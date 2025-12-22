@@ -7,15 +7,13 @@
     "type": "module",
     "scripts": {
         "test": "",
-        "postinstall": "vite-envs update-types",
         "dev": "vite --host",
         "build": "tsc && vite build",
         "lint": "eslint ./src",
         "preview": "vite preview",
         "_format": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "npm run _format -- --write",
-        "format:check": "npm run _format -- --list-different",
-        "generate-todos-api-client": "tsx scripts/generate-todos-api-client.ts"
+        "format:check": "npm run _format -- --list-different"
     },
     "dependencies": {
         "react": "^19.2.0",
