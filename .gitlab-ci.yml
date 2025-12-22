@@ -1,6 +1,6 @@
 include:
   - component: $CI_SERVER_FQDN/sndi-lille/ressources-communes/components/meta-component-js-kube/ci-js-kube@1.0.0
-  inputs:
-    package_manager: "npm" 
-    sonar_project_key: "compas-ui-v2"
-    sonar_token: "à ajouter pour plus tard" 
+    inputs:
+      package_manager: "npm" 
+      sonar_project_key: "compas-ui-v2"
+      sonar_token: "à ajouter pour plus tard" 
