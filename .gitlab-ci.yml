@@ -3,4 +3,4 @@ include:
     inputs:
       package_manager: "npm" 
       sonar_project_key: "compas-ui-v2"
-      sonar_token: "à ajouter pour plus tard" 
+      sonar_token: "${SONAR_TOKEN}"
