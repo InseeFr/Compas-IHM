@@ -9,55 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DevopsTableRouteImport } from './routes/devopsTable'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
 
-const DevopsTableRoute = DevopsTableRouteImport.update({
-  id: '/devopsTable',
-  path: '/devopsTable',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndicateurDevopsTableRoute = IndicateurDevopsTableRouteImport.update({
+  id: '/indicateur/devopsTable',
+  path: '/indicateur/devopsTable',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/devopsTable': typeof DevopsTableRoute
+  '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/devopsTable': typeof DevopsTableRoute
+  '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/devopsTable': typeof DevopsTableRoute
+  '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/devopsTable'
+  fullPaths: '/' | '/indicateur/devopsTable'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/devopsTable'
-  id: '__root__' | '/' | '/devopsTable'
+  to: '/' | '/indicateur/devopsTable'
+  id: '__root__' | '/' | '/indicateur/devopsTable'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DevopsTableRoute: typeof DevopsTableRoute
+  IndicateurDevopsTableRoute: typeof IndicateurDevopsTableRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/devopsTable': {
-      id: '/devopsTable'
-      path: '/devopsTable'
-      fullPath: '/devopsTable'
-      preLoaderRoute: typeof DevopsTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/indicateur/devopsTable': {
+      id: '/indicateur/devopsTable'
+      path: '/indicateur/devopsTable'
+      fullPath: '/indicateur/devopsTable'
+      preLoaderRoute: typeof IndicateurDevopsTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DevopsTableRoute: DevopsTableRoute,
+  IndicateurDevopsTableRoute: IndicateurDevopsTableRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

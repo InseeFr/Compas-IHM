@@ -9,8 +9,9 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
   data: T[];
   paginationConfig: Pagination;
   rowId?: (originalRow: T, index?: number, parentRow?: MRT_Row<T>) => string;
-  renderTopCustom?: (props: {table: MRT_TableInstance<T>}) => React.ReactNode;
+  renderTopCustom?: (props: { table: MRT_TableInstance<T> }) => React.ReactNode;
 }
+
 
 export default function TablePageLayout<T extends MRT_RowData>(
   props: Readonly<TablePageLayoutProps<T>>
@@ -30,14 +31,12 @@ export default function TablePageLayout<T extends MRT_RowData>(
         data={props.data}
         columns={props.columns}
         enableExpanding={true}
-        enableColumnFilters={false}
-        enableColumnActions={false}
-        enableDensityToggle={false}
-        enableFullScreenToggle={false}
+        enableColumnFilters={true}
         enableHiding={false}
+        enableDensityToggle={false}
         initialState={{
           pagination: props.paginationConfig.pagination,
-          showColumnFilters: false,
+          showColumnFilters: true,
         }}
         getRowId={props.rowId}
         renderTopToolbarCustomActions={props.renderTopCustom}
