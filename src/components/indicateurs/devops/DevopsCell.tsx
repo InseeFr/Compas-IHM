@@ -1,6 +1,15 @@
 import { Tooltip } from "@mui/material";
 import type { DevopsIndicateur } from "../../../models/devops-indicateur";
 
+function getTooltip(lettre: string, count: number | string, singularLabel: string, pluralLabel: string, prefix?: string) {
+  if (lettre === "NR") return "Non renseigné";
+  if (lettre === "SO") return "Sans objet";
+
+  const nb = Number(count) || 0;
+  const label = nb <= 1 ? singularLabel : pluralLabel;
+  return prefix ? `${prefix} ${nb} ${label}` : `${nb} ${label}`;
+}
+
 export function ContributorCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
   const { lettreContributorCount, nbContributorCount } = row.original;
 
@@ -32,12 +41,7 @@ export function ContributorCell({ row }: Readonly<{ row: { original: DevopsIndic
 
 export function DeploymentCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
   const { lettreDeploymentCount, nbDeploymentCount } = row.original;
-
-  const isNR = lettreDeploymentCount === "NR";
-  const isSO = lettreDeploymentCount === "SO";
-  const nb = Number(nbDeploymentCount) || 0;
-  const miseLabel = nb <= 1 ? "mise en production" : "mises en production";
-  const tooltip = isNR ? "Non renseigné" : isSO ? "Sans objet" : `${nb} ${miseLabel}`;
+  const tooltip = getTooltip(lettreDeploymentCount, nbDeploymentCount, "mise en production", "mises en production");
 
   return (
     <Tooltip title={tooltip}>
@@ -48,12 +52,7 @@ export function DeploymentCell({ row }: Readonly<{ row: { original: DevopsIndica
 
 export function DistanceCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
   const { lettreDistanceCount, distanceCount } = row.original;
-
-  const isNR = lettreDistanceCount === "NR";
-  const isSO = lettreDistanceCount === "SO";
-  const nb = Number(distanceCount) || 0;
-  const jourLabel = nb <= 1 ? "jour" : "jours";
-  const tooltip = isNR ? "Non renseigné" : isSO ? "Sans objet" : `Il y a ${nb} ${jourLabel}`;
+  const tooltip = getTooltip(lettreDistanceCount, distanceCount, "jour", "jours", "Il y a");
 
   return (
     <Tooltip title={tooltip}>
