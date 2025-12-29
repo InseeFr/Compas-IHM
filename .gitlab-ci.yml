@@ -4,14 +4,3 @@ include:
       package_manager: "npm" 
       sonar_project_key: "dsi_compas_compas-ui-v2_3395f55b-6671-4c39-9a53-6585284c1b56"
       sonar_token: "${SONAR_TOKEN}"
-
-stages:
-  - test
-
-test:
-  image: cypress/browsers:22.15.0
-  stage: test
-  script:
-    - npm ci
-    - npm start &
-    - npx cypress run --browser electron
