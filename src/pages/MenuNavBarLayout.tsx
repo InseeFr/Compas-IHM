@@ -31,7 +31,7 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                     {item.subItem ? (
                         <>
                             <Button
-                                role="button"
+                                data-role="button"
                                 data-testid={`navbar-button-${index}-${item.title}`}
                                 aria-controls={open && activeIndex === index ? "basic-menu" : undefined}
                                 aria-expanded={open && activeIndex === index ? "true" : undefined}
@@ -60,7 +60,6 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                             >
                                 {item.subItem.map((sub, subIndex) => (
                                     <MenuItem
-                                        role="menuitem"
                                         data-testid={`navbar-menu-${index}-${subIndex}-${sub.label}`}
                                         key={sub.label}
                                         onClick={handleClose}
@@ -77,7 +76,7 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                         <Button
                             component={Link}
                             to={item.to}
-                            role="button"
+                            data-role="button"
                             sx={{ textTransform: "none" }}
                         >
                             <Typography

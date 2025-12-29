@@ -12,7 +12,8 @@ export function handleExportCsv(
     const a: HTMLAnchorElement = document.createElement("a");
     const date: string = new Date().toISOString().slice(0, 10);
     a.href = url;
-    a.download = `${date}-tableau-${indicator}${viewMode ? `-${viewMode}` : ""}.csv`;
+    const view: string = viewMode ? `-${viewMode}` : "";
+    a.download = `${date}-tableau-${indicator}${view}.csv`;
     a.click();
     URL.revokeObjectURL(url);
 }

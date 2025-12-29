@@ -23,8 +23,8 @@ export default defineConfig({
         globals: true,
         setupFiles: "./vitest.setup.ts",
         coverage: {
-            reporter: ['text','lcov'],
-            reportsDirectory: './coverage'
+            reporter: ["lcov"],
+            reportsDirectory: "./coverage"
         }
     }
 });

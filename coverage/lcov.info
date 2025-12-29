@@ -1,5 +1,5 @@
 TN:
-SF:src\assets\logo_insee.png
+SF:src/assets/logo_insee.png
 FNF:0
 FNH:0
 LF:0
@@ -8,7 +8,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\assets\logo_insee_dark.png
+SF:src/assets/logo_insee_dark.png
 FNF:0
 FNH:0
 LF:0
@@ -17,7 +17,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\components\Header.tsx
+SF:src/components/Header.tsx
 FN:17,Header
 FNF:1
 FNH:1
@@ -33,7 +33,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:src\constantes\constantes.ts
+SF:src/constantes/constantes.ts
 FNF:0
 FNH:0
 DA:3,1
@@ -44,7 +44,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src\pages\MenuNavBarLayout.tsx
+SF:src/pages/MenuNavBarLayout.tsx
 FN:10,MenuNavBarLayout
 FN:17,(anonymous_1)
 FN:22,(anonymous_2)
@@ -91,7 +91,7 @@ BRF:12
 BRH:12
 end_of_record
 TN:
-SF:src\pages\NavBarLayout.tsx
+SF:src/pages/NavBarLayout.tsx
 FN:5,NavBarLayout
 FNF:1
 FNH:1
