@@ -1,0 +1,8 @@
+stages:
+  - test
+
+cypress-test:
+  image: cypress/browsers:22.15.0
+  stage: test
+  script:
+    - npm run test
