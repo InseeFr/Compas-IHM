@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "generate-todos-api-client": "tsx orval/generate-todos-api-client.ts",
-        "cy": "cypress run",
+        "test": "cypress run",
         "cy:open": "cypress open",
         "dev": "vite --host",
         "build": "tsc && vite build",
