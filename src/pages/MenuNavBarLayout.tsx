@@ -52,8 +52,10 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                                 anchorEl={anchorEl}
                                 open={open && activeIndex === index}
                                 onClose={handleClose}
-                                PaperProps={{
-                                    sx: { backgroundColor: theme.palette.background.paper }
+                                slotProps={{
+                                    paper: {
+                                        sx: { backgroundColor: theme.palette.background.paper }
+                                    }
                                 }}
                             >
                                 {item.subItem.map((sub, subIndex) => (
@@ -72,7 +74,12 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                             </Menu>
                         </>
                     ) : (
-                        <Button component={Link} to={item.to} role="button" sx={{ textTransform: "none" }}>
+                        <Button
+                            component={Link}
+                            to={item.to}
+                            role="button"
+                            sx={{ textTransform: "none" }}
+                        >
                             <Typography
                                 noWrap
                                 sx={{
