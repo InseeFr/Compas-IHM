@@ -16,17 +16,17 @@ interface HeaderProps {
 
 export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
     return (
-        <AppBar position="relative" color="inherit" data-cy="header">
+        <AppBar position="relative" color="inherit" data-testid="header">
             <Toolbar>
                 <Box
                     component="img"
-                    data-cy="header-logo"
+                    data-testid="header-logo"
                     sx={{ height: 64 }}
                     alt="Insee Logo."
                     src={darkMode ? LogoInseeDark : LogoInseeLight}
                 />
                 <Typography
-                    data-cy="header-title"
+                    data-testid="header-title"
                     variant="h6"
                     noWrap
                     component="a"
@@ -47,7 +47,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                 <NavBarLayout />
 
                 <IconButton
-                    data-cy="toggle-darkmode"
+                    data-testid="toggle-darkmode"
                     sx={{ ml: 2 }}
                     onClick={toggleDarkMode}
                     color="inherit"

@@ -31,13 +31,13 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                     {item.subItem ? (
                         <>
                             <Button
-                                data-cy={`navbar-item-${index}`}
+                                role="button"
+                                data-testid={`navbar-button-${index}-${item.title}`}
                                 aria-controls={open && activeIndex === index ? "basic-menu" : undefined}
                                 aria-expanded={open && activeIndex === index ? "true" : undefined}
                                 onClick={e => handleClick(e, index)}
                             >
                                 <Typography
-                                    data-cy={`navbar-title-${index}`}
                                     noWrap
                                     sx={{
                                         fontFamily: "monospace",
@@ -53,21 +53,18 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                                 open={open && activeIndex === index}
                                 onClose={handleClose}
                                 PaperProps={{
-                                    sx: {
-                                        backgroundColor: theme.palette.background.paper
-                                    }
+                                    sx: { backgroundColor: theme.palette.background.paper }
                                 }}
                             >
                                 {item.subItem.map((sub, subIndex) => (
                                     <MenuItem
-                                        data-cy={`navbar-subitem-${index}-${subIndex}`}
+                                        role="menuitem"
+                                        data-testid={`navbar-menu-${index}-${subIndex}-${sub.label}`}
                                         key={sub.label}
                                         onClick={handleClose}
                                         component={Link}
                                         to={sub.to}
-                                        sx={{
-                                            color: theme.palette.text.primary
-                                        }}
+                                        sx={{ color: theme.palette.text.primary }}
                                     >
                                         {sub.label}
                                     </MenuItem>
@@ -75,7 +72,7 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                             </Menu>
                         </>
                     ) : (
-                        <Button component={Link} to={item.to} sx={{ textTransform: "none" }}>
+                        <Button component={Link} to={item.to} role="button" sx={{ textTransform: "none" }}>
                             <Typography
                                 noWrap
                                 sx={{

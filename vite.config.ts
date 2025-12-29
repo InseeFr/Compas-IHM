@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteEnvs } from "vite-envs";
@@ -17,4 +18,10 @@ export default defineConfig({
             autoCodeSplitting: true
         })
     ]
+    ,
+    test:{
+        environment: 'jsdom',
+        globals: true,
+        setupFiles: './vitest.setup.ts'
+    }
 });
