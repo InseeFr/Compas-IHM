@@ -7,7 +7,6 @@
     "type": "module",
     "scripts": {
         "generate-todos-api-client": "tsx orval/generate-todos-api-client.ts",
-        "test": "cypress run --browser electron",
         "cy:open": "cypress open",
         "dev": "vite --host",
         "build": "tsc && vite build",
@@ -15,7 +14,8 @@
         "preview": "vite preview",
         "_format": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "npm run _format -- --write",
-        "format:check": "npm run _format -- --list-different"
+        "format:check": "npm run _format -- --list-different",
+        "test": "cypress run --browser electron"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
