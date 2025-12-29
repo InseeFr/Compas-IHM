@@ -7,8 +7,9 @@
     "type": "module",
     "scripts": {
         "generate-todos-api-client": "tsx orval/generate-todos-api-client.ts",
-        "test": "cypress run",
+        "test": "",
         "cy:open": "cypress open",
+        "ci:test": "npm start & npx cypress run --browser electron",
         "dev": "vite --host",
         "build": "tsc && vite build",
         "lint": "eslint ./src",
