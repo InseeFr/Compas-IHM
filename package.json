@@ -7,7 +7,8 @@
     "type": "module",
     "scripts": {
         "generate-todos-api-client": "tsx orval/generate-todos-api-client.ts",
-        "test": "",
+        "cy": "cypress run",
+        "cy:open": "cypress open",
         "dev": "vite --host",
         "build": "tsc && vite build",
         "lint": "eslint ./src",
@@ -40,6 +41,7 @@
         "@types/react": "^19.2.5",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react-swc": "^4.2.2",
+        "cypress": "^15.8.1",
         "eslint": "^9.39.1",
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-refresh": "^0.4.24",

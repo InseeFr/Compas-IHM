@@ -31,11 +31,13 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                     {item.subItem ? (
                         <>
                             <Button
+                                data-cy={`navbar-item-${index}`}
                                 aria-controls={open && activeIndex === index ? "basic-menu" : undefined}
                                 aria-expanded={open && activeIndex === index ? "true" : undefined}
                                 onClick={e => handleClick(e, index)}
                             >
                                 <Typography
+                                    data-cy={`navbar-title-${index}`}
                                     noWrap
                                     sx={{
                                         fontFamily: "monospace",
@@ -56,8 +58,9 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
                                     }
                                 }}
                             >
-                                {item.subItem.map(sub => (
+                                {item.subItem.map((sub, subIndex) => (
                                     <MenuItem
+                                        data-cy={`navbar-subitem-${index}-${subIndex}`}
                                         key={sub.label}
                                         onClick={handleClose}
                                         component={Link}
