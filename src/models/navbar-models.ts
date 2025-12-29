@@ -1,14 +1,14 @@
 export interface NavBarModel {
-  items: NavItem[];
+    items: NavItem[];
 }
 
 interface SubItem {
-  label: string;
-  to: string;
+    label: string;
+    to: string;
 }
 
 interface NavItem {
-  title: string;
-  to?: string; 
-  subItem?: SubItem[]; 
+    title: string;
+    to?: string;
+    subItem?: SubItem[];
 }

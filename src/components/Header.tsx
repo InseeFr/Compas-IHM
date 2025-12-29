@@ -10,46 +10,46 @@ import LogoInseeDark from "../assets/logo_insee_dark.png";
 import NavBarLayout from "../pages/NavBarLayout";
 
 interface HeaderProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
+    darkMode: boolean;
+    toggleDarkMode: () => void;
 }
 
 export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
-  return (
-    <AppBar position="relative" color="inherit">
-      <Toolbar>
-        <Box
-          component="img"
-          sx={{ height: 64 }}
-          alt="Insee Logo."
-          src={darkMode ? LogoInseeDark : LogoInseeLight} 
-        />
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          href="/"
-          sx={{
-            mr: 2,
-            display: { xs: "none", md: "flex" },
-            fontFamily: "monospace",
-            fontWeight: 700,
-            letterSpacing: ".3rem",
-            color: "inherit",
-            textDecoration: "none",
-          }}
-        >
-          COMPAS
-        </Typography>
+    return (
+        <AppBar position="relative" color="inherit">
+            <Toolbar>
+                <Box
+                    component="img"
+                    sx={{ height: 64 }}
+                    alt="Insee Logo."
+                    src={darkMode ? LogoInseeDark : LogoInseeLight}
+                />
+                <Typography
+                    variant="h6"
+                    noWrap
+                    component="a"
+                    href="/"
+                    sx={{
+                        mr: 2,
+                        display: { xs: "none", md: "flex" },
+                        fontFamily: "monospace",
+                        fontWeight: 700,
+                        letterSpacing: ".3rem",
+                        color: "inherit",
+                        textDecoration: "none"
+                    }}
+                >
+                    COMPAS
+                </Typography>
 
-        <NavBarLayout />
+                <NavBarLayout />
 
-        <IconButton sx={{ ml: 2 }} onClick={toggleDarkMode} color="inherit">
-          {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-        </IconButton>
-      </Toolbar>
-    </AppBar>
-  );
+                <IconButton sx={{ ml: 2 }} onClick={toggleDarkMode} color="inherit">
+                    {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+                </IconButton>
+            </Toolbar>
+        </AppBar>
+    );
 }
 
 export default Header;

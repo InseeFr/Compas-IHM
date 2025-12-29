@@ -10,16 +10,16 @@ export const Route = createRootRouteWithContext()({
 });
 
 function RootComponent() {
-  const [darkMode, setDarkMode] = useState(false);
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+    const [darkMode, setDarkMode] = useState(false);
+    const toggleDarkMode = () => setDarkMode(prev => !prev);
 
-  return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <CssBaseline /> 
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <main>
-        <Outlet />
-      </main>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+            <CssBaseline />
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            <main>
+                <Outlet />
+            </main>
+        </ThemeProvider>
+    );
 }
