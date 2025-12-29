@@ -6,11 +6,10 @@ include:
       sonar_token: "${SONAR_TOKEN}"
 
 cypress-tests:
-  image: cypress/browsers:22.15.0   
+  image: node:latest   
   stage: build-app-and-test        
   script:
     - npm ci
     - npm run dev &                 
-    - npx wait-on http://localhost:5173  
-    - npx cypress run --browser electron
+    - npm run e2e
   allow_failure: false
