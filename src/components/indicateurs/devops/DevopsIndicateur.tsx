@@ -62,7 +62,7 @@ export const DevopsIndicateurTable = () => {
     const paginationConfig: Pagination = {
         pagination: {
             pageIndex: 0,
-            pageSize: 35
+            pageSize: 30
         }
     };
 

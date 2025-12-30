@@ -12,7 +12,12 @@ export default function ButtonCsvExport<T extends MRT_RowData>({
 }: Readonly<ButtonCsvExportProps<T>>) {
     return (
         <Box display="flex" alignItems="center" gap={1}>
-            <Button variant="contained" color="secondary" onClick={() => onExport(table)}>
+            <Button
+                data-testid={"button-export-csv"}
+                variant="contained"
+                color="secondary"
+                onClick={() => onExport(table)}
+            >
                 Exporter en CSV
             </Button>
         </Box>

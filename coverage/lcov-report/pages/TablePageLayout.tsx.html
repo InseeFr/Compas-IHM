@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for components/Header.tsx</title>
+    <title>Code coverage report for pages/TablePageLayout.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> Header.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">pages</a> TablePageLayout.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -114,18 +114,7 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,19 +131,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -182,73 +165,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import LogoInseeLight from "../assets/logo_insee.png";
-import LogoInseeDark from "../assets/logo_insee_dark.png";
-import NavBarLayout from "../pages/NavBarLayout";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box } from "@mui/material";
+import {
+    MaterialReactTable,
+    type MRT_ColumnDef,
+    type MRT_Row,
+    type MRT_RowData,
+    type MRT_TableInstance
+} from "material-react-table";
+import type { JSX } from "react";
+import type { Pagination } from "../models/table-model";
 &nbsp;
-interface HeaderProps {
-    darkMode: boolean;
-    toggleDarkMode: () =&gt; void;
+interface TablePageLayoutProps&lt;T extends MRT_RowData&gt; {
+    titleTable: string;
+    columns: MRT_ColumnDef&lt;T&gt;[];
+    data: T[];
+    paginationConfig: Pagination;
+    rowId?: (originalRow: T, index?: number, parentRow?: MRT_Row&lt;T&gt;) =&gt; string;
+    renderTopCustom?: (props: { table: MRT_TableInstance&lt;T&gt; }) =&gt; React.ReactNode;
 }
 &nbsp;
-export function Header({ darkMode, toggleDarkMode }: Readonly&lt;HeaderProps&gt;) {
+export default function TablePageLayout&lt;T extends MRT_RowData&gt;(
+    props: Readonly&lt;TablePageLayoutProps&lt;T&gt;&gt;
+): JSX.Element {
     return (
-        &lt;AppBar position="relative" color="inherit" data-testid="header"&gt;
-            &lt;Toolbar&gt;
-                &lt;Box
-                    component="img"
-                    data-testid="header-logo"
-                    sx={{ height: 64 }}
-                    alt="Insee Logo."
-                    src={darkMode ? <span class="branch-0 cbranch-no" title="branch not covered" >LogoInseeDark : L</span>ogoInseeLight}
-                /&gt;
-                &lt;Typography
-                    data-testid="header-title"
-                    variant="h6"
-                    noWrap
-                    component="a"
-                    href="/"
-                    sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        letterSpacing: ".3rem",
-                        color: "inherit",
-                        textDecoration: "none"
-                    }}
-                &gt;
-                    COMPAS
-                &lt;/Typography&gt;
+        &lt;Box
+            sx={{
+                width: "100%",
+                minHeight: "100vh",
+                padding: 0,
+                margin: 0
+            }}
+        &gt;
+            {&lt;h1 style={{ textAlign: "center" }}&gt;{props.titleTable}&lt;/h1&gt;}
 &nbsp;
-                &lt;NavBarLayout /&gt;
-&nbsp;
-                &lt;IconButton
-                    data-testid="toggle-darkmode"
-                    sx={{ ml: 2 }}
-                    onClick={toggleDarkMode}
-                    color="inherit"
-                &gt;
-                    {<span class="branch-0 cbranch-no" title="branch not covered" >darkMode ? &lt;Brightness7Icon /&gt; : &lt;B</span>rightness4Icon /&gt;}
-                &lt;/IconButton&gt;
-            &lt;/Toolbar&gt;
-        &lt;/AppBar&gt;
+            &lt;MaterialReactTable
+                data={props.data}
+                columns={props.columns}
+                enableExpanding={true}
+                enableColumnFilters={true}
+                enableHiding={false}
+                enableDensityToggle={false}
+                initialState={{
+                    pagination: props.paginationConfig.pagination,
+                    showColumnFilters: true
+                }}
+                getRowId={props.rowId}
+                renderTopToolbarCustomActions={props.renderTopCustom}
+            /&gt;
+        &lt;/Box&gt;
     );
 }
-&nbsp;
-export default Header;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
