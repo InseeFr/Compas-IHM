@@ -17,13 +17,13 @@ export const NAV_TEXTS: NavBarModel = {
         {
             title: "Indicateurs",
             subItem: [
-                { label: "Indicateurs principaux", to: "/indicateurs/principaux" },
-                { label: "Qualité", to: "/indicateur/qualite" },
+                { label: "Indicateurs principaux", to: "/indicateurs/principauxTable" },
+                { label: "Qualité", to: "/indicateur/qualiteTable" },
                 { label: "Devops", to: "/indicateur/devopsTable" },
-                { label: "Green IT", to: "/indicateur/green-it" },
-                { label: "Sécurité", to: "/indicateur/securite" },
-                { label: "Accessibilité", to: "/indicateur/accessibilite" },
-                { label: "Dernières Méteo", to: "/indicateur/meteo" }
+                { label: "Green IT", to: "/indicateur/greenITTable" },
+                { label: "Sécurité", to: "/indicateur/securiteTable" },
+                { label: "Accessibilité", to: "/indicateur/accessibiliteTable" },
+                { label: "Dernières Méteo", to: "/indicateur/meteoTable" }
             ]
         },
         {

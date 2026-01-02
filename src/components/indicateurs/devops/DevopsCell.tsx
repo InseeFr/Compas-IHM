@@ -1,5 +1,5 @@
 import { Tooltip } from "@mui/material";
-import type { DevopsIndicateur } from "../../../models/devops-indicateur";
+import type { DevopsIndicateur } from "../../../models/indicateurs";
 
 function getTooltip(
     lettre: string,

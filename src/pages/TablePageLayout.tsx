@@ -17,6 +17,7 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     data: T[];
     paginationConfig: Pagination;
     rowId?: (originalRow: T, index?: number, parentRow?: MRT_Row<T>) => string;
+    subRow?: (originalRow: T, index: number) => T[] | undefined;
     renderTopCustom?: (props: { table: MRT_TableInstance<T> }) => React.ReactNode;
     columnFilters?: MRT_ColumnFiltersState;
     onColumnFiltersChange?: OnChangeFn<MRT_ColumnFiltersState>;
@@ -53,6 +54,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 }}
                 onColumnFiltersChange={props.onColumnFiltersChange}
                 getRowId={props.rowId}
+                getSubRows={props.subRow}
                 renderTopToolbarCustomActions={props.renderTopCustom}
             />
         </Box>
