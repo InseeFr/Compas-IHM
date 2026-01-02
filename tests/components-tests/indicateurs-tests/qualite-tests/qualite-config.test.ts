@@ -46,7 +46,7 @@ describe("formatIndicateur", () => {
             lettreCouvertureTestUniaire: "A",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
-            pourcentageCouvertureTestUniaire: "50%",
+            pourcentageCouvertureTestUnitaire: "50%",
             lettreQualiteGenerale: "G",
             detteTechnique: "123"
         });
@@ -56,13 +56,14 @@ describe("formatIndicateur", () => {
         const resultat = formatIndicateur(mockModule, true);
 
         expect(resultat).toEqual({
+            applicationId: undefined,
             applicationName: "Mod1",
             sndi: "S1",
             domaine: "D1",
             lettreCouvertureTestUniaire: "X",
             lettreFiabilite: "Y",
             lettreDetteTechnique: "Z",
-            pourcentageCouvertureTestUniaire: "75%",
+            pourcentageCouvertureTestUnitaire: "75%",
             parentApplication: "App1",
             isModule: true,
             lettreQualiteGenerale: undefined,

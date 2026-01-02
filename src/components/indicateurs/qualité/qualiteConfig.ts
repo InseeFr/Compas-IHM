@@ -16,7 +16,7 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
             `"${row.original.sndi}"`,
             `"${row.original.domaine}"`,
             `"${row.original.lettreCouvertureTestUniaire}"`,
-            `"${row.original.pourcentageCouvertureTestUniaire}"`,
+            `"${row.original.pourcentageCouvertureTestUnitaire}"`,
             `"${row.original.lettreDetteTechnique}"`,
             `"${row.original.detteTechnique}"`,
             `"${row.original.lettreFiabilite}"`
@@ -80,7 +80,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? "NR",
         lettreFiabilite: item.lettreFiabilite ?? "NR",
         lettreDetteTechnique: item.lettreDetteTechnique ?? "NR",
-        pourcentageCouvertureTestUniaire: item.pourcentageCouvertureTestUniaire ?? "NR",
+        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? "NR",
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? "NR"),
         detteTechnique: item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : "NR",
         ...(isModule

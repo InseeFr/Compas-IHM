@@ -16,14 +16,14 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
     const tooltipText = Number.isNaN(minutes)
         ? "Dette technique : NR"
         : "Dette technique : " + Math.round(minutes / 420) + " jours";
-    return getToolTip(tooltipText, row.original.detteTechnique ?? "NR");
+    return getToolTip(tooltipText, row.original.lettreDetteTechnique ?? "NR");
 }
 
 export function CouvertureTestUnitCell({
     row
 }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     return getToolTip(
-        `Couverture : ${row.original.pourcentageCouvertureTestUniaire ?? "NR"}`,
+        `Couverture : ${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}`,
         row.original.lettreCouvertureTestUniaire ?? "NR"
     );
 }

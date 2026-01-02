@@ -22,7 +22,7 @@ export interface QualiteIndicateur {
     lettreCouvertureTestUniaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
-    pourcentageCouvertureTestUniaire: string;
+    pourcentageCouvertureTestUnitaire: string;
     grade?: string;
     isModule?: boolean;
     parentApplication?: string;

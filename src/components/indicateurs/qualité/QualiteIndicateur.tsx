@@ -30,7 +30,7 @@ const QualiteIndicateurTable = () => {
         }
         fetchData();
     }, []);
-
+    console.log(qualiteIndicateur);
     return (
         <TablePageLayout
             titleTable="Table Indicateur Qualité"
