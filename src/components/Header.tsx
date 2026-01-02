@@ -8,6 +8,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import LogoInseeLight from "../assets/logo_insee.png";
 import LogoInseeDark from "../assets/logo_insee_dark.png";
 import NavBarLayout from "../pages/NavBarLayout";
+import { Link } from "@tanstack/react-router";
 
 interface HeaderProps {
     darkMode: boolean;
@@ -29,8 +30,8 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                     data-testid="header-title"
                     variant="h6"
                     noWrap
-                    component="a"
-                    href="/"
+                    component={Link}
+                    to="/"
                     sx={{
                         mr: 2,
                         display: { xs: "none", md: "flex" },
@@ -48,7 +49,9 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
 
                 <IconButton
                     data-testid="toggle-darkmode"
-                    sx={{ ml: 2 }}
+                    sx={{
+                        ml: "auto"
+                    }}
                     onClick={toggleDarkMode}
                     color="inherit"
                 >

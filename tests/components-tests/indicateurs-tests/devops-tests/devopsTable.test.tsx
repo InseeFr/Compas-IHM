@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { DevopsIndicateurTable } from "../src/components/indicateurs/devops/DevopsIndicateur";
-import * as client from "../src/todos-api/client.gen";
-import * as exportCsv from "../src/utils/exportCsv";
+import { DevopsIndicateurTable } from "components/indicateurs/devops/DevopsIndicateur";
+import * as client from "../../../../src/todos-api/client.gen";
+import * as exportCsv from "../../../../src/utils/exportCsv";
 
-vi.mock("../src/todos-api/client.gen", () => ({
+vi.mock("../../../../src/todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
     getModules2: vi.fn()
 }));
 
-vi.mock("../src/utils/exportCsv", () => ({
+vi.mock("../../../../src/utils/exportCsv", () => ({
     handleExportCsv: vi.fn()
 }));
 

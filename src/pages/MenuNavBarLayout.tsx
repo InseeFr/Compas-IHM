@@ -14,12 +14,12 @@ export default function MenuNavBarLayout({ props }: Readonly<IMenuLayoutProps>) 
 
     const open = Boolean(anchorEl);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, index: number): void => {
         setAnchorEl(event.currentTarget);
         setActiveIndex(index);
     };
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setAnchorEl(null);
         setActiveIndex(null);
     };

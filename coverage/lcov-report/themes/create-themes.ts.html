@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for pages/ButtonCsvExport.tsx</title>
+    <title>Code coverage report for themes/create-themes.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">pages</a> ButtonCsvExport.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">themes</a> create-themes.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -39,7 +39,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -88,7 +88,11 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -96,11 +100,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -113,31 +112,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box, Button } from "@mui/material";
-import type { MRT_RowData, MRT_TableInstance } from "material-react-table";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createTheme } from "@mui/material/styles";
 &nbsp;
-interface ButtonCsvExportProps&lt;T extends MRT_RowData&gt; {
-    table: MRT_TableInstance&lt;T&gt;;
-    onExport: (table: MRT_TableInstance&lt;T&gt;) =&gt; void;
-}
+export const lightTheme = createTheme({
+    palette: {
+        mode: "light",
+        primary: {
+            main: "#1976d2"
+        },
+        background: {
+            default: "#fff",
+            paper: "#fff"
+        }
+    }
+});
 &nbsp;
-export default function ButtonCsvExport&lt;T extends MRT_RowData&gt;({
-    table,
-    onExport
-}: Readonly&lt;ButtonCsvExportProps&lt;T&gt;&gt;) {
-    return (
-        &lt;Box display="flex" alignItems="center" gap={1}&gt;
-            &lt;Button
-                data-testid={"button-export-csv"}
-                variant="contained"
-                color="secondary"
-                onClick={() =&gt; onExport(table)}
-            &gt;
-                Exporter en CSV
-            &lt;/Button&gt;
-        &lt;/Box&gt;
-    );
-}
+export const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+        primary: {
+            main: "#90caf9"
+        },
+        background: {
+            default: "#121212",
+            paper: "#1d1d1d"
+        }
+    }
+});
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

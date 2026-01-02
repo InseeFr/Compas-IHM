@@ -1,9 +1,20 @@
 // tests/header.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Header from "../src/components/Header";
-import NavBarLayout from "../src/pages/NavBarLayout";
+import Header from "../../src/components/Header";
+import NavBarLayout from "../../src/pages/NavBarLayout";
 import { describe, it, expect, beforeEach, vi } from "vitest";
+
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 
 describe("Header et NavBar", () => {
     const toggleDarkMode = vi.fn();
@@ -12,13 +23,6 @@ describe("Header et NavBar", () => {
     beforeEach(() => {
         user = userEvent.setup();
         toggleDarkMode.mockReset();
-
-        vi.mock("@tanstack/react-router", async () => {
-            return {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                Link: ({ to, children }: any) => <a href={to}>{children}</a>
-            };
-        });
     });
 
     it("affiche correctement le header", () => {
