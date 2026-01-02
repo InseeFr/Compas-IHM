@@ -15,7 +15,7 @@
         "format": "npm run _format -- --write",
         "format:check": "npm run _format -- --list-different",
         "test": "vitest",
-        "coverage": "vitest run --coverage && node scripts/fix-lcov-paths.js"
+        "coverage": "vitest run --coverage"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",

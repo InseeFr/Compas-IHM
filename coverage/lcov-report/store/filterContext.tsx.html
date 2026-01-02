@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/14</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>10/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">20% </span>
-                <span class="quiet">Functions</span>
+                <span class="quiet">Branches</span>
                 <span class='fraction'>1/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30.76% </span>
+                <span class="strong">80% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>4/5</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">69.23% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/13</span>
+                <span class='fraction'>9/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -125,18 +125,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,21 +142,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createContext, useReducer, useMemo, type ReactNode, useContext } from "react";
 &nbsp;
 export interface FilterState {
@@ -179,17 +179,17 @@ const initialState: FilterState = {
     appName: ""
 };
 &nbsp;
-function <span class="fstat-no" title="function not covered" >filterReducer(s</span>tate: FilterState, action: Action): FilterState {
-<span class="cstat-no" title="statement not covered" >    switch (action.type) {</span>
+function filterReducer(state: FilterState, action: Action): FilterState {
+    switch (action.type) {
         case "SET_SERVICE_DEV":
-<span class="cstat-no" title="statement not covered" >            return { ...state, serviceDev: action.payload };</span>
-        case "SET_DOMAINE_DEV":
+            return { ...state, serviceDev: action.payload };
+<span class="branch-1 cbranch-no" title="branch not covered" >        case "SET_DOMAINE_DEV":</span>
 <span class="cstat-no" title="statement not covered" >            return { ...state, domaineDev: action.payload };</span>
-        case "SET_APP_NAME":
+<span class="branch-2 cbranch-no" title="branch not covered" >        case "SET_APP_NAME":</span>
 <span class="cstat-no" title="statement not covered" >            return { ...state, appName: action.payload };</span>
-        case "RESET_FILTERS":
+<span class="branch-3 cbranch-no" title="branch not covered" >        case "RESET_FILTERS":</span>
 <span class="cstat-no" title="statement not covered" >            return initialState;</span>
-        default:
+<span class="branch-4 cbranch-no" title="branch not covered" >        default:</span>
 <span class="cstat-no" title="statement not covered" >            return state;</span>
     }
 }
@@ -199,10 +199,10 @@ const FilterContext = createContext&lt;{
     dispatch: React.Dispatch&lt;Action&gt;;
 }&gt;({ state: initialState, dispatch: <span class="fstat-no" title="function not covered" >() =&gt; {}</span> });
 &nbsp;
-export const FilterProvider = <span class="fstat-no" title="function not covered" >({</span> children }: { children: ReactNode }) =&gt; {
-    const [state, dispatch]<span class="cstat-no" title="statement not covered" > = useReducer(filterReducer, initialState);</span>
-    const <span class="cstat-no" title="statement not covered" >memoState = useMemo(<span class="fstat-no" title="function not covered" >() =&gt; (<span class="cstat-no" title="statement not covered" >{</span> state, dispatch }), [</span>state, dispatch]);</span>
-<span class="cstat-no" title="statement not covered" >    return &lt;FilterContext.Provider value={memoState}&gt;{children}&lt;/FilterContext.Provider&gt;;</span>
+export const FilterProvider = ({ children }: { children: ReactNode }) =&gt; {
+    const [state, dispatch] = useReducer(filterReducer, initialState);
+    const memoState = useMemo(() =&gt; ({ state, dispatch }), [state, dispatch]);
+    return &lt;FilterContext.Provider value={memoState}&gt;{children}&lt;/FilterContext.Provider&gt;;
 };
 &nbsp;
 // eslint-disable-next-line react-refresh/only-export-components
@@ -214,7 +214,7 @@ export const useFilterContext = () =&gt; useContext(FilterContext);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-02T08:22:05.318Z
+                at 2026-01-02T08:48:14.709Z
             </div>
         <script src="../prettify.js"></script>
         <script>
