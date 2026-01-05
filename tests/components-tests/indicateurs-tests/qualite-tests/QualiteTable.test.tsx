@@ -55,8 +55,10 @@ describe("QualiteIndicateurTable", () => {
     it("renders table with fetched data", async () => {
         render(<QualiteIndicateurTable />);
 
-        expect(await screen.findByText("Table Indicateur Qualité")).toBeDefined();
-
+        const heading = await screen.findByRole("heading", {
+            name: /table indicateur qualité/i
+        });
+        expect(heading).toBeDefined();
         expect(await screen.findByText("Nom")).toBeInTheDocument();
         expect(screen.getByText("Service dev.")).toBeInTheDocument();
 
