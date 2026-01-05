@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IndicateurQualiteTableRouteImport } from './routes/indicateur/qualiteTable'
 import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndicateurQualiteTableRoute = IndicateurQualiteTableRouteImport.update({
+  id: '/indicateur/qualiteTable',
+  path: '/indicateur/qualiteTable',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndicateurDevopsTableRoute = IndicateurDevopsTableRouteImport.update({
@@ -26,27 +32,31 @@ const IndicateurDevopsTableRoute = IndicateurDevopsTableRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
+  '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
+  '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
+  '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/indicateur/devopsTable'
+  fullPaths: '/' | '/indicateur/devopsTable' | '/indicateur/qualiteTable'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/indicateur/devopsTable'
-  id: '__root__' | '/' | '/indicateur/devopsTable'
+  to: '/' | '/indicateur/devopsTable' | '/indicateur/qualiteTable'
+  id: '__root__' | '/' | '/indicateur/devopsTable' | '/indicateur/qualiteTable'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IndicateurDevopsTableRoute: typeof IndicateurDevopsTableRoute
+  IndicateurQualiteTableRoute: typeof IndicateurQualiteTableRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/qualiteTable': {
+      id: '/indicateur/qualiteTable'
+      path: '/indicateur/qualiteTable'
+      fullPath: '/indicateur/qualiteTable'
+      preLoaderRoute: typeof IndicateurQualiteTableRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/indicateur/devopsTable': {
@@ -71,6 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IndicateurDevopsTableRoute: IndicateurDevopsTableRoute,
+  IndicateurQualiteTableRoute: IndicateurQualiteTableRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

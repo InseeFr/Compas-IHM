@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { formatIndicateur, onExport } from "../../../../src/components/indicateurs/devops/devopsConfig";
 import { handleExportCsv } from "utils/exportCsv";
-import type { DevopsIndicateur } from "models/devops-indicateur";
+import type { DevopsIndicateur } from "models/indicateurs";
 import type { MRT_TableInstance } from "material-react-table";
 
 vi.mock("../../../../src/utils/exportCsv", () => ({

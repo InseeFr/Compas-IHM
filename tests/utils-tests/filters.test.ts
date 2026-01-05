@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import type { MRT_ColumnFiltersState } from "material-react-table";
 import { columnFilters, filteredColumns, handleColumnFiltersChange } from "utils/filterFunctions";
 import type { Action, FilterState } from "store/filterContext";
+import { groupModulesByApp } from "utils/group-module-by-apps";
 
 describe("filteredColumns", () => {
     it("retourne les valeurs uniques non vides", () => {
@@ -108,5 +109,46 @@ describe("handleColumnFiltersChange", () => {
             type: "SET_DOMAINE_DEV",
             payload: "new-domaine"
         });
+    });
+});
+
+type TestModule = {
+    name: string;
+    isModule?: boolean;
+    parentApplication?: string;
+};
+
+describe("groupModulesByApp", () => {
+    it("devrait grouper les modules par parent d'application", () => {
+        const modules: TestModule[] = [
+            { name: "A", isModule: true, parentApplication: "App1" },
+            { name: "B", isModule: true, parentApplication: "App2" },
+            { name: "C", isModule: true, parentApplication: "App1" },
+            { name: "D" },
+            { name: "E", isModule: false, parentApplication: "App2" }
+        ];
+
+        const result = groupModulesByApp(modules);
+
+        expect(result).toEqual({
+            App1: [
+                { name: "A", isModule: true, parentApplication: "App1" },
+                { name: "C", isModule: true, parentApplication: "App1" }
+            ],
+            App2: [{ name: "B", isModule: true, parentApplication: "App2" }]
+        });
+    });
+
+    it("devrait retourner un tableau vide si c'est une app", () => {
+        const modules: TestModule[] = [{ name: "X" }, { name: "Y", isModule: false }];
+
+        const result = groupModulesByApp(modules);
+
+        expect(result).toEqual({});
+    });
+
+    it("devrait retourner un tableau vide", () => {
+        const result = groupModulesByApp([]);
+        expect(result).toEqual({});
     });
 });
