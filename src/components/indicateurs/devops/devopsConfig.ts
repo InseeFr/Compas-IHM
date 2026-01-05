@@ -1,6 +1,6 @@
 import { HEADERS_DEVOPS } from "constantes/constantes-csv";
 import type { MRT_TableInstance, MRT_Row } from "material-react-table";
-import type { DevopsIndicateur } from "models/devops-indicateur";
+import type { DevopsIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import { handleExportCsv } from "utils/exportCsv";
 import { filteredColumns } from "utils/filterFunctions";

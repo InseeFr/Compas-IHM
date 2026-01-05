@@ -10,6 +10,7 @@ import {
 import type { OnChangeFn } from "@tanstack/react-table";
 import type { JSX } from "react";
 import type { Pagination } from "../models/table-model";
+import AnimatedTitle from "./AnimatedTitleLayout";
 
 interface TablePageLayoutProps<T extends MRT_RowData> {
     titleTable: string;
@@ -17,6 +18,7 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     data: T[];
     paginationConfig: Pagination;
     rowId?: (originalRow: T, index?: number, parentRow?: MRT_Row<T>) => string;
+    subRow?: (originalRow: T, index: number) => T[] | undefined;
     renderTopCustom?: (props: { table: MRT_TableInstance<T> }) => React.ReactNode;
     columnFilters?: MRT_ColumnFiltersState;
     onColumnFiltersChange?: OnChangeFn<MRT_ColumnFiltersState>;
@@ -25,6 +27,7 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
 export default function TablePageLayout<T extends MRT_RowData>(
     props: Readonly<TablePageLayoutProps<T>>
 ): JSX.Element {
+    const isLoading: boolean = !props.data || props.data.length === 0;
     return (
         <Box
             sx={{
@@ -34,8 +37,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 margin: 0
             }}
         >
-            {<h1 style={{ textAlign: "center" }}>{props.titleTable}</h1>}
-
+            <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
                 data={props.data}
                 columns={props.columns}
@@ -45,14 +47,17 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableDensityToggle={false}
                 state={{
                     columnFilters: props.columnFilters,
-                    showColumnFilters: true
+                    showColumnFilters: true,
+                    isLoading: isLoading
                 }}
                 initialState={{
                     pagination: props.paginationConfig.pagination,
-                    showColumnFilters: true
+                    showColumnFilters: true,
+                    isLoading: isLoading
                 }}
                 onColumnFiltersChange={props.onColumnFiltersChange}
                 getRowId={props.rowId}
+                getSubRows={props.subRow}
                 renderTopToolbarCustomActions={props.renderTopCustom}
             />
         </Box>

@@ -1,5 +1,5 @@
-import { Tooltip } from "@mui/material";
-import type { DevopsIndicateur } from "../../../models/devops-indicateur";
+import type { DevopsIndicateur } from "../../../models/indicateurs";
+import { ToolTipLayout } from "pages/ToolTipLayout";
 
 function getTooltip(
     lettre: string,
@@ -38,11 +38,7 @@ export function ContributorCell({ row }: Readonly<{ row: { original: DevopsIndic
     const tooltip =
         !isNR && !isSO && hasDuplicateFlag ? `${baseTooltip} (doublon d'URL Gitlab)` : baseTooltip;
 
-    return (
-        <Tooltip title={tooltip}>
-            <span>{lettreContributorCount}</span>
-        </Tooltip>
-    );
+    return <ToolTipLayout title={tooltip} content={lettreContributorCount} />;
 }
 
 export function DeploymentCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
@@ -53,21 +49,11 @@ export function DeploymentCell({ row }: Readonly<{ row: { original: DevopsIndica
         "mise en production",
         "mises en production"
     );
-
-    return (
-        <Tooltip title={tooltip}>
-            <span>{lettreDeploymentCount}</span>
-        </Tooltip>
-    );
+    return <ToolTipLayout title={tooltip} content={lettreDeploymentCount} />;
 }
 
 export function DistanceCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
     const { lettreDistanceCount, distanceCount } = row.original;
     const tooltip = getTooltip(lettreDistanceCount, distanceCount, "jour", "jours", "Il y a");
-
-    return (
-        <Tooltip title={tooltip}>
-            <span>{lettreDistanceCount}</span>
-        </Tooltip>
-    );
+    return <ToolTipLayout title={tooltip} content={lettreDistanceCount} />;
 }

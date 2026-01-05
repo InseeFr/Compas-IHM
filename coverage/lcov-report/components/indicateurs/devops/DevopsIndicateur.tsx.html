@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">95.23% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/18</span>
+                <span class='fraction'>20/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">94.11% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>16/17</span>
             </div>
         
             
@@ -110,7 +110,12 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -121,6 +126,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -149,8 +156,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -158,19 +166,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useMemo, useState } from "react";
-import type { DevopsIndicateur } from "../../../models/devops-indicateur";
+import type { DevopsIndicateur } from "../../../models/indicateurs";
 import { getApplications2, getModules2 } from "../../../todos-api/client.gen";
 import ButtonCsvExport from "../../../pages/ButtonCsvExport";
 import TablePageLayout from "../../../pages/TablePageLayout";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import { useFilterContext } from "store/filterContext";
 import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
+import { groupModulesByApp } from "utils/group-module-by-apps";
 &nbsp;
 export const DevopsIndicateurTable = () =&gt; {
     const [devopsIndicateur, setDevopsIndicateur] = useState&lt;DevopsIndicateur[]&gt;([]);
     const { state, dispatch } = useFilterContext();
 &nbsp;
     const columns = useMemo(() =&gt; columnsTable(devopsIndicateur), [devopsIndicateur]);
+&nbsp;
+    const modulesByApp = useMemo(() =&gt; groupModulesByApp(devopsIndicateur), [devopsIndicateur]);
 &nbsp;
     useEffect(() =&gt; {
         async function fetchData(): Promise&lt;void&gt; {
@@ -198,6 +209,7 @@ export const DevopsIndicateurTable = () =&gt; {
             rowId={row =&gt;
                 row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
             }
+            subRow={subRow =&gt; (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
             columnFilters={columnFilters(state)}
             onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
             renderTopCustom={({ table }) =&gt; &lt;ButtonCsvExport table={table} onExport={onExport} /&gt;}
@@ -211,7 +223,7 @@ export const DevopsIndicateurTable = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-02T08:48:14.709Z
+                at 2026-01-02T15:34:51.417Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
