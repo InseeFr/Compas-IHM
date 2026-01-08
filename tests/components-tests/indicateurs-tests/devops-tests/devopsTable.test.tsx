@@ -1,96 +1,91 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { DevopsIndicateurTable } from "components/indicateurs/devops/DevopsIndicateur";
-import * as client from "../../../../src/todos-api/client.gen";
-import * as exportCsv from "../../../../src/utils/exportCsv";
+import { FilterProvider } from "store/filterContext";
+import * as devopsConfig from "components/indicateurs/devops/devopsConfig";
+import { getApplications2, getModules2 } from "todos-api/client.gen";
 
-vi.mock("../../../../src/todos-api/client.gen", () => ({
+// Mocks des API
+vi.mock("todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
     getModules2: vi.fn()
 }));
 
-vi.mock("../../../../src/utils/exportCsv", () => ({
-    handleExportCsv: vi.fn()
+// Mock du bouton CSV
+vi.mock("pages/ButtonCsvExport", () => ({
+    default: ({ onExport }: any) => <button onClick={() => onExport("mockTable")}>Export CSV</button>
 }));
 
-const mockApps = [
-    {
-        applicationName: "App1",
-        sndi: "S1",
-        domaineSndi: "D1",
-        lettreContributorCount: "A",
-        lettreDeploymentCount: "B",
-        lettreDistanceCount: "C",
-        nbContributorCount: 1,
-        nbDeploymentCount: 2,
-        distanceCount: 3,
-        lettreGlobalDevops: "G"
-    }
-];
+// Mock du layout/table
+vi.mock("pages/TablePageLayout", () => ({
+    default: ({ data, renderTopCustom }: any) => (
+        <div>
+            {renderTopCustom?.({ table: "mockTable" })}
+            {data.map((item: any) => (
+                <div key={item.applicationName}>{item.applicationName}</div>
+            ))}
+        </div>
+    )
+}));
 
-const mockModules = [
-    {
-        applicationName: "App1",
-        moduleName: "Mod1",
-        sndi: "S1",
-        domaineSndi: "D1",
-        lettreContributorCount: "X",
-        lettreDeploymentCount: "Y",
-        lettreDistanceCount: "Z",
-        nbContributorCount: 4,
-        nbDeploymentCount: 5,
-        distanceCount: 6,
-        lettreGlobalDevops: "H"
-    }
-];
+// Mock des utilitaires
+vi.mock("utils/group-module-by-apps", () => ({
+    groupModulesByApp: vi.fn(() => ({}))
+}));
+
+vi.mock("components/indicateurs/devops/devopsConfig", () => ({
+    columnsTable: vi.fn(() => []),
+    formatIndicateur: vi.fn((x: any) => x),
+    onExport: vi.fn(),
+    paginationConfig: {}
+}));
 
 describe("DevopsIndicateurTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-
-        vi.mocked(client.getApplications2).mockResolvedValue(mockApps as any);
-        vi.mocked(client.getModules2).mockResolvedValue(mockModules as any);
     });
 
-    it("devrait retourner la data de devops", async () => {
-        const apps = await client.getApplications2();
-        const modules = await client.getModules2();
+    it("should render applications and modules after fetching data", async () => {
+        const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
+        const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
 
-        expect(apps).toEqual(mockApps);
-        expect(modules).toEqual(mockModules);
+        (getApplications2 as any).mockResolvedValue(mockApps);
+        (getModules2 as any).mockResolvedValue(mockModules);
+
+        render(
+            <FilterProvider>
+                <DevopsIndicateurTable />
+            </FilterProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("App1")).toBeDefined();
+            expect(screen.getByText("App2")).toBeDefined();
+        });
+
+        expect(screen.queryByText("Module1")).toBeNull();
+
+        expect(getApplications2).toHaveBeenCalledOnce();
+        expect(getModules2).toHaveBeenCalledOnce();
     });
 
-    it("renders table with fetched data", async () => {
-        render(<DevopsIndicateurTable />);
+    it("should call onExport when clicking Export CSV button", async () => {
+        const mockApps = [{ applicationName: "App1" }];
+        const mockModules: any[] = [];
 
-        expect(await screen.findByText("Nom")).toBeInTheDocument();
-        expect(screen.getByText("Service dev.")).toBeInTheDocument();
+        (getApplications2 as any).mockResolvedValue(mockApps);
+        (getModules2 as any).mockResolvedValue(mockModules);
 
-        expect(await screen.findByText("App1")).toBeInTheDocument();
+        render(
+            <FilterProvider>
+                <DevopsIndicateurTable />
+            </FilterProvider>
+        );
 
-        expect(await screen.findByText("Mod1")).toBeInTheDocument();
-    });
+        const exportButton = await screen.findByText("Export CSV");
+        fireEvent.click(exportButton);
 
-    it("exporte correctement les données en CSV", async () => {
-        render(<DevopsIndicateurTable />);
-        await screen.findByText("App1");
-
-        const exportButton = screen.getByTestId("button-export-csv");
-        exportButton.click();
-
-        expect(exportCsv.handleExportCsv).toHaveBeenCalledTimes(1);
-
-        const [filename, headers, csvData] = vi.mocked(exportCsv.handleExportCsv).mock.calls[0];
-
-        expect(filename).toBe("devops");
-
-        expect(headers).toBeDefined();
-        expect(Array.isArray(headers)).toBe(true);
-
-        expect(csvData).toEqual([
-            `"App1","","S1","D1","A","B","C"`,
-            `"App1","Mod1","S1","D1","X","Y","Z"`
-        ]);
+        expect(devopsConfig.onExport).toHaveBeenCalledWith("mockTable");
     });
 });

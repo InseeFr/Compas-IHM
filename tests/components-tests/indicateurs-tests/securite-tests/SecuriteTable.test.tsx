@@ -1,0 +1,154 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import SecuriteIndicateurTable from "components/indicateurs/securite/SecuriteIndicateur";
+import * as clientApi from "todos-api/client.gen";
+import * as exportCsv from "utils/exportCsv";
+import { useFilterContext } from "store/filterContext";
+import * as groupModuleUtils from "utils/group-module-by-apps";
+import type { MRT_Row } from "material-react-table";
+import type { SecuriteIndicateur } from "models/indicateurs";
+
+vi.mock("store/filterContext", () => ({
+    useFilterContext: vi.fn()
+}));
+
+vi.mock("utils/exportCsv", () => ({
+    handleExportCsv: vi.fn(),
+    flattenRows: vi.fn((rows: MRT_Row<SecuriteIndicateur>[]) => {
+        const flatten = (arr: MRT_Row<SecuriteIndicateur>[]): MRT_Row<SecuriteIndicateur>[] => {
+            return arr.flatMap((row: MRT_Row<SecuriteIndicateur>) => [
+                row,
+                ...(row.subRows ? flatten(row.subRows) : [])
+            ]);
+        };
+        return flatten(rows);
+    })
+}));
+
+vi.mock("utils/filterFunctions", () => ({
+    filteredColumns: vi.fn(() => []),
+    columnFilters: vi.fn(() => []),
+    handleColumnFiltersChange: vi.fn(() => vi.fn())
+}));
+
+vi.mock("todos-api/client.gen", () => ({
+    getApplications1: vi.fn(),
+    getModules1: vi.fn(),
+    getIndicateurSecuriteByApplication: vi.fn(),
+    getIndicateurSecuriteByModule: vi.fn()
+}));
+
+const mockApps: clientApi.Application[] = [
+    {
+        idApplication: 1,
+        appName: "App1",
+        sndi: "S1",
+        domaineSndi: "D1"
+    }
+];
+
+const mockModules: clientApi.Module[] = [
+    {
+        id: 1,
+        appName: "App1",
+        modName: "Mod1",
+        sndi: "S1",
+        domaineSndi: "D1"
+    }
+];
+
+const mockSecuriteApps: clientApi.IndicateurSecuriteView[] = [
+    {
+        applicationId: 1,
+        nbCveCritical: "5",
+        nbCveHigh: "10",
+        nbCveMedium: "15",
+        nbCveLow: "20",
+        lettreCve: "B",
+        nbVmNonMaj: "3",
+        lettreMajVm: "C",
+        delaiVmNonMiseAjour: "45",
+        lettreGlobaleSecurite: "B",
+        lettreGlobale: "B"
+    }
+];
+
+const mockSecuriteModules: clientApi.IndicateurSecuriteView[] = [
+    {
+        moduleId: 1,
+        nbCveCritical: "2",
+        nbCveHigh: "4",
+        nbCveMedium: "6",
+        nbCveLow: "8",
+        lettreCve: "A",
+        nbVmNonMaj: "1",
+        lettreMajVm: "A",
+        delaiVmNonMiseAjour: "20",
+        lettreGlobaleSecurite: "A",
+        lettreGlobale: "A"
+    }
+];
+
+describe("SecuriteIndicateurTable", () => {
+    const dispatchMock = vi.fn();
+    const stateMock = {};
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        (useFilterContext as any).mockReturnValue({ state: stateMock, dispatch: dispatchMock });
+        vi.mocked(clientApi.getApplications1).mockResolvedValue(mockApps);
+        vi.mocked(clientApi.getModules1).mockResolvedValue(mockModules);
+        vi.mocked(clientApi.getIndicateurSecuriteByApplication).mockResolvedValue(mockSecuriteApps);
+        vi.mocked(clientApi.getIndicateurSecuriteByModule).mockResolvedValue(mockSecuriteModules);
+        vi.spyOn(groupModuleUtils, "groupModulesByApp").mockImplementation(data => ({
+            App1: data.filter(d => d.isModule)
+        }));
+    });
+
+    it("devrait retourner les données de sécurité", async () => {
+        const apps = await clientApi.getApplications1();
+        const modules = await clientApi.getModules1();
+        const securiteApps = await clientApi.getIndicateurSecuriteByApplication();
+        const securiteModules = await clientApi.getIndicateurSecuriteByModule();
+
+        expect(apps).toEqual(mockApps);
+        expect(modules).toEqual(mockModules);
+        expect(securiteApps).toEqual(mockSecuriteApps);
+        expect(securiteModules).toEqual(mockSecuriteModules);
+    });
+
+    it("renders table with fetched data", async () => {
+        render(<SecuriteIndicateurTable />);
+
+        const heading = await screen.findByRole("heading", {
+            name: /table indicateur sécurité/i
+        });
+        expect(heading).toBeDefined();
+
+        expect(await screen.findByText("Nom")).toBeInTheDocument();
+        expect(screen.getByText("Service dev.")).toBeInTheDocument();
+        expect(screen.getByText("CVE")).toBeInTheDocument();
+        expect(await screen.findByText("App1")).toBeInTheDocument();
+    });
+
+    it("exporte correctement les données en CSV", async () => {
+        render(<SecuriteIndicateurTable />);
+        await screen.findByText("App1");
+
+        const exportButton = screen.getByTestId("button-export-csv");
+        fireEvent.click(exportButton);
+
+        expect(exportCsv.handleExportCsv).toHaveBeenCalledTimes(1);
+        const [filename, headers, csvData] = vi.mocked(exportCsv.handleExportCsv).mock.calls[0];
+
+        expect(filename).toBe("sécurité");
+        expect(headers).toBeDefined();
+        expect(Array.isArray(headers)).toBe(true);
+
+        expect(csvData).toEqual([
+            '"App1","","S1","D1","B","5","10","15","20","3","C","45","B","B"',
+            '"App1","Mod1","S1","D1","A","2","4","6","8","1","A","20","A","A"'
+        ]);
+    });
+});

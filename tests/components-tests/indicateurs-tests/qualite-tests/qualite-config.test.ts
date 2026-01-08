@@ -5,7 +5,14 @@ import { handleExportCsv } from "utils/exportCsv";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 
 vi.mock("utils/exportCsv", () => ({
-    handleExportCsv: vi.fn()
+    handleExportCsv: vi.fn(),
+    // 👇 Ajouter le mock de flattenRows
+    flattenRows: vi.fn(rows => {
+        const flatten = (arr: any[]): any[] => {
+            return arr.flatMap((row: any) => [row, ...(row.subRows ? flatten(row.subRows) : [])]);
+        };
+        return flatten(rows);
+    })
 }));
 
 const mockApp: IndicateurQualiteView = {
@@ -37,7 +44,6 @@ const mockModule: IndicateurQualiteView = {
 describe("formatIndicateur", () => {
     it("doit formater correctement une application", () => {
         const resultat = formatIndicateur(mockApp, false);
-
         expect(resultat).toEqual({
             applicationId: 1,
             applicationName: "App1",
@@ -54,7 +60,6 @@ describe("formatIndicateur", () => {
 
     it("doit formater correctement un module", () => {
         const resultat = formatIndicateur(mockModule, true);
-
         expect(resultat).toEqual({
             applicationId: undefined,
             applicationName: "Mod1",
@@ -76,7 +81,6 @@ describe("columnsTable", () => {
     it("doit générer les colonnes avec les bons intitulés", () => {
         const data = [formatIndicateur(mockApp)];
         const colonnes = columnsTable(data);
-
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom",
             "Service dev.",
@@ -85,7 +89,6 @@ describe("columnsTable", () => {
             "Fiabilité",
             "Dette Technique"
         ]);
-
         const couvertureCol = colonnes.find(c => c.accessorKey === "lettreCouvertureTestUniaire");
         expect(couvertureCol?.Cell).toBeDefined();
     });
@@ -94,10 +97,11 @@ describe("columnsTable", () => {
 describe("OnExport", () => {
     it("doit appeler handleExportCsv avec les bonnes données CSV", () => {
         const mockTable: any = {
-            getPrePaginationRowModel: () => ({
+            // 👇 Utiliser getExpandedRowModel au lieu de getPrePaginationRowModel
+            getExpandedRowModel: () => ({
                 rows: [
-                    { original: formatIndicateur(mockApp) },
-                    { original: formatIndicateur(mockModule, true) }
+                    { original: formatIndicateur(mockApp), subRows: [] },
+                    { original: formatIndicateur(mockModule, true), subRows: [] }
                 ]
             })
         };
@@ -106,11 +110,9 @@ describe("OnExport", () => {
 
         expect(handleExportCsv).toHaveBeenCalledTimes(1);
         const [nomFichier, entetes, csvData] = (handleExportCsv as any).mock.calls[0];
-
         expect(nomFichier).toBe("qualité");
         expect(entetes).toBeDefined();
         expect(Array.isArray(entetes)).toBe(true);
-
         expect(csvData).toEqual([
             `"App1","","S1","D1","A","50%","C","123","B"`,
             `"App1","Mod1","S1","D1","X","75%","Z","456","Y"`

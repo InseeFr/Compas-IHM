@@ -1,3 +1,4 @@
+import type { MRT_Row, MRT_RowData } from "material-react-table";
 import type { ViewMode } from "../constantes/constantes";
 
 export function handleExportCsv(
@@ -16,4 +17,8 @@ export function handleExportCsv(
     a.download = `${date}-tableau-${indicator}${view}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+}
+
+export function flattenRows<T extends MRT_RowData>(rows: MRT_Row<T>[]): MRT_Row<T>[] {
+    return rows.flatMap(row => [row, ...flattenRows(row.subRows || [])]);
 }

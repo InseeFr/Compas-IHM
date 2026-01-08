@@ -27,12 +27,11 @@ export const NAV_TEXTS: NavBarModel = {
             ]
         },
         {
-            title: "Saisie de la météo",
-            to: "/saisie/meteo"
-        },
-        {
-            title: "Saisie de l'accessibilité",
-            to: "/saisie/accessibilite"
+            title: "Saisie d'un projet",
+            subItem: [
+                { label: "Saisie météo", to: "/saisie/meteo" },
+                { label: "Saisie accessibilité", to: "/saisie/accessibilité" }
+            ]
         }
     ]
 };
