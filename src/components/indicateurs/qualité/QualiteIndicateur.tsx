@@ -30,11 +30,10 @@ const QualiteIndicateurTable = () => {
         }
         fetchData();
     }, []);
-    console.log(qualiteIndicateur);
     return (
         <TablePageLayout
             titleTable="Table Indicateur Qualité"
-            data={qualiteIndicateur}
+            data={qualiteIndicateur.filter(item => (item.isModule ? null : item))}
             columns={columns}
             paginationConfig={paginationConfig}
             rowId={row =>

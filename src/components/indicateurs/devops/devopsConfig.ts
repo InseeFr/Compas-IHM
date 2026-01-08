@@ -2,13 +2,13 @@ import { HEADERS_DEVOPS } from "constantes/constantes-csv";
 import type { MRT_TableInstance, MRT_Row } from "material-react-table";
 import type { DevopsIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
-import { handleExportCsv } from "utils/exportCsv";
+import { flattenRows, handleExportCsv } from "utils/exportCsv";
 import { filteredColumns } from "utils/filterFunctions";
 import { ContributorCell, DeploymentCell, DistanceCell } from "./DevopsCell";
 import type { IndicateurDevopsView } from "todos-api/client.gen";
 
 export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
-    const filteredRows: MRT_Row<DevopsIndicateur>[] = table.getPrePaginationRowModel().rows;
+    const filteredRows: MRT_Row<DevopsIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
     const csvData: string[] = filteredRows.map(row =>
         [
             `"${row.original.isModule ? row.original.parentApplication : row.original.applicationName}"`,

@@ -36,7 +36,7 @@ export const DevopsIndicateurTable = () => {
     return (
         <TablePageLayout
             titleTable="Table Indicateur DEVOPS"
-            data={devopsIndicateur}
+            data={devopsIndicateur.filter(item => (item.isModule ? null : item))}
             columns={columns}
             paginationConfig={paginationConfig}
             rowId={row =>

@@ -2,13 +2,13 @@ import { HEADERS_QUALITE } from "constantes/constantes-csv";
 import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { QualiteIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
-import { handleExportCsv } from "utils/exportCsv";
+import { flattenRows, handleExportCsv } from "utils/exportCsv";
 import { filteredColumns } from "utils/filterFunctions";
 import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
-    const filteredRows: MRT_Row<QualiteIndicateur>[] = table.getPrePaginationRowModel().rows;
+    const filteredRows: MRT_Row<QualiteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
     const csvData: string[] = filteredRows.map(row =>
         [
             `"${row.original.isModule ? row.original.parentApplication : row.original.applicationName}"`,
