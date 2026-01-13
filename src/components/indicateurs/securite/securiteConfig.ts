@@ -3,7 +3,6 @@ import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { SecuriteIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import { flattenRows, handleExportCsv } from "utils/exportCsv";
-import { filteredColumns } from "utils/filterFunctions";
 import { CveCell, MajVmCell } from "./SecuriteCell";
 import type { Application, Module, IndicateurSecuriteView } from "todos-api/client.gen";
 
@@ -37,65 +36,60 @@ export const paginationConfig: Pagination = {
     }
 };
 
-export const columnsTable = (
-    securiteIndicateur: SecuriteIndicateur[]
-): ColumnTable<SecuriteIndicateur>[] => {
+export const columnsTable = (): ColumnTable<SecuriteIndicateur>[] => {
     return [
-        { accessorKey: "applicationName", header: "Nom", enableColumnFilter: false },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(securiteIndicateur, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(securiteIndicateur, "domaine")
-        },
+        { accessorKey: "applicationName", header: "Nom" },
+        { accessorKey: "sndi", header: "serviceDev" },
         {
             accessorKey: "lettreNiveauCve",
             header: "CVE",
-            enableColumnFilter: false,
             Cell: CveCell
         },
         {
             accessorKey: "lettreMajVm",
             header: "nb de VMs hors délai",
-            enableColumnFilter: false,
             Cell: MajVmCell
         },
         {
             accessorKey: "delaiVmNonMiseAjour",
-            header: "Max delai Maj VM",
-            enableColumnFilter: false
+            header: "Max delai Maj VM"
         }
     ];
 };
+
+function formatSecuriteIndicateurBase(
+    securiteItem?: IndicateurSecuriteView
+): Partial<SecuriteIndicateur> {
+    const defaultValue = "NR";
+
+    return {
+        nbCveCritical: securiteItem?.nbCveCritical ?? defaultValue,
+        nbCveHigh: securiteItem?.nbCveHigh ?? defaultValue,
+        nbCveLow: securiteItem?.nbCveLow ?? defaultValue,
+        nbCveMedium: securiteItem?.nbCveMedium ?? defaultValue,
+        lettreCve: securiteItem?.lettreCve ?? defaultValue,
+        lettreNiveauCve: securiteItem?.lettreCve ?? defaultValue,
+        nbVmNonMaj: securiteItem?.nbVmNonMaj ?? defaultValue,
+        lettreMajVm: securiteItem?.lettreMajVm ?? defaultValue,
+        delaiVmNonMiseAjour: securiteItem?.delaiVmNonMiseAjour ?? defaultValue,
+        lettreGlobaleSecurite: securiteItem?.lettreGlobaleSecurite ?? defaultValue,
+        lettreGlobale: securiteItem?.lettreGlobale ?? defaultValue
+    };
+}
 
 export function formatApplicationSecurite(
     app: Application,
     securiteItem?: IndicateurSecuriteView
 ): SecuriteIndicateur {
+    const defaultValue = "NR";
+
     return {
         applicationId: app.idApplication,
-        applicationName: app.appName ?? "NR",
-        sndi: app.sndi ?? "NR",
-        domaine: app.domaineSndi ?? "NR",
-        nbCveCritical: securiteItem?.nbCveCritical ?? "NR",
-        nbCveHigh: securiteItem?.nbCveHigh ?? "NR",
-        nbCveLow: securiteItem?.nbCveLow ?? "NR",
-        nbCveMedium: securiteItem?.nbCveMedium ?? "NR",
-        lettreCve: securiteItem?.lettreCve ?? "NR",
-        lettreNiveauCve: securiteItem?.lettreCve ?? "NR",
-        nbVmNonMaj: securiteItem?.nbVmNonMaj ?? "NR",
-        lettreMajVm: securiteItem?.lettreMajVm ?? "NR",
-        delaiVmNonMiseAjour: securiteItem?.delaiVmNonMiseAjour ?? "NR",
-        lettreGlobaleSecurite: securiteItem?.lettreGlobaleSecurite ?? "NR",
-        lettreGlobale: securiteItem?.lettreGlobale ?? "NR",
+        applicationName: app.appName ?? defaultValue,
+        sndi: app.sndi ?? defaultValue,
+        domaine: app.domaineSndi ?? defaultValue,
+        domaineFonc: app.domaineFonctionnel ?? defaultValue,
+        ...formatSecuriteIndicateurBase(securiteItem),
         isModule: false
     };
 }
@@ -104,23 +98,16 @@ export function formatModuleSecurite(
     mod: Module,
     securiteItem?: IndicateurSecuriteView
 ): SecuriteIndicateur {
+    const defaultValue = "NR";
+
     return {
         moduleId: mod.id,
-        applicationName: mod.modName ?? "NR",
-        sndi: mod.sndi ?? "NR",
-        domaine: mod.domaineSndi ?? "NR",
-        nbCveCritical: securiteItem?.nbCveCritical ?? "NR",
-        nbCveHigh: securiteItem?.nbCveHigh ?? "NR",
-        nbCveLow: securiteItem?.nbCveLow ?? "NR",
-        nbCveMedium: securiteItem?.nbCveMedium ?? "NR",
-        lettreCve: securiteItem?.lettreCve ?? "NR",
-        lettreNiveauCve: securiteItem?.lettreCve ?? "NR",
-        nbVmNonMaj: securiteItem?.nbVmNonMaj ?? "NR",
-        lettreMajVm: securiteItem?.lettreMajVm ?? "NR",
-        delaiVmNonMiseAjour: securiteItem?.delaiVmNonMiseAjour ?? "NR",
-        lettreGlobaleSecurite: securiteItem?.lettreGlobaleSecurite ?? "NR",
-        lettreGlobale: securiteItem?.lettreGlobale ?? "NR",
-        parentApplication: mod.appName ?? "NR",
+        applicationName: mod.modName ?? defaultValue,
+        sndi: mod.sndi ?? defaultValue,
+        domaine: mod.domaineSndi ?? defaultValue,
+        domaineFonc: mod.domaineFonctionnel ?? defaultValue,
+        ...formatSecuriteIndicateurBase(securiteItem),
+        parentApplication: mod.appName ?? defaultValue,
         isModule: true
     };
 }

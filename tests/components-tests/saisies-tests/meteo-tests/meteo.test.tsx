@@ -55,17 +55,19 @@ vi.mock("components/saisies/meteo/meteoCell", () => ({
 }));
 
 /* =======================
-   Mock dynamique react-hook-form
+   Mock react-hook-form
 ======================= */
 vi.mock("react-hook-form", async () => {
     const actual = await vi.importActual<any>("react-hook-form");
 
     return {
         ...actual,
+        useWatch: () => 4,
         useForm: () => ({
             control: {},
             register: () => ({}),
             reset: vi.fn(),
+            formState: { errors: {} },
             handleSubmit: (fn: any) => () =>
                 fn({
                     valeurMeteo: 4,
@@ -112,10 +114,7 @@ describe("MeteoForm", () => {
             commentaire: "Mon commentaire"
         };
 
-        mockedGetApplications1.mockResolvedValueOnce([
-            { idApplication: 1, appName: "App A" },
-            { idApplication: 2, appName: "App B" }
-        ]);
+        mockedGetApplications1.mockResolvedValueOnce([{ idApplication: 1, appName: "App A" }]);
 
         mockedCreerMeteo.mockResolvedValueOnce(undefined);
 
@@ -127,11 +126,14 @@ describe("MeteoForm", () => {
             expect(mockedCreerMeteo).toHaveBeenCalledTimes(1);
         });
 
-        const args = mockedCreerMeteo.mock.calls[0][0];
-        expect(args.commentaire).toBe("Mon commentaire");
-        expect(args.idsApplication).toEqual([1]);
+        expect(mockedCreerMeteo).toHaveBeenCalledWith(
+            expect.objectContaining({
+                commentaire: "Mon commentaire",
+                idsApplication: [1]
+            })
+        );
 
-        expect(await screen.findByText(/Création de Météo Réussie/i)).toBeInTheDocument();
+        expect(await screen.findByText(/création de la météo réussie/i)).toBeInTheDocument();
     });
 
     it("affiche une erreur si aucune application n'est sélectionnée", async () => {

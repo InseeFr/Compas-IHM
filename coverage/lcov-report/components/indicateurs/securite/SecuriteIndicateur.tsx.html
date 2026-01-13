@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.66% </span>
+                <span class="strong">96.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/30</span>
+                <span class='fraction'>30/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>24/25</span>
+                <span class='fraction'>25/26</span>
             </div>
         
             
@@ -158,7 +158,10 @@
 <a name='L93'></a><a href='#L93'>93</a>
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,14 +209,7 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -236,18 +232,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -274,8 +278,9 @@ import {
 } from "todos-api/client.gen";
 import TablePageLayout from "pages/TablePageLayout";
 import { groupModulesByApp } from "utils/group-module-by-apps";
-import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
 import ButtonCsvExport from "pages/ButtonCsvExport";
+import { Filters } from "components/Filters";
+import { applyDevFilters } from "utils/filters-functions";
 &nbsp;
 function formatApplicationsData(
     apps: Application[],
@@ -300,15 +305,8 @@ function formatModulesData(
 const SecuriteIndicateurTable = () =&gt; {
     const { state, dispatch } = useFilterContext();
     const [securiteIndicateur, setSecuriteIndicateur] = useState&lt;SecuriteIndicateur[]&gt;([]);
-    const columns = useMemo(() =&gt; columnsTable(securiteIndicateur), [securiteIndicateur]);
-&nbsp;
-    const applicationsOnly = useMemo(
-        () =&gt; securiteIndicateur.filter(item =&gt; !item.isModule),
-        [securiteIndicateur]
-    );
-&nbsp;
+    const columns = useMemo(() =&gt; columnsTable(), []);
     const modulesByApp = useMemo(() =&gt; groupModulesByApp(securiteIndicateur), [securiteIndicateur]);
-&nbsp;
     useEffect(() =&gt; {
         async function fetchData(): Promise&lt;void&gt; {
             try {
@@ -330,20 +328,28 @@ const SecuriteIndicateurTable = () =&gt; {
         fetchData();
     }, []);
 &nbsp;
+    const filteredData = useMemo(
+        () =&gt; securiteIndicateur.filter(item =&gt; applyDevFilters(item, state)),
+        [securiteIndicateur, state]
+    );
+&nbsp;
     return (
-        &lt;TablePageLayout
-            titleTable="Table Indicateur Sécurité"
-            data={applicationsOnly}
-            columns={columns}
-            paginationConfig={paginationConfig}
-            rowId={row =&gt;
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
-            subRow={subRow =&gt; (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
-            columnFilters={columnFilters(state)}
-            onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
-            renderTopCustom={({ table }) =&gt; &lt;ButtonCsvExport table={table} onExport={OnExport} /&gt;}
-        /&gt;
+        &lt;&gt;
+            &lt;Filters data={securiteIndicateur} state={state} dispatch={dispatch} /&gt;
+            &lt;TablePageLayout
+                titleTable="Table Indicateur Sécurité"
+                data={filteredData.filter(item =&gt; (item.isModule ? null : item))}
+                columns={columns}
+                paginationConfig={paginationConfig}
+                rowId={row =&gt;
+                    row.isModule
+                        ? `${row.parentApplication}-${row.applicationName}`
+                        : row.applicationName
+                }
+                subRow={subRow =&gt; (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
+                renderTopCustom={({ table }) =&gt; &lt;ButtonCsvExport table={table} onExport={OnExport} /&gt;}
+            /&gt;
+        &lt;/&gt;
     );
 };
 &nbsp;
@@ -355,7 +361,7 @@ export default SecuriteIndicateurTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T12:28:42.317Z
+                at 2026-01-13T08:49:22.110Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

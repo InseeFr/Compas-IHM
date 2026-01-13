@@ -17,7 +17,7 @@ export const NAV_TEXTS: NavBarModel = {
         {
             title: "Indicateurs",
             subItem: [
-                { label: "Indicateurs principaux", to: "/indicateurs/principauxTable" },
+                { label: "Indicateurs principaux", to: "/indicateur/mainIndicators" },
                 { label: "Qualité", to: "/indicateur/qualiteTable" },
                 { label: "Devops", to: "/indicateur/devopsTable" },
                 { label: "Green IT", to: "/indicateur/greenITTable" },

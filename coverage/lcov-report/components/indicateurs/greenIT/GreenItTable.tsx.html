@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/16</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">94.11% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>16/17</span>
             </div>
         
             
@@ -132,7 +132,16 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,6 +180,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,9 +202,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,15 +230,16 @@ import {
     paginationConfig
 } from "./greenItConfig";
 import TablePageLayout from "pages/TablePageLayout";
-import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
 import ButtonCsvExport from "pages/ButtonCsvExport";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Filters } from "components/Filters";
+import { applyDevFilters } from "utils/filters-functions";
 &nbsp;
 export const GreenItTable = () =&gt; {
     const [greenItData, setGreenItData] = useState&lt;GreenITIndicateur[]&gt;([]);
     const { state, dispatch } = useFilterContext();
     const [viewMode, setViewMode] = useState&lt;ViewMode&gt;("global");
-    const columns = useMemo(() =&gt; columnsGreenIt(greenItData), [greenItData]);
+    const columns = useMemo(() =&gt; columnsGreenIt(), []);
 &nbsp;
     useEffect(() =&gt; {
         async function fetchData(): Promise&lt;void&gt; {
@@ -239,35 +256,42 @@ export const GreenItTable = () =&gt; {
         fetchData();
     }, []);
 &nbsp;
+    const filteredData = useMemo(
+        () =&gt; greenItData.filter(item =&gt; applyDevFilters(item, state)),
+        [greenItData, state]
+    );
+&nbsp;
     return (
-        &lt;TablePageLayout
-            titleTable="Table Indicateur GreenIT"
-            data={filteredViewMode(viewMode, greenItData)}
-            columns={columns}
-            paginationConfig={paginationConfig}
-            rowId={row =&gt;
-                row.isModule ? <span class="branch-0 cbranch-no" title="branch not covered" >`${row.parentApplication}-${row.applicationName}` </span>: row.applicationName
-            }
-            columnFilters={columnFilters(state)}
-            onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
-            renderTopCustom={({ table }) =&gt; (
-                &lt;Fragment&gt;
-                    {" "}
-                    &lt;ButtonCsvExport table={table} onExport={onExport} /&gt;
-                    &lt;ToggleButtonGroup
-                        value={viewMode}
-                        exclusive
-                        onChange={(_, val) =&gt; val &amp;&amp; setViewMode(val)}
-                        size="small"
-                        color="primary"
-                    &gt;
-                        &lt;ToggleButton value="global"&gt;Global&lt;/ToggleButton&gt;
-                        &lt;ToggleButton value="prod"&gt;Prod&lt;/ToggleButton&gt;
-                        &lt;ToggleButton value="horsprod"&gt;Hors-prod&lt;/ToggleButton&gt;
-                    &lt;/ToggleButtonGroup&gt;
-                &lt;/Fragment&gt;
-            )}
-        /&gt;
+        &lt;&gt;
+            &lt;Filters data={greenItData} state={state} dispatch={dispatch} /&gt;
+            &lt;TablePageLayout
+                titleTable="Table Indicateur GreenIT"
+                data={filteredViewMode(viewMode, filteredData)}
+                columns={columns}
+                paginationConfig={paginationConfig}
+                rowId={row =&gt;
+                    row.isModule
+                        ? <span class="branch-0 cbranch-no" title="branch not covered" >`${row.parentApplication}-${row.applicationName}`</span>
+                        : row.applicationName
+                }
+                renderTopCustom={({ table }) =&gt; (
+                    &lt;Fragment&gt;
+                        &lt;ToggleButtonGroup
+                            value={viewMode}
+                            exclusive
+                            onChange={(_, val) =&gt; val &amp;&amp; setViewMode(val)}
+                            size="small"
+                            color="primary"
+                        &gt;
+                            &lt;ToggleButton value="global"&gt;Global&lt;/ToggleButton&gt;
+                            &lt;ToggleButton value="prod"&gt;Prod&lt;/ToggleButton&gt;
+                            &lt;ToggleButton value="horsprod"&gt;Hors-prod&lt;/ToggleButton&gt;
+                        &lt;/ToggleButtonGroup&gt;
+                        &lt;ButtonCsvExport table={table} onExport={onExport} /&gt;
+                    &lt;/Fragment&gt;
+                )}
+            /&gt;
+        &lt;/&gt;
     );
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -277,7 +301,7 @@ export const GreenItTable = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T12:28:42.317Z
+                at 2026-01-13T08:49:22.110Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

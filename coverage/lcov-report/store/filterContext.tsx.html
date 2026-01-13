@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/14</span>
+                <span class='fraction'>10/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">16.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>1/6</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">64.28% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/13</span>
+                <span class='fraction'>9/14</span>
             </div>
         
             
@@ -111,7 +111,12 @@
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,7 +130,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,39 +152,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createContext, useReducer, useMemo, type ReactNode, useContext } from "react";
 &nbsp;
 export interface FilterState {
     serviceDev: string;
     domaineDev: string;
     appName: string;
+    domaineFonc: string;
 }
 &nbsp;
 export type Action =
     | { type: "SET_SERVICE_DEV"; payload: string }
     | { type: "SET_DOMAINE_DEV"; payload: string }
     | { type: "SET_APP_NAME"; payload: string }
+    | { type: "SET_DOMAINE_FONC"; payload: string }
     | { type: "RESET_FILTERS" };
 &nbsp;
 const initialState: FilterState = {
     serviceDev: "",
     domaineDev: "",
-    appName: ""
+    appName: "",
+    domaineFonc: ""
 };
 &nbsp;
 function filterReducer(state: FilterState, action: Action): FilterState {
@@ -187,9 +200,11 @@ function filterReducer(state: FilterState, action: Action): FilterState {
 <span class="cstat-no" title="statement not covered" >            return { ...state, domaineDev: action.payload };</span>
 <span class="branch-2 cbranch-no" title="branch not covered" >        case "SET_APP_NAME":</span>
 <span class="cstat-no" title="statement not covered" >            return { ...state, appName: action.payload };</span>
-<span class="branch-3 cbranch-no" title="branch not covered" >        case "RESET_FILTERS":</span>
+<span class="branch-3 cbranch-no" title="branch not covered" >        case "SET_DOMAINE_FONC":</span>
+<span class="cstat-no" title="statement not covered" >            return { ...state, domaineFonc: action.payload };</span>
+<span class="branch-4 cbranch-no" title="branch not covered" >        case "RESET_FILTERS":</span>
 <span class="cstat-no" title="statement not covered" >            return initialState;</span>
-<span class="branch-4 cbranch-no" title="branch not covered" >        default:</span>
+<span class="branch-5 cbranch-no" title="branch not covered" >        default:</span>
 <span class="cstat-no" title="statement not covered" >            return state;</span>
     }
 }
@@ -214,7 +229,7 @@ export const useFilterContext = () =&gt; useContext(FilterContext);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T12:28:42.317Z
+                at 2026-01-13T08:49:22.110Z
             </div>
         <script src="../prettify.js"></script>
         <script>

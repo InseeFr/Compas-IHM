@@ -76,6 +76,7 @@ describe("formatApplicationSecurite", () => {
             applicationName: "App1",
             sndi: "S1",
             domaine: "D1",
+            domaineFonc: "NR",
             nbCveCritical: "5",
             nbCveHigh: "10",
             nbCveMedium: "15",
@@ -92,7 +93,7 @@ describe("formatApplicationSecurite", () => {
     });
 
     it("doit gérer les données manquantes avec NR", () => {
-        const resultat = formatApplicationSecurite(mockApp, undefined);
+        const resultat = formatApplicationSecurite(mockApp);
 
         expect(resultat.nbCveCritical).toBe("NR");
         expect(resultat.nbCveHigh).toBe("NR");
@@ -110,6 +111,7 @@ describe("formatModuleSecurite", () => {
             applicationName: "Mod1",
             sndi: "S1",
             domaine: "D1",
+            domaineFonc: "NR",
             nbCveCritical: "2",
             nbCveHigh: "4",
             nbCveMedium: "6",
@@ -127,7 +129,7 @@ describe("formatModuleSecurite", () => {
     });
 
     it("doit gérer les données manquantes avec NR", () => {
-        const resultat = formatModuleSecurite(mockModule, undefined);
+        const resultat = formatModuleSecurite(mockModule);
 
         expect(resultat.nbCveCritical).toBe("NR");
         expect(resultat.lettreCve).toBe("NR");
@@ -138,13 +140,11 @@ describe("formatModuleSecurite", () => {
 
 describe("columnsTable", () => {
     it("doit générer les colonnes avec les bons intitulés", () => {
-        const data = [formatApplicationSecurite(mockApp, mockSecuriteApp)];
-        const colonnes = columnsTable(data);
+        const colonnes = columnsTable();
 
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom",
-            "Service dev.",
-            "Domaine dev.",
+            "serviceDev",
             "CVE",
             "nb de VMs hors délai",
             "Max delai Maj VM"

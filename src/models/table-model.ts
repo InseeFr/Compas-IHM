@@ -5,9 +5,6 @@ export interface ColumnTable<U extends MRT_RowData> {
     header: string;
     accessorKey: string;
     id?: string;
-    enableColumnFilter?: false | true;
-    filterVariant?: "multi-select" | "select";
-    filterSelectOptions?: string[];
     Cell?: ({ row, column }: { row: { original: U }; column: { id?: string } }) => JSX.Element | null;
     sortingFn?: MRT_SortingFn<U>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

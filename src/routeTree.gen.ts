@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SaisieMeteoRouteImport } from './routes/saisie/meteo'
+import { Route as SaisieAccessibilitChar233RouteImport } from './routes/saisie/accessibilité'
 import { Route as IndicateurSecuriteTableRouteImport } from './routes/indicateur/securiteTable'
 import { Route as IndicateurQualiteTableRouteImport } from './routes/indicateur/qualiteTable'
 import { Route as IndicateurMeteoTableRouteImport } from './routes/indicateur/meteoTable'
+import { Route as IndicateurMainIndicatorsRouteImport } from './routes/indicateur/mainIndicators'
 import { Route as IndicateurGreenITTableRouteImport } from './routes/indicateur/greenITTable'
 import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
 import { Route as IndicateurAccessibiliteTableRouteImport } from './routes/indicateur/accessibiliteTable'
@@ -28,6 +30,12 @@ const SaisieMeteoRoute = SaisieMeteoRouteImport.update({
   path: '/saisie/meteo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaisieAccessibilitChar233Route =
+  SaisieAccessibilitChar233RouteImport.update({
+    id: '/saisie/accessibilité',
+    path: '/saisie/accessibilité',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const IndicateurSecuriteTableRoute = IndicateurSecuriteTableRouteImport.update({
   id: '/indicateur/securiteTable',
   path: '/indicateur/securiteTable',
@@ -43,6 +51,12 @@ const IndicateurMeteoTableRoute = IndicateurMeteoTableRouteImport.update({
   path: '/indicateur/meteoTable',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndicateurMainIndicatorsRoute =
+  IndicateurMainIndicatorsRouteImport.update({
+    id: '/indicateur/mainIndicators',
+    path: '/indicateur/mainIndicators',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const IndicateurGreenITTableRoute = IndicateurGreenITTableRouteImport.update({
   id: '/indicateur/greenITTable',
   path: '/indicateur/greenITTable',
@@ -65,9 +79,11 @@ export interface FileRoutesByFullPath {
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
+  '/indicateur/mainIndicators': typeof IndicateurMainIndicatorsRoute
   '/indicateur/meteoTable': typeof IndicateurMeteoTableRoute
   '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
   '/indicateur/securiteTable': typeof IndicateurSecuriteTableRoute
+  '/saisie/accessibilité': typeof SaisieAccessibilitChar233Route
   '/saisie/meteo': typeof SaisieMeteoRoute
 }
 export interface FileRoutesByTo {
@@ -75,9 +91,11 @@ export interface FileRoutesByTo {
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
+  '/indicateur/mainIndicators': typeof IndicateurMainIndicatorsRoute
   '/indicateur/meteoTable': typeof IndicateurMeteoTableRoute
   '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
   '/indicateur/securiteTable': typeof IndicateurSecuriteTableRoute
+  '/saisie/accessibilité': typeof SaisieAccessibilitChar233Route
   '/saisie/meteo': typeof SaisieMeteoRoute
 }
 export interface FileRoutesById {
@@ -86,9 +104,11 @@ export interface FileRoutesById {
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
+  '/indicateur/mainIndicators': typeof IndicateurMainIndicatorsRoute
   '/indicateur/meteoTable': typeof IndicateurMeteoTableRoute
   '/indicateur/qualiteTable': typeof IndicateurQualiteTableRoute
   '/indicateur/securiteTable': typeof IndicateurSecuriteTableRoute
+  '/saisie/accessibilité': typeof SaisieAccessibilitChar233Route
   '/saisie/meteo': typeof SaisieMeteoRoute
 }
 export interface FileRouteTypes {
@@ -98,9 +118,11 @@ export interface FileRouteTypes {
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
+    | '/indicateur/mainIndicators'
     | '/indicateur/meteoTable'
     | '/indicateur/qualiteTable'
     | '/indicateur/securiteTable'
+    | '/saisie/accessibilité'
     | '/saisie/meteo'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,9 +130,11 @@ export interface FileRouteTypes {
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
+    | '/indicateur/mainIndicators'
     | '/indicateur/meteoTable'
     | '/indicateur/qualiteTable'
     | '/indicateur/securiteTable'
+    | '/saisie/accessibilité'
     | '/saisie/meteo'
   id:
     | '__root__'
@@ -118,9 +142,11 @@ export interface FileRouteTypes {
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
+    | '/indicateur/mainIndicators'
     | '/indicateur/meteoTable'
     | '/indicateur/qualiteTable'
     | '/indicateur/securiteTable'
+    | '/saisie/accessibilité'
     | '/saisie/meteo'
   fileRoutesById: FileRoutesById
 }
@@ -129,9 +155,11 @@ export interface RootRouteChildren {
   IndicateurAccessibiliteTableRoute: typeof IndicateurAccessibiliteTableRoute
   IndicateurDevopsTableRoute: typeof IndicateurDevopsTableRoute
   IndicateurGreenITTableRoute: typeof IndicateurGreenITTableRoute
+  IndicateurMainIndicatorsRoute: typeof IndicateurMainIndicatorsRoute
   IndicateurMeteoTableRoute: typeof IndicateurMeteoTableRoute
   IndicateurQualiteTableRoute: typeof IndicateurQualiteTableRoute
   IndicateurSecuriteTableRoute: typeof IndicateurSecuriteTableRoute
+  SaisieAccessibilitChar233Route: typeof SaisieAccessibilitChar233Route
   SaisieMeteoRoute: typeof SaisieMeteoRoute
 }
 
@@ -149,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/saisie/meteo'
       fullPath: '/saisie/meteo'
       preLoaderRoute: typeof SaisieMeteoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saisie/accessibilité': {
+      id: '/saisie/accessibilité'
+      path: '/saisie/accessibilité'
+      fullPath: '/saisie/accessibilité'
+      preLoaderRoute: typeof SaisieAccessibilitChar233RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/indicateur/securiteTable': {
@@ -170,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/indicateur/meteoTable'
       fullPath: '/indicateur/meteoTable'
       preLoaderRoute: typeof IndicateurMeteoTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/mainIndicators': {
+      id: '/indicateur/mainIndicators'
+      path: '/indicateur/mainIndicators'
+      fullPath: '/indicateur/mainIndicators'
+      preLoaderRoute: typeof IndicateurMainIndicatorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/indicateur/greenITTable': {
@@ -201,9 +243,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndicateurAccessibiliteTableRoute: IndicateurAccessibiliteTableRoute,
   IndicateurDevopsTableRoute: IndicateurDevopsTableRoute,
   IndicateurGreenITTableRoute: IndicateurGreenITTableRoute,
+  IndicateurMainIndicatorsRoute: IndicateurMainIndicatorsRoute,
   IndicateurMeteoTableRoute: IndicateurMeteoTableRoute,
   IndicateurQualiteTableRoute: IndicateurQualiteTableRoute,
   IndicateurSecuriteTableRoute: IndicateurSecuriteTableRoute,
+  SaisieAccessibilitChar233Route: SaisieAccessibilitChar233Route,
   SaisieMeteoRoute: SaisieMeteoRoute,
 }
 export const routeTree = rootRouteImport

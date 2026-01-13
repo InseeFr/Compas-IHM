@@ -3,8 +3,7 @@ import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { A11yIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import { handleExportCsv, flattenRows } from "utils/exportCsv";
-import { filteredColumns } from "utils/filterFunctions";
-import type { IndicateursModuleA11Y } from "todos-api/client.gen";
+import type { IndicateursModuleA11Y, Module } from "todos-api/client.gen";
 import { IssueA11yCell } from "./A11yCell";
 
 export const OnExport = (table: MRT_TableInstance<A11yIndicateur>) => {
@@ -19,7 +18,7 @@ export const OnExport = (table: MRT_TableInstance<A11yIndicateur>) => {
         return [
             `"${row.original.modName}"`,
             `"${row.original.sndi}"`,
-            `"${row.original.domaineSndi}"`,
+            `"${row.original.domaine}"`,
             `"${row.original.notation ?? ""}"`,
             `"${row.original.lettreIssueAccessibilite ?? "NR"}"`,
             `"${nbIssueFormatted}"` // 👈 Utiliser la valeur formatée
@@ -36,46 +35,31 @@ export const paginationConfig: Pagination = {
     }
 };
 
-export const columnsTable = (a11yIndicateur: A11yIndicateur[]): ColumnTable<A11yIndicateur>[] => {
+export const columnsTable = (): ColumnTable<A11yIndicateur>[] => {
     return [
         {
             accessorKey: "modName",
-            header: "Nom du module",
-            enableColumnFilter: false
+            header: "Nom du module"
         },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(a11yIndicateur, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(a11yIndicateur, "domaineSndi")
-        },
+        { accessorKey: "sndi", header: "serviceDev" },
         {
             accessorKey: "notation",
-            header: "Notation Évaluation",
-            enableColumnFilter: false
+            header: "Notation Évaluation"
         },
         {
             accessorKey: "lettreIssueAccessibilite",
             header: "Issue Sonar",
-            enableColumnFilter: false,
             Cell: IssueA11yCell
         }
     ];
 };
 
-export function formatIndicateur(item: IndicateursModuleA11Y): A11yIndicateur {
+export function formatIndicateur(item: IndicateursModuleA11Y, module?: Module): A11yIndicateur {
     return {
         modName: item.modName ?? "NR",
         sndi: item.sndi ?? "NR",
-        domaineSndi: item.domaineSndi ?? "NR",
+        domaine: item.domaineSndi ?? "NR",
+        domaineFonc: module?.domaineFonctionnel ?? "NR",
         notation: item.notation,
         lettreIssueAccessibilite: item.lettreIssueAccessibilite,
         nbIssueAccessibilite: item.nbIssueAccessibilite

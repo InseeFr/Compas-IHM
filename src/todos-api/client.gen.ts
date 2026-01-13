@@ -14,12 +14,12 @@ export interface DemandeCreationMeteo {
 
 export interface InfosSaisiesA11yToSaveDTO {
     dateMajInfosSaisies?: string;
+    isDeclaration?: boolean;
     idIndicateurTypeAudit?: number;
     scoreAudit?: number;
     dateAudit?: string;
     dateDeclaration?: string;
     idModule?: number;
-    declaration?: boolean;
 }
 
 export interface IndicateurSecuriteView {

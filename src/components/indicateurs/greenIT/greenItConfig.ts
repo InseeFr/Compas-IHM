@@ -5,7 +5,6 @@ import type { GreenITIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import type { Application, IndicateurApplicationGreenITView } from "todos-api/client.gen";
 import { handleExportCsv } from "utils/exportCsv";
-import { filteredColumns } from "utils/filterFunctions";
 
 /** ===== Utils ===== **/
 const firstNumberOrNull = (s: string | null | undefined): number | null => {
@@ -133,6 +132,7 @@ export function formatIndicateur(
             applicationName: app.appName ?? DEFAULT_VALUE,
             sndi: app.sndi ?? DEFAULT_VALUE,
             domaine: app.domaineSndi ?? DEFAULT_VALUE,
+            domaineFonc: app.domaineFonctionnel ?? DEFAULT_VALUE,
 
             consoGlobal: getValue(greenITApp, "conso"),
             cpuAllocatedGlobal: getValue(greenITApp, "cpuAllocated"),
@@ -163,55 +163,37 @@ export const paginationConfig: Pagination = {
     }
 };
 
-export const columnsGreenIt = (greentItData: GreenITIndicateur[]): ColumnTable<GreenITIndicateur>[] => {
+export const columnsGreenIt = (): ColumnTable<GreenITIndicateur>[] => {
     return [
-        { accessorKey: "applicationName", header: "Nom", enableColumnFilter: false },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(greentItData, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(greentItData, "domaine")
-        },
+        { accessorKey: "applicationName", header: "Nom" },
+        { accessorKey: "sndi", header: "serviceDev" },
         {
             header: "Conso (Wh)",
             accessorKey: "_consoSort",
-            enableColumnFilter: false,
             Cell: ({ row }: MRT_RowData) => row.original._conso,
             sortingFn: sortHelper
         },
         {
             header: "CPU alloué (GHz)",
             accessorKey: "_cpuSort",
-            enableColumnFilter: false,
             Cell: ({ row }: MRT_RowData) => row.original._cpu,
             sortingFn: sortHelper
         },
         {
             header: "RAM allouée (Go)",
             accessorKey: "_ramSort",
-            enableColumnFilter: false,
             Cell: ({ row }: MRT_RowData) => row.original._ram,
             sortingFn: sortHelper
         },
         {
             header: "Disque alloué (Go)",
             accessorKey: "_diskSort",
-            enableColumnFilter: false,
             Cell: ({ row }: MRT_RowData) => row.original._disk,
             sortingFn: sortHelper
         },
         {
             header: "Nombre de VM",
             accessorKey: "_nbVmSort",
-            enableColumnFilter: false,
             Cell: ({ row }: MRT_RowData) => row.original._nbVm,
             sortingFn: sortHelper
         }

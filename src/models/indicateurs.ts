@@ -2,6 +2,7 @@ export interface DevopsIndicateur {
     applicationName: string;
     sndi: string;
     domaine: string;
+    domaineFonc: string;
     lettreContributorCount: string;
     lettreDeploymentCount: string;
     lettreDistanceCount: string;
@@ -19,6 +20,7 @@ export interface QualiteIndicateur {
     applicationName: string;
     sndi: string;
     domaine: string;
+    domaineFonc: string;
     lettreCouvertureTestUniaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
@@ -34,6 +36,7 @@ export interface GreenITIndicateur {
     applicationName: string;
     sndi: string;
     domaine: string;
+    domaineFonc: string;
 
     consoGlobal: string;
     cpuAllocatedGlobal: string;
@@ -74,6 +77,7 @@ export interface SecuriteIndicateur {
     applicationName: string;
     sndi: string;
     domaine: string;
+    domaineFonc: string;
     nbCveCritical?: string;
     nbCveHigh?: string;
     nbCveMedium?: string;
@@ -92,7 +96,8 @@ export interface SecuriteIndicateur {
 export interface A11yIndicateur {
     modName: string;
     sndi: string;
-    domaineSndi: string;
+    domaine: string;
+    domaineFonc: string;
     notation?: string;
     lettreIssueAccessibilite?: string;
     nbIssueAccessibilite?: string;
@@ -108,5 +113,120 @@ export interface MeteoIndicateur {
     applicationName: string;
     sndi: string;
     domaine: string;
+    domaineFonc: string;
     byMonth: Record<string, MeteoPoint[]>;
 }
+
+export interface AppsIndicateur {
+    idApplication: number;
+    appName: string;
+    domaine: string;
+    domaineFonc: string;
+    sndi: string;
+}
+
+export interface ModsIndicateur {
+    id?: number;
+    nomTechnique?: string;
+    applicationTechnique?: string;
+    sourceCreation?: string;
+    modName?: string;
+    idApplication?: number;
+    appName?: string;
+    domaine: string;
+    domaineFonc: string;
+    keySonar?: string;
+    sndi: string;
+    statut?: string;
+    dateDerniereLivraisonEnProduction?: string;
+    typeLivrable?: string;
+    urlCodeSource?: string;
+}
+
+export interface GlobalIndicator {
+    idApplication?: number;
+    applicationName: string;
+    sndi: string;
+    domaine: string;
+    domaineFonc: string;
+    lettreCouvertureTestUniaire: string;
+    lettreFiabilite?: string;
+    lettreDetteTechnique?: string;
+    lettreGlobaleSecurite: string;
+    pourcentageCouvertureTestUniaire: string;
+    nbCveCritical: string;
+    nbCveHigh: string;
+    nbCveLow: string;
+    nbCveMedium: string;
+    lettreCve: string;
+    delaiVmNonMiseAjour?: string;
+    nbVmNonMaj?: string;
+    grade?: string;
+    isModule?: boolean;
+    parentApplication?: string;
+    lettreContributorCount?: string;
+    lettreDeploymentCount?: string;
+    lettreDistanceCount?: string;
+    distanceCount?: string;
+    nbDeploymentCount?: string;
+    nbContributorCount?: string;
+    meteo?: number;
+    meteoCommentaire?: string;
+    dateMeteoCommentaire?: string;
+    declarationA11y?: boolean;
+    dateDeclarationA11y?: string;
+
+    conso?: string;
+    consoNormalized: string;
+    impactNormalized: string;
+    gaspillage: string;
+    lettreGreen?: string;
+
+    ramAllocated?: string;
+    ramMaxi?: string;
+    diskAllocated?: string;
+    diskUsed?: string;
+    cpuAllocated?: string;
+    cpuMaxi?: string;
+    nbVm?: string;
+
+    ramAllocatedProd?: string;
+    ramMaxiProd?: string;
+    diskAllocatedProd?: string;
+    diskUsedProd?: string;
+    cpuAllocatedProd?: string;
+    cpuMaxiProd?: string;
+    nbVmProd?: string;
+    consoProd?: string;
+
+    lettreA11y?: string;
+    scoreAuditA11y?: number;
+    lettreQualiteGenerale?: string;
+    lettreDevopsGenerale?: string;
+    detteTechnique?: string;
+
+    maturite?: string;
+    robustesse?: string;
+    scoreBenefice?: string;
+    scoreComplexite?: string;
+    scoreOrga?: string;
+    scoreTechnique?: string;
+
+    progressionDeploy?: string;
+    progressionArchi?: string;
+    progressionTechnos?: string;
+    progressionCloud?: string;
+    progressionDevops?: string;
+    progressionMateqip?: string;
+}
+
+export type AllIndicators =
+    | MeteoIndicateur
+    | QualiteIndicateur
+    | SecuriteIndicateur
+    | DevopsIndicateur
+    | GreenITIndicateur
+    | A11yIndicateur
+    | AppsIndicateur
+    | ModsIndicateur
+    | GlobalIndicator;

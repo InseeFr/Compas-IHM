@@ -1,7 +1,6 @@
 import type { MeteoIndicateur, MeteoPoint } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
-import type { Meteo } from "todos-api/client.gen";
-import { filteredColumns } from "utils/filterFunctions";
+import type { Application, Meteo } from "todos-api/client.gen";
 import { MeteoCell } from "./meteoCell";
 import type { MRT_TableInstance } from "material-react-table";
 import { handleExportCsv } from "utils/exportCsv";
@@ -55,29 +54,44 @@ export const month = (meteos: Meteo[]): string[] => {
     return monthRange(minMk, maxMk);
 };
 
-const createRow = (meteo: Meteo, mapMeteo: Map<number, MeteoIndicateur>): MeteoIndicateur => {
+const createRow = (
+    meteo: Meteo,
+    domaineFoncByApp: Map<number, string>,
+    mapMeteo: Map<number, MeteoIndicateur>
+): MeteoIndicateur => {
     const id = meteo.idApplication!;
-
     const result: MeteoIndicateur = {
         idApp: id,
         applicationName: meteo.appName ?? "NR",
         sndi: meteo.sndi ?? "NR",
         domaine: meteo.domaineSndi ?? "NR",
+        domaineFonc: domaineFoncByApp.get(id) ?? "NR",
         byMonth: {}
     };
-
     mapMeteo.set(id, result);
     return result;
 };
 
-export const buildMeteo = (meteos: Meteo[], allMonths: string[]): MeteoIndicateur[] => {
+export function buildDomaineFoncMap(apps: Application[]): Map<number, string> {
+    return new Map(
+        apps
+            .filter(app => app.idApplication != null)
+            .map(app => [app.idApplication!, app.domaineFonctionnel ?? "NR"])
+    );
+}
+
+export const buildMeteo = (
+    meteos: Meteo[],
+    allMonths: string[],
+    domaineFoncByApp: Map<number, string>
+): MeteoIndicateur[] => {
     const meteoByApp = new Map<number, MeteoIndicateur>();
 
     meteos.forEach(meteo => {
         const id = meteo.idApplication;
         if (id == null) return;
 
-        const row = meteoByApp.get(id) ?? createRow(meteo, meteoByApp);
+        const row = meteoByApp.get(id) ?? createRow(meteo, domaineFoncByApp, meteoByApp);
 
         if (!meteo.date) return;
 
@@ -119,30 +133,13 @@ export const buildMeteo = (meteos: Meteo[], allMonths: string[]): MeteoIndicateu
     return completed;
 };
 
-export const columnsMeteo = (
-    meteos: MeteoIndicateur[],
-    months: string[]
-): ColumnTable<MeteoIndicateur>[] => {
+export const columnsMeteo = (months: string[]): ColumnTable<MeteoIndicateur>[] => {
     const baseColumns: ColumnTable<MeteoIndicateur>[] = [
         {
             header: "Nom",
-            accessorKey: "applicationName",
-            enableColumnFilter: false
+            accessorKey: "applicationName"
         },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(meteos, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(meteos, "domaine")
-        }
+        { accessorKey: "sndi", header: "serviceDev" }
     ];
 
     const monthColumns: ColumnTable<MeteoIndicateur>[] = months.map(mk => ({
@@ -150,7 +147,6 @@ export const columnsMeteo = (
         header: frMonthLabel(mk),
         accessorKey: "Par mois",
         accessorFn: row => row.byMonth[mk] ?? [],
-        enableColumnFilter: false,
         Cell: MeteoCell
     }));
 
@@ -165,7 +161,7 @@ export const paginationConfig: Pagination = {
 
 export const onExport = (table: MRT_TableInstance<MeteoIndicateur>) => {
     const escapeCsv = (value: string | number | undefined) =>
-        `"${(value ?? "").toString().replace(/"/g, '""')}"`;
+        `"${(value ?? "").toString().replaceAll('"', '""')}"`;
 
     const rows = table.getPrePaginationRowModel().rows;
     if (rows.length === 0) return;

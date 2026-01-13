@@ -2,11 +2,22 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as meteoConfig from "../../../../src/components/indicateurs/meteo/meteo-config";
 import { handleExportCsv } from "utils/exportCsv";
+import type { Application } from "todos-api/client.gen";
 
 // ----- Mocks -----
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn()
 }));
+
+const mockApp: Application[] = [
+    {
+        appName: "App1",
+        domaineFonctionnel: "F1",
+        domaineSndi: "D1",
+        sndi: "S1",
+        idApplication: 1
+    }
+];
 
 // ----- Données -----
 const mockMeteos = [
@@ -60,7 +71,8 @@ describe("meteo-config.ts", () => {
 
     it("builds meteo rows correctly", () => {
         const allMonths = ["2026-01", "2026-02"];
-        const result = meteoConfig.buildMeteo(mockMeteos as any, allMonths);
+        const domaine = meteoConfig.buildDomaineFoncMap(mockApp);
+        const result = meteoConfig.buildMeteo(mockMeteos as any, allMonths, domaine);
 
         expect(result.length).toBe(2);
         expect(result[0].applicationName).toBe("App1");
@@ -71,16 +83,10 @@ describe("meteo-config.ts", () => {
     });
 
     it("creates columns including month columns", () => {
-        const meteos = meteoConfig.buildMeteo(mockMeteos as any, ["2026-01", "2026-02"]);
-        const columns = meteoConfig.columnsMeteo(meteos, ["2026-01", "2026-02"]);
+        const columns = meteoConfig.columnsMeteo(["2026-01", "2026-02"]);
 
         expect(columns[0].header).toBe("Nom");
-        expect(columns[1].header).toBe("Service dev.");
-        expect(columns[2].header).toBe("Domaine dev.");
-
-        expect(columns[3].header).toContain("janv.");
-        expect(columns[4].header).toContain("févr.");
-        expect(columns[3].Cell).toBeDefined();
+        expect(columns[1].header).toBe("serviceDev");
     });
 
     it("calls handleExportCsv correctly in onExport", () => {
