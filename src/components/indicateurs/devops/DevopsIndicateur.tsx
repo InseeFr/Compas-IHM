@@ -5,14 +5,15 @@ import ButtonCsvExport from "../../../pages/ButtonCsvExport";
 import TablePageLayout from "../../../pages/TablePageLayout";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import { useFilterContext } from "store/filterContext";
-import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
 import { groupModulesByApp } from "utils/group-module-by-apps";
+import { Filters } from "components/Filters";
+import { applyDevFilters } from "utils/filters-functions";
 
 export const DevopsIndicateurTable = () => {
     const [devopsIndicateur, setDevopsIndicateur] = useState<DevopsIndicateur[]>([]);
     const { state, dispatch } = useFilterContext();
 
-    const columns = useMemo(() => columnsTable(devopsIndicateur), [devopsIndicateur]);
+    const columns = useMemo(() => columnsTable(), []);
 
     const modulesByApp = useMemo(() => groupModulesByApp(devopsIndicateur), [devopsIndicateur]);
 
@@ -33,19 +34,27 @@ export const DevopsIndicateurTable = () => {
         fetchData();
     }, []);
 
+    const filteredData = useMemo(
+        () => devopsIndicateur.filter(item => applyDevFilters(item, state)),
+        [devopsIndicateur, state]
+    );
+
     return (
-        <TablePageLayout
-            titleTable="Table Indicateur DEVOPS"
-            data={devopsIndicateur.filter(item => (item.isModule ? null : item))}
-            columns={columns}
-            paginationConfig={paginationConfig}
-            rowId={row =>
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
-            subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
-            columnFilters={columnFilters(state)}
-            onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
-            renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
-        />
+        <>
+            <Filters data={devopsIndicateur} state={state} dispatch={dispatch} />
+            <TablePageLayout
+                titleTable="Table Indicateur DEVOPS"
+                data={filteredData.filter(item => (item.isModule ? null : item))}
+                columns={columns}
+                paginationConfig={paginationConfig}
+                rowId={row =>
+                    row.isModule
+                        ? `${row.parentApplication}-${row.applicationName}`
+                        : row.applicationName
+                }
+                subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
+                renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
+            />
+        </>
     );
 };

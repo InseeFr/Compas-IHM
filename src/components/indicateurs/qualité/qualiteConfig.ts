@@ -3,7 +3,6 @@ import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { QualiteIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import { flattenRows, handleExportCsv } from "utils/exportCsv";
-import { filteredColumns } from "utils/filterFunctions";
 import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 
@@ -32,62 +31,63 @@ export const paginationConfig: Pagination = {
     }
 };
 
-export const columnsTable = (
-    qualiteIndicateur: QualiteIndicateur[]
-): ColumnTable<QualiteIndicateur>[] => {
+export const columnsTable = (): ColumnTable<QualiteIndicateur>[] => {
     return [
-        { accessorKey: "applicationName", header: "Nom", enableColumnFilter: false },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(qualiteIndicateur, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(qualiteIndicateur, "domaine")
-        },
+        { accessorKey: "applicationName", header: "Nom" },
+        { accessorKey: "sndi", header: "serviceDev" },
+
         {
             accessorKey: "lettreCouvertureTestUniaire",
             header: "Couverture de Test",
-            enableColumnFilter: false,
             Cell: CouvertureTestUnitCell
         },
         {
             accessorKey: "lettreFiabilite",
-            header: "Fiabilité",
-            enableColumnFilter: false
+            header: "Fiabilité"
         },
         {
             accessorKey: "lettreDetteTechnique",
             header: "Dette Technique",
-            enableColumnFilter: false,
             Cell: DetteTechCell
         }
     ];
 };
 
 export function formatIndicateur(item: IndicateurQualiteView, isModule = false): QualiteIndicateur {
+    const defaultValue = "NR";
+
+    const getApplicationName = () => {
+        if (isModule) {
+            return item.moduleName ?? defaultValue;
+        }
+        return item.applicationName ?? defaultValue;
+    };
+
+    const formatDetteTechnique = () => {
+        return item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : defaultValue;
+    };
+
+    const getModuleSpecificFields = () => {
+        if (!isModule) return {};
+
+        return {
+            parentApplication: item.applicationName ?? defaultValue,
+            isModule: true
+        };
+    };
+
     return {
         applicationId: isModule ? undefined : item.applicationId,
-        applicationName: isModule ? (item.moduleName ?? "NR") : (item.applicationName ?? "NR"),
-        sndi: item.sndi ?? "NR",
-        domaine: item.domaineSndi ?? "NR",
-        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? "NR",
-        lettreFiabilite: item.lettreFiabilite ?? "NR",
-        lettreDetteTechnique: item.lettreDetteTechnique ?? "NR",
-        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? "NR",
-        lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? "NR"),
-        detteTechnique: item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : "NR",
-        ...(isModule
-            ? {
-                  parentApplication: item.applicationName ?? "NR",
-                  isModule: true
-              }
-            : {})
+        applicationName: getApplicationName(),
+        sndi: item.sndi ?? defaultValue,
+        domaine: item.domaineSndi ?? defaultValue,
+        domaineFonc: item.domaineFonctionnel ?? defaultValue,
+        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? defaultValue,
+        lettreFiabilite: item.lettreFiabilite ?? defaultValue,
+        lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
+        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? defaultValue,
+        lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
+        detteTechnique: formatDetteTechnique(),
+        ...getModuleSpecificFields()
     };
 }

@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.57% </span>
+                <span class="strong">67.56% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/35</span>
+                <span class='fraction'>25/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
@@ -164,7 +164,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -191,8 +190,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,26 +212,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -254,7 +254,6 @@ import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { QualiteIndicateur } from "models/indicateurs";
 import type { ColumnTable, Pagination } from "models/table-model";
 import { flattenRows, handleExportCsv } from "utils/exportCsv";
-import { filteredColumns } from "utils/filterFunctions";
 import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 &nbsp;
@@ -283,63 +282,64 @@ export const paginationConfig: Pagination = {
     }
 };
 &nbsp;
-export const columnsTable = (
-    qualiteIndicateur: QualiteIndicateur[]
-): ColumnTable&lt;QualiteIndicateur&gt;[] =&gt; {
+export const columnsTable = (): ColumnTable&lt;QualiteIndicateur&gt;[] =&gt; {
     return [
-        { accessorKey: "applicationName", header: "Nom", enableColumnFilter: false },
-        {
-            accessorKey: "sndi",
-            header: "Service dev.",
-            enableColumnFilter: true,
-            filterVariant: "select",
-            filterSelectOptions: filteredColumns(qualiteIndicateur, "sndi")
-        },
-        {
-            accessorKey: "domaine",
-            header: "Domaine dev.",
-            filterVariant: "select",
-            enableColumnFilter: true,
-            filterSelectOptions: filteredColumns(qualiteIndicateur, "domaine")
-        },
+        { accessorKey: "applicationName", header: "Nom" },
+        { accessorKey: "sndi", header: "serviceDev" },
+&nbsp;
         {
             accessorKey: "lettreCouvertureTestUniaire",
             header: "Couverture de Test",
-            enableColumnFilter: false,
             Cell: CouvertureTestUnitCell
         },
         {
             accessorKey: "lettreFiabilite",
-            header: "Fiabilité",
-            enableColumnFilter: false
+            header: "Fiabilité"
         },
         {
             accessorKey: "lettreDetteTechnique",
             header: "Dette Technique",
-            enableColumnFilter: false,
             Cell: DetteTechCell
         }
     ];
 };
 &nbsp;
 export function formatIndicateur(item: IndicateurQualiteView, isModule = false): QualiteIndicateur {
+    const defaultValue = "NR";
+&nbsp;
+    const getApplicationName = () =&gt; {
+        if (isModule) {
+            return item.moduleName ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue;</span>
+        }
+        return item.applicationName ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue;</span>
+    };
+&nbsp;
+    const formatDetteTechnique = () =&gt; {
+        return item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue;</span>
+    };
+&nbsp;
+    const getModuleSpecificFields = () =&gt; {
+        if (!isModule) return {};
+&nbsp;
+        return {
+            parentApplication: item.applicationName ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+            isModule: true
+        };
+    };
+&nbsp;
     return {
         applicationId: isModule ? undefined : item.applicationId,
-        applicationName: isModule ? (item.moduleName ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR") : (i</span>tem.applicationName ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR"),</span>
-        sndi: item.sndi ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        domaine: item.domaineSndi ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        lettreFiabilite: item.lettreFiabilite ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        lettreDetteTechnique: item.lettreDetteTechnique ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR"),</span>
-        detteTechnique: item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-        ...(isModule
-            ? {
-                  parentApplication: item.applicationName ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR",</span>
-                  isModule: true
-              }
-            : {})
+        applicationName: getApplicationName(),
+        sndi: item.sndi ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        domaine: item.domaineSndi ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        domaineFonc: item.domaineFonctionnel ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        lettreFiabilite: item.lettreFiabilite ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        lettreDetteTechnique: item.lettreDetteTechnique ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue,</span>
+        lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? <span class="branch-1 cbranch-no" title="branch not covered" >defaultValue),</span>
+        detteTechnique: formatDetteTechnique(),
+        ...getModuleSpecificFields()
     };
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -349,7 +349,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T12:28:42.317Z
+                at 2026-01-13T08:49:22.110Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

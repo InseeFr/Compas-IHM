@@ -19,8 +19,9 @@ import {
 } from "todos-api/client.gen";
 import TablePageLayout from "pages/TablePageLayout";
 import { groupModulesByApp } from "utils/group-module-by-apps";
-import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
 import ButtonCsvExport from "pages/ButtonCsvExport";
+import { Filters } from "components/Filters";
+import { applyDevFilters } from "utils/filters-functions";
 
 function formatApplicationsData(
     apps: Application[],
@@ -45,15 +46,8 @@ function formatModulesData(
 const SecuriteIndicateurTable = () => {
     const { state, dispatch } = useFilterContext();
     const [securiteIndicateur, setSecuriteIndicateur] = useState<SecuriteIndicateur[]>([]);
-    const columns = useMemo(() => columnsTable(securiteIndicateur), [securiteIndicateur]);
-
-    const applicationsOnly = useMemo(
-        () => securiteIndicateur.filter(item => !item.isModule),
-        [securiteIndicateur]
-    );
-
+    const columns = useMemo(() => columnsTable(), []);
     const modulesByApp = useMemo(() => groupModulesByApp(securiteIndicateur), [securiteIndicateur]);
-
     useEffect(() => {
         async function fetchData(): Promise<void> {
             try {
@@ -75,20 +69,28 @@ const SecuriteIndicateurTable = () => {
         fetchData();
     }, []);
 
+    const filteredData = useMemo(
+        () => securiteIndicateur.filter(item => applyDevFilters(item, state)),
+        [securiteIndicateur, state]
+    );
+
     return (
-        <TablePageLayout
-            titleTable="Table Indicateur Sécurité"
-            data={applicationsOnly}
-            columns={columns}
-            paginationConfig={paginationConfig}
-            rowId={row =>
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
-            subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
-            columnFilters={columnFilters(state)}
-            onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
-            renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={OnExport} />}
-        />
+        <>
+            <Filters data={securiteIndicateur} state={state} dispatch={dispatch} />
+            <TablePageLayout
+                titleTable="Table Indicateur Sécurité"
+                data={filteredData.filter(item => (item.isModule ? null : item))}
+                columns={columns}
+                paginationConfig={paginationConfig}
+                rowId={row =>
+                    row.isModule
+                        ? `${row.parentApplication}-${row.applicationName}`
+                        : row.applicationName
+                }
+                subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
+                renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={OnExport} />}
+            />
+        </>
     );
 };
 

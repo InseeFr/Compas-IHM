@@ -44,7 +44,8 @@ describe("formatIndicateur", () => {
         expect(resultat).toEqual({
             modName: "Module1",
             sndi: "S1",
-            domaineSndi: "D1",
+            domaine: "D1",
+            domaineFonc: "NR",
             notation: "A",
             lettreIssueAccessibilite: "B",
             nbIssueAccessibilite: "5"
@@ -70,7 +71,7 @@ describe("formatIndicateur", () => {
 
         expect(resultat.modName).toBe("NR");
         expect(resultat.sndi).toBe("NR");
-        expect(resultat.domaineSndi).toBe("NR");
+        expect(resultat.domaine).toBe("NR");
         expect(resultat.notation).toBeUndefined();
         expect(resultat.lettreIssueAccessibilite).toBeUndefined();
         expect(resultat.nbIssueAccessibilite).toBeUndefined();
@@ -79,32 +80,17 @@ describe("formatIndicateur", () => {
 
 describe("columnsTable", () => {
     it("doit générer les colonnes avec les bons intitulés", () => {
-        const data = [formatIndicateur(mockModule)];
-        const colonnes = columnsTable(data);
+        const colonnes = columnsTable();
 
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom du module",
-            "Service dev.",
-            "Domaine dev.",
+            "serviceDev",
             "Notation Évaluation",
             "Issue Sonar"
         ]);
 
         const issueCol = colonnes.find(c => c.accessorKey === "lettreIssueAccessibilite");
         expect(issueCol?.Cell).toBeDefined();
-    });
-
-    it("doit avoir les filtres configurés correctement", () => {
-        const data = [formatIndicateur(mockModule), formatIndicateur(mockModule2)];
-        const colonnes = columnsTable(data);
-
-        const sndiCol = colonnes.find(c => c.accessorKey === "sndi");
-        expect(sndiCol?.enableColumnFilter).toBe(true);
-        expect(sndiCol?.filterVariant).toBe("select");
-
-        const domaineCol = colonnes.find(c => c.accessorKey === "domaine");
-        expect(domaineCol?.enableColumnFilter).toBe(true);
-        expect(domaineCol?.filterVariant).toBe("select");
     });
 });
 
@@ -139,7 +125,7 @@ describe("OnExport", () => {
         const mockIncomplete = {
             modName: "Module3",
             sndi: "S3",
-            domaineSndi: "D3",
+            domaine: "D3",
             notation: undefined,
             lettreIssueAccessibilite: undefined,
             nbIssueAccessibilite: undefined

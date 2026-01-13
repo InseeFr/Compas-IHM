@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.36% </span>
+                <span class="strong">88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/22</span>
+                <span class='fraction'>22/25</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.81% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/11</span>
+                <span class='fraction'>11/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/18</span>
+                <span class='fraction'>17/20</span>
             </div>
         
             
@@ -114,7 +114,17 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,6 +160,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -158,10 +175,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,14 +190,15 @@ import ButtonCsvExport from "../../../pages/ButtonCsvExport";
 import TablePageLayout from "../../../pages/TablePageLayout";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import { useFilterContext } from "store/filterContext";
-import { columnFilters, handleColumnFiltersChange } from "utils/filterFunctions";
 import { groupModulesByApp } from "utils/group-module-by-apps";
+import { Filters } from "components/Filters";
+import { applyDevFilters } from "utils/filters-functions";
 &nbsp;
 export const DevopsIndicateurTable = () =&gt; {
     const [devopsIndicateur, setDevopsIndicateur] = useState&lt;DevopsIndicateur[]&gt;([]);
     const { state, dispatch } = useFilterContext();
 &nbsp;
-    const columns = useMemo(() =&gt; columnsTable(devopsIndicateur), [devopsIndicateur]);
+    const columns = useMemo(() =&gt; columnsTable(), []);
 &nbsp;
     const modulesByApp = useMemo(() =&gt; groupModulesByApp(devopsIndicateur), [devopsIndicateur]);
 &nbsp;
@@ -200,20 +219,28 @@ export const DevopsIndicateurTable = () =&gt; {
         fetchData();
     }, []);
 &nbsp;
+    const filteredData = useMemo(
+        () =&gt; devopsIndicateur.filter(item =&gt; applyDevFilters(item, state)),
+        [devopsIndicateur, state]
+    );
+&nbsp;
     return (
-        &lt;TablePageLayout
-            titleTable="Table Indicateur DEVOPS"
-            data={devopsIndicateur.filter(item =&gt; (item.isModule ? null : item))}
-            columns={columns}
-            paginationConfig={paginationConfig}
-            rowId={<span class="fstat-no" title="function not covered" >row =&gt;</span>
-<span class="cstat-no" title="statement not covered" >                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName</span>
-            }
-            subRow={<span class="fstat-no" title="function not covered" >subRow =&gt; (<span class="cstat-no" title="statement not covered" >s</span>ubRow.isModule ? undefined : modulesByApp[subRow.applicationName])</span>}
-            columnFilters={columnFilters(state)}
-            onColumnFiltersChange={handleColumnFiltersChange(state, dispatch)}
-            renderTopCustom={({ table }) =&gt; &lt;ButtonCsvExport table={table} onExport={onExport} /&gt;}
-        /&gt;
+        &lt;&gt;
+            &lt;Filters data={devopsIndicateur} state={state} dispatch={dispatch} /&gt;
+            &lt;TablePageLayout
+                titleTable="Table Indicateur DEVOPS"
+                data={filteredData.filter(item =&gt; (item.isModule ? null : item))}
+                columns={columns}
+                paginationConfig={paginationConfig}
+                rowId={<span class="fstat-no" title="function not covered" >row =&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    row.isModule</span>
+                        ? `${row.parentApplication}-${row.applicationName}`
+                        : row.applicationName
+                }
+                subRow={<span class="fstat-no" title="function not covered" >subRow =&gt; (<span class="cstat-no" title="statement not covered" >s</span>ubRow.isModule ? undefined : modulesByApp[subRow.applicationName])</span>}
+                renderTopCustom={({ table }) =&gt; &lt;ButtonCsvExport table={table} onExport={onExport} /&gt;}
+            /&gt;
+        &lt;/&gt;
     );
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -223,7 +250,7 @@ export const DevopsIndicateurTable = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-07T12:28:42.317Z
+                at 2026-01-13T08:49:22.110Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

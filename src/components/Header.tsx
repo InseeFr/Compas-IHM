@@ -23,6 +23,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                     component="img"
                     data-testid="header-logo"
                     sx={{ height: 64 }}
+                    fetchPriority="high"
                     alt="Insee Logo."
                     src={darkMode ? LogoInseeDark : LogoInseeLight}
                 />

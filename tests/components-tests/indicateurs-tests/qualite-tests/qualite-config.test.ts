@@ -20,6 +20,7 @@ const mockApp: IndicateurQualiteView = {
     applicationName: "App1",
     sndi: "S1",
     domaineSndi: "D1",
+    domaineFonctionnel: "NR",
     lettreCouvertureTestUniaire: "A",
     lettreFiabilite: "B",
     lettreDetteTechnique: "C",
@@ -33,6 +34,7 @@ const mockModule: IndicateurQualiteView = {
     applicationName: "App1",
     sndi: "S1",
     domaineSndi: "D1",
+    domaineFonctionnel: "NR",
     lettreCouvertureTestUniaire: "X",
     lettreFiabilite: "Y",
     lettreDetteTechnique: "Z",
@@ -49,6 +51,7 @@ describe("formatIndicateur", () => {
             applicationName: "App1",
             sndi: "S1",
             domaine: "D1",
+            domaineFonc: "NR",
             lettreCouvertureTestUniaire: "A",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
@@ -65,6 +68,7 @@ describe("formatIndicateur", () => {
             applicationName: "Mod1",
             sndi: "S1",
             domaine: "D1",
+            domaineFonc: "NR",
             lettreCouvertureTestUniaire: "X",
             lettreFiabilite: "Y",
             lettreDetteTechnique: "Z",
@@ -79,12 +83,10 @@ describe("formatIndicateur", () => {
 
 describe("columnsTable", () => {
     it("doit générer les colonnes avec les bons intitulés", () => {
-        const data = [formatIndicateur(mockApp)];
-        const colonnes = columnsTable(data);
+        const colonnes = columnsTable();
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom",
-            "Service dev.",
-            "Domaine dev.",
+            "serviceDev",
             "Couverture de Test",
             "Fiabilité",
             "Dette Technique"
