@@ -51,18 +51,18 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
         };
     }, [app, population]);
 
-    const appColor = "#42a5f5";
-    const allColor = "#ab47bc";
-    const domainColor = "#26a69a";
+    const appColor = "#c01313ff";
+    const allColor = "#19cf28ff";
+    const domainColor = "#5112e4ff";
 
     const option = useMemo(() => {
         const labels: string[] = [
-            "Qualité",
+            "Maturité Cloud",
             "Sécurité",
-            "Fréquence MEP",
+            "Freq MEP",
             "Fiabilité",
             "Green IT",
-            "Maturité Cloud"
+            "Qualité"
         ];
 
         return {
@@ -82,21 +82,32 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
             },
             legend: {
                 data: [app.applicationName, "Moyenne globale", `Moyenne domaine (${domainName})`],
-                bottom: 10,
+                bottom: 0,
+                itemGap: 12,
                 textStyle: { color: textColor }
             },
             radar: {
-                indicator: labels.map(name => ({ name, max: 5 })),
+                center: ["50%", "40%"],
+                radius: "52%",
+
+                indicator: labels.map(name => ({
+                    name,
+                    max: 5
+                })),
+
                 splitNumber: 5,
+
                 name: {
-                    textStyle: { color: textColor }
+                    color: textColor,
+                    fontSize: 12,
+                    formatter: (value: string) => value,
+                    padding: [4, 4]
                 },
+
                 splitLine: {
                     lineStyle: { color: gridColor }
                 },
-                splitArea: {
-                    show: false
-                },
+                splitArea: { show: false },
                 axisLine: {
                     lineStyle: { color: gridColor }
                 }
@@ -111,7 +122,7 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
                             name: app.applicationName,
                             lineStyle: { color: appColor, width: 2 },
                             itemStyle: { color: appColor },
-                            areaStyle: { color: "rgba(66,165,245,0.25)" }
+                            areaStyle: { color: "rgba(245, 132, 66, 0.25)" }
                         }
                     ]
                 },
@@ -163,9 +174,10 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
             data-testid="radar-chart-container"
             ref={chartRef}
             sx={{
-                width: 320,
-                height: 340,
-                position: "relative"
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                padding: "24px"
             }}
         />
     );

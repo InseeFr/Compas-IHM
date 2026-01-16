@@ -62,7 +62,7 @@ export const GreenItTable = () => {
                             exclusive
                             onChange={(_, val) => val && setViewMode(val)}
                             size="small"
-                            color="primary"
+                            color="secondary"
                         >
                             <ToggleButton value="global">Global</ToggleButton>
                             <ToggleButton value="prod">Prod</ToggleButton>

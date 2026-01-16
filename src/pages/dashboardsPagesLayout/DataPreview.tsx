@@ -13,7 +13,6 @@ export default function DataPreview(props: Readonly<DataPreviewProps>): JSX.Elem
             elevation={4}
             sx={{
                 width: "100%",
-                maxWidth: 760,
                 borderRadius: 4,
                 overflow: "hidden",
                 background: t =>

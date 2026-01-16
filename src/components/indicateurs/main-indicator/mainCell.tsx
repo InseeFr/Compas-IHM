@@ -67,7 +67,7 @@ export const DevopsCell = ({ row }: Readonly<{ row: { original: GlobalIndicator 
 
 export const MeteoCell = ({ row }: Readonly<{ row: { original: GlobalIndicator } }>) => {
     const icon = getMeteoIcon(row.original.meteo);
-    console.log(row.original.applicationName === "achille" ? row.original : "")
+    console.log(row.original.applicationName === "achille" ? row.original : "");
     const isNotValidIcon: boolean =
         icon.type === QuestionMarkIcon &&
         icon.props.sx?.color === "#d46407ff" &&
