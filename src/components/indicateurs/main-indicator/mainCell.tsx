@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { isDateOlderThan31Days } from "utils/date-functions";
 import { getMeteoIcon } from "utils/meteoIcon";
 import ErrorIcon from "@mui/icons-material/Error";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 export const QualityCell = ({ row }: Readonly<{ row: { original: GlobalIndicator } }>) => {
     const detteTechniqueJours = Math.round(Number.parseFloat(row.original.detteTechnique ?? "0") / 420);
@@ -65,23 +66,31 @@ export const DevopsCell = ({ row }: Readonly<{ row: { original: GlobalIndicator 
 };
 
 export const MeteoCell = ({ row }: Readonly<{ row: { original: GlobalIndicator } }>) => {
+    const icon = getMeteoIcon(row.original.meteo);
+    console.log(row.original.applicationName === "achille" ? row.original : "")
+    const isNotValidIcon: boolean =
+        icon.type === QuestionMarkIcon &&
+        icon.props.sx?.color === "#d46407ff" &&
+        icon.props.sx?.fontSize === 20;
     const content: ReactNode = (
         <span>
-            {!row.original.dateMeteoCommentaire ||
-            isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
+            {isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
                 <ErrorIcon sx={{ color: "#b90404ff", fontSize: 20 }} />
             ) : (
-                getMeteoIcon(row.original.meteo?.toString() ?? "NR")
+                icon
             )}
         </span>
     );
+    const getMeteoComm: string = row.original.meteoCommentaire
+        ? row.original.meteoCommentaire
+        : "Commentaire non renseigné";
+    const commentary: string = isNotValidIcon ? "Valeur météo erronée" : getMeteoComm;
     return (
         <ToolTipLayout
             title={
-                !row.original.dateMeteoCommentaire ||
                 isDateOlderThan31Days(row.original.dateMeteoCommentaire)
-                    ? "NR"
-                    : (row.original.meteoCommentaire ?? "NR")
+                    ? "Météo vieille de plus de 31 jours"
+                    : commentary
             }
             content={content}
         />

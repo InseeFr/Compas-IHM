@@ -76,9 +76,9 @@ describe("meteo-config.ts", () => {
 
         expect(result.length).toBe(2);
         expect(result[0].applicationName).toBe("App1");
-        expect(result[0].byMonth["2026-01"][0].valeur).toBe("5");
-        expect(result[0].byMonth["2026-02"][0].valeur).toBe("10");
-        expect(result[1].byMonth["2026-01"][0].valeur).toBe("NR");
+        expect(result[0].byMonth["2026-01"][0].valeur).toBe(5);
+        expect(result[0].byMonth["2026-02"][0].valeur).toBe(10);
+        expect(result[1].byMonth["2026-01"][0].valeur).toBe(-1);
         expect(result[1].byMonth["2026-02"]).toEqual([]);
     });
 

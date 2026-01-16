@@ -1,3 +1,26 @@
+export interface IndicateurApplicationMaturite {
+    applicationId?: number;
+    sndi: string;
+    domaine: string;
+    domaineFonc: string;
+    maturite?: string;
+    robustesse?: string;
+
+    scoreBenefice?: string;
+    scoreComplexite?: string;
+    scoreOrga?: string;
+    scoreTechnique?: string;
+
+    progressionDeploy?: string;
+    progressionArchi?: string;
+    progressionTechnos?: string;
+    progressionCloud?: string;
+    progressionDevops?: string;
+    progressionMateqip?: string;
+
+    applicationName?: string;
+}
+
 export interface DevopsIndicateur {
     applicationName: string;
     sndi: string;
@@ -105,7 +128,7 @@ export interface A11yIndicateur {
 
 export interface MeteoPoint {
     date: string;
-    valeur: string;
+    valeur: number;
     commentaire?: string;
 }
 export interface MeteoIndicateur {
@@ -220,6 +243,42 @@ export interface GlobalIndicator {
     progressionMateqip?: string;
 }
 
+export interface IndicateurApplicationSynthese {
+    applicationId: number;
+    applicationName: string;
+    sndi: string;
+    domaine: string;
+    domaineFonc: string;
+    lettreCouvertureTestUniaire: string;
+    lettreFiabilite?: string;
+    lettreDetteTechnique?: string;
+    lettreNiveauCve: string;
+    pourcentageCouvertureTestUniaire: string;
+    nbCveCritical: string;
+    nbCveHigh: string;
+    nbCveLow: string;
+    nbCveMedium: string;
+    grade?: string;
+    isModule?: boolean;
+    parentApplication?: string;
+    distanceNote?: string;
+    distanceValue?: string;
+    meteo?: number;
+    conso?: string;
+    lettreGreen?: string;
+    lettreA11y?: string;
+    scoreAuditA11y?: number;
+    lettreQualiteGenerale?: string;
+    detteTechnique?: string;
+    meteoCommentaire?: string;
+    dateMeteoCommentaire?: string;
+    maturite?: string;
+    robustesse?: string;
+    gaspillage?: string;
+    consoNormalized?: string;
+    impactNormalized?: string;
+}
+
 export type AllIndicators =
     | MeteoIndicateur
     | QualiteIndicateur
@@ -229,4 +288,6 @@ export type AllIndicators =
     | A11yIndicateur
     | AppsIndicateur
     | ModsIndicateur
+    | IndicateurApplicationMaturite
+    | IndicateurApplicationSynthese
     | GlobalIndicator;

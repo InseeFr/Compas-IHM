@@ -37,9 +37,9 @@ export const MainIndicator = () => {
                 apps,
                 modules,
                 qualiteAppData,
-                qualiteModulesData,
-                DevopsAppData,
-                DevopsModulesData,
+                qualiteModule,
+                devopsAppData,
+                devopsModulesData,
                 meteoData,
                 consoAppData,
                 a11yDataModules,
@@ -66,7 +66,7 @@ export const MainIndicator = () => {
             const formattedApplications = formattedApps({
                 apps,
                 qualiteAppData,
-                devopsAppData: DevopsAppData,
+                devopsAppData,
                 meteoData,
                 consoAppData,
                 a11yDataApps,
@@ -76,8 +76,8 @@ export const MainIndicator = () => {
 
             const formattedModulesData = formattedModules({
                 modules,
-                qualiteModule: qualiteModulesData,
-                devopsModulesData: DevopsModulesData,
+                qualiteModule,
+                devopsModulesData,
                 meteoData,
                 a11yDataModules,
                 securiteModules

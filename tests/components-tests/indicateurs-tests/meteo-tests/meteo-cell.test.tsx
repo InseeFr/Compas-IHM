@@ -20,8 +20,8 @@ describe("MeteoCell", () => {
         original: {
             byMonth: {
                 "01": [
-                    { date: "2026-01-01", valeur: "1", commentaire: "Orage" },
-                    { date: "2026-01-02", valeur: "2" }
+                    { date: "2026-01-01", valeur: 1, commentaire: "Orage" },
+                    { date: "2026-01-02", valeur: 2 }
                 ]
             },
             idApp: 0,

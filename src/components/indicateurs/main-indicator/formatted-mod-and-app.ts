@@ -34,96 +34,108 @@ interface ModuleDataSources {
     securiteModules: IndicateurSecuriteView[];
 }
 
-export const findBy = <T, K extends string | number | symbol>(
-    array: T[],
-    key: (item: T) => K | undefined
-): Record<K, T> => {
-    return array.reduce(
-        (acc, item) => {
-            const k = key(item);
-            if (k !== undefined) {
-                acc[k] = item;
-            }
-            return acc;
-        },
-        {} as Record<K, T>
+const findByIdApp = <T extends { applicationId?: number; idApplication?: number }>(
+    indicateur: T[],
+    app: Application
+): T | undefined => {
+    return indicateur.find(
+        i => i.applicationId === app.idApplication || i.idApplication === app.idApplication
     );
 };
 
-const getValueOrDefault = <T>(value: T | undefined): T | typeof NR => value ?? NR;
+const findByIdMod = <T extends { moduleId?: number; appName?: string; idModule?: number }>(
+    indicateur: T[],
+    module: Module
+): T | undefined => {
+    return indicateur.find(
+        i => i.moduleId === module.id || i.appName === module.appName || i.idModule === module.id
+    );
+};
+
+const numberOrDefault = (value?: number | null): number | undefined =>
+    value ?? -1;
+
+const stringOrNR = (value?: string | null): string  =>
+    value ?? NR;
 
 const createQualiteIndicators = (
-    qualite: IndicateurQualiteView | undefined
-): Partial<GlobalIndicator> => ({
-    lettreCouvertureTestUniaire: getValueOrDefault(qualite?.lettreCouvertureTestUniaire),
-    lettreFiabilite: getValueOrDefault(qualite?.lettreFiabilite),
-    lettreDetteTechnique: getValueOrDefault(qualite?.lettreDetteTechnique),
-    lettreQualiteGenerale: getValueOrDefault(qualite?.lettreGlobalQualite),
-    pourcentageCouvertureTestUniaire: getValueOrDefault(qualite?.pourcentageCouvertureTestUniaire),
-    detteTechnique: getValueOrDefault(qualite?.detteTechnique?.replace(/\.00$/, ""))
+    qualite?: IndicateurQualiteView
+) => ({
+    lettreCouvertureTestUniaire: stringOrNR(qualite?.lettreCouvertureTestUniaire),
+    lettreFiabilite: stringOrNR(qualite?.lettreFiabilite),
+    lettreDetteTechnique: stringOrNR(qualite?.lettreDetteTechnique),
+    lettreQualiteGenerale: stringOrNR(qualite?.lettreGlobalQualite),
+    pourcentageCouvertureTestUniaire: stringOrNR(qualite?.pourcentageCouvertureTestUniaire),
+    detteTechnique: qualite?.detteTechnique
+        ? qualite.detteTechnique.replace(/\.00$/, "")
+        : NR
 });
 
 const createSecuriteIndicators = (
-    securite: IndicateurSecuriteView | undefined
-): Partial<GlobalIndicator> => ({
-    lettreGlobaleSecurite: getValueOrDefault(securite?.lettreGlobaleSecurite),
-    lettreCve: getValueOrDefault(securite?.lettreCve),
-    nbCveCritical: getValueOrDefault(securite?.nbCveCritical),
-    nbCveHigh: getValueOrDefault(securite?.nbCveHigh),
-    nbCveLow: getValueOrDefault(securite?.nbCveLow),
-    nbCveMedium: getValueOrDefault(securite?.nbCveMedium),
-    delaiVmNonMiseAjour: getValueOrDefault(securite?.delaiVmNonMiseAjour),
-    nbVmNonMaj: getValueOrDefault(securite?.nbVmNonMaj)
+    securite?: IndicateurSecuriteView
+) => ({
+    lettreGlobaleSecurite: stringOrNR(securite?.lettreGlobaleSecurite),
+    lettreCve: stringOrNR(securite?.lettreCve),
+
+    nbCveCritical: stringOrNR(securite?.nbCveCritical?.toString()),
+    nbCveHigh: stringOrNR(securite?.nbCveHigh?.toString()),
+    nbCveLow: stringOrNR(securite?.nbCveLow?.toString()),
+    nbCveMedium: stringOrNR(securite?.nbCveMedium?.toString()),
+
+    delaiVmNonMiseAjour: stringOrNR(securite?.delaiVmNonMiseAjour),
+    nbVmNonMaj: stringOrNR(securite?.nbVmNonMaj)
 });
 
-const createDevopsIndicators = (devops: IndicateurDevopsView | undefined): Partial<GlobalIndicator> => ({
-    lettreDistanceCount: getValueOrDefault(devops?.lettreDistanceCount),
-    distanceCount: getValueOrDefault(devops?.distanceCount),
-    lettreDeploymentCount: getValueOrDefault(devops?.lettreDeploymentCount),
-    nbDeploymentCount: getValueOrDefault(devops?.nbDeploymentCount),
-    lettreContributorCount: getValueOrDefault(devops?.lettreContributorCount),
-    nbContributorCount: getValueOrDefault(devops?.nbContributorCount),
-    lettreDevopsGenerale: getValueOrDefault(devops?.lettreGlobalDevops)
+const createDevopsIndicators = (
+    devops?: IndicateurDevopsView
+) => ({
+    lettreDistanceCount: stringOrNR(devops?.lettreDistanceCount),
+    lettreDeploymentCount: stringOrNR(devops?.lettreDeploymentCount),
+    lettreContributorCount: stringOrNR(devops?.lettreContributorCount),
+    lettreDevopsGenerale: stringOrNR(devops?.lettreGlobalDevops),
+
+    distanceCount: stringOrNR(devops?.distanceCount?.toString()),
+    nbDeploymentCount: stringOrNR(devops?.nbDeploymentCount?.toString()),
+    nbContributorCount: stringOrNR(devops?.nbContributorCount?.toString())
 });
 
 const createMeteoIndicators = (
-    meteo: Meteo | undefined,
-    isModule: boolean = false
-): Partial<GlobalIndicator> => {
-    console.log(meteo);
-    return {
-        meteo: meteo?.valeurMeteo ?? -1,
-        meteoCommentaire: meteo?.commentaire ?? (isModule ? SO : NR),
-        dateMeteoCommentaire: meteo?.date ?? (isModule ? SO : NR)
-    };
-};
-
-const createGreenITIndicators = (
-    greenApp: IndicateurApplicationGreenITView | undefined
-): Partial<GlobalIndicator> => ({
-    conso: getValueOrDefault(greenApp?.conso),
-    lettreGreen: getValueOrDefault(greenApp?.lettreGreen),
-    gaspillage: getValueOrDefault(greenApp?.gaspillageScore),
-    consoNormalized: getValueOrDefault(greenApp?.consoScore),
-    impactNormalized: getValueOrDefault(greenApp?.impactScore),
-    ramAllocated: getValueOrDefault(greenApp?.ramAllocated),
-    ramMaxi: getValueOrDefault(greenApp?.ramMaxi),
-    diskAllocated: getValueOrDefault(greenApp?.diskAllocated),
-    diskUsed: getValueOrDefault(greenApp?.diskUsed),
-    cpuAllocated: getValueOrDefault(greenApp?.cpuAllocated),
-    cpuMaxi: getValueOrDefault(greenApp?.cpuMaxi),
-    nbVm: getValueOrDefault(greenApp?.nbVm),
-    ramAllocatedProd: getValueOrDefault(greenApp?.ramAllocatedProd),
-    ramMaxiProd: getValueOrDefault(greenApp?.ramMaxiProd),
-    diskAllocatedProd: getValueOrDefault(greenApp?.diskAllocatedProd),
-    diskUsedProd: getValueOrDefault(greenApp?.diskUsedProd),
-    cpuAllocatedProd: getValueOrDefault(greenApp?.cpuAllocatedProd),
-    cpuMaxiProd: getValueOrDefault(greenApp?.cpuMaxiProd),
-    nbVmProd: getValueOrDefault(greenApp?.nbVmProd),
-    consoProd: getValueOrDefault(greenApp?.consoProd)
+    meteo?: Meteo,
+    isModule = false
+) => ({
+    meteo: numberOrDefault(meteo?.valeurMeteo),
+    meteoCommentaire: meteo?.commentaire ?? (isModule ? SO : NR),
+    dateMeteoCommentaire: meteo?.date ?? (isModule ? SO : NR)
 });
 
-const MODULE_GREEN_IT_DEFAULTS: Partial<GlobalIndicator> = {
+const createGreenITIndicators = (
+    greenApp?: IndicateurApplicationGreenITView
+) => ({
+    conso: stringOrNR(greenApp?.conso),
+    lettreGreen: stringOrNR(greenApp?.lettreGreen),
+    gaspillage: stringOrNR(greenApp?.gaspillageScore),
+    consoNormalized: stringOrNR(greenApp?.consoScore),
+    impactNormalized: stringOrNR(greenApp?.impactScore),
+
+    ramAllocated: stringOrNR(greenApp?.ramAllocated),
+    ramMaxi: stringOrNR(greenApp?.ramMaxi),
+    diskAllocated: stringOrNR(greenApp?.diskAllocated),
+    diskUsed: stringOrNR(greenApp?.diskUsed),
+    cpuAllocated: stringOrNR(greenApp?.cpuAllocated),
+    cpuMaxi: stringOrNR(greenApp?.cpuMaxi),
+    nbVm: stringOrNR(greenApp?.nbVm),
+
+    ramAllocatedProd: stringOrNR(greenApp?.ramAllocatedProd),
+    ramMaxiProd: stringOrNR(greenApp?.ramMaxiProd),
+    diskAllocatedProd: stringOrNR(greenApp?.diskAllocatedProd),
+    diskUsedProd: stringOrNR(greenApp?.diskUsedProd),
+    cpuAllocatedProd: stringOrNR(greenApp?.cpuAllocatedProd),
+    cpuMaxiProd: stringOrNR(greenApp?.cpuMaxiProd),
+    nbVmProd: stringOrNR(greenApp?.nbVmProd),
+    consoProd: stringOrNR(greenApp?.consoProd)
+});
+
+const MODULE_GREEN_IT_DEFAULTS = {
     conso: SO,
     lettreGreen: SO,
     gaspillage: SO,
@@ -146,31 +158,35 @@ const MODULE_GREEN_IT_DEFAULTS: Partial<GlobalIndicator> = {
     consoProd: SO
 };
 
-const createA11yIndicators = (a11y: IndicateursModuleA11Y | undefined): Partial<GlobalIndicator> => ({
-    lettreA11y: getValueOrDefault(a11y?.notation),
-    scoreAuditA11y: a11y?.scoreAudit ?? 0,
-    declarationA11y: a11y?.declaration ?? false,
-    dateDeclarationA11y: a11y?.dateDeclaration
+const createA11yIndicators = (
+    a11y?: IndicateursModuleA11Y
+) => ({
+    lettreA11y: stringOrNR(a11y?.notation),
+    scoreAuditA11y: numberOrDefault(a11y?.scoreAudit),
+    declarationA11y: a11y?.declaration ?? undefined,
+    dateDeclarationA11y:  stringOrNR(a11y?.dateDeclaration)
 });
 
 const createMaturiteCloudIndicators = (
-    maturite: IndicateurApplicationMaturiteCloud | undefined
-): Partial<GlobalIndicator> => ({
-    maturite: getValueOrDefault(maturite?.maturite),
-    robustesse: getValueOrDefault(maturite?.robustesse),
-    scoreBenefice: getValueOrDefault(maturite?.scoreBenefice),
-    scoreComplexite: getValueOrDefault(maturite?.scoreComplexite),
-    scoreOrga: getValueOrDefault(maturite?.scoreOrga),
-    scoreTechnique: getValueOrDefault(maturite?.scoreTechnique),
-    progressionDeploy: getValueOrDefault(maturite?.progressionDeploy),
-    progressionArchi: getValueOrDefault(maturite?.progressionArchi),
-    progressionTechnos: getValueOrDefault(maturite?.progressionTechnos),
-    progressionCloud: getValueOrDefault(maturite?.progressionCloud),
-    progressionDevops: getValueOrDefault(maturite?.progressionDevops),
-    progressionMateqip: getValueOrDefault(maturite?.progressionMateqip)
+    maturite?: IndicateurApplicationMaturiteCloud
+) => ({
+    maturite: stringOrNR(maturite?.maturite),
+    robustesse: stringOrNR(maturite?.robustesse),
+    scoreBenefice: stringOrNR(maturite?.scoreBenefice),
+    scoreComplexite: stringOrNR(maturite?.scoreComplexite),
+    scoreOrga: stringOrNR(maturite?.scoreOrga),
+    scoreTechnique: stringOrNR(maturite?.scoreTechnique),
+
+    progressionDeploy: stringOrNR(maturite?.progressionDeploy),
+    progressionArchi: stringOrNR(maturite?.progressionArchi),
+    progressionTechnos: stringOrNR(maturite?.progressionTechnos),
+    progressionCloud: stringOrNR(maturite?.progressionCloud),
+    progressionDevops: stringOrNR(maturite?.progressionDevops),
+    progressionMateqip: stringOrNR(maturite?.progressionMateqip)
 });
 
-const MODULE_MATURITE_CLOUD_DEFAULTS: Partial<GlobalIndicator> = {
+
+const MODULE_MATURITE_CLOUD_DEFAULTS = {
     maturite: SO,
     robustesse: SO,
     scoreBenefice: SO,
@@ -186,80 +202,55 @@ const MODULE_MATURITE_CLOUD_DEFAULTS: Partial<GlobalIndicator> = {
 };
 
 export const formattedApps = (sources: ApplicationDataSources): GlobalIndicator[] => {
-    const qualiteById = findBy(sources.qualiteAppData, q => q.applicationId);
-    const devopsById = findBy(sources.devopsAppData, d => d.applicationId);
-    const meteoByName = findBy(sources.meteoData, m => m.idApplication);
-    const consoByName = findBy(
-        sources.consoAppData.filter(g => g.applicationName !== undefined),
-        g => g.applicationName!
-    );
-    const a11yById = findBy(sources.a11yDataApps, a => a.idApplication);
-    const securiteById = findBy(sources.securiteApps, s => s.applicationId);
-    const maturiteById = findBy(sources.maturiteCloudApps, m => m.applicationId);
-
     return sources.apps.map(app => {
-        const appId = app.idApplication;
-        const appName = app.appName ?? NR;
+        const qualiteByName = findByIdApp(sources.qualiteAppData, app);
+        const meteoByName = findByIdApp(sources.meteoData, app);
+        const devopsByName = findByIdApp(sources.devopsAppData, app);
+        const greenIt = findByIdApp(sources.consoAppData, app);
+        const a11y = findByIdApp(sources.a11yDataApps , app);
+        const maturiteByName = findByIdApp(sources.maturiteCloudApps, app);
+        const securiteApp = findByIdApp(sources.securiteApps, app);
 
-        const qualite = appId ? qualiteById[appId] : undefined;
-        const devops = appId ? devopsById[appId] : undefined;
-        const meteo = appId ? meteoByName[appId] : undefined;
-        const greenApp = consoByName[appName];
-        const accessibiliteApp = appId ? a11yById[appId] : undefined;
-        const securiteApp = appId ? securiteById[appId] : undefined;
-        const maturiteCloudApp = appId ? maturiteById[appId] : undefined;
 
-        return {
-            idApplication: appId,
-            applicationName: appName,
+        const result: GlobalIndicator =  {
+            idApplication: app.idApplication,
+            applicationName: app.appName ?? "",
             sndi: app.sndi ?? NR,
             domaine: app.domaineSndi ?? NR,
             domaineFonc: app.domaineFonctionnel ?? NR,
-            ...createQualiteIndicators(qualite),
+            ...createGreenITIndicators(greenIt),
+            ...createMeteoIndicators(meteoByName),
+            ...createDevopsIndicators(devopsByName),
+            ...createMaturiteCloudIndicators(maturiteByName),
+            ...createQualiteIndicators(qualiteByName),
             ...createSecuriteIndicators(securiteApp),
-            ...createDevopsIndicators(devops),
-            ...createMeteoIndicators(meteo, false),
-            ...createGreenITIndicators(greenApp),
-            ...createA11yIndicators(accessibiliteApp),
-            ...createMaturiteCloudIndicators(maturiteCloudApp)
-        } as GlobalIndicator;
+            ...createA11yIndicators(a11y)
+        };
+        return result;
     });
 };
 
 export const formattedModules = (sources: ModuleDataSources): GlobalIndicator[] => {
-    const qualiteMod = findBy(sources.qualiteModule, q => q.moduleId);
-    const devopsById = findBy(sources.devopsModulesData, d => d.moduleId);
-    const meteoByName = findBy(
-        sources.meteoData.filter(m => m.appName !== undefined),
-        m => m.appName!
-    );
-    const a11yById = findBy(sources.a11yDataModules, a => a.idModule);
-    const securiteById = findBy(sources.securiteModules, s => s.moduleId);
-
     return sources.modules.map(module => {
-        const moduleId = module.id;
-        const moduleName = module.modName ?? NR;
-
-        const devops = moduleId ? devopsById[moduleId] : undefined;
-        const meteo = meteoByName[moduleName];
-        const accessibiliteModule = moduleId ? a11yById[moduleId] : undefined;
-        const securiteModule = moduleId ? securiteById[moduleId] : undefined;
-        const qualiteModule = moduleId ? qualiteMod[moduleId] : undefined;
-
+        const qualiteMod = findByIdMod(sources.qualiteModule, module);
+        const devopsById = findByIdMod(sources.devopsModulesData, module);
+        const meteoByName = findByIdMod(sources.meteoData, module);
+        const a11yById = findByIdMod(sources.a11yDataModules, module);
+        const securiteById = findByIdMod(sources.securiteModules, module);
         return {
-            applicationName: moduleName,
+            applicationName: module.appName ?? "",
             sndi: module.sndi ?? NR,
             domaine: module.domaineSndi ?? NR,
             domaineFonc: module.domaineFonctionnel ?? NR,
             isModule: true,
             parentApplication: module.appName ?? NR,
-            ...createQualiteIndicators(qualiteModule),
-            ...createSecuriteIndicators(securiteModule),
-            ...createDevopsIndicators(devops),
-            ...createMeteoIndicators(meteo, true),
-            ...createA11yIndicators(accessibiliteModule),
+            ...createQualiteIndicators(qualiteMod),
+            ...createSecuriteIndicators(securiteById),
+            ...createDevopsIndicators(devopsById),
+            ...createMeteoIndicators(meteoByName, true),
+            ...createA11yIndicators(a11yById),
             ...MODULE_GREEN_IT_DEFAULTS,
             ...MODULE_MATURITE_CLOUD_DEFAULTS
-        } as GlobalIndicator;
+        };
     });
 };

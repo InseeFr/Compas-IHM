@@ -5,7 +5,6 @@ import { viteEnvs } from "vite-envs";
 import react from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-vite-plugin";
 
-// https://vite.dev/config/
 export default defineConfig({
     plugins: [
         react(),
@@ -25,6 +24,7 @@ export default defineConfig({
         coverage: {
             reporter: ["lcov"],
             reportsDirectory: "./coverage"
-        }
+        },
+        include: ["**/*.test.ts", "**/*.test.tsx"]
     }
 });

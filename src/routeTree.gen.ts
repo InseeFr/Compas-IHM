@@ -19,6 +19,9 @@ import { Route as IndicateurMainIndicatorsRouteImport } from './routes/indicateu
 import { Route as IndicateurGreenITTableRouteImport } from './routes/indicateur/greenITTable'
 import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
 import { Route as IndicateurAccessibiliteTableRouteImport } from './routes/indicateur/accessibiliteTable'
+import { Route as DashboardSyntheseRouteImport } from './routes/dashboard/synthese'
+import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
+import { Route as DashboardMaturiteRouteImport } from './routes/dashboard/maturite'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -73,9 +76,27 @@ const IndicateurAccessibiliteTableRoute =
     path: '/indicateur/accessibiliteTable',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DashboardSyntheseRoute = DashboardSyntheseRouteImport.update({
+  id: '/dashboard/synthese',
+  path: '/dashboard/synthese',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
+  id: '/dashboard/overview',
+  path: '/dashboard/overview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
+  id: '/dashboard/maturite',
+  path: '/dashboard/maturite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
@@ -88,6 +109,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
@@ -101,6 +125,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
   '/indicateur/greenITTable': typeof IndicateurGreenITTableRoute
@@ -115,6 +142,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard/maturite'
+    | '/dashboard/overview'
+    | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
@@ -127,6 +157,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/dashboard/maturite'
+    | '/dashboard/overview'
+    | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
@@ -139,6 +172,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/dashboard/maturite'
+    | '/dashboard/overview'
+    | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
     | '/indicateur/greenITTable'
@@ -152,6 +188,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardMaturiteRoute: typeof DashboardMaturiteRoute
+  DashboardOverviewRoute: typeof DashboardOverviewRoute
+  DashboardSyntheseRoute: typeof DashboardSyntheseRoute
   IndicateurAccessibiliteTableRoute: typeof IndicateurAccessibiliteTableRoute
   IndicateurDevopsTableRoute: typeof IndicateurDevopsTableRoute
   IndicateurGreenITTableRoute: typeof IndicateurGreenITTableRoute
@@ -235,11 +274,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndicateurAccessibiliteTableRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/synthese': {
+      id: '/dashboard/synthese'
+      path: '/dashboard/synthese'
+      fullPath: '/dashboard/synthese'
+      preLoaderRoute: typeof DashboardSyntheseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/overview': {
+      id: '/dashboard/overview'
+      path: '/dashboard/overview'
+      fullPath: '/dashboard/overview'
+      preLoaderRoute: typeof DashboardOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/maturite': {
+      id: '/dashboard/maturite'
+      path: '/dashboard/maturite'
+      fullPath: '/dashboard/maturite'
+      preLoaderRoute: typeof DashboardMaturiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardMaturiteRoute: DashboardMaturiteRoute,
+  DashboardOverviewRoute: DashboardOverviewRoute,
+  DashboardSyntheseRoute: DashboardSyntheseRoute,
   IndicateurAccessibiliteTableRoute: IndicateurAccessibiliteTableRoute,
   IndicateurDevopsTableRoute: IndicateurDevopsTableRoute,
   IndicateurGreenITTableRoute: IndicateurGreenITTableRoute,

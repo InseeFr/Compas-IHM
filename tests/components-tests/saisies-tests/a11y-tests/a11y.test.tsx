@@ -7,6 +7,7 @@ import * as client from "todos-api/client.gen";
 // Mock de l'API
 vi.mock("todos-api/client.gen", () => ({
     getModules1: vi.fn(),
+    listerModulesA11y: vi.fn(),
     majInfosSaisiesA11Y: vi.fn()
 }));
 
@@ -48,6 +49,7 @@ describe("A11yForm", () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.mocked(client.listerModulesA11y).mockResolvedValue([{ idModule: 1 }, { idModule: 2 }]);
         vi.mocked(client.getModules1).mockResolvedValue(mockModules);
     });
 
@@ -94,7 +96,6 @@ describe("A11yForm", () => {
         const cancelButton = screen.getByRole("button", { name: /annuler/i });
         await user.click(cancelButton);
 
-        // Vérifier que le formulaire est réinitialisé
         const declarationCheckbox = screen.getByTestId("declaration-checkbox");
         expect(declarationCheckbox).not.toBeChecked();
     });
@@ -105,15 +106,12 @@ describe("A11yForm", () => {
 
         await waitFor(() => expect(client.getModules1).toHaveBeenCalled());
 
-        // Sélectionner un module
         const moduleCheckbox = screen.getByTestId("module-1");
         await user.click(moduleCheckbox);
 
-        // Soumettre le formulaire
         const submitButton = screen.getByRole("button", { name: /saisir/i });
         await user.click(submitButton);
 
-        // Vérifier le message de succès avec une fonction matcher
         await waitFor(
             () => {
                 const alert = screen.getByRole("alert");

@@ -100,9 +100,7 @@ export const buildMeteo = (
         const point: MeteoPoint = {
             date: meteo.date,
             valeur:
-                meteo.valeurMeteo !== undefined && meteo.valeurMeteo !== null
-                    ? String(meteo.valeurMeteo)
-                    : "NR",
+                meteo.valeurMeteo ?? -1,
             commentaire:
                 meteo.commentaire && meteo.commentaire.length > 0
                     ? meteo.commentaire
