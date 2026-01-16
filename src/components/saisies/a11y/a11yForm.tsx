@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { Alert, Button, Stack } from "@mui/material";
-import {
-    getModules1,
-    majInfosSaisiesA11Y,
-    type InfosSaisiesA11yToSaveDTO,
-    type Module
-} from "todos-api/client.gen";
+import { majInfosSaisiesA11Y, type InfosSaisiesA11yToSaveDTO } from "todos-api/client.gen";
 import { FormPageLayout } from "pages/formsPageLayout/FormPageLayout";
 import { MainFormPageLayout } from "pages/formsPageLayout/MainPageLayout";
 import { SnackBarPageLayout } from "pages/formsPageLayout/SnackBarPageLayout";
@@ -18,7 +13,7 @@ import {
     RenderScoreAudit,
     RenderTypeAudit
 } from "components/saisies/a11y/a11yCell";
-import { DEFAULT_TYPE_AUDIT, TYPES_AUDIT, type A11yFormValues } from "./a11yFormValues";
+import { DEFAULT_TYPE_AUDIT, fetchModules, TYPES_AUDIT, type A11yFormValues } from "./a11yFormValues";
 import type { ModsIndicateur } from "models/indicateurs";
 import { useFilterContext } from "store/filterContext";
 import { Filters } from "components/Filters";
@@ -33,29 +28,8 @@ export default function A11yForm() {
 
     useEffect(() => {
         async function fetchData() {
-            const mods: Module[] = await getModules1();
-            const mappedMods: ModsIndicateur[] = mods
-                .map(mod => ({
-                    id: mod.id,
-                    nomTechnique: mod.nomTechnique,
-                    applicationTechnique: mod.applicationTechnique,
-                    sourceCreation: mod.sourceCreation,
-                    modName: mod.modName ?? "",
-                    idApplication: mod.idApplication,
-                    appName: mod.appName,
-
-                    domaine: mod.domaineSndi ?? "",
-                    domaineFonc: mod.domaineFonctionnel ?? "",
-                    sndi: mod.sndi ?? "",
-
-                    keySonar: mod.keySonar,
-                    statut: mod.statut,
-                    dateDerniereLivraisonEnProduction: mod.dateDerniereLivraisonEnProduction,
-                    typeLivrable: mod.typeLivrable,
-                    urlCodeSource: mod.urlCodeSource
-                }))
-                .sort((a, b) => a.modName.localeCompare(b.modName));
-            setModules(mappedMods);
+            const modules: ModsIndicateur[] = await fetchModules();
+            setModules(modules);
         }
         fetchData();
     }, []);

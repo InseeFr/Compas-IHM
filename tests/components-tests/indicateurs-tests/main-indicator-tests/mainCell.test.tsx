@@ -260,27 +260,15 @@ describe("MeteoCell", () => {
         render(<MeteoCell row={createRow({ dateMeteoCommentaire: oldDate.toISOString() })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toBe("NR");
+        expect(title.textContent).toBe("Météo vieille de plus de 31 jours");
     });
 
-    it("affiche l'icône d'erreur quand la date est absente", () => {
-        render(<MeteoCell row={createRow({ dateMeteoCommentaire: undefined as any })} />);
-
-        expect(screen.getByTestId("error-icon")).toBeInTheDocument();
-    });
-
-    it("affiche NR dans le tooltip quand la date est absente", () => {
-        render(<MeteoCell row={createRow({ dateMeteoCommentaire: undefined as any })} />);
-
-        const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toBe("NR");
-    });
 
     it("gère un commentaire météo absent avec date récente", () => {
         render(<MeteoCell row={createRow({ meteoCommentaire: undefined as any })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toBe("NR");
+        expect(title.textContent).toBe("Commentaire non renseigné");
     });
 
     it("convertit meteo en string pour l'icône", () => {

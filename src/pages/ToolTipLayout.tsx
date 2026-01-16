@@ -1,16 +1,16 @@
 import { Tooltip } from "@mui/material";
 import type { JSX, ReactNode } from "react";
 
-interface ToolTipLayoutProps<T> {
+interface ToolTipLayoutProps {
     title: ReactNode;
-    content: T;
+    content: ReactNode;
     key?: string;
 }
 
-export function ToolTipLayout<T extends ReactNode>(props: Readonly<ToolTipLayoutProps<T>>): JSX.Element {
+export function ToolTipLayout(props: Readonly<ToolTipLayoutProps>): JSX.Element {
     return (
         <Tooltip title={props.title} key={props.key}>
-            <span>{props.content}</span>
+            <div>{props.content}</div>
         </Tooltip>
     );
 }

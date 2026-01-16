@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/38</span>
+                <span class='fraction'>43/43</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.83% </span>
+                <span class="strong">89.79% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>46/48</span>
+                <span class='fraction'>44/49</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>38/38</span>
+                <span class='fraction'>43/43</span>
             </div>
         
             
@@ -213,7 +213,17 @@
 <a name='L148'></a><a href='#L148'>148</a>
 <a name='L149'></a><a href='#L149'>149</a>
 <a name='L150'></a><a href='#L150'>150</a>
-<a name='L151'></a><a href='#L151'>151</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,7 +290,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,9 +305,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -369,6 +387,7 @@ import type { ReactNode } from "react";
 import { isDateOlderThan31Days } from "utils/date-functions";
 import { getMeteoIcon } from "utils/meteoIcon";
 import ErrorIcon from "@mui/icons-material/Error";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 &nbsp;
 export const QualityCell = ({ row }: Readonly&lt;{ row: { original: GlobalIndicator } }&gt;) =&gt; {
     const detteTechniqueJours = Math.round(Number.parseFloat(row.original.detteTechnique ?? "0") / 420);
@@ -430,23 +449,31 @@ export const DevopsCell = ({ row }: Readonly&lt;{ row: { original: GlobalIndicat
 };
 &nbsp;
 export const MeteoCell = ({ row }: Readonly&lt;{ row: { original: GlobalIndicator } }&gt;) =&gt; {
+    const icon = getMeteoIcon(row.original.meteo);
+    console.log(row.original.applicationName === "achille" ? <span class="branch-0 cbranch-no" title="branch not covered" >row.original </span>: "")
+    const isNotValidIcon: boolean =
+        icon.type === QuestionMarkIcon &amp;&amp;
+<span class="branch-1 cbranch-no" title="branch not covered" >        icon.props.sx?.color === "#d46407ff" &amp;&amp;</span>
+<span class="branch-2 cbranch-no" title="branch not covered" >        icon.props.sx?.fontSize === 20;</span>
     const content: ReactNode = (
         &lt;span&gt;
-            {!row.original.dateMeteoCommentaire ||
-            isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
+            {isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
                 &lt;ErrorIcon sx={{ color: "#b90404ff", fontSize: 20 }} /&gt;
             ) : (
-                getMeteoIcon(row.original.meteo?.toString() ?? <span class="branch-1 cbranch-no" title="branch not covered" >"NR")</span>
+                icon
             )}
         &lt;/span&gt;
     );
+    const getMeteoComm: string = row.original.meteoCommentaire
+        ? row.original.meteoCommentaire
+        : "Commentaire non renseigné";
+    const commentary: string = isNotValidIcon ? <span class="branch-0 cbranch-no" title="branch not covered" >"Valeur météo erronée" : g</span>etMeteoComm;
     return (
         &lt;ToolTipLayout
             title={
-                !row.original.dateMeteoCommentaire ||
                 isDateOlderThan31Days(row.original.dateMeteoCommentaire)
-                    ? "NR"
-                    : (row.original.meteoCommentaire ?? "NR")
+                    ? "Météo vieille de plus de 31 jours"
+                    : commentary
             }
             content={content}
         /&gt;
@@ -520,7 +547,7 @@ export const MaturityCell = ({ row }: Readonly&lt;{ row: { original: GlobalIndic
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-13T08:49:22.110Z
+                at 2026-01-15T15:59:44.128Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

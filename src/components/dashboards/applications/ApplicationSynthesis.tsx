@@ -1,0 +1,95 @@
+import type { IndicateurApplicationSynthese } from "models/indicateurs";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { useFilterContext } from "store/filterContext";
+import {
+    fetchApplicationSynthesis,
+    handleGenerateReport,
+    normalize,
+    transformModuleData
+} from "./application-synthesis-config";
+import { applyDevFilters } from "utils/filters-functions";
+import { Filters } from "components/Filters";
+import DashboardPageLayout from "pages/dashboardsPagesLayout/dashboardPageLayout";
+import { TextField } from "@mui/material";
+import ApplicationReportPreview, { ButtonGenerateReport } from "./preview/ApplicationContent";
+
+export const ApplicationSynthesis = () => {
+    const [apps, setApps] = useState<IndicateurApplicationSynthese[]>([]);
+    const [selectedApp, setSelectedApp] = useState<IndicateurApplicationSynthese | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [modules, setModules] = useState<IndicateurApplicationSynthese[]>([]);
+    const { state, dispatch } = useFilterContext();
+
+    const getLabel = (app: IndicateurApplicationSynthese) =>
+        app.applicationName ?? `Application ${app.applicationId}`;
+
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true);
+            try {
+                const [resultApp, resultMod] = await fetchApplicationSynthesis();
+                setApps(resultApp);
+                setModules(resultMod);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, []);
+
+    const filteredData = useMemo(() => apps.filter(item => applyDevFilters(item, state)), [apps, state]);
+
+    const selectedModules = useMemo(() => {
+        if (!selectedApp) return [];
+
+        const normalizedAppName = normalize(selectedApp.applicationName);
+        const normalizedAppId = normalize(selectedApp.applicationId);
+
+        return modules
+            .filter(module => {
+                const normalizedParent = normalize(module.parentApplication);
+                return normalizedParent === normalizedAppName || normalizedParent === normalizedAppId;
+            })
+            .map(transformModuleData);
+    }, [selectedApp, modules]);
+
+    return (
+        <Fragment>
+            <Filters state={state} dispatch={dispatch} data={apps} />
+            <DashboardPageLayout
+                title={"Synthèse d'une application"}
+                dashboardData={filteredData}
+                loading={loading}
+                setter={setSelectedApp}
+                getter={selectedApp}
+                renderInputAutoComplete={params => (
+                    <TextField
+                        {...params}
+                        label="Rechercher une application"
+                        variant="outlined"
+                        placeholder="Tapez le nom…"
+                    />
+                )}
+                subHeader={
+                    selectedApp && (
+                        <ButtonGenerateReport
+                            handle={handleGenerateReport}
+                            appName={selectedApp.applicationName}
+                        />
+                    )
+                }
+                renderContent={
+                    selectedApp && (
+                        <ApplicationReportPreview
+                            key={`app-report-${selectedApp.applicationName}`}
+                            appDetails={selectedApp}
+                            modules={selectedModules}
+                            population={apps}
+                        />
+                    )
+                }
+                label={getLabel}
+            />
+        </Fragment>
+    );
+};

@@ -44,7 +44,7 @@ export const computeDetteTechniqueJours = (dette: string | undefined): string | 
 
 export const formatMainCsvRow = (item: MRT_Row<GlobalIndicator>): string => {
     const original = item.original;
-    
+
     const row = [
         original.isModule ? (original.parentApplication ?? "") : original.applicationName,
         original.isModule ? original.applicationName : "",

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>6/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>4/7</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -83,7 +83,8 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -91,36 +92,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import WaterDropTwoToneIcon from "@mui/icons-material/WaterDropTwoTone";
 import WbCloudyIcon from "@mui/icons-material/WbCloudy";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import ErrorIcon from "@mui/icons-material/Error";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 &nbsp;
-export const getMeteoIcon = (val: string) =&gt; {
+export const getMeteoIcon = (val?: number) =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (val === undefined) <span class="cstat-no" title="statement not covered" >return &lt;QuestionMarkIcon sx={{ color: "#d46407ff", fontSize: 20 }} /&gt;;</span>
     switch (val) {
-        case "1":
+        case 1:
             return &lt;ThunderstormIcon sx={{ color: "#1976d2", fontSize: 20 }} /&gt;;
-        case "2":
+        case 2:
             return &lt;WaterDropTwoToneIcon sx={{ color: "#0288d1", fontSize: 20 }} /&gt;;
-        case "3":
-            return &lt;WbCloudyIcon sx={{ color: "#757575", fontSize: 20 }} /&gt;;
-        case "4":
-            return &lt;WbSunnyIcon sx={{ color: "#fbc02d", fontSize: 20 }} /&gt;;
+<span class="branch-2 cbranch-no" title="branch not covered" >        case 3:</span>
+<span class="cstat-no" title="statement not covered" >            return &lt;WbCloudyIcon sx={{ color: "#757575", fontSize: 20 }} /&gt;;</span>
+<span class="branch-3 cbranch-no" title="branch not covered" >        case 4:</span>
+<span class="cstat-no" title="statement not covered" >            return &lt;WbSunnyIcon sx={{ color: "#fbc02d", fontSize: 20 }} /&gt;;</span>
         default:
-            return &lt;ErrorIcon sx={{ color: "#b90404ff", fontSize: 20 }} /&gt;;
+            return &lt;QuestionMarkIcon sx={{ color: "#d46407ff", fontSize: 20 }} /&gt;;
     }
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -130,7 +133,7 @@ export const getMeteoIcon = (val: string) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-13T08:49:22.110Z
+                at 2026-01-15T15:59:44.128Z
             </div>
         <script src="../prettify.js"></script>
         <script>
