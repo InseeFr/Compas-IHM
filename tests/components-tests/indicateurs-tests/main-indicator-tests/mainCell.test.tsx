@@ -263,7 +263,6 @@ describe("MeteoCell", () => {
         expect(title.textContent).toBe("Météo vieille de plus de 31 jours");
     });
 
-
     it("gère un commentaire météo absent avec date récente", () => {
         render(<MeteoCell row={createRow({ meteoCommentaire: undefined as any })} />);
 

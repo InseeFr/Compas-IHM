@@ -40,7 +40,8 @@ vi.mock("components/dashboards/maturité/MaturiteContent", () => ({
     MaturiteHeader: vi.fn(() => <div data-testid="maturite-header">Header</div>),
     ComplexitySection: vi.fn(() => <div data-testid="complexity-section">Complexity</div>),
     ConseilComplexity: vi.fn(() => <div data-testid="conseil-complexity">Conseil</div>),
-    TechAndOrga: vi.fn(() => <div data-testid="tech-and-orga">Tech & Orga</div>)
+    TechAndOrga: vi.fn(() => <div data-testid="tech-and-orga">Tech & Orga</div>),
+    DisclaimerMaturity: vi.fn(() => <div data-testid="disclaimer">Disclaimer</div>)
 }));
 
 vi.mock("utils/filters-functions", () => ({

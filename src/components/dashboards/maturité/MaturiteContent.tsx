@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { alpha, Box, Chip, Divider, LinearProgress, Stack, Typography } from "@mui/material";
 import { green, grey, red } from "@mui/material/colors";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -338,5 +339,52 @@ function TipsBlock({ title, items, loading = false, error = null }: Readonly<Tip
                 </Box>
             )}
         </Stack>
+    );
+}
+
+export function DisclaimerMaturity() {
+    return (
+        <Box
+            sx={theme => ({
+                p: { xs: 2, sm: 3, md: 4 },
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: 2,
+                gap: theme.spacing(3),
+                bgcolor: "#72007a",
+                color: "common.white",
+                width: "100%",
+                maxWidth: 900,
+                mx: "auto"
+            })}
+        >
+            <Stack direction="row" alignItems="flex-start" spacing={2} justifyContent="space-between">
+                <Box sx={{ pr: 1 }}>
+                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
+                        Ces indicateurs et les conseils associés sont basés sur un questionnaire
+                        auto-administré rempli par les équipes de développement en avril 2025. Ils
+                        peuvent donc être partiellement obsolètes, ou biaisés par une éventuelle mauvaise
+                        compréhension de certaines questions.
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
+                        De plus, les indicateurs sont issus d’une analyse statistique des réponses
+                        apportées à ce questionnaire, et sont donc soumis aux incertitudes propres à ce
+                        type d’analyse.
+                    </Typography>
+                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
+                        L’IA a été utilisée de manière marginale tout au long du process. Aucune donnée
+                        relative aux applications de l’Insee ne lui a été soumise.
+                    </Typography>
+                    <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
+                        Ces informations ont vocation à être mises à jour à un rythme semestriel.
+                    </Typography>
+                </Box>
+
+                <WarningAmberRoundedIcon
+                    sx={{ fontSize: 64, flexShrink: 0, color: "warning.main" }}
+                    titleAccess="Avertissement"
+                />
+            </Stack>
+        </Box>
     );
 }

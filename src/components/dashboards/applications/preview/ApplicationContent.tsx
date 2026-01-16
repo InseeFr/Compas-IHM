@@ -79,9 +79,9 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
             }}
             id="app-report-pdf"
         >
-            <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+            <Box display="flex" justifyContent="space-between">
                 <Box sx={{ my: 2, borderColor: theme.palette.divider }}>
-                    <Typography variant="h4" gutterBottom color="primary">
+                    <Typography variant="h4" gutterBottom color="secondary">
                         Rapport d'application : {appDetails.applicationName}
                     </Typography>
 

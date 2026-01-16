@@ -6,6 +6,7 @@ import type { ApplicationTip } from "todos-api/client.gen";
 import {
     ComplexitySection,
     ConseilComplexity,
+    DisclaimerMaturity,
     MaturiteHeader,
     TechAndOrga
 } from "components/dashboards/maturité/MaturiteContent";
@@ -291,4 +292,40 @@ describe("MaturiteContent Components", () => {
             expect(container.firstChild).toBeInTheDocument();
         });
     });
+    describe('DisclaimerMaturity', () => {
+    it('renders the component without crashing', () => {
+        render(<DisclaimerMaturity />);
+        expect(screen.getByText(/Ces indicateurs et les conseils associés/i)).toBeInTheDocument();
+    });
+
+    it('displays all disclaimer paragraphs', () => {
+        render(<DisclaimerMaturity />);
+        
+        expect(screen.getByText(/Ces indicateurs et les conseils associés sont basés sur un questionnaire/i)).toBeInTheDocument();
+        expect(screen.getByText(/De plus, les indicateurs sont issus d’une analyse statistique des réponses apportées à ce questionnaire, et sont donc soumis aux incertitudes propres à ce type d’analyse./i)).toBeInTheDocument();
+        expect(screen.getByText(/L’IA a été utilisée de manière marginale tout au long du process. Aucune donnée relative aux applications de l’Insee ne lui a été soumise./i)).toBeInTheDocument();
+        expect(screen.getByText(/Ces informations ont vocation à être mises à jour à un rythme semestriel/i)).toBeInTheDocument();
+    });
+
+    it('displays the warning icon with correct accessibility text', () => {
+        render(<DisclaimerMaturity />);
+        
+        const warningIcon = screen.getByText('Avertissement');
+        expect(warningIcon).toBeInTheDocument();
+    });
+
+    it('has the correct background color', () => {
+        const { container } = render(<DisclaimerMaturity />);
+        
+        const box = container.querySelector('[class*="MuiBox-root"]');
+        expect(box).toHaveStyle({ backgroundColor: '#72007a' });
+    });
+
+    it('mentions April 2025 as the questionnaire date', () => {
+        render(<DisclaimerMaturity />);
+        
+        expect(screen.getByText(/avril 2025/i)).toBeInTheDocument();
+    });
+
+});
 });

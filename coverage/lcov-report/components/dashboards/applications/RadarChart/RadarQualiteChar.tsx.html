@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.17% </span>
+                <span class="strong">88.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/34</span>
+                <span class='fraction'>31/35</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/8</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.93% </span>
+                <span class="strong">91.17% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/33</span>
+                <span class='fraction'>31/34</span>
             </div>
         
             
@@ -237,7 +237,19 @@
 <a name='L172'></a><a href='#L172'>172</a>
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,6 +337,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -335,6 +351,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -398,6 +421,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -464,18 +488,18 @@ const RadarQualiteChart: React.FC&lt;Props&gt; = ({ app, population, title }) =&
         };
     }, [app, population]);
 &nbsp;
-    const appColor = "#42a5f5";
-    const allColor = "#ab47bc";
-    const domainColor = "#26a69a";
+    const appColor = "#c01313ff";
+    const allColor = "#19cf28ff";
+    const domainColor = "#5112e4ff";
 &nbsp;
     const option = useMemo(() =&gt; {
         const labels: string[] = [
-            "Qualité",
+            "Maturité Cloud",
             "Sécurité",
-            "Fréquence MEP",
+            "Freq MEP",
             "Fiabilité",
             "Green IT",
-            "Maturité Cloud"
+            "Qualité"
         ];
 &nbsp;
         return {
@@ -495,21 +519,32 @@ const RadarQualiteChart: React.FC&lt;Props&gt; = ({ app, population, title }) =&
             },
             legend: {
                 data: [app.applicationName, "Moyenne globale", `Moyenne domaine (${domainName})`],
-                bottom: 10,
+                bottom: 0,
+                itemGap: 12,
                 textStyle: { color: textColor }
             },
             radar: {
-                indicator: labels.map(name =&gt; ({ name, max: 5 })),
+                center: ["50%", "40%"],
+                radius: "52%",
+&nbsp;
+                indicator: labels.map(name =&gt; ({
+                    name,
+                    max: 5
+                })),
+&nbsp;
                 splitNumber: 5,
+&nbsp;
                 name: {
-                    textStyle: { color: textColor }
+                    color: textColor,
+                    fontSize: 12,
+                    formatter: <span class="fstat-no" title="function not covered" >(v</span>alue: string) =&gt; <span class="cstat-no" title="statement not covered" >value,</span>
+                    padding: [4, 4]
                 },
+&nbsp;
                 splitLine: {
                     lineStyle: { color: gridColor }
                 },
-                splitArea: {
-                    show: false
-                },
+                splitArea: { show: false },
                 axisLine: {
                     lineStyle: { color: gridColor }
                 }
@@ -524,7 +559,7 @@ const RadarQualiteChart: React.FC&lt;Props&gt; = ({ app, population, title }) =&
                             name: app.applicationName,
                             lineStyle: { color: appColor, width: 2 },
                             itemStyle: { color: appColor },
-                            areaStyle: { color: "rgba(66,165,245,0.25)" }
+                            areaStyle: { color: "rgba(245, 132, 66, 0.25)" }
                         }
                     ]
                 },
@@ -576,9 +611,10 @@ const RadarQualiteChart: React.FC&lt;Props&gt; = ({ app, population, title }) =&
             data-testid="radar-chart-container"
             ref={chartRef}
             sx={{
-                width: 320,
-                height: 340,
-                position: "relative"
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                padding: "24px"
             }}
         /&gt;
     );
@@ -592,7 +628,7 @@ export default RadarQualiteChart;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-15T15:59:44.128Z
+                at 2026-01-16T13:49:47.291Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

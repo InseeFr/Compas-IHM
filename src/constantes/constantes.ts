@@ -2,6 +2,11 @@ import type { NavBarModel } from "../models/navbar-models";
 
 export const WELCOME_MESSAGE: string = "Bienvenue sur COMPAS !";
 
+export const CONTENT: string =
+    "Vous pouvez consulter la documentation détaillant les différents indicateurs qualité suivis dans Compas en cliquant sur le lien suivant";
+export const LINK: string =
+    "https://gitlab.insee.fr/dsi/compas/documentation/compas-wiki/-/wikis/syntheses/indicateurs";
+
 export type ViewMode = "global" | "prod" | "horsprod";
 
 export const NAV_TEXTS: NavBarModel = {

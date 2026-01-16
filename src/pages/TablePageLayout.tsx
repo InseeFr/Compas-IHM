@@ -41,13 +41,15 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableExpanding={true}
                 enableColumnFilters={false}
                 enableHiding={false}
+                enableGlobalFilter={true}
                 enableDensityToggle={false}
                 state={{
                     isLoading: isLoading
                 }}
                 initialState={{
                     pagination: props.paginationConfig.pagination,
-                    isLoading: isLoading
+                    isLoading: isLoading,
+                    showGlobalFilter: true
                 }}
                 getRowId={props.rowId}
                 getSubRows={props.subRow}

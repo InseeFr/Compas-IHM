@@ -52,28 +52,20 @@ const findByIdMod = <T extends { moduleId?: number; appName?: string; idModule?:
     );
 };
 
-const numberOrDefault = (value?: number | null): number | undefined =>
-    value ?? -1;
+const numberOrDefault = (value?: number | null): number | undefined => value ?? -1;
 
-const stringOrNR = (value?: string | null): string  =>
-    value ?? NR;
+const stringOrNR = (value?: string | null): string => value ?? NR;
 
-const createQualiteIndicators = (
-    qualite?: IndicateurQualiteView
-) => ({
+const createQualiteIndicators = (qualite?: IndicateurQualiteView) => ({
     lettreCouvertureTestUniaire: stringOrNR(qualite?.lettreCouvertureTestUniaire),
     lettreFiabilite: stringOrNR(qualite?.lettreFiabilite),
     lettreDetteTechnique: stringOrNR(qualite?.lettreDetteTechnique),
     lettreQualiteGenerale: stringOrNR(qualite?.lettreGlobalQualite),
     pourcentageCouvertureTestUniaire: stringOrNR(qualite?.pourcentageCouvertureTestUniaire),
-    detteTechnique: qualite?.detteTechnique
-        ? qualite.detteTechnique.replace(/\.00$/, "")
-        : NR
+    detteTechnique: qualite?.detteTechnique ? qualite.detteTechnique.replace(/\.00$/, "") : NR
 });
 
-const createSecuriteIndicators = (
-    securite?: IndicateurSecuriteView
-) => ({
+const createSecuriteIndicators = (securite?: IndicateurSecuriteView) => ({
     lettreGlobaleSecurite: stringOrNR(securite?.lettreGlobaleSecurite),
     lettreCve: stringOrNR(securite?.lettreCve),
 
@@ -86,9 +78,7 @@ const createSecuriteIndicators = (
     nbVmNonMaj: stringOrNR(securite?.nbVmNonMaj)
 });
 
-const createDevopsIndicators = (
-    devops?: IndicateurDevopsView
-) => ({
+const createDevopsIndicators = (devops?: IndicateurDevopsView) => ({
     lettreDistanceCount: stringOrNR(devops?.lettreDistanceCount),
     lettreDeploymentCount: stringOrNR(devops?.lettreDeploymentCount),
     lettreContributorCount: stringOrNR(devops?.lettreContributorCount),
@@ -99,18 +89,13 @@ const createDevopsIndicators = (
     nbContributorCount: stringOrNR(devops?.nbContributorCount?.toString())
 });
 
-const createMeteoIndicators = (
-    meteo?: Meteo,
-    isModule = false
-) => ({
+const createMeteoIndicators = (meteo?: Meteo, isModule = false) => ({
     meteo: numberOrDefault(meteo?.valeurMeteo),
     meteoCommentaire: meteo?.commentaire ?? (isModule ? SO : NR),
     dateMeteoCommentaire: meteo?.date ?? (isModule ? SO : NR)
 });
 
-const createGreenITIndicators = (
-    greenApp?: IndicateurApplicationGreenITView
-) => ({
+const createGreenITIndicators = (greenApp?: IndicateurApplicationGreenITView) => ({
     conso: stringOrNR(greenApp?.conso),
     lettreGreen: stringOrNR(greenApp?.lettreGreen),
     gaspillage: stringOrNR(greenApp?.gaspillageScore),
@@ -158,18 +143,14 @@ const MODULE_GREEN_IT_DEFAULTS = {
     consoProd: SO
 };
 
-const createA11yIndicators = (
-    a11y?: IndicateursModuleA11Y
-) => ({
+const createA11yIndicators = (a11y?: IndicateursModuleA11Y) => ({
     lettreA11y: stringOrNR(a11y?.notation),
     scoreAuditA11y: numberOrDefault(a11y?.scoreAudit),
     declarationA11y: a11y?.declaration ?? undefined,
-    dateDeclarationA11y:  stringOrNR(a11y?.dateDeclaration)
+    dateDeclarationA11y: stringOrNR(a11y?.dateDeclaration)
 });
 
-const createMaturiteCloudIndicators = (
-    maturite?: IndicateurApplicationMaturiteCloud
-) => ({
+const createMaturiteCloudIndicators = (maturite?: IndicateurApplicationMaturiteCloud) => ({
     maturite: stringOrNR(maturite?.maturite),
     robustesse: stringOrNR(maturite?.robustesse),
     scoreBenefice: stringOrNR(maturite?.scoreBenefice),
@@ -184,7 +165,6 @@ const createMaturiteCloudIndicators = (
     progressionDevops: stringOrNR(maturite?.progressionDevops),
     progressionMateqip: stringOrNR(maturite?.progressionMateqip)
 });
-
 
 const MODULE_MATURITE_CLOUD_DEFAULTS = {
     maturite: SO,
@@ -207,12 +187,11 @@ export const formattedApps = (sources: ApplicationDataSources): GlobalIndicator[
         const meteoByName = findByIdApp(sources.meteoData, app);
         const devopsByName = findByIdApp(sources.devopsAppData, app);
         const greenIt = findByIdApp(sources.consoAppData, app);
-        const a11y = findByIdApp(sources.a11yDataApps , app);
+        const a11y = findByIdApp(sources.a11yDataApps, app);
         const maturiteByName = findByIdApp(sources.maturiteCloudApps, app);
         const securiteApp = findByIdApp(sources.securiteApps, app);
 
-
-        const result: GlobalIndicator =  {
+        const result: GlobalIndicator = {
             idApplication: app.idApplication,
             applicationName: app.appName ?? "",
             sndi: app.sndi ?? NR,

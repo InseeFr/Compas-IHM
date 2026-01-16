@@ -6,7 +6,13 @@ import { Filters } from "components/Filters";
 import DashboardPageLayout from "pages/dashboardsPagesLayout/dashboardPageLayout";
 import { applyDevFilters } from "utils/filters-functions";
 import { TextField } from "@mui/material";
-import { ComplexitySection, ConseilComplexity, MaturiteHeader, TechAndOrga } from "./MaturiteContent";
+import {
+    ComplexitySection,
+    ConseilComplexity,
+    DisclaimerMaturity,
+    MaturiteHeader,
+    TechAndOrga
+} from "./MaturiteContent";
 import type { ApplicationTip } from "todos-api/client.gen";
 
 export default function MaturiteCloud() {
@@ -92,6 +98,7 @@ export default function MaturiteCloud() {
                 }
                 label={getLabel}
             />
+            <DisclaimerMaturity />
         </Fragment>
     );
 }
