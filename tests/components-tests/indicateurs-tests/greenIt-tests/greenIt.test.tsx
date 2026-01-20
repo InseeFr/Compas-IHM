@@ -91,8 +91,8 @@ describe("GreenItTable (mocked)", () => {
         expect(heading).toBeDefined();
 
         expect(screen.getByText("Nom")).toBeInTheDocument();
-        expect(screen.getByText("Service dev.")).toBeInTheDocument();
-
+        const elements = await screen.findAllByText("Service dev.");
+        expect(elements[0]).toBeInTheDocument();
         expect(screen.getByText("App1")).toBeInTheDocument();
 
         const apps = await client.getApplications1();
