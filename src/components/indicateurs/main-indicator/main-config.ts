@@ -9,12 +9,34 @@ import {
     QualityCell,
     SecurityCell
 } from "./mainCell";
+import type { MRT_SortingFn } from "material-react-table";
+import { isDateOlderThan31Days } from "utils/date-functions";
 
 export const paginationConfig: Pagination = {
     pagination: {
         pageIndex: 0,
         pageSize: 30
     }
+};
+
+const sortHelper: MRT_SortingFn<GlobalIndicator> = (rowA, rowB) => {
+    const a: GlobalIndicator = rowA.original;
+    const b: GlobalIndicator = rowB.original;
+
+    const aExpired: boolean = isDateOlderThan31Days(a.dateMeteoCommentaire);
+    const bExpired: boolean = isDateOlderThan31Days(b.dateMeteoCommentaire);
+
+    if (aExpired && !bExpired) return -1;
+    if (!aExpired && bExpired) return 1;
+
+    const aVal: number | undefined = a.meteo;
+    const bVal: number | undefined = b.meteo;
+
+    if (aVal == null && bVal == null) return 0;
+    if (aVal == null) return -1;
+    if (bVal == null) return 1;
+
+    return aVal - bVal;
 };
 
 export const columnsGlobal = (): ColumnTable<GlobalIndicator>[] => [
@@ -51,7 +73,8 @@ export const columnsGlobal = (): ColumnTable<GlobalIndicator>[] => [
     {
         accessorKey: "meteo",
         header: "Météo ressentie",
-        Cell: MeteoCell
+        Cell: MeteoCell,
+        sortingFn: sortHelper
     },
     {
         accessorKey: "lettreA11y",

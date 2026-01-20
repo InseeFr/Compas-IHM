@@ -56,7 +56,11 @@ export function SelectedFiltersLayout<T>(props: Readonly<SelectedFiltersLayoutPr
                         return (
                             <FormControl style={{ minWidth: 200 }} key={filter.title}>
                                 <InputLabel>{filter.title}</InputLabel>
-                                <Select value={filter.selectedOne} onChange={filter.onChange}>
+                                <Select
+                                    value={filter.selectedOne}
+                                    onChange={filter.onChange}
+                                    label={filter.title}
+                                >
                                     <MenuItem>Tous</MenuItem>
                                     {values.map(value => (
                                         <MenuItem key={value} value={value}>

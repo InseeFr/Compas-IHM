@@ -127,7 +127,8 @@ describe("SecuriteIndicateurTable", () => {
         expect(heading).toBeDefined();
 
         expect(await screen.findByText("Nom")).toBeInTheDocument();
-        expect(screen.getByText("Service dev.")).toBeInTheDocument();
+        const elements = await screen.findAllByText("Service dev.");
+        expect(elements[0]).toBeInTheDocument();
         expect(screen.getByText("CVE")).toBeInTheDocument();
         expect(await screen.findByText("App1")).toBeInTheDocument();
     });

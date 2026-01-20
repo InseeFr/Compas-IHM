@@ -17,6 +17,10 @@
         "test": "vitest",
         "coverage": "vitest run --coverage"
     },
+    "engines": {
+        "node": "v20.20.0",
+        "npm": "10.8.2"
+    },
     "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
@@ -54,7 +58,6 @@
         "globals": "^17.0.0",
         "jsdom": "^27.4.0",
         "node-fetch": "^3.3.2",
-        "npm": "^11.7.0",
         "orval": "7.18.0",
         "prettier": "^3.7.4",
         "typescript": "~5.9.3",
