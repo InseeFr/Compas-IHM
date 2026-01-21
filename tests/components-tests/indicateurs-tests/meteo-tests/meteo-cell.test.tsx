@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// MeteoCell.test.tsx
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
 import type { MeteoIndicateur } from "models/indicateurs";
-import { MeteoCell } from "components/indicateurs/meteo/meteoCell";
+import { MeteoCell, MeteoFormMonths } from "components/indicateurs/meteo/meteoCell";
 
-// Mock de ToolTipLayout pour simplifier le test
 vi.mock("pages/ToolTipLayout", () => ({
     ToolTipLayout: ({ title, content }: any) => (
         <div data-testid="tooltip">
@@ -34,13 +33,10 @@ describe("MeteoCell", () => {
 
     it("rend les icônes correctes selon la valeur", () => {
         render(<MeteoCell row={baseRow} column={{ id: "m-01" }} />);
-
         const titles = screen.getAllByTestId("tooltip-title");
         expect(titles).toHaveLength(2);
-
         expect(titles[0].textContent).toContain("2026-01-01");
         expect(titles[0].textContent).toContain("Orage");
-
         expect(titles[1].textContent).toContain("2026-01-02");
     });
 
@@ -52,9 +48,7 @@ describe("MeteoCell", () => {
                 }
             }
         };
-
         render(<MeteoCell row={row} column={{ id: "m-01" }} />);
-
         const title = screen.getByTestId("tooltip-title");
         expect(title.textContent).toContain("2026-01-03");
         expect(title.textContent).toContain("Inconnu");
@@ -62,9 +56,7 @@ describe("MeteoCell", () => {
 
     it("retourne null si aucune donnée disponible", () => {
         const row: any = { original: { byMonth: { "01": [] } } };
-
         const { container } = render(<MeteoCell row={row} column={{ id: "m-01" }} />);
-
         expect(container.firstChild).toBeNull();
     });
 
@@ -80,13 +72,86 @@ describe("MeteoCell", () => {
                 }
             }
         };
-
         render(<MeteoCell row={row} column={{ id: "m-03" }} />);
-
         const tooltips = screen.getAllByTestId("tooltip");
         expect(tooltips).toHaveLength(3);
-
         const titles = screen.getAllByTestId("tooltip-title");
         expect(titles[2].textContent).toContain("Inconnu");
+    });
+});
+
+describe("MeteoFormMonths", () => {
+    it("renders with default value", () => {
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={6} handleChange={handleChange} />);
+
+        // Verify the combobox is rendered
+        expect(screen.getByRole("combobox")).toBeInTheDocument();
+        
+        // Check the value via the hidden input
+        const hiddenInput = document.querySelector('input.MuiSelect-nativeInput') as HTMLInputElement;
+        expect(hiddenInput).toHaveValue("6");
+    });
+
+    it("renders all period options when opened", async () => {
+        const user = userEvent.setup();
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={3} handleChange={handleChange} />);
+
+        const select = screen.getByRole("combobox");
+        await user.click(select);
+
+        // Verify via role="option" which is more semantic
+        const options = screen.getAllByRole("option");
+        expect(options).toHaveLength(3);
+        expect(options[0]).toHaveTextContent("3 mois");
+        expect(options[1]).toHaveTextContent("6 mois");
+        expect(options[2]).toHaveTextContent("12 mois");
+    });
+
+    it("calls handleChange when a new period is selected", async () => {
+        const user = userEvent.setup();
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={3} handleChange={handleChange} />);
+
+        const select = screen.getByRole("combobox");
+        await user.click(select);
+        
+        // Get the option by role instead of text to avoid duplicates
+        const options = screen.getAllByRole("option");
+        const option12 = options.find(opt => opt.textContent?.includes("12 mois"));
+        if (option12) {
+            await user.click(option12);
+        }
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+    });
+
+    it("is disabled when disabled prop is true", () => {
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={6} handleChange={handleChange} disabled={true} />);
+
+        const select = screen.getByRole("combobox");
+        // Material-UI uses aria-disabled instead of the disabled attribute
+        expect(select).toHaveAttribute("aria-disabled", "true");
+    });
+
+    it("is enabled by default", () => {
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={6} handleChange={handleChange} />);
+
+        const select = screen.getByRole("combobox");
+        expect(select).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    it("displays calendar icon in label", () => {
+        const handleChange = vi.fn();
+        render(<MeteoFormMonths nbMois={6} handleChange={handleChange} />);
+
+        // Verify the calendar icon is present by testId
+        expect(screen.getByTestId("CalendarMonthIcon")).toBeInTheDocument();
+        
+        // Verify the combobox exists (which confirms the component rendered)
+        expect(screen.getByRole("combobox")).toBeInTheDocument();
     });
 });

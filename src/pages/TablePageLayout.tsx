@@ -14,7 +14,9 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     titleTable: string;
     columns: MRT_ColumnDef<T>[];
     data: T[];
+    isLoading: boolean;
     paginationConfig: Pagination;
+    reactKey?: string;
     rowId?: (originalRow: T, index?: number, parentRow?: MRT_Row<T>) => string;
     subRow?: (originalRow: T, index: number) => T[] | undefined;
     renderTopCustom?: (props: { table: MRT_TableInstance<T> }) => React.ReactNode;
@@ -23,7 +25,6 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
 export default function TablePageLayout<T extends MRT_RowData>(
     props: Readonly<TablePageLayoutProps<T>>
 ): JSX.Element {
-    const isLoading: boolean = !props.data || props.data.length === 0;
     return (
         <Box
             sx={{
@@ -35,6 +36,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
         >
             <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
+                key={props.reactKey}
                 data={props.data}
                 columns={props.columns}
                 enableFullScreenToggle={false}
@@ -44,11 +46,10 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableGlobalFilter={true}
                 enableDensityToggle={false}
                 state={{
-                    isLoading: isLoading
+                    isLoading: props.isLoading
                 }}
                 initialState={{
                     pagination: props.paginationConfig.pagination,
-                    isLoading: isLoading,
                     showGlobalFilter: true
                 }}
                 getRowId={props.rowId}

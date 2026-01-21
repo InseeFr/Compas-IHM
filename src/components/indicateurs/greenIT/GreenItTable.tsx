@@ -1,6 +1,5 @@
 import type { ViewMode } from "constantes/constantes";
-import type { GreenITIndicateur } from "models/indicateurs";
-import { useEffect, useMemo, useState, Fragment } from "react";
+import { useMemo, useState, Fragment } from "react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications, getApplications1 } from "todos-api/client.gen";
 import {
@@ -14,40 +13,38 @@ import TablePageLayout from "pages/TablePageLayout";
 import ButtonCsvExport from "pages/ButtonCsvExport";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { Filters } from "components/Filters";
-import { applyDevFilters } from "utils/filters-functions";
+import { UseQueryIndicators } from "utils/useQueryIndicators";
 
 export const GreenItTable = () => {
-    const [greenItData, setGreenItData] = useState<GreenITIndicateur[]>([]);
     const { state, dispatch } = useFilterContext();
     const [viewMode, setViewMode] = useState<ViewMode>("global");
     const columns = useMemo(() => columnsGreenIt(), []);
 
-    useEffect(() => {
-        async function fetchData(): Promise<void> {
-            try {
-                const [sndiAndDomainApp, appGreenIt] = await Promise.all([
-                    getApplications1(),
-                    getApplications()
-                ]);
-                setGreenItData([...formatIndicateur(sndiAndDomainApp, appGreenIt)]);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des données: ", error);
-            }
+    const fetchData = async () => {
+        try {
+            const [sndiAndDomainApp, appGreenIt] = await Promise.all([
+                getApplications1(),
+                getApplications()
+            ]);
+            return [...formatIndicateur(sndiAndDomainApp, appGreenIt)];
+        } catch (error) {
+            console.error("Erreur lors de la récupération des données: ", error);
         }
-        fetchData();
-    }, []);
+    };
 
-    const filteredData = useMemo(
-        () => greenItData.filter(item => applyDevFilters(item, state)),
-        [greenItData, state]
-    );
+    const { data, isLoading, filteredData } = UseQueryIndicators({
+        queryKey: ["GreenItIndicator"],
+        fetchData,
+        hasModules: false
+    });
 
     return (
         <>
-            <Filters data={greenItData} state={state} dispatch={dispatch} />
+            <Filters data={data} state={state} dispatch={dispatch} />
             <TablePageLayout
                 titleTable="Table Indicateur GreenIT"
                 data={filteredViewMode(viewMode, filteredData)}
+                isLoading={isLoading}
                 columns={columns}
                 paginationConfig={paginationConfig}
                 rowId={row =>

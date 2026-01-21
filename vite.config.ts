@@ -7,7 +7,7 @@ import { tanstackRouter } from "@tanstack/router-vite-plugin";
 
 export default defineConfig({
     plugins: [
-         tanstackRouter({
+        tanstackRouter({
             target: "react",
             autoCodeSplitting: true
         }),
@@ -15,7 +15,7 @@ export default defineConfig({
         tsconfigPaths(),
         viteEnvs({
             declarationFile: ".env"
-        }),
+        })
     ],
     test: {
         environment: "jsdom",

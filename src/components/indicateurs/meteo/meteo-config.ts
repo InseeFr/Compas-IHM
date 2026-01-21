@@ -49,9 +49,9 @@ export const month = (meteos: Meteo[]): string[] => {
 
     const sorted = [...monthKeys].sort((a, b) => a.localeCompare(b));
     const minMk = sorted[0];
-    const maxMk = sorted[sorted.length - 1];
+    const maxMk = sorted.at(-1);
 
-    return monthRange(minMk, maxMk);
+    return monthRange(minMk, maxMk ?? "");
 };
 
 const createRow = (
@@ -135,8 +135,7 @@ export const columnsMeteo = (months: string[]): ColumnTable<MeteoIndicateur>[] =
         {
             header: "Nom",
             accessorKey: "applicationName"
-        },
-        { accessorKey: "sndi", header: "serviceDev" }
+        }
     ];
 
     const monthColumns: ColumnTable<MeteoIndicateur>[] = months.map(mk => ({

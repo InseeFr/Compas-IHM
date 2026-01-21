@@ -146,7 +146,7 @@ const MODULE_GREEN_IT_DEFAULTS = {
 const createA11yIndicators = (a11y?: IndicateursModuleA11Y) => ({
     lettreA11y: stringOrNR(a11y?.notation),
     scoreAuditA11y: numberOrDefault(a11y?.scoreAudit),
-    declarationA11y: a11y?.declaration ?? undefined,
+    declarationA11y: a11y?.isDeclaration ?? undefined,
     dateDeclarationA11y: stringOrNR(a11y?.dateDeclaration)
 });
 

@@ -41,15 +41,21 @@ vi.mock("components/indicateurs/devops/devopsConfig", () => ({
     paginationConfig: {}
 }));
 
+const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
+const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
+
+vi.mock("@tanstack/react-query", () => ({
+    useQuery: vi.fn(() => ({
+        data: [...mockApps, ...mockModules],
+        isLoading: false
+    }))
+}));
 describe("DevopsIndicateurTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render applications and modules after fetching data", async () => {
-        const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
-        const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
-
         (getApplications2 as any).mockResolvedValue(mockApps);
         (getModules2 as any).mockResolvedValue(mockModules);
 
@@ -65,9 +71,6 @@ describe("DevopsIndicateurTable", () => {
         });
 
         expect(screen.queryByText("Module1")).toBeNull();
-
-        expect(getApplications2).toHaveBeenCalledOnce();
-        expect(getModules2).toHaveBeenCalledOnce();
     });
 
     it("should call onExport when clicking Export CSV button", async () => {

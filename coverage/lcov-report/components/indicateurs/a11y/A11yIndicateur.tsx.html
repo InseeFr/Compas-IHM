@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/19</span>
+                <span class='fraction'>14/16</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.81% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/11</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.66% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/15</span>
+                <span class='fraction'>11/13</span>
             </div>
         
             
@@ -109,10 +109,7 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -124,25 +121,23 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
@@ -153,53 +148,52 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { A11yIndicateur } from "models/indicateurs";
-import { useEffect, useMemo, useState } from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useMemo } from "react";
 import { useFilterContext } from "store/filterContext";
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./a11yConfig";
 import { getModules1, listerModulesA11y } from "todos-api/client.gen";
 import TablePageLayout from "pages/TablePageLayout";
 import ButtonCsvExport from "pages/ButtonCsvExport";
 import { Filters } from "components/Filters";
-import { applyDevFilters } from "utils/filters-functions";
+import { UseQueryIndicators } from "utils/useQueryIndicators";
 &nbsp;
 export const A11yIndicateurTable = () =&gt; {
-    const [a11yIndicateur, setA11yIndicateur] = useState&lt;A11yIndicateur[]&gt;([]);
     const { state, dispatch } = useFilterContext();
     const columns = useMemo(() =&gt; columnsTable(), []);
 &nbsp;
-    async function fetchA11yIndicateurs(): Promise&lt;A11yIndicateur[]&gt; {
-        const [modulesA11y, modules] = await Promise.all([listerModulesA11y(), getModules1()]);
+    const fetchData = async () =&gt; {
+        try {
+            const [modulesA11y, modules] = await Promise.all([listerModulesA11y(), getModules1()]);
 &nbsp;
-        const modulesByName = new Map(modules.map(module =&gt; [module.modName, module]));
+            const modulesByName = new Map(modules.map(module =&gt; [module.modName, module]));
 &nbsp;
-        return modulesA11y.map(mod =&gt; formatIndicateur(mod, modulesByName.get(mod.modName)));
-    }
+            return modulesA11y.map(mod =&gt; formatIndicateur(mod, modulesByName.get(mod.modName)));
+        } catch (error) {
+            console.error("Erreur lors de la récupération des données A11y: ", error);
+        }
+    };
 &nbsp;
-    useEffect(() =&gt; {
-        fetchA11yIndicateurs()
-            .then(setA11yIndicateur)
-            .catch(error =&gt; console.error("Erreur lors de la récupération des données A11y: ", error));
-    }, []);
-&nbsp;
-    const filteredData = useMemo(
-        () =&gt; a11yIndicateur.filter(item =&gt; applyDevFilters(item, state)),
-        [a11yIndicateur, state]
-    );
+    const { data, isLoading, filteredData } = UseQueryIndicators({
+        queryKey: ["A11YIndicator"],
+        fetchData,
+        hasModules: true
+    });
 &nbsp;
     return (
         &lt;&gt;
-            &lt;Filters data={a11yIndicateur} state={state} dispatch={dispatch} /&gt;
+            &lt;Filters data={data} state={state} dispatch={dispatch} /&gt;
             &lt;TablePageLayout
                 titleTable="Table Indicateur Accessibilité"
                 data={filteredData}
                 columns={columns}
+                isLoading={isLoading}
                 paginationConfig={paginationConfig}
                 rowId={<span class="fstat-no" title="function not covered" >row =&gt; <span class="cstat-no" title="statement not covered" >r</span>ow.modName}</span>
                 renderTopCustom={<span class="fstat-no" title="function not covered" >({</span> table }<span class="cstat-no" title="statement not covered" >) =&gt; &lt;ButtonCsvExport table={table} onExport={OnExport} /&gt;}</span>
@@ -214,7 +208,7 @@ export const A11yIndicateurTable = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-16T13:49:47.291Z
+                at 2026-01-21T15:00:19.658Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

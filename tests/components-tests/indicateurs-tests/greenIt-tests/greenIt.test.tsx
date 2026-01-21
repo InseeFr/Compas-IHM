@@ -50,6 +50,13 @@ const mockGreenIT = [
     }
 ];
 
+vi.mock("@tanstack/react-query", () => ({
+    useQuery: vi.fn(() => ({
+        data: [...mockApps, ...mockGreenIT],
+        isLoading: false
+    }))
+}));
+
 // ====================
 // Tests
 // ====================
@@ -81,10 +88,6 @@ describe("GreenItTable (mocked)", () => {
         render(<GreenItTable />);
 
         await screen.findByText("App1");
-
-        expect(vi.mocked(client.getApplications1)).toHaveBeenCalledTimes(1);
-        expect(vi.mocked(client.getApplications)).toHaveBeenCalledTimes(1);
-
         const heading = await screen.findByRole("heading", {
             name: /table indicateur GreenIT/i
         });

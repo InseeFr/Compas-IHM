@@ -35,6 +35,38 @@ vi.mock("pages/TablePageLayout");
 vi.mock("pages/ButtonCsvExport");
 vi.mock("components/Filters");
 
+vi.mock("@tanstack/react-query", () => ({
+    useQuery: vi.fn(options => {
+        const queryFn = options.queryFn;
+        let data;
+
+        try {
+            data = queryFn ? queryFn() : undefined;
+        } catch (error) {
+            return {
+                data: undefined,
+                isLoading: false,
+                error: error,
+                isSuccess: false,
+                isError: true
+            };
+        }
+
+        return {
+            data: data,
+            isLoading: false,
+            error: null,
+            isSuccess: true,
+            isError: false
+        };
+    }),
+    QueryClient: vi.fn(() => ({
+        mount: vi.fn(),
+        unmount: vi.fn()
+    })),
+    QueryClientProvider: vi.fn(({ children }) => children)
+}));
+
 describe("MeteoTable", () => {
     const mockDispatch = vi.fn();
     const mockState = {
@@ -151,21 +183,5 @@ describe("MeteoTable", () => {
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
         });
-    });
-
-    it("devrait gérer les erreurs lors du chargement des données", async () => {
-        const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-        vi.mocked(getHistory).mockRejectedValue(new Error("API Error"));
-
-        render(<MeteoTable />);
-
-        await waitFor(() => {
-            expect(consoleErrorSpy).toHaveBeenCalledWith(
-                "Erreur lors de la récupération du meteo history: ",
-                expect.any(Error)
-            );
-        });
-
-        consoleErrorSpy.mockRestore();
     });
 });

@@ -1,5 +1,4 @@
-import type { MeteoIndicateur } from "models/indicateurs";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications1, getHistory } from "todos-api/client.gen";
 import {
@@ -14,44 +13,60 @@ import TablePageLayout from "pages/TablePageLayout";
 import ButtonCsvExport from "pages/ButtonCsvExport";
 import { Filters } from "components/Filters";
 import { applyDevFilters } from "utils/filters-functions";
+import { MeteoFormMonths } from "./meteoCell";
+import { useQuery } from "@tanstack/react-query";
 
 export const MeteoTable = () => {
-    const [meteoData, setMeteoData] = useState<MeteoIndicateur[]>([]);
     const { state, dispatch } = useFilterContext();
-    const [months, setMonths] = useState<string[]>([]);
+    const [nbMois, setNbMois] = useState<number>(6);
+
+    const fetchData = async () => {
+        const [meteoHistory, apps] = await Promise.all([
+            getHistory({ nbMois: nbMois }),
+            getApplications1()
+        ]);
+        const items = meteoHistory.filter(meteo => meteo.idApplication !== undefined);
+        const getMonths: string[] = month(items);
+        const domaineFoncMap = buildDomaineFoncMap(apps);
+        const meteoData = buildMeteo(meteoHistory, getMonths, domaineFoncMap);
+
+        return { data: meteoData, months: getMonths };
+    };
+
+    const { data: queryResult, isLoading } = useQuery({
+        queryKey: ["meteoIndicator", nbMois],
+        queryFn: fetchData,
+        staleTime: 0
+    });
+
+    const data = useMemo(() => queryResult?.data ?? [], [queryResult?.data]);
+    const months = useMemo(() => queryResult?.months ?? [], [queryResult?.months]);
+
     const columns = useMemo(() => columnsMeteo(months), [months]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const [meteoHistory, apps] = await Promise.all([getHistory(), getApplications1()]);
-                const items = meteoHistory.filter(meteo => meteo.idApplication !== undefined);
-                const getMonths: string[] = month(items);
-                const domaineFoncMap = buildDomaineFoncMap(apps);
-                setMonths(getMonths);
-                setMeteoData(buildMeteo(meteoHistory, getMonths, domaineFoncMap));
-            } catch (error) {
-                console.error("Erreur lors de la récupération du meteo history: ", error);
-            }
-        }
-        fetchData();
-    }, []);
-
-    const filteredData = useMemo(
-        () => meteoData.filter(item => applyDevFilters(item, state)),
-        [meteoData, state]
-    );
+    const filteredData = useMemo(() => data.filter(item => applyDevFilters(item, state)), [data, state]);
 
     return (
         <>
-            <Filters data={meteoData} state={state} dispatch={dispatch} />
+            <Filters data={data} state={state} dispatch={dispatch} />
             <TablePageLayout
+                reactKey={months.join("|")}
                 titleTable="Table Indicateur Météo"
                 columns={columns}
                 data={filteredData}
+                isLoading={isLoading}
                 paginationConfig={paginationConfig}
                 rowId={r => String(r.idApp ?? r.applicationName)}
-                renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
+                renderTopCustom={({ table }) => (
+                    <Fragment>
+                        <MeteoFormMonths
+                            nbMois={nbMois}
+                            handleChange={event => setNbMois(Number(event.target.value))}
+                            disabled={isLoading}
+                        />
+                        <ButtonCsvExport table={table} onExport={onExport} />
+                    </Fragment>
+                )}
             />
         </>
     );

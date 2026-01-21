@@ -80,7 +80,7 @@ describe("formattedApps", () => {
         const mockA11y: IndicateursModuleA11Y = {
             notation: "A",
             scoreAudit: 85,
-            declaration: true,
+            isDeclaration: true,
             dateDeclaration: "2024-01-01"
         };
 
@@ -260,7 +260,7 @@ describe("formattedModules", () => {
         const mockA11y: IndicateursModuleA11Y = {
             notation: "B",
             scoreAudit: 78,
-            declaration: false,
+            isDeclaration: false,
             dateDeclaration: "2023-12-15"
         };
 

@@ -56,6 +56,13 @@ const mockModules = [
     }
 ];
 
+vi.mock("@tanstack/react-query", () => ({
+    useQuery: vi.fn(() => ({
+        data: [...mockApps, ...mockModules],
+        isLoading: false
+    }))
+}));
+
 describe("QualiteIndicateurTable", () => {
     const stateMock = {};
     const dispatchMock = vi.fn();
