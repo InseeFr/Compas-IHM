@@ -148,6 +148,13 @@ export interface AppsIndicateur {
     sndi: string;
 }
 
+export interface FilterableItem {
+    isModule?: boolean;
+    sndi?: string;
+    domaine?: string;
+    domaineFonc?: string;
+}
+
 export interface ModsIndicateur {
     id?: number;
     nomTechnique?: string;

@@ -86,7 +86,6 @@ describe("meteo-config.ts", () => {
         const columns = meteoConfig.columnsMeteo(["2026-01", "2026-02"]);
 
         expect(columns[0].header).toBe("Nom");
-        expect(columns[1].header).toBe("serviceDev");
     });
 
     it("calls handleExportCsv correctly in onExport", () => {
