@@ -40,6 +40,7 @@
         "react-dom": "^19.2.0",
         "react-hook-form": "^7.70.0",
         "react-markdown": "^10.1.0",
+        "remark-gfm": "^4.0.1",
         "tsafe": "^1.8.12",
         "vite-envs": "^4.6.2",
         "vite-tsconfig-paths": "^6.0.3"

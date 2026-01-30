@@ -1,133 +1,63 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import HomePageLayout from "pages/Home";
 
-vi.mock("../assets/content/compas-accueil.md?raw", () => ({
-    default:
-        "# Titre principal\n\n## Sous-titre\n\nContenu du paragraphe avec [un lien](https://example.com)"
+vi.mock("@tanstack/react-router", () => ({
+    Link: ({ children, params }: any) => <a href={`/${params?.pageName}`}>{children}</a>
 }));
 
-vi.mock("react-markdown", () => ({
-    default: ({ children, components }: any) => {
-        const lines = children.split("\n");
-        return (
-            <div data-testid="markdown-container">
-                {lines.map((line: string) => {
-                    if (line.startsWith("#")) {
-                        const H1 = components.h1;
-                        return <H1 key={`${line}-h1`}>{line.substring(2)}</H1>;
-                    }
-                    if (line.startsWith("##")) {
-                        const H2 = components.h2;
-                        return <H2 key={`${line}-h2`}>{line.substring(3)}</H2>;
-                    }
-                    if (line.includes("[") && line.includes("](")) {
-                        const match = new RegExp(/\[(.+?)\]\((.+?)\)/).exec(line);
-                        if (match) {
-                            const A = components.a;
-                            return (
-                                <span key={`${line}-a`}>
-                                    <A href={match[2]}>{match[1]}</A>
-                                </span>
-                            );
-                        }
-                    }
-                    if (line.trim()) {
-                        const P = components.p;
-                        return <P key={`${line}-p`}>{line}</P>;
-                    }
-                    return null;
-                })}
-            </div>
-        );
-    }
+vi.mock("assets/content/pagesMdConfig.json", () => ({
+    default: [
+        { parent: "Indicateur", file: "indicateur-dev", page: "Devops" },
+        { parent: "Indicateur", file: "indicateur-sec", page: "Sécu" },
+        { parent: "Indicateur", file: "indicateur-qual", page: "Qualité" }
+    ]
 }));
 
 describe("HomePageLayout", () => {
     beforeEach(() => {
-        vi.clearAllMocks();
+        render(<HomePageLayout />);
     });
 
-    describe("Chargement du contenu markdown", () => {
-        it("devrait charger et afficher le contenu markdown au montage du composant", async () => {
-            render(<HomePageLayout />);
-
-            await waitFor(() => {
-                expect(screen.getByTestId("markdown-container")).toBeInTheDocument();
-            });
-        });
-
-        it("devrait afficher un titre h1 avec les styles MUI appropriés", async () => {
-            render(<HomePageLayout />);
-
-            await waitFor(() => {
-                const heading = screen.getByText("Compas");
-                expect(heading).toBeInTheDocument();
-                expect(heading.tagName).toBe("H1");
-            });
-        });
+    it("render le composant", () => {
+        expect(screen.getByText("Accueil")).toBeInTheDocument();
     });
 
-    describe("Accessibilité", () => {
-        it("devrait rendre les titres h1 focusables avec tabIndex", async () => {
-            render(<HomePageLayout />);
-
-            await waitFor(() => {
-                const heading = screen.getByText("Compas");
-                expect(heading).toHaveAttribute("tabIndex", "0");
-            });
-        });
-
-        it("devrait rendre les paragraphes focusables avec tabIndex", async () => {
-            render(<HomePageLayout />);
-
-            await waitFor(() => {
-                const paragraph = screen.getByText(
-                    "- schémas des interactions des systémes Oscar, Analyzer et Compas"
-                );
-                expect(paragraph).toHaveAttribute("tabIndex", "0");
-            });
-        });
+    it("affiche le titre principal", () => {
+        expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Accueil");
     });
 
-    describe("Liens externes", () => {
-        it("devrait rendre les liens avec target=_blank et rel=noopener noreferrer", async () => {
-            render(<HomePageLayout />);
-
-            await waitFor(() => {
-                const link = screen.getByText("décrits ici");
-                expect(link).toHaveAttribute("href");
-                expect(link).toHaveAttribute("target", "_blank");
-                expect(link).toHaveAttribute("rel", "noopener noreferrer");
-            });
-        });
+    it("affiche le texte descriptif", () => {
+        expect(screen.getByText(/liste de tous les indicateurs/i)).toBeInTheDocument();
     });
 
-    describe("Structure du composant", () => {
-        it("devrait rendre le contenu dans un Container MUI sans gutters", () => {
-            const { container } = render(<HomePageLayout />);
-
-            const muiContainer = container.querySelector(".MuiContainer-root");
-            expect(muiContainer).toBeInTheDocument();
-            expect(muiContainer).toHaveClass("MuiContainer-disableGutters");
-        });
-
-        it("devrait appliquer la classe CSS pour le style markdown", () => {
-            const { container } = render(<HomePageLayout />);
-
-            const markdownDiv = container.querySelector(".markdown-content");
-            expect(markdownDiv).toBeInTheDocument();
-        });
+    it("affiche le parent unique", () => {
+        expect(screen.getByText("Indicateur")).toBeInTheDocument();
     });
 
-    describe("Gestion des erreurs", () => {
-        it("devrait logger une erreur si le fichier markdown n'est pas trouvé", async () => {
-            const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    it("affiche trois liens", () => {
+        expect(screen.getAllByRole("link")).toHaveLength(3);
+    });
 
-            expect(consoleErrorSpy).toBeDefined();
+    it("affiche les bons libellés de pages", () => {
+        expect(screen.getByText("Devops")).toBeInTheDocument();
+        expect(screen.getByText("Sécu")).toBeInTheDocument();
+        expect(screen.getByText("Qualité")).toBeInTheDocument();
+    });
 
-            consoleErrorSpy.mockRestore();
-        });
+    it("chaque lien a la bonne route", () => {
+        expect(screen.getByText("Devops").closest("a")).toHaveAttribute("href", "/indicateur-dev");
+
+        expect(screen.getByText("Sécu").closest("a")).toHaveAttribute("href", "/indicateur-sec");
+
+        expect(screen.getByText("Qualité").closest("a")).toHaveAttribute("href", "/indicateur-qual");
+    });
+
+    it("le parent contient exactement trois liens", () => {
+        const li = screen.getByText("Indicateur").closest("li")!;
+        const links = within(li).getAllByRole("link");
+        expect(links).toHaveLength(3);
     });
 });
