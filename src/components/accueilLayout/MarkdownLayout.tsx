@@ -5,16 +5,11 @@ import { LinkCustom } from "./custom/LinkCustom";
 import "styles/markdown.css";
 import { Box, Container } from "@mui/material";
 import remarkGfm from "remark-gfm";
+import { markdownFiles } from "utils/markdown-files";
 
 interface MarkdownLayoutProps {
     file: string;
 }
-
-const markdownFiles: Record<string, string> = import.meta.glob("../../assets/content/**/*.md", {
-    query: "?raw",
-    import: "default",
-    eager: true
-});
 
 export const MarkdownLayout: React.FC<MarkdownLayoutProps> = ({ file }) => {
     const [content, setContent] = useState<string>("");
