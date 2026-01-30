@@ -1,11 +1,8 @@
+import type { MRT_ColumnDef, MRT_RowData } from "material-react-table";
 import type { NavBarModel } from "../models/navbar-models";
+import { muiAriaCell } from "utils/accessibility-functions";
 
-export const WELCOME_MESSAGE: string = "Bienvenue sur COMPAS !";
-
-export const CONTENT: string =
-    "Vous pouvez consulter la documentation détaillant les différents indicateurs qualité suivis dans Compas en cliquant sur le lien suivant";
-export const LINK: string =
-    "https://gitlab.insee.fr/dsi/compas/documentation/compas-wiki/-/wikis/syntheses/indicateurs";
+export type ACCESSIBILITE = "conforme" | "partiel" | "Non-conforme";
 
 export type ViewMode = "global" | "prod" | "horsprod";
 
@@ -32,7 +29,7 @@ export const NAV_TEXTS: NavBarModel = {
             ]
         },
         {
-            title: "Saisie d'un projet",
+            title: "Saisie",
             subItem: [
                 { label: "Saisie météo", to: "/saisie/meteo" },
                 { label: "Saisie accessibilité", to: "/saisie/accessibilité" }
@@ -40,3 +37,25 @@ export const NAV_TEXTS: NavBarModel = {
         }
     ]
 };
+
+export const BASE_COLONNE = <T extends MRT_RowData>(isModule?: boolean): MRT_ColumnDef<T>[] => [
+    isModule
+        ? {
+              accessorKey: "modName",
+              header: "Module",
+              muiTableBodyCellProps: ({ cell, row }) =>
+                  muiAriaCell({ title: "Module", cell: cell, row: row })
+          }
+        : {
+              accessorKey: "applicationName",
+              header: "Nom",
+              muiTableBodyCellProps: ({ cell, row }) =>
+                  muiAriaCell({ title: "Application", cell: cell, row: row })
+          },
+    {
+        accessorKey: "sndi",
+        header: "serviceDev",
+        muiTableBodyCellProps: ({ cell, row }) =>
+            muiAriaCell({ title: "Service SNDI", cell: cell, row: row })
+    }
+];

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ChartCard } from "components/dashboards/overview/ChartCard";
+import { ChartCard } from "pages/dashboards/overview/ChartCard";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme();

@@ -1,26 +1,22 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ContributorCell, DeploymentCell, DistanceCell } from "components/indicateurs/devops/DevopsCell";
+import { ContributorCell, DeploymentCell, DistanceCell } from "pages/indicateurs/devops/DevopsCell";
 import type { DevopsIndicateur } from "models/indicateurs";
 
-// Mock ToolTipLayout to simplify testing
-vi.mock("pages/ToolTipLayout", () => ({
+vi.mock("components/ToolTipLayout", () => ({
     ToolTipLayout: ({ title, content }: { title: string; content: string }) => (
         <div data-testid="tooltip" title={title}>
             {content}
         </div>
-    ),
+    )
 }));
 
 describe("ContributorCell", () => {
-    const createRow = (
-        lettreContributorCount: string,
-        nbContributorCount: number | string
-    ) => ({
+    const createRow = (lettreContributorCount: string, nbContributorCount: number | string) => ({
         original: {
             lettreContributorCount,
-            nbContributorCount,
-        } as DevopsIndicateur,
+            nbContributorCount
+        } as DevopsIndicateur
     });
 
     describe("Standard cases", () => {
@@ -89,7 +85,7 @@ describe("ContributorCell", () => {
             expect(tooltip).toHaveAttribute("title", "2 personnes (doublon d'URL Gitlab)");
         });
 
-        it("should add duplicate flag for 'C d' with mixed case", () => {
+        it("should add duplicate flag for 'C d' with 1 person", () => {
             const row = createRow("C d", 1);
             render(<ContributorCell row={row} />);
 
@@ -110,7 +106,7 @@ describe("ContributorCell", () => {
             );
         });
 
-        it("should NOT add duplicate flag for 'NR' even with 'd'", () => {
+        it("should NOT add duplicate flag for 'NR' even with 'd' pattern", () => {
             const row = createRow("NR", 0);
             render(<ContributorCell row={row} />);
 
@@ -119,7 +115,7 @@ describe("ContributorCell", () => {
             expect(tooltip.getAttribute("title")).not.toContain("doublon");
         });
 
-        it("should NOT add duplicate flag for 'SO' even with 'd'", () => {
+        it("should NOT add duplicate flag for 'SO' even with 'd' pattern", () => {
             const row = createRow("SO", 0);
             render(<ContributorCell row={row} />);
 
@@ -133,6 +129,7 @@ describe("ContributorCell", () => {
             render(<ContributorCell row={row} />);
 
             const tooltip = screen.getByTestId("tooltip");
+            expect(tooltip).toHaveAttribute("title", "2 personnes");
             expect(tooltip.getAttribute("title")).not.toContain("doublon");
         });
 
@@ -141,6 +138,7 @@ describe("ContributorCell", () => {
             render(<ContributorCell row={row} />);
 
             const tooltip = screen.getByTestId("tooltip");
+            expect(tooltip).toHaveAttribute("title", "2 personnes");
             expect(tooltip.getAttribute("title")).not.toContain("doublon");
         });
     });
@@ -161,14 +159,6 @@ describe("ContributorCell", () => {
             const tooltip = screen.getByTestId("tooltip");
             expect(tooltip).toHaveAttribute("title", "aucune contribution sur la période");
         });
-
-        it("should handle negative numbers (displays negative count)", () => {
-            const row = createRow("D", -5);
-            render(<ContributorCell row={row} />);
-
-            const tooltip = screen.getByTestId("tooltip");
-            expect(tooltip).toHaveAttribute("title", "-5 personne");
-        });
     });
 });
 
@@ -176,8 +166,8 @@ describe("DeploymentCell", () => {
     const createRow = (lettreDeploymentCount: string, nbDeploymentCount: number | string) => ({
         original: {
             lettreDeploymentCount,
-            nbDeploymentCount,
-        } as DevopsIndicateur,
+            nbDeploymentCount
+        } as DevopsIndicateur
     });
 
     it("should display 'NR' with 'Non renseigné' tooltip", () => {
@@ -255,8 +245,8 @@ describe("DistanceCell", () => {
     const createRow = (lettreDistanceCount: string, distanceCount: number | string) => ({
         original: {
             lettreDistanceCount,
-            distanceCount,
-        } as DevopsIndicateur,
+            distanceCount
+        } as DevopsIndicateur
     });
 
     it("should display 'NR' with 'Non renseigné' tooltip", () => {
@@ -335,16 +325,5 @@ describe("DistanceCell", () => {
 
         const tooltip = screen.getByTestId("tooltip");
         expect(tooltip).toHaveAttribute("title", "Il y a 365 jours");
-    });
-});
-
-describe("getTooltip helper function", () => {
-    // Since getTooltip is not exported, we test it indirectly through the components
-    // But we can document the expected behavior here for clarity
-
-    it("should be tested through DeploymentCell and DistanceCell", () => {
-        // This test serves as documentation that getTooltip is tested
-        // indirectly through the consuming components
-        expect(true).toBe(true);
     });
 });

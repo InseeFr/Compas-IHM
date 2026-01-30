@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { CorrelationChart } from "components/dashboards/overview/Charts/ScatterChart";
+import { CorrelationChart } from "pages/dashboards/overview/Charts/ScatterChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme();

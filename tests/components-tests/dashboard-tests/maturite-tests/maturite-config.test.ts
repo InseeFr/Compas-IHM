@@ -9,7 +9,7 @@ import {
     maturiteLevel,
     maturiteLabel,
     computeConseil
-} from "components/dashboards/maturité/maturite-config";
+} from "pages/dashboards/maturité/maturite-config";
 import type { IndicateurApplicationMaturite } from "models/indicateurs";
 import type { ApplicationTip } from "todos-api/client.gen";
 import { green, orange, red, yellow } from "@mui/material/colors";

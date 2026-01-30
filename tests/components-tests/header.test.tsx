@@ -1,8 +1,8 @@
 // tests/header.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Header from "../../src/components/Header";
-import NavBarLayout from "../../src/pages/NavBarLayout";
+import Header from "../../src/pages/Header";
+import NavBarLayout from "../../src/components/NavBarLayout";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 vi.mock("@tanstack/react-router", async () => {
@@ -43,7 +43,7 @@ describe("Header et NavBar", () => {
     });
 
     it("ouvre un menu déroulant de la NavBar et clique sur un sous-item", async () => {
-        render(<NavBarLayout />);
+        render(<NavBarLayout darkMode={true} />);
         const mainButton = screen.getByRole("button", { name: "Indicateurs" });
 
         await user.click(mainButton);

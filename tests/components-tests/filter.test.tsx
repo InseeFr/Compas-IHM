@@ -2,11 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Filters } from "components/Filters";
+import { Filters } from "pages/Filters";
 import type { AllIndicators } from "models/indicateurs";
 import type { FilterState } from "store/filterContext";
 
-vi.mock("pages/SelectedFiltersLayout", () => ({
+vi.mock("components/SelectedFiltersLayout", () => ({
     SelectedFiltersLayout: vi.fn(({ filters }) => (
         <div data-testid="selected-filters-layout">
             {filters.map((filter: any, index: number) => (
@@ -130,7 +130,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithDomaineDev} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             expect(SelectedFiltersLayout).toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithDomaineFonc} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -168,7 +168,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithBoth} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -188,7 +188,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithServiceDev} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -206,7 +206,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithDomaineFonc} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -226,7 +226,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithServiceDev} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -244,7 +244,7 @@ describe("Filters", () => {
             render(<Filters state={stateWithDomaineDev} dispatch={mockDispatch} data={mockData} />);
 
             const SelectedFiltersLayout = vi.mocked(
-                (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+                (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
             );
 
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -258,7 +258,7 @@ describe("Filters", () => {
         render(<Filters state={defaultState} dispatch={mockDispatch} data={mockData} />);
 
         const SelectedFiltersLayout = vi.mocked(
-            (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+            (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
         );
 
         const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -286,7 +286,7 @@ describe("Filters", () => {
         rerender(<Filters state={defaultState} dispatch={mockDispatch} data={newData} />);
 
         const SelectedFiltersLayout = vi.mocked(
-            (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+            (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
         );
 
         const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
@@ -300,7 +300,7 @@ describe("Filters", () => {
         render(<Filters state={defaultState} dispatch={mockDispatch} data={[]} />);
 
         const SelectedFiltersLayout = vi.mocked(
-            (await import("pages/SelectedFiltersLayout")).SelectedFiltersLayout
+            (await import("components/SelectedFiltersLayout")).SelectedFiltersLayout
         );
 
         const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;

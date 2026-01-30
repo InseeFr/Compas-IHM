@@ -1,8 +1,5 @@
-import {
-    avgArrays,
-    pickSixAxisScores
-} from "components/dashboards/applications/RadarChart/radar-config";
-import type { AppForRadar } from "components/dashboards/applications/RadarChart/RadarQualiteChar";
+import { avgArrays, pickSixAxisScores } from "pages/dashboards/applications/RadarChart/radar-config";
+import type { AppForRadar } from "pages/dashboards/applications/RadarChart/RadarQualiteChar";
 import { describe, it, expect } from "vitest";
 
 describe("Radar utils", () => {

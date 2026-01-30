@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { MainIndicator } from "components/indicateurs/main-indicator/mainIndicator";
+import { MainIndicator } from "pages/indicateurs/main-indicator/mainIndicator";
 import { useFilterContext, type FilterState } from "store/filterContext";
 import { UseQueryIndicators } from "utils/useQueryIndicators";
 import * as clientGen from "todos-api/client.gen";
-import {
-    formattedApps,
-    formattedModules
-} from "components/indicateurs/main-indicator/formatted-mod-and-app";
+import { formattedApps, formattedModules } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 
 // Mock all dependencies
 vi.mock("store/filterContext");
 vi.mock("utils/useQueryIndicators");
 vi.mock("todos-api/client.gen");
-vi.mock("components/indicateurs/main-indicator/formatted-mod-and-app");
-vi.mock("pages/TablePageLayout", () => ({
+vi.mock("pages/indicateurs/main-indicator/formatted-mod-and-app");
+vi.mock("components/TablePageLayout", () => ({
     default: ({ titleTable, isLoading, data, rowId, subRow, renderTopCustom }: any) => (
         <div data-testid="table-page-layout">
             <div data-testid="title">{titleTable}</div>
+            <div data-testid="filters">
+                <span data-testid="filter-data">{data?.length}</span>
+            </div>
             <div data-testid="loading">{isLoading.toString()}</div>
             <div data-testid="data-length">{data.length}</div>
             {/* Test rowId function */}
@@ -41,25 +41,19 @@ vi.mock("pages/TablePageLayout", () => ({
         </div>
     )
 }));
-vi.mock("components/Filters", () => ({
-    Filters: ({ data }: any) => (
-        <div data-testid="filters">
-            <span data-testid="filter-data">{data?.length}</span>
-        </div>
-    )
-}));
-vi.mock("pages/ButtonCsvExport", () => ({
+
+vi.mock("components/ButtonCsvExport", () => ({
     default: ({ table, onExport }: any) => (
         <button data-testid="csv-export" onClick={() => onExport(table)}>
             Export CSV
         </button>
     )
 }));
-vi.mock("components/indicateurs/main-indicator/main-config", () => ({
+vi.mock("pages/indicateurs/main-indicator/main-config", () => ({
     columnsGlobal: vi.fn(() => [{ id: "col1" }, { id: "col2" }]),
     paginationConfig: { pageSize: 10 }
 }));
-vi.mock("components/indicateurs/main-indicator/csvexport", () => ({
+vi.mock("pages/indicateurs/main-indicator/csvexport", () => ({
     onExport: vi.fn()
 }));
 
@@ -149,8 +143,6 @@ describe("MainIndicator", () => {
     });
 
     it("rowId function handles both applications and modules correctly", () => {
-        // Test that the rowId function logic is correct for both types
-        // Since modules are filtered from main data, we verify through the mock implementation
         const mockApp = { applicationName: "TestApp", isModule: false };
         const mockModule = {
             applicationName: "TestModule",
@@ -169,13 +161,7 @@ describe("MainIndicator", () => {
 
         render(<MainIndicator />);
 
-        // Application rowId should be just the applicationName
         expect(screen.getByTestId("row-id-0")).toHaveTextContent("TestApp");
-
-        // The rowId function in the component handles both cases:
-        // - Applications: row.applicationName
-        // - Modules: `${row.parentApplication}-${row.applicationName}`
-        // We've verified the function exists and is passed correctly
     });
 
     it("returns subRows for applications with modules", () => {

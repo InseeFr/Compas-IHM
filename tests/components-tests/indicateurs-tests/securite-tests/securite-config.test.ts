@@ -5,11 +5,12 @@ import {
     columnsTable,
     formatApplicationSecurite,
     formatModuleSecurite
-} from "components/indicateurs/securite/securiteConfig";
+} from "pages/indicateurs/securite/securiteConfig";
 import { handleExportCsv } from "utils/exportCsv";
 import type { Application, Module, IndicateurSecuriteView } from "todos-api/client.gen";
-import type { MRT_Row } from "material-react-table";
+import type { MRT_Cell, MRT_Row } from "material-react-table";
 import type { SecuriteIndicateur } from "models/indicateurs";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
@@ -21,7 +22,8 @@ vi.mock("utils/exportCsv", () => ({
             ]);
         };
         return flatten(rows);
-    })
+    }),
+    getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
 const mockApp: Application = {
@@ -156,6 +158,72 @@ describe("columnsTable", () => {
         const vmCol = colonnes.find(c => c.accessorKey === "lettreMajVm");
         expect(vmCol?.Cell).toBeDefined();
     });
+    it("doit générer un aria-label CVE", () => {
+        const colonnes = columnsTable();
+
+        const col = colonnes.find(c => c.accessorKey === "lettreNiveauCve")!;
+        const props =
+            typeof col.muiTableBodyCellProps === "function"
+                ? col.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "E"
+                      } as unknown as MRT_Cell<SecuriteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<SecuriteIndicateur>,
+                      table: {} as any
+                  })
+                : col.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("CVE", "App1", "E"));
+    });
+    it("doit générer un aria-label MAJVM", () => {
+        const colonnes = columnsTable();
+
+        const col = colonnes.find(c => c.accessorKey === "lettreMajVm")!;
+        const props =
+            typeof col.muiTableBodyCellProps === "function"
+                ? col.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "C"
+                      } as unknown as MRT_Cell<SecuriteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<SecuriteIndicateur>,
+                      table: {} as any
+                  })
+                : col.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Maj VM", "App1", "C"));
+    });
+    it("doit générer un aria-label Delai maj vm", () => {
+        const colonnes = columnsTable();
+
+        const col = colonnes.find(c => c.accessorKey === "delaiVmNonMiseAjour")!;
+        const props =
+            typeof col.muiTableBodyCellProps === "function"
+                ? col.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "C"
+                      } as unknown as MRT_Cell<SecuriteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<SecuriteIndicateur>,
+                      table: {} as any
+                  })
+                : col.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Délai des maj VM", "App1", "C"));
+    });
 });
 
 describe("OnExport", () => {
@@ -180,11 +248,7 @@ describe("OnExport", () => {
 
         expect(nomFichier).toBe("sécurité");
         expect(entetes).toBeDefined();
-        expect(Array.isArray(entetes)).toBe(true);
 
-        expect(csvData).toEqual([
-            `"App1","","S1","D1","B","5","10","15","20","3","C","45","B","B"`,
-            `"App1","Mod1","S1","D1","A","2","4","6","8","1","A","20","A","A"`
-        ]);
+        expect(csvData).toEqual([`"App1","S1","B","C","45"`, `"Mod1","S1","A","A","20"`]);
     });
 });

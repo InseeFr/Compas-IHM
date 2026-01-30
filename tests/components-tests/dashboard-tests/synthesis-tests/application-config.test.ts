@@ -33,7 +33,7 @@ import {
     handleGenerateReport,
     normalize,
     transformModuleData
-} from "components/dashboards/applications/application-synthesis-config";
+} from "pages/dashboards/applications/application-synthesis-config";
 
 const addImage = vi.fn();
 const save = vi.fn();

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import TreeGraphCveCritiques from "components/dashboards/overview/Charts/Treegraph";
+import TreeGraphCveCritiques from "pages/dashboards/overview/Charts/Treegraph";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme();

@@ -10,10 +10,7 @@ import type {
     IndicateurApplicationMaturiteCloud,
     Module
 } from "todos-api/client.gen";
-import {
-    formattedApps,
-    formattedModules
-} from "components/indicateurs/main-indicator/formatted-mod-and-app";
+import { formattedApps, formattedModules } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 
 describe("formattedApps", () => {
     it("devrait formater une application avec toutes les données présentes", () => {
@@ -223,6 +220,7 @@ describe("formattedModules", () => {
     it("devrait formater un module avec toutes les données présentes", () => {
         const mockModule: Module = {
             id: 1,
+            modName: "Module 1",
             appName: "Parent App",
             sndi: "SNDI-MOD-001",
             domaineSndi: "Domaine Module",
@@ -287,7 +285,7 @@ describe("formattedModules", () => {
 
         expect(result).toHaveLength(1);
         expect(result[0]).toMatchObject({
-            applicationName: "Parent App",
+            applicationName: "Module 1",
             sndi: "SNDI-MOD-001",
             domaine: "Domaine Module",
             domaineFonc: "Fonctionnel Module",
@@ -362,8 +360,8 @@ describe("formattedModules", () => {
 
     it("devrait gérer plusieurs modules", () => {
         const mockModules: Module[] = [
-            { id: 1, appName: "Module 1" },
-            { id: 2, appName: "Module 2" }
+            { id: 1, modName: "Module 1" },
+            { id: 2, modName: "Module 2" }
         ];
 
         const result = formattedModules({

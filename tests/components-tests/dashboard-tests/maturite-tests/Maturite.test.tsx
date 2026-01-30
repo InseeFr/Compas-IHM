@@ -6,8 +6,8 @@ import {
     computeConseil,
     fetchMaturiteData,
     fetchTipsData
-} from "components/dashboards/maturité/maturite-config";
-import MaturiteCloud from "components/dashboards/maturité/MaturiteCloud";
+} from "pages/dashboards/maturité/maturite-config";
+import MaturiteCloud from "pages/dashboards/maturité/MaturiteCloud";
 
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn(() => ({
@@ -16,27 +16,26 @@ vi.mock("store/filterContext", () => ({
     }))
 }));
 
-vi.mock("components/dashboards/maturité/maturite-config", () => ({
+vi.mock("pages/dashboards/maturité/maturite-config", () => ({
     fetchMaturiteData: vi.fn(),
     fetchTipsData: vi.fn(),
     bottom3ByPriority: vi.fn(tips => tips.slice(0, 3)),
     computeConseil: vi.fn()
 }));
 
-vi.mock("components/Filters", () => ({
-    Filters: vi.fn(() => <div data-testid="filters">Filters</div>)
-}));
-
-vi.mock("pages/dashboardsPagesLayout/dashboardPageLayout", () => ({
+vi.mock("components/dashboardsPagesLayout/dashboardPageLayout", () => ({
     default: vi.fn(({ renderContent, subHeader }) => (
-        <div data-testid="dashboard-layout">
-            {subHeader}
-            {renderContent}
-        </div>
+        <>
+            <div data-testid="filters">Filters</div>
+            <div data-testid="dashboard-layout">
+                {subHeader}
+                {renderContent}
+            </div>
+        </>
     ))
 }));
 
-vi.mock("components/dashboards/maturité/MaturiteContent", () => ({
+vi.mock("pages/dashboards/maturité/MaturiteContent", () => ({
     MaturiteHeader: vi.fn(() => <div data-testid="maturite-header">Header</div>),
     ComplexitySection: vi.fn(() => <div data-testid="complexity-section">Complexity</div>),
     ConseilComplexity: vi.fn(() => <div data-testid="conseil-complexity">Conseil</div>),

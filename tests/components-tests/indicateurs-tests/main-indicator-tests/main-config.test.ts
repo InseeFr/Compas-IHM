@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import type { GlobalIndicator } from "models/indicateurs";
-import { columnsGlobal, paginationConfig } from "components/indicateurs/main-indicator/main-config";
+import {
+    columnsGlobal,
+    paginationConfig,
+    sortHelper
+} from "pages/indicateurs/main-indicator/main-config";
+import type { MRT_Cell, MRT_Row } from "material-react-table";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 describe("paginationConfig", () => {
     it("définit la configuration de pagination par défaut", () => {
@@ -43,6 +49,26 @@ describe("columnsGlobal", () => {
         it("n'a pas de Cell personnalisée", () => {
             expect(nomColumn.Cell).toBeUndefined();
         });
+        it("doit générer un aria-label appName", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "applicationName")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "App1"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe("Application: App1");
+        });
     });
 
     describe("colonne serviceDev", () => {
@@ -54,6 +80,26 @@ describe("columnsGlobal", () => {
 
         it("a le header 'serviceDev'", () => {
             expect(sndiColumn.header).toBe("serviceDev");
+        });
+        it("doit générer un aria-label servicedev", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "sndi")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "S1"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Service SNDI", "App1", "S1"));
         });
     });
 
@@ -72,6 +118,26 @@ describe("columnsGlobal", () => {
             expect(qualityColumn.Cell).toBeDefined();
             expect(qualityColumn.Cell?.name).toBe("QualityCell");
         });
+        it("doit générer un aria-label qualité", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "lettreQualiteGenerale")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "A"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Qualité globale", "App1", "A"));
+        });
     });
 
     describe("colonne Sécurité", () => {
@@ -88,6 +154,26 @@ describe("columnsGlobal", () => {
         it("a une Cell personnalisée SecurityCell", () => {
             expect(securityColumn.Cell).toBeDefined();
             expect(securityColumn.Cell?.name).toBe("SecurityCell");
+        });
+        it("doit générer un aria-label Securite", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "lettreGlobaleSecurite")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "C"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Sécurité globale", "App1", "C"));
         });
     });
 
@@ -122,6 +208,27 @@ describe("columnsGlobal", () => {
             const result = devopsColumn.accessorFn?.(mockRow);
             expect(result).toBe("B-5");
         });
+
+        it("doit générer un aria-label Devops", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "lettreDistanceCount")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "C"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Devops globale", "App1", "C"));
+        });
     });
 
     describe("colonne GreenIt", () => {
@@ -138,6 +245,26 @@ describe("columnsGlobal", () => {
         it("a une Cell personnalisée GreenItCell", () => {
             expect(greenItColumn.Cell).toBeDefined();
             expect(greenItColumn.Cell?.name).toBe("GreenItCell");
+        });
+        it("doit générer un aria-label green", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "lettreGreen")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "B"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("GreenIt global", "App1", "B"));
         });
     });
 
@@ -156,6 +283,26 @@ describe("columnsGlobal", () => {
             expect(meteoColumn.Cell).toBeDefined();
             expect(meteoColumn.Cell?.name).toBe("MeteoCell");
         });
+        it("doit générer un aria-label meteo", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "meteo")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "4"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Météo globale", "App1", "4"));
+        });
     });
 
     describe("colonne Accessibilité", () => {
@@ -173,6 +320,28 @@ describe("columnsGlobal", () => {
             expect(a11yColumn.Cell).toBeDefined();
             expect(a11yColumn.Cell?.name).toBe("A11yCell");
         });
+        it("doit générer un aria-label a11y", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "lettreA11y")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "NR"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(
+                generateAriaLabelCell("Accessibilité globale", "App1", "NR")
+            );
+        });
     });
 
     describe("colonne Maturité Cloud", () => {
@@ -189,6 +358,26 @@ describe("columnsGlobal", () => {
         it("a une Cell personnalisée MaturityCell", () => {
             expect(maturityColumn.Cell).toBeDefined();
             expect(maturityColumn.Cell?.name).toBe("MaturityCell");
+        });
+        it("doit générer un aria-label maturité", () => {
+            const colContributeur = columns.find(c => c.accessorKey === "maturite")!;
+            const props =
+                typeof colContributeur.muiTableBodyCellProps === "function"
+                    ? colContributeur.muiTableBodyCellProps({
+                          cell: {
+                              getValue: () => "NR"
+                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
+                          column: {} as any,
+                          row: {
+                              original: {
+                                  applicationName: "App1"
+                              }
+                          } as MRT_Row<GlobalIndicator>,
+                          table: {} as any
+                      })
+                    : colContributeur.muiTableBodyCellProps;
+
+            expect(props!["aria-label"]).toBe(generateAriaLabelCell("Maturité globale", "App1", "NR"));
         });
     });
 
@@ -258,5 +447,31 @@ describe("columnsGlobal", () => {
             const result = devopsColumn.accessorFn?.(mockRow);
             expect(result).toBe("-10");
         });
+    });
+});
+describe("sortHelper sans mock", () => {
+    const makeRow = (original: any) => ({ original });
+
+    it("place les dates expirées avant les non-expirées", () => {
+        const now = new Date();
+
+        const oldDate = new Date();
+        oldDate.setDate(now.getDate() - 32);
+        const recentDate = new Date();
+        recentDate.setDate(now.getDate() - 10);
+
+        const a = makeRow({ dateMeteoCommentaire: oldDate.toISOString() });
+        const b = makeRow({ dateMeteoCommentaire: recentDate.toISOString() });
+
+        expect((sortHelper as any)(a, b)).toBe(-1);
+        expect((sortHelper as any)(b, a)).toBe(1);
+    });
+
+    it("compare correctement les valeurs meteo numériques", () => {
+        const a = makeRow({ dateMeteoCommentaire: "2026-01-01", meteo: 2 });
+        const b = makeRow({ dateMeteoCommentaire: "2026-01-01", meteo: 5 });
+
+        expect((sortHelper as any)(a, b)).toBeLessThan(0);
+        expect((sortHelper as any)(b, a)).toBeGreaterThan(0);
     });
 });

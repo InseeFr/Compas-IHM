@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { OnExport, columnsTable, formatIndicateur } from "components/indicateurs/a11y/a11yConfig";
+import { OnExport, columnsTable, formatIndicateur } from "pages/indicateurs/a11y/a11yConfig";
 import { handleExportCsv } from "utils/exportCsv";
 import type { IndicateursModuleA11Y } from "todos-api/client.gen";
-import type { MRT_Row } from "material-react-table";
+import type { MRT_Cell, MRT_Row } from "material-react-table";
 import type { A11yIndicateur } from "models/indicateurs";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
@@ -25,7 +26,12 @@ const mockModule: IndicateursModuleA11Y = {
     domaineSndi: "D1",
     notation: "A",
     lettreIssueAccessibilite: "B",
-    nbIssueAccessibilite: "5.00"
+    nbIssueAccessibilite: "5.00",
+    scoreAudit: 3,
+    typeAuditLibelle: "Audit partiel",
+    isDeclaration: true,
+    dateAudit: "2025-10-12",
+    dateDeclaration: "2025-10-11"
 };
 
 const mockModule2: IndicateursModuleA11Y = {
@@ -34,22 +40,36 @@ const mockModule2: IndicateursModuleA11Y = {
     domaineSndi: "D2",
     notation: "C",
     lettreIssueAccessibilite: "D",
-    nbIssueAccessibilite: "10"
+    nbIssueAccessibilite: "10",
+    scoreAudit: 4,
+    typeAuditLibelle: "Audit complet",
+    isDeclaration: true,
+    dateAudit: "2025-10-12",
+    dateDeclaration: "2025-10-11"
 };
 
 describe("formatIndicateur", () => {
     it("doit formater correctement un module A11y", () => {
         const resultat = formatIndicateur(mockModule);
-
-        expect(resultat).toEqual({
+        const actual: A11yIndicateur = {
             modName: "Module1",
             sndi: "S1",
             domaine: "D1",
             domaineFonc: "NR",
             notation: "A",
             lettreIssueAccessibilite: "B",
-            nbIssueAccessibilite: "5"
-        });
+            nbIssueAccessibilite: "5",
+            declaration: {
+                hasDeclaration: true,
+                dateDeclaration: "2025-10-11"
+            },
+            audit: {
+                score: "3",
+                auditType: "Audit partiel",
+                dateAudit: "2025-10-12"
+            }
+        };
+        expect(resultat).toEqual(actual);
     });
 
     it("doit supprimer .00 du nombre d'issues", () => {
@@ -83,10 +103,12 @@ describe("columnsTable", () => {
         const colonnes = columnsTable();
 
         expect(colonnes.map(c => c.header)).toEqual([
-            "Nom du module",
+            "Module",
             "serviceDev",
             "Notation Évaluation",
-            "Issue Sonar"
+            "Déclaration",
+            "Audit",
+            "Problème Sonar"
         ]);
 
         const issueCol = colonnes.find(c => c.accessorKey === "lettreIssueAccessibilite");
@@ -116,19 +138,31 @@ describe("OnExport", () => {
 
         expect(nomFichier).toBe("accessibilité");
         expect(entetes).toBeDefined();
-        expect(Array.isArray(entetes)).toBe(true);
 
-        expect(csvData).toEqual([`"Module1","S1","D1","A","B","5"`, `"Module2","S2","D2","C","D","10"`]);
+        expect(csvData).toEqual([
+            `"Module1","S1","A","Déclarée - Date: 2025-10-11","Type: Audit partiel - date:2025-10-12 - Score:3","B"`,
+            `"Module2","S2","C","Déclarée - Date: 2025-10-11","Type: Audit complet - date:2025-10-12 - Score:4","D"`
+        ]);
     });
 
     it("doit exporter correctement avec des valeurs manquantes", () => {
-        const mockIncomplete = {
+        const mockIncomplete: A11yIndicateur = {
             modName: "Module3",
             sndi: "S3",
             domaine: "D3",
             notation: undefined,
             lettreIssueAccessibilite: undefined,
-            nbIssueAccessibilite: undefined
+            nbIssueAccessibilite: undefined,
+            domaineFonc: "",
+            declaration: {
+                hasDeclaration: true,
+                dateDeclaration: "2025-10-11"
+            },
+            audit: {
+                score: "3",
+                auditType: "Audit complet",
+                dateAudit: "2025-10-12"
+            }
         };
 
         const mockTable: any = {
@@ -140,8 +174,78 @@ describe("OnExport", () => {
         OnExport(mockTable);
 
         expect(handleExportCsv).toHaveBeenCalledTimes(1);
-        const [, , csvData] = (handleExportCsv as any).mock.calls[0];
+        const [filename, headers, csvData] = (handleExportCsv as any).mock.calls[0];
+        expect(filename).toBe("accessibilité");
 
-        expect(csvData).toEqual([`"Module3","S3","D3","","NR","NR"`]);
+        expect(headers).toBeDefined();
+        expect(csvData).toEqual([
+            `"Module3","S3","NR","Déclarée - Date: 2025-10-11","Type: Audit complet - date:2025-10-12 - Score:3","NR"`
+        ]);
+    });
+
+    it("doit générer un aria-label Déclarée avec date", () => {
+        const colonnes = columnsTable();
+
+        const col = colonnes.find(c => c.accessorKey === "declaration")!;
+        const props =
+            typeof col.muiTableBodyCellProps === "function"
+                ? col.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => ({
+                              hasDeclaration: true,
+                              dateDeclaration: "2024-10-01"
+                          })
+                      } as unknown as MRT_Cell<A11yIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              modName: "Mod1"
+                          }
+                      } as MRT_Row<A11yIndicateur>,
+                      table: {} as any
+                  })
+                : col.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell(
+                "Déclaration d'audit",
+                "Mod1",
+                "Déclaration Déclarée, Date: 2024-10-01",
+                true
+            )
+        );
+    });
+    it("doit générer un aria-label Audit", () => {
+        const colonnes = columnsTable();
+
+        const col = colonnes.find(c => c.accessorKey === "audit")!;
+        const props =
+            typeof col.muiTableBodyCellProps === "function"
+                ? col.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => ({
+                              dateAudit: "2024-10-01",
+                              score: "10",
+                              auditType: "Audit Complet"
+                          })
+                      } as unknown as MRT_Cell<A11yIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              modName: "Mod1"
+                          }
+                      } as MRT_Row<A11yIndicateur>,
+                      table: {} as any
+                  })
+                : col.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell(
+                "Audit",
+                "Mod1",
+                "Type d'audit Audit Complet, date: 2024-10-01, score: 10",
+                true
+            )
+        );
     });
 });

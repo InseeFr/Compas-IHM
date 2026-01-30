@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from "vitest";
-import { OnExport, columnsTable, formatIndicateur } from "components/indicateurs/qualité/qualiteConfig";
+import { OnExport, columnsTable, formatIndicateur } from "pages/indicateurs/qualité/qualiteConfig";
 import { handleExportCsv } from "utils/exportCsv";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
+import type { QualiteIndicateur } from "models/indicateurs";
+import type { MRT_Cell, MRT_Row } from "material-react-table";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
-    // 👇 Ajouter le mock de flattenRows
     flattenRows: vi.fn(rows => {
         const flatten = (arr: any[]): any[] => {
             return arr.flatMap((row: any) => [row, ...(row.subRows ? flatten(row.subRows) : [])]);
         };
         return flatten(rows);
-    })
+    }),
+    getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
 const mockApp: IndicateurQualiteView = {
@@ -94,12 +97,75 @@ describe("columnsTable", () => {
         const couvertureCol = colonnes.find(c => c.accessorKey === "lettreCouvertureTestUniaire");
         expect(couvertureCol?.Cell).toBeDefined();
     });
+    it("doit générer un aria-label Couverture", () => {
+        const colContributeur = columnsTable().find(
+            c => c.accessorKey === "lettreCouvertureTestUniaire"
+        )!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "NR"
+                      } as unknown as MRT_Cell<QualiteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<QualiteIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Couverture Test Unitaire", "App1", "NR")
+        );
+    });
+    it("doit générer un aria-label Fiabilité", () => {
+        const colContributeur = columnsTable().find(c => c.accessorKey === "lettreFiabilite")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "E"
+                      } as unknown as MRT_Cell<QualiteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<QualiteIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Fiabilité", "App1", "E"));
+    });
+    it("doit générer un aria-label Dette", () => {
+        const colContributeur = columnsTable().find(c => c.accessorKey === "lettreDetteTechnique")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "C"
+                      } as unknown as MRT_Cell<QualiteIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<QualiteIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Dette technique", "App1", "C"));
+    });
 });
 
 describe("OnExport", () => {
     it("doit appeler handleExportCsv avec les bonnes données CSV", () => {
         const mockTable: any = {
-            // 👇 Utiliser getExpandedRowModel au lieu de getPrePaginationRowModel
             getExpandedRowModel: () => ({
                 rows: [
                     { original: formatIndicateur(mockApp), subRows: [] },
@@ -114,10 +180,6 @@ describe("OnExport", () => {
         const [nomFichier, entetes, csvData] = (handleExportCsv as any).mock.calls[0];
         expect(nomFichier).toBe("qualité");
         expect(entetes).toBeDefined();
-        expect(Array.isArray(entetes)).toBe(true);
-        expect(csvData).toEqual([
-            `"App1","","S1","D1","A","50%","C","123","B"`,
-            `"App1","Mod1","S1","D1","X","75%","Z","456","Y"`
-        ]);
+        expect(csvData).toEqual([`"App1","S1","A","B","C"`, `"Mod1","S1","X","Y","Z"`]);
     });
 });

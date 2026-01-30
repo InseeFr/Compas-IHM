@@ -1,0 +1,59 @@
+:root {
+    --navbar-hover-bg: rgba(124, 58, 237, 0.08);
+}
+
+.navbar-box.light-mode {
+  background-color: #F8FAFC;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-box.dark-mode {
+  background-color: #0f0f23;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-button:hover {
+    background-color: var(--navbar-hover-bg);
+}
+
+.navbar-title{
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    background: linear-gradient(90deg, #000000 0%, #000000 40%, #9c27b0 60%, #9c27b0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: none;
+}
+
+.dark-mode .navbar-title {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    background: linear-gradient(90deg, #ffffff 0%, #ffffff 40%, #ce93d8 60%, #ce93d8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: none;
+}
+
+.MuiMenu-paper {
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+    background-color: var(--mui-palette-background-paper); 
+}
+
+.navbar-menu-item {
+    font-weight: 400;
+    background-clip: text;
+    text-transform: none;
+}
+
+.navbar-menu-item:hover {
+    background-color: var(--mui-palette-action-hover); 
+}

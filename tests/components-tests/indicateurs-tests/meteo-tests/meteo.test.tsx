@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications1, getHistory } from "todos-api/client.gen";
-import { MeteoTable } from "components/indicateurs/meteo/meteoTable";
+import { MeteoTable } from "pages/indicateurs/meteo/meteoTable";
 
 // Mock des dépendances
 vi.mock("store/filterContext");

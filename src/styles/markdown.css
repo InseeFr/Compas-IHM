@@ -1,0 +1,282 @@
+
+.markdown-content {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: inherit;
+  padding-top: 90px; 
+  min-height: calc(100vh - 90px);
+}
+
+/* Titres */
+.markdown-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.8;
+  color: inherit;
+}
+
+.markdown-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: inherit;
+}
+
+.markdown-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+
+.markdown-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+
+/* Paragraphes */
+.markdown-content p {
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+/* Listes */
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+.markdown-content ul ul {
+  list-style-type: circle;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.markdown-content ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Liens */
+.markdown-content a {
+  color: inherit;
+  text-decoration: underline;
+  transition: opacity 0.2s;
+  opacity: 0.8;
+}
+
+.markdown-content a:hover {
+  opacity: 1;
+}
+
+.markdown-content a:visited {
+  opacity: 0.7;
+}
+
+/* Code inline */
+.markdown-content code {
+  background-color: rgba(127, 127, 127, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  color: inherit;
+}
+
+/* Blocs de code */
+.markdown-content pre {
+  background-color: rgba(127, 127, 127, 0.1);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875rem;
+}
+
+/* Citations */
+.markdown-content blockquote {
+  border-left: 4px solid currentColor;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  color: inherit;
+  font-style: italic;
+  background-color: rgba(127, 127, 127, 0.05);
+  border-radius: 4px;
+  opacity: 0.9;
+}
+
+/* Tables */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid currentColor;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.markdown-content th {
+  background-color: rgba(127, 127, 127, 0.1);
+  font-weight: 600;
+  color: inherit;
+}
+
+.markdown-content tr:nth-child(even) {
+  background-color: rgba(127, 127, 127, 0.05);
+}
+
+/* Séparateur horizontal */
+.markdown-content hr {
+  border: none;
+  border-top: 2px solid currentColor;
+  opacity: 0.2;
+  margin: 2rem 0;
+}
+
+/* Images */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Strong et Em */
+.markdown-content strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.markdown-content em {
+  font-style: italic;
+  color: inherit;
+}
+
+/* Table des matières */
+.markdown-content .toc {
+  background-color: rgba(127, 127, 127, 0.1);
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.markdown-content .toc h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: inherit;
+}
+
+.markdown-content .toc ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.markdown-content .toc li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content .toc a {
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.markdown-content .toc a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Encarts / Notes */
+.markdown-content .note,
+.markdown-content .warning,
+.markdown-content .info {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border-left: 4px solid currentColor;
+  background-color: rgba(127, 127, 127, 0.1);
+  color: inherit;
+}
+
+/* Sommaire DSFR - Sans ID, cible le premier h2 + ul */
+/* Sommaire DSFR - Theme-aware */
+.markdown-content > h2:first-of-type {
+  background-color: rgba(156, 55, 151, 0.411); 
+  border-left: 4px solid #740091;       
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  font-weight: 700;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.markdown-content > h2:first-of-type + ul {
+  background-color: rgba(156, 55, 151, 0.411);
+  border-left: 4px solid #740091;
+  padding: 0 1.5rem 1.5rem 2.5rem;
+  margin-top: 0;
+  margin-bottom: 2rem !important;
+  list-style-type: disc;
+}
+
+.markdown-content > h2:first-of-type + ul li {
+  color: inherit;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content > h2:first-of-type + ul a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+}
+
+.markdown-content > h2:first-of-type + ul a:hover {
+  text-decoration: underline;
+}
+
+/* Listes imbriquées */
+.markdown-content > h2:first-of-type + ul ul {
+  background-color: inherit;
+  border: none;
+  padding-left: 1.5rem;
+  margin-bottom: 0;
+  margin-top: 0.25rem;
+}
+

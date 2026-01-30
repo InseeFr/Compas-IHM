@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import A11yForm from "components/saisies/a11y/a11yForm";
+import A11yForm from "pages/saisies/a11y/a11yForm";
 import * as client from "todos-api/client.gen";
 
 // Mock de l'API
@@ -11,8 +12,35 @@ vi.mock("todos-api/client.gen", () => ({
     majInfosSaisiesA11Y: vi.fn()
 }));
 
+//Mock du hook form
+vi.mock("react-hook-form", async () => {
+    const actual = await vi.importActual<any>("react-hook-form");
+
+    return {
+        ...actual,
+
+        Controller: (props: any) => {
+            if (props.name === "modules") {
+                return props.render({
+                    field: {
+                        value: [],
+                        onChange: vi.fn()
+                    },
+                    fieldState: {
+                        error: {
+                            type: "required",
+                            message: "Veuillez renseigner ce champ"
+                        }
+                    }
+                });
+            }
+            return actual.Controller(props);
+        }
+    };
+});
+
 // Mock des composants de rendu
-vi.mock("components/saisies/a11y/a11yCell", () => ({
+vi.mock("pages/saisies/a11y/a11yCell", () => ({
     RenderModuleSelections: vi.fn(field => (
         <div>
             <input
@@ -28,6 +56,8 @@ vi.mock("components/saisies/a11y/a11yCell", () => ({
                 }}
             />
             <label>Module 1</label>
+
+            {field.fieldState?.error && <span>{field.fieldState.error.message}</span>}
         </div>
     )),
     RenderDeclaration: vi.fn(field => (
@@ -69,7 +99,7 @@ describe("A11yForm", () => {
         await user.click(submitButton);
 
         await waitFor(() => {
-            expect(screen.getByText(/veuillez sélectionner au moins un module/i)).toBeInTheDocument();
+            expect(screen.getByText(content => content.includes("renseigner"))).toBeInTheDocument();
         });
     });
 

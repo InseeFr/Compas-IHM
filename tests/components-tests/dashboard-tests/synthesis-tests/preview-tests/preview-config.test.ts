@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { IndicateurApplicationSynthese } from "models/indicateurs";
-import { generateNarrative } from "components/dashboards/applications/preview/application-preview-config";
+import { generateNarrative } from "pages/dashboards/applications/preview/application-preview-config";
 
 const baseApp: IndicateurApplicationSynthese = {
     applicationId: 1,

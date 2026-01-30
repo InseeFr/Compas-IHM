@@ -124,6 +124,15 @@ export interface A11yIndicateur {
     notation?: string;
     lettreIssueAccessibilite?: string;
     nbIssueAccessibilite?: string;
+    declaration?: {
+        hasDeclaration: boolean;
+        dateDeclaration: string;
+    };
+    audit: {
+        score: string;
+        auditType: string;
+        dateAudit: string;
+    };
 }
 
 export interface MeteoPoint {

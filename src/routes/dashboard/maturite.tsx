@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import MaturiteCloud from "components/dashboards/maturité/MaturiteCloud";
+import MaturiteCloud from "pages/dashboards/maturité/MaturiteCloud";
 
 export const Route = createFileRoute("/dashboard/maturite")({
     component: RouteComponent

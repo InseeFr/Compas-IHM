@@ -7,12 +7,11 @@ export const lightTheme = createTheme({
             main: "#1976d2"
         },
         background: {
-            default: "#fff",
-            paper: "#fff"
+            default: "#F8FAFC",
+            paper: "#F8FAFC"
         }
     }
 });
-
 export const darkTheme = createTheme({
     palette: {
         mode: "dark",
@@ -20,8 +19,8 @@ export const darkTheme = createTheme({
             main: "#90caf9"
         },
         background: {
-            default: "#121212",
-            paper: "#1d1d1d"
+            default: "#0f0f23",
+            paper: "#181833"
         }
     }
 });

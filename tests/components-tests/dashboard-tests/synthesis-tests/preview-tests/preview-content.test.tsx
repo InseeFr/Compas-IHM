@@ -2,11 +2,11 @@ import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ApplicationReportPreview, {
     ButtonGenerateReport
-} from "components/dashboards/applications/preview/ApplicationContent";
+} from "pages/dashboards/applications/preview/ApplicationContent";
 import type { IndicateurApplicationSynthese } from "models/indicateurs";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("components/dashboards/applications/RadarChart/RadarQualiteChar.tsx", () => ({
+vi.mock("pages/dashboards/applications/RadarChart/RadarQualiteChar.tsx", () => ({
     default: () => <div data-testid="radar-chart-mock">Radar Chart Mock</div>
 }));
 
