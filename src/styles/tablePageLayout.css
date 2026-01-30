@@ -1,0 +1,238 @@
+/* tablePageLayout.css */
+
+.table-page-layout {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+    position: relative;
+  }
+  
+  .table-page-layout:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Override Material React Table styles */
+  .table-page-layout .MuiPaper-root {
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  .table-page-layout .MuiTable-root {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .table-page-layout .MuiTableHead-root {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .table-page-layout .MuiTableCell-head {
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+    padding: 16px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableCell-head {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .table-page-layout .MuiTableCell-body {
+    padding: 14px 16px;
+    font-size: 0.9375rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableCell-body {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .table-page-layout .MuiTableRow-root:last-child .MuiTableCell-body {
+    border-bottom: none;
+  }
+  
+  .table-page-layout .MuiTableRow-root:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    transition: background-color 0.2s ease;
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableRow-root:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+  
+  /* Toolbar styling */
+  .table-page-layout .MuiToolbar-root {
+    padding: 20px 24px;
+    min-height: auto;
+    gap: 16px;
+  }
+  
+  /* Search input */
+  .table-page-layout .MuiTextField-root {
+    border-radius: 8px;
+  }
+  
+  .table-page-layout .MuiOutlinedInput-root {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .table-page-layout .MuiOutlinedInput-root:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiOutlinedInput-root:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  
+  .table-page-layout .MuiOutlinedInput-root.Mui-focused {
+    background-color: rgba(25, 118, 210, 0.04);
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiOutlinedInput-root.Mui-focused {
+    background-color: rgba(144, 202, 249, 0.08);
+  }
+  
+  /* Pagination */
+  .table-page-layout .MuiTablePagination-root {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px 16px;
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTablePagination-root {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .table-page-layout .MuiTablePagination-select {
+    border-radius: 6px;
+  }
+  
+  /* Loading state */
+  .table-page-layout .MuiLinearProgress-root {
+    border-radius: 0;
+    height: 3px;
+  }
+  
+  /* Expand button */
+  .table-page-layout .MuiIconButton-root {
+    transition: transform 0.2s ease;
+  }
+  
+  .table-page-layout .MuiIconButton-root:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Enhanced horizontal scrollbar - Sticky at bottom */
+  .table-page-layout .MuiTableContainer-root {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-gutter: stable;
+  }
+
+  /* Sticky scrollbar container */
+  .table-page-layout .MuiTableContainer-root::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: inherit;
+    pointer-events: none;
+    z-index: 5;
+  }
+  
+
+  
+  [data-theme="dark"] .table-page-layout .MuiTableContainer-root {
+    scrollbar-color: rgba(144, 202, 249, 0.4) rgba(255, 255, 255, 0.04);
+  }
+  
+  /* Webkit scrollbar (Chrome, Safari, Edge) - Sticky */
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar {
+    width: 12px;
+    height: 14px;
+    position: sticky;
+    bottom: 0;
+  }
+  
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 6px;
+    margin: 0 8px;
+    position: sticky;
+    bottom: 0;
+  }
+  
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb {
+    background: rgba(25, 118, 210, 0.5);
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background 0.2s ease;
+    min-width: 40px;
+  }
+  
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb:hover {
+    background: rgba(25, 118, 210, 0.7);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb:active {
+    background: rgba(25, 118, 210, 0.9);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb {
+    background: rgba(144, 202, 249, 0.5);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb:hover {
+    background: rgba(144, 202, 249, 0.7);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  [data-theme="dark"] .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-thumb:active {
+    background: rgba(144, 202, 249, 0.9);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  /* Scrollbar corner */
+  .table-page-layout .MuiTableContainer-root::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .table-page-layout .MuiToolbar-root {
+      padding: 16px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .table-page-layout .MuiTableCell-head,
+    .table-page-layout .MuiTableCell-body {
+      padding: 12px;
+      font-size: 0.875rem;
+    }
+  
+    .table-page-layout .MuiTableContainer-root::-webkit-scrollbar {
+      height: 12px;
+    }
+  }

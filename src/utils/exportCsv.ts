@@ -1,15 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { MRT_Row, MRT_RowData } from "material-react-table";
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from "material-react-table";
 import type { ViewMode } from "../constantes/constantes";
 import type { GlobalIndicator } from "models/indicateurs";
 
-export function handleExportCsv(
+export function handleExportCsv<U extends MRT_RowData>(
     indicator: string,
-    headers: string[],
+    table: MRT_TableInstance<U>,
     filteredData: string[],
+    headers?: string[],
     viewMode?: ViewMode
 ) {
-    const csvRows: string = [headers.join(","), ...filteredData].join("\n");
+    const colonnes: string[] = table
+        .getAllLeafColumns()
+        .filter(c => c.id !== "mrt-row-expand")
+        .map(c => c.columnDef.header);
+    const headCsv = headers ? headers.join(",") : colonnes.join(",");
+    const csvRows: string = [headCsv, ...filteredData].join("\n");
     const blob: Blob = new Blob([csvRows], { type: "text/csv" });
     const url: string = URL.createObjectURL(blob);
     const a: HTMLAnchorElement = document.createElement("a");
@@ -25,20 +30,20 @@ export function flattenRows<T extends MRT_RowData>(rows: MRT_Row<T>[]): MRT_Row<
     return rows.flatMap(row => [row, ...flattenRows(row.subRows || [])]);
 }
 
-export const sanitize = (value: any): string => {
+export const sanitize = (value?: string | number): string => {
     return value === null || value === undefined || value === -1 || value === "" ? "NR" : String(value);
 };
 
 export const formatValue = (value: string): string | number => {
     if (value === "NR") return "NR";
     const num = Number(value);
-    return isNaN(num) ? value : num;
+    return Number.isNaN(num) ? value : num;
 };
 
 export const computeDetteTechniqueJours = (dette: string | undefined): string | number => {
     if (!dette || dette === "NR") return "NR";
-    const minutes = parseFloat(dette);
-    if (isNaN(minutes) || minutes <= 0) return "NR";
+    const minutes = Number.parseFloat(dette);
+    if (Number.isNaN(minutes) || minutes <= 0) return "NR";
     return Math.round(minutes / 420);
 };
 
@@ -95,5 +100,10 @@ export const formatMainCsvRow = (item: MRT_Row<GlobalIndicator>): string => {
 };
 
 export const escapeCsvValue = (value: string): string => {
-    return `"${value.replace(/"/g, '""')}"`;
+    return `"${value.replaceAll('"', '""')}"`;
+};
+
+export const getName = <U extends MRT_RowData>(row: MRT_Row<U>): string => {
+    const moduleName: string = `${row.original.parentApplication}-${row.original.applicationName}`;
+    return `"${row.original.isModule ? moduleName : row.original.applicationName}"`;
 };

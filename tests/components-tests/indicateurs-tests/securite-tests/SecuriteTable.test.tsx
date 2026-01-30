@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import SecuriteIndicateurTable from "components/indicateurs/securite/SecuriteIndicateur";
+import SecuriteIndicateurTable from "pages/indicateurs/securite/SecuriteIndicateur";
 import * as clientApi from "todos-api/client.gen";
 import { useFilterContext } from "store/filterContext";
 import * as groupModuleUtils from "utils/group-module-by-apps";
@@ -22,7 +22,8 @@ vi.mock("utils/exportCsv", () => ({
             ]);
         };
         return flatten(rows);
-    })
+    }),
+    getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
 vi.mock("utils/filterFunctions", () => ({

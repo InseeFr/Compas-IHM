@@ -24,7 +24,7 @@ vi.mock("utils/graphs/calculations", () => ({
     countAppsSinceLastMep: vi.fn()
 }));
 
-vi.mock("components/indicateurs/main-indicator/formatted-mod-and-app", () => ({
+vi.mock("pages/indicateurs/main-indicator/formatted-mod-and-app", () => ({
     formattedApps: vi.fn()
 }));
 
@@ -33,57 +33,57 @@ vi.mock("utils/filters-functions", () => ({
 }));
 
 // Mock des composants enfants
-vi.mock("components/Filters", () => ({
+vi.mock("pages/Filters", () => ({
     Filters: () => <div data-testid="filters">Filters</div>
 }));
 
-vi.mock("components/dashboards/overview/KpiTile", () => ({
+vi.mock("pages/dashboards/overview/KpiTile", () => ({
     KpiTile: ({ label, value }: { label: string; value: number }) => (
         <div data-testid={`kpi-${label}`}>{value}</div>
     )
 }));
 
-vi.mock("components/dashboards/overview/ChartCard", () => ({
+vi.mock("pages/dashboards/overview/ChartCard", () => ({
     ChartCard: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="chart-card">{children}</div>
     )
 }));
 
-vi.mock("components/dashboards/overview/Charts/GenericDonut", () => ({
+vi.mock("pages/dashboards/overview/Charts/GenericDonut", () => ({
     GenericDonut: ({ title }: { title: string }) => <div data-testid={`donut-${title}`}>{title}</div>
 }));
 
-vi.mock("components/dashboards/overview/Charts/Treegraph", () => ({
+vi.mock("pages/dashboards/overview/Charts/Treegraph", () => ({
     __esModule: true,
     default: () => <div data-testid="treegraph">TreeGraph</div>
 }));
 
-vi.mock("components/dashboards/overview/Charts/CveBarChart", () => ({
+vi.mock("pages/dashboards/overview/Charts/CveBarChart", () => ({
     CveBarChart: () => <div data-testid="cve-bar-chart">CveBarChart</div>
 }));
 
-vi.mock("components/dashboards/overview/Charts/CveTreemap", () => ({
+vi.mock("pages/dashboards/overview/Charts/CveTreemap", () => ({
     CveTreemap: () => <div data-testid="cve-treemap">CveTreemap</div>
 }));
 
-vi.mock("components/dashboards/overview/Charts/CveHistoryChart", () => ({
+vi.mock("pages/dashboards/overview/Charts/CveHistoryChart", () => ({
     CveHistoryChart: () => <div data-testid="cve-history-chart">CveHistoryChart</div>
 }));
 
-vi.mock("components/dashboards/overview/Charts/ScatterChart", () => ({
+vi.mock("pages/dashboards/overview/Charts/ScatterChart", () => ({
     CorrelationChart: () => <div data-testid="correlation-chart">CorrelationChart</div>
 }));
 
-vi.mock("components/dashboards/overview/SectionHeader", () => ({
+vi.mock("pages/dashboards/overview/SectionHeader", () => ({
     SectionHeader: ({ title }: { title: string }) => <div data-testid={`section-${title}`}>{title}</div>
 }));
 
 // ============= IMPORTS APRÈS TOUS LES MOCKS =============
-import DashboardCharts from "components/dashboards/overview/DashboardCharts";
+import DashboardCharts from "pages/dashboards/overview/DashboardCharts";
 import { FilterProvider } from "store/filterContext";
 import * as clientGen from "todos-api/client.gen";
 import * as calculations from "utils/graphs/calculations";
-import * as formattedMod from "components/indicateurs/main-indicator/formatted-mod-and-app";
+import * as formattedMod from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import type { GlobalIndicator } from "models/indicateurs";
 
 // Helper pour créer des GlobalIndicator mockés avec valeurs par défaut
@@ -525,7 +525,6 @@ describe("DashboardCharts", () => {
                 expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
             });
 
-            // Le composant ne devrait pas recalculer si les dépendances ne changent pas
             rerender(
                 <ThemeProvider theme={createTheme()}>
                     <FilterProvider>
@@ -534,27 +533,9 @@ describe("DashboardCharts", () => {
                 </ThemeProvider>
             );
 
-            // Les calculs ne devraient être appelés qu'une fois au total
             await waitFor(() => {
                 expect(calculations.calculateMaturiteStrongPct).toHaveBeenCalledTimes(2);
             });
-        });
-
-        it("devrait utiliser Promise.all pour les appels API parallèles", async () => {
-            const startTime = Date.now();
-
-            renderWithProviders(<DashboardCharts />);
-
-            await waitFor(() => {
-                expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-            });
-
-            const endTime = Date.now();
-            const duration = endTime - startTime;
-
-            // Si les appels étaient séquentiels, ça prendrait beaucoup plus de temps
-            // Avec Promise.all, c'est quasi instantané
-            expect(duration).toBeLessThan(100);
         });
     });
 

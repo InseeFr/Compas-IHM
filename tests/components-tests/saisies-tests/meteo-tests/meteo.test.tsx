@@ -2,54 +2,61 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { getApplications1, creerMeteo } from "todos-api/client.gen";
-import { MeteoForm } from "components/saisies/meteo/meteoForm";
+import { MeteoForm } from "pages/saisies/meteo/meteoForm";
 
-/* =======================
-   Variable pour piloter le formulaire
-======================= */
 let mockFormData: any = {};
 
-/* =======================
-   Mocks API
-======================= */
+const mockReset = vi.fn();
+
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
     creerMeteo: vi.fn()
 }));
 
-/* =======================
-   Mocks Layouts
-======================= */
-vi.mock("pages/formsPageLayout/MainPageLayout", () => ({
-    MainFormPageLayout: ({ title, formulaires, onSubmit }: any) => (
+vi.mock("components/formsPageLayout/MainPageLayout", () => ({
+    MainFormPageLayout: ({ title, formulaires, onSubmit, reset }: any) => (
         <form onSubmit={onSubmit}>
             <h1>{title}</h1>
             {formulaires}
+            <button type="button" onClick={reset}>
+                Annuler
+            </button>
+            <button type="submit">Saisir</button>
         </form>
     )
 }));
 
-vi.mock("pages/formsPageLayout/SnackBarPageLayout", () => ({
+vi.mock("components/formsPageLayout/SnackBarPageLayout", () => ({
     SnackBarPageLayout: ({ openSnack, render }: any) =>
         openSnack ? <div data-testid="snackbar">{render}</div> : null
 }));
 
-vi.mock("pages/formsPageLayout/FormPageLayout", () => ({
-    FormPageLayout: ({ title, render, name }: any) => (
-        <div>
-            <h2>{title}</h2>
-            {render({
-                value: name === "idsApplication" ? (mockFormData.idsApplication ?? []) : 4,
-                onChange: () => undefined
-            })}
-        </div>
-    )
+vi.mock("components/formsPageLayout/FormPageLayout", () => ({
+    FormPageLayout: ({ title, render, name, required }: any) => {
+        const value = name === "idsApplication" ? (mockFormData.idsApplication ?? []) : 4;
+
+        const hasError = required && Array.isArray(value) && value.length === 0;
+
+        return (
+            <div>
+                <h2>{title}</h2>
+
+                {render({
+                    value,
+                    onChange: () => undefined,
+                    required
+                })}
+
+                {hasError && <span>Veuillez renseigner ce champ</span>}
+            </div>
+        );
+    }
 }));
 
 /* =======================
    Mocks cellules
 ======================= */
-vi.mock("components/saisies/meteo/meteoCell", () => ({
+vi.mock("pages/saisies/meteo/meteoCell", () => ({
     RenderAppSelections: () => <div data-testid="render-app-selections" />,
     RenderMeteoSelection: () => <div data-testid="render-meteo-selection" />
 }));
@@ -66,15 +73,29 @@ vi.mock("react-hook-form", async () => {
         useForm: () => ({
             control: {},
             register: () => ({}),
-            reset: vi.fn(),
-            formState: { errors: {} },
-            handleSubmit: (fn: any) => () =>
+            reset: mockReset,
+            formState: {
+                errors:
+                    mockFormData.idsApplication?.length === 0
+                        ? {
+                              idsApplication: {
+                                  type: "required",
+                                  message: "Veuillez renseigner ce champ"
+                              }
+                          }
+                        : {}
+            },
+            handleSubmit: (fn: any) => () => {
+                if (mockFormData.idsApplication?.length === 0) {
+                    return;
+                }
                 fn({
                     valeurMeteo: 4,
                     date: "2024-01-01",
                     commentaire: mockFormData.commentaire ?? "",
                     idsApplication: mockFormData.idsApplication ?? []
-                })
+                });
+            }
         })
     };
 });
@@ -148,10 +169,35 @@ describe("MeteoForm", () => {
 
         fireEvent.click(screen.getByRole("button", { name: "Saisir" }));
 
-        expect(
-            await screen.findByText("Veuillez sélectionner au moins une application.")
-        ).toBeInTheDocument();
+        expect(await screen.findByText("Veuillez renseigner ce champ")).toBeInTheDocument();
 
         expect(mockedCreerMeteo).not.toHaveBeenCalled();
+    });
+    it("affiche une erreur si erreur durant la création", async () => {
+        mockFormData = {
+            idsApplication: [1],
+            commentaire: "Test"
+        };
+
+        mockedGetApplications1.mockResolvedValueOnce([{ idApplication: 1, appName: "App A" }]);
+
+        mockedCreerMeteo.mockRejectedValueOnce(new Error("une erreur lors de la création de météo"));
+
+        render(<MeteoForm />);
+
+        fireEvent.click(screen.getByRole("button", { name: "Saisir" }));
+
+        expect(
+            await screen.findByText("Une erreur est survenue lors de la création météo.")
+        ).toBeInTheDocument();
+    });
+    it("reset le formulaire quand on clique sur Annuler", async () => {
+        mockedGetApplications1.mockResolvedValueOnce([{ idApplication: 1, appName: "App A" }]);
+
+        render(<MeteoForm />);
+
+        fireEvent.click(screen.getByRole("button", { name: "Annuler" }));
+
+        expect(mockReset).toHaveBeenCalledTimes(1);
     });
 });

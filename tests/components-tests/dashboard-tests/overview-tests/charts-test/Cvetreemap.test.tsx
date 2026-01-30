@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CveTreemap } from "components/dashboards/overview/Charts/CveTreemap";
+import { CveTreemap } from "pages/dashboards/overview/Charts/CveTreemap";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme();

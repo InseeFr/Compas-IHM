@@ -1,0 +1,39 @@
+
+
+
+.filter-item {
+  flex: 1 1 220px !important;  
+  min-width: 180px !important; 
+  max-width: 260px !important; 
+}
+.filter-item .MuiOutlinedInput-root {
+  border-radius: 12px;
+  background-color: inherit;
+  font-size: 0.9rem;
+  color: inherit;
+}
+
+.filter-item .MuiOutlinedInput-notchedOutline {
+  border-color: currentColor;
+  border-width: 1px;
+}
+
+.filter-item .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(156, 55, 151, 0.6);
+}
+
+.filter-item
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(156, 55, 151, 0.8);
+  box-shadow: 0 0 0 3px rgba(156, 55, 151, 0.2);
+}
+
+.filter-item .MuiInputLabel-root {
+  color: inherit;
+}
+
+.filter-item .MuiInputLabel-root.Mui-focused {
+  color: rgba(156, 55, 151, 0.8);
+}

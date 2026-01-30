@@ -1,24 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { DevopsIndicateurTable } from "components/indicateurs/devops/DevopsIndicateur";
+import { DevopsIndicateurTable } from "pages/indicateurs/devops/DevopsIndicateur";
 import { FilterProvider } from "store/filterContext";
-import * as devopsConfig from "components/indicateurs/devops/devopsConfig";
+import * as devopsConfig from "pages/indicateurs/devops/devopsConfig";
 import { getApplications2, getModules2 } from "todos-api/client.gen";
+import { UseQueryIndicators } from "utils/useQueryIndicators";
 
-// Mocks des API
 vi.mock("todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
     getModules2: vi.fn()
 }));
 
-// Mock du bouton CSV
-vi.mock("pages/ButtonCsvExport", () => ({
+vi.mock("components/ButtonCsvExport", () => ({
     default: ({ onExport }: any) => <button onClick={() => onExport("mockTable")}>Export CSV</button>
 }));
 
-// Mock du layout/table
-vi.mock("pages/TablePageLayout", () => ({
+vi.mock("components/TablePageLayout", () => ({
     default: ({ data, renderTopCustom }: any) => (
         <div>
             {renderTopCustom?.({ table: "mockTable" })}
@@ -29,12 +27,11 @@ vi.mock("pages/TablePageLayout", () => ({
     )
 }));
 
-// Mock des utilitaires
 vi.mock("utils/group-module-by-apps", () => ({
     groupModulesByApp: vi.fn(() => ({}))
 }));
 
-vi.mock("components/indicateurs/devops/devopsConfig", () => ({
+vi.mock("pages/indicateurs/devops/devopsConfig", () => ({
     columnsTable: vi.fn(() => []),
     formatIndicateur: vi.fn((x: any) => x),
     onExport: vi.fn(),
@@ -44,15 +41,18 @@ vi.mock("components/indicateurs/devops/devopsConfig", () => ({
 const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
 const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
 
-vi.mock("@tanstack/react-query", () => ({
-    useQuery: vi.fn(() => ({
-        data: [...mockApps, ...mockModules],
-        isLoading: false
-    }))
+vi.mock("utils/useQueryIndicators", () => ({
+    UseQueryIndicators: vi.fn()
 }));
 describe("DevopsIndicateurTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        (UseQueryIndicators as any).mockReturnValue({
+            data: [...mockApps, ...mockModules],
+            filteredData: mockApps,
+            modulesByApp: { App1: [mockModules[0]] },
+            isLoading: false
+        });
     });
 
     it("should render applications and modules after fetching data", async () => {
@@ -90,5 +90,24 @@ describe("DevopsIndicateurTable", () => {
         fireEvent.click(exportButton);
 
         expect(devopsConfig.onExport).toHaveBeenCalledWith("mockTable");
+    });
+    it("gère une erreur lors du fetch des indicateurs devops", async () => {
+        const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+        (UseQueryIndicators as any).mockReturnValue({
+            data: undefined,
+            filteredData: [],
+            modulesByApp: {},
+            isLoading: false
+        });
+
+        render(<DevopsIndicateurTable />);
+
+        expect(devopsConfig.formatIndicateur).not.toHaveBeenCalled();
+
+        expect(screen.queryByText("App1")).toBeNull();
+        expect(screen.queryByText("Mod1")).toBeNull();
+
+        consoleSpy.mockRestore();
     });
 });

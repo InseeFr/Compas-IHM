@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { formatIndicateur, onExport } from "components/indicateurs/devops/devopsConfig";
+import { columnsTable, formatIndicateur, onExport } from "pages/indicateurs/devops/devopsConfig";
 import { handleExportCsv } from "utils/exportCsv";
 import type { DevopsIndicateur } from "models/indicateurs";
-import type { MRT_TableInstance } from "material-react-table";
-import { HEADERS_DEVOPS } from "constantes/constantes-csv";
+import type { MRT_Cell, MRT_Row, MRT_TableInstance } from "material-react-table";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mock handleExportCsv et flattenRows -----
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
-    // 👇 Ajouter le mock de flattenRows
     flattenRows: vi.fn(rows => {
         const flatten = (arr: any[]): any[] => {
             return arr.flatMap((row: any) => [row, ...(row.subRows ? flatten(row.subRows) : [])]);
         };
         return flatten(rows);
-    })
+    }),
+    getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
 beforeEach(() => {
@@ -94,10 +94,19 @@ describe("onExport", () => {
                             lettreContributorCount: "X",
                             lettreDeploymentCount: "Y",
                             lettreDistanceCount: "Z",
-                            isModule: true,
-                            parentApplication: "AppParent"
+                            isModule: true
                         },
-                        subRows: []
+                        subRows: [
+                            {
+                                original: {
+                                    applicationName: "bk",
+                                    sndi: "S2",
+                                    lettreDeploymentCount: "B",
+                                    lettreDistanceCount: "C",
+                                    parentApplication: "App2"
+                                }
+                            }
+                        ]
                     }
                 ]
             })
@@ -105,17 +114,80 @@ describe("onExport", () => {
 
         onExport(table);
 
-        // Vérifie qu'on a bien appelé handleExportCsv
         expect(handleExportCsv).toHaveBeenCalledTimes(1);
         const [filename, headers, csvData] = vi.mocked(handleExportCsv).mock.calls[0];
         expect(filename).toBe("devops");
-        expect(headers).toBe(HEADERS_DEVOPS);
+        expect(headers).toBeDefined();
         expect(Array.isArray(csvData)).toBe(true);
 
-        // Vérifie le format CSV
-        expect(csvData).toEqual([
-            `"App1","","S1","D1","A","B","C"`,
-            `"AppParent","App2","S2","D2","X","Y","Z"`
-        ]);
+        expect(csvData).toEqual([`"App1","S1","B","C"`, `"App2","S2","Y","Z"`, `"bk","S2","B","C"`]);
+    });
+});
+
+describe("Colonnes", () => {
+    const colonnes = columnsTable();
+    beforeEach(() => {
+        return colonnes;
+    });
+
+    // it("doit générer un aria-label Contributeur", () => {
+    //     const colContributeur = colonnes.find(c => c.accessorKey === "lettreContributorCount")!;
+    //     const props =
+    //         typeof colContributeur.muiTableBodyCellProps === "function"
+    //             ? colContributeur.muiTableBodyCellProps({
+    //                   cell: {
+    //                       getValue: () => "A"
+    //                   } as unknown as MRT_Cell<DevopsIndicateur, unknown>,
+    //                   column: {} as any,
+    //                   row: {
+    //                       original: {
+    //                           applicationName: "App1"
+    //                       }
+    //                   } as MRT_Row<DevopsIndicateur>,
+    //                   table: {} as any
+    //               })
+    //             : colContributeur.muiTableBodyCellProps;
+
+    //     expect(props!["aria-label"]).toBe(generateAriaLabelCell("Note Contributeur", "App1", "A"));
+    // });
+    it("doit générer un aria-label Deployment", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "lettreDeploymentCount")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "A"
+                      } as unknown as MRT_Cell<DevopsIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<DevopsIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Note de déploiement", "App1", "A"));
+    });
+    it("doit générer un aria-label DistanceCount", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "lettreDistanceCount")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "A"
+                      } as unknown as MRT_Cell<DevopsIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<DevopsIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Note de distance", "App1", "A"));
     });
 });

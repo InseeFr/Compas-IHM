@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as meteoConfig from "../../../../src/components/indicateurs/meteo/meteo-config";
+import * as meteoConfig from "../../../../src/pages/indicateurs/meteo/meteo-config";
 import { handleExportCsv } from "utils/exportCsv";
 import type { Application } from "todos-api/client.gen";
+import type { MRT_Cell, MRT_Row } from "material-react-table";
+import type { MeteoIndicateur } from "models/indicateurs";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mocks -----
 vi.mock("utils/exportCsv", () => ({
@@ -86,6 +89,33 @@ describe("meteo-config.ts", () => {
         const columns = meteoConfig.columnsMeteo(["2026-01", "2026-02"]);
 
         expect(columns[0].header).toBe("Nom");
+    });
+    it("doit générer un aria-label month columns", () => {
+        const columns = meteoConfig.columnsMeteo(["2026-01"]);
+        const colContributeur = columns.find(c => c.accessorKey === "Par mois")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => [
+                              {
+                                  date: "2026-01-12",
+                                  valeur: 4,
+                                  commentaire: "oui"
+                              }
+                          ]
+                      } as unknown as MRT_Cell<MeteoIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<MeteoIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Météo de janv. 2026", "App1", "4"));
     });
 
     it("calls handleExportCsv correctly in onExport", () => {

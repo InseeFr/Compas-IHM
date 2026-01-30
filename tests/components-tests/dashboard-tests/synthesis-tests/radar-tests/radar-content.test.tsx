@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import type { AppForRadar } from "components/dashboards/applications/RadarChart/RadarQualiteChar";
-import RadarQualiteChart from "components/dashboards/applications/RadarChart/RadarQualiteChar";
+import type { AppForRadar } from "pages/dashboards/applications/RadarChart/RadarQualiteChar";
+import RadarQualiteChart from "pages/dashboards/applications/RadarChart/RadarQualiteChar";
 import * as echarts from "echarts";
 import { vi, describe, it, beforeEach } from "vitest";
 

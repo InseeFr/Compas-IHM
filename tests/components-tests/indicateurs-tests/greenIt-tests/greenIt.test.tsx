@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as client from "todos-api/client.gen";
-import * as exportCsv from "pages/ButtonCsvExport";
-import { GreenItTable } from "components/indicateurs/greenIT/GreenItTable";
+import * as exportCsv from "components/ButtonCsvExport";
+import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import type { Application } from "todos-api/client.gen";
 
 // ====================
@@ -13,7 +13,7 @@ vi.mock("todos-api/client.gen", () => ({
     getApplications: vi.fn()
 }));
 
-vi.mock("pages/ButtonCsvExport", () => ({
+vi.mock("components/ButtonCsvExport", () => ({
     default: vi.fn(() => <button data-testid="button-export-csv">Export CSV</button>)
 }));
 

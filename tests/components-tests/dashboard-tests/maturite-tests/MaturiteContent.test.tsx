@@ -9,7 +9,7 @@ import {
     DisclaimerMaturity,
     MaturiteHeader,
     TechAndOrga
-} from "components/dashboards/maturité/MaturiteContent";
+} from "pages/dashboards/maturité/MaturiteContent";
 
 vi.mock("./maturite-config", () => ({
     clamp01: vi.fn(val => Math.max(0, Math.min(1, val))),
@@ -19,7 +19,7 @@ vi.mock("./maturite-config", () => ({
     maturiteLabel: vi.fn(maturite => (maturite >= 70 ? "Forte" : "Faible"))
 }));
 
-vi.mock("pages/ToolTipLayout", () => ({
+vi.mock("components/ToolTipLayout", () => ({
     ToolTipLayout: vi.fn(({ content }) => <div data-testid="tooltip">{content}</div>)
 }));
 

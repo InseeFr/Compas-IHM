@@ -15,9 +15,9 @@ import {
     RenderTypeAudit,
     RenderScoreAudit,
     RenderDateAudit
-} from "components/saisies/a11y/a11yCell";
+} from "pages/saisies/a11y/a11yCell";
 
-import type { A11yFormValues } from "components/saisies/a11y/a11yFormValues";
+import type { A11yFormValues } from "pages/saisies/a11y/a11yFormValues";
 import type { Module } from "todos-api/client.gen";
 
 function mockField<T extends keyof A11yFormValues>(
@@ -104,7 +104,7 @@ describe("A11y renders", () => {
 
             render(<RenderDateDeclaration {...field} />);
 
-            const input = screen.getByLabelText("Date de déclaration");
+            const input = screen.getByLabelText("date de déclaration");
 
             await user.type(input, "2024-02-01");
 

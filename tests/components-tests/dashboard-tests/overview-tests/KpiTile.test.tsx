@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { KpiTile } from "components/dashboards/overview/KpiTile";
+import { KpiTile } from "pages/dashboards/overview/KpiTile";
 import { CloudOutlined } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, vi, beforeEach, expect } from "vitest";
-import QualiteIndicateurTable from "components/indicateurs/qualité/QualiteIndicateur";
+import QualiteIndicateurTable from "pages/indicateurs/qualité/QualiteIndicateur";
 import { useFilterContext } from "store/filterContext";
 import * as clientApi from "todos-api/client.gen";
-import * as qualiteConfig from "components/indicateurs/qualité/qualiteConfig";
+import * as qualiteConfig from "pages/indicateurs/qualité/qualiteConfig";
 import * as groupModuleUtils from "utils/group-module-by-apps";
+import { UseQueryIndicators } from "utils/useQueryIndicators";
 
 // ----- Mocks -----
 vi.mock("store/filterContext", () => ({
@@ -21,7 +22,7 @@ vi.mock("utils/group-module-by-apps", () => ({
     groupModulesByApp: vi.fn(() => ({}))
 }));
 
-vi.mock("pages/TablePageLayout", () => ({
+vi.mock("components/TablePageLayout", () => ({
     default: ({ data, renderTopCustom }: any) => (
         <div>
             {renderTopCustom?.({ table: "mockTable" })}
@@ -32,11 +33,11 @@ vi.mock("pages/TablePageLayout", () => ({
     )
 }));
 
-vi.mock("pages/ButtonCsvExport", () => ({
+vi.mock("components/ButtonCsvExport", () => ({
     default: ({ onExport }: any) => <button onClick={() => onExport("mockTable")}>Export CSV</button>
 }));
 
-vi.mock("components/indicateurs/qualité/qualiteConfig", () => ({
+vi.mock("pages/indicateurs/qualité/qualiteConfig", () => ({
     columnsTable: vi.fn(() => []),
     formatIndicateur: vi.fn((x: any) => x),
     OnExport: vi.fn(),
@@ -56,11 +57,8 @@ const mockModules = [
     }
 ];
 
-vi.mock("@tanstack/react-query", () => ({
-    useQuery: vi.fn(() => ({
-        data: [...mockApps, ...mockModules],
-        isLoading: false
-    }))
+vi.mock("utils/useQueryIndicators", () => ({
+    UseQueryIndicators: vi.fn()
 }));
 
 describe("QualiteIndicateurTable", () => {
@@ -75,6 +73,12 @@ describe("QualiteIndicateurTable", () => {
         vi.spyOn(groupModuleUtils, "groupModulesByApp").mockImplementation(data => ({
             App1: data.filter(d => d.isModule)
         }));
+        (UseQueryIndicators as any).mockReturnValue({
+            data: [...mockApps, ...mockModules],
+            filteredData: mockApps,
+            modulesByApp: { App1: [mockModules[0]] },
+            isLoading: false
+        });
     });
 
     it("renders applications and modules", async () => {
@@ -94,5 +98,25 @@ describe("QualiteIndicateurTable", () => {
         fireEvent.click(exportButton);
 
         expect(qualiteConfig.OnExport).toHaveBeenCalledWith("mockTable");
+    });
+
+    it("gère une erreur lors du fetch des indicateurs qualité", async () => {
+        const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+        (UseQueryIndicators as any).mockReturnValue({
+            data: undefined,
+            filteredData: [],
+            modulesByApp: {},
+            isLoading: false
+        });
+
+        render(<QualiteIndicateurTable />);
+
+        expect(qualiteConfig.formatIndicateur).not.toHaveBeenCalled();
+
+        expect(screen.queryByText("App1")).toBeNull();
+        expect(screen.queryByText("Mod1")).toBeNull();
+
+        consoleSpy.mockRestore();
     });
 });

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { SectionHeader } from "components/dashboards/overview/SectionHeader";
+import { SectionHeader } from "pages/dashboards/overview/SectionHeader";
 import { DashboardOutlined } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 

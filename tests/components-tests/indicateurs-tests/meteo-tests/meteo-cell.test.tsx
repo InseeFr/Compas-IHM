@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import type { MeteoIndicateur } from "models/indicateurs";
-import { MeteoCell, MeteoFormMonths } from "components/indicateurs/meteo/meteoCell";
+import { MeteoCell, MeteoFormMonths } from "pages/indicateurs/meteo/meteoCell";
 
-vi.mock("pages/ToolTipLayout", () => ({
+vi.mock("components/ToolTipLayout", () => ({
     ToolTipLayout: ({ title, content }: any) => (
         <div data-testid="tooltip">
             <div data-testid="tooltip-title">{title}</div>
@@ -87,9 +87,9 @@ describe("MeteoFormMonths", () => {
 
         // Verify the combobox is rendered
         expect(screen.getByRole("combobox")).toBeInTheDocument();
-        
+
         // Check the value via the hidden input
-        const hiddenInput = document.querySelector('input.MuiSelect-nativeInput') as HTMLInputElement;
+        const hiddenInput = document.querySelector("input.MuiSelect-nativeInput") as HTMLInputElement;
         expect(hiddenInput).toHaveValue("6");
     });
 
@@ -116,7 +116,7 @@ describe("MeteoFormMonths", () => {
 
         const select = screen.getByRole("combobox");
         await user.click(select);
-        
+
         // Get the option by role instead of text to avoid duplicates
         const options = screen.getAllByRole("option");
         const option12 = options.find(opt => opt.textContent?.includes("12 mois"));
@@ -150,7 +150,7 @@ describe("MeteoFormMonths", () => {
 
         // Verify the calendar icon is present by testId
         expect(screen.getByTestId("CalendarMonthIcon")).toBeInTheDocument();
-        
+
         // Verify the combobox exists (which confirms the component rendered)
         expect(screen.getByRole("combobox")).toBeInTheDocument();
     });

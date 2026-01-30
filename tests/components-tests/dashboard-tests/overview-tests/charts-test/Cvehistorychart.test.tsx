@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CveHistoryChart } from "components/dashboards/overview/Charts/CveHistoryChart";
+import { CveHistoryChart } from "pages/dashboards/overview/Charts/CveHistoryChart";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const theme = createTheme();

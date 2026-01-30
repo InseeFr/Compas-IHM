@@ -1,0 +1,225 @@
+
+.dashboard-layout {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
+.dashboard-title-section {
+    margin-bottom: 2rem;
+}
+
+.dashboard-filters {
+    margin-bottom: 24px !important;
+    background-color: transparent !important;
+    display: flex !important;
+    flex-direction: row !important; 
+    gap: 16px !important; 
+    align-items: flex-start !important;
+    border: none !important;
+}
+
+.dashboard-divider {
+    margin: 1.5rem 0;
+}
+
+.dashboard-paper {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        rgba(147, 51, 234, 0.05) 0%,
+        rgba(168, 85, 247, 0.08) 50%,
+        rgba(192, 132, 252, 0.05) 100%
+    );
+    border-radius: 16px;
+    border: 1px solid rgba(147, 51, 234, 0.1);
+    box-shadow: 0 8px 32px rgba(147, 51, 234, 0.12);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-paper:hover {
+    box-shadow: 0 12px 48px rgba(147, 51, 234, 0.18);
+    transform: translateY(-2px);
+}
+
+.dashboard-paper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        #9333ea 0%,
+        #a855f7 50%,
+        #c084fc 100%
+    );
+}
+
+.autocomplete-container {
+    width: 100%;
+    max-width: 560px;
+}
+
+.autocomplete-container .MuiAutocomplete-root {
+    background: linear-gradient(
+        135deg,
+        rgba(147, 51, 234, 0.03) 0%,
+        rgba(168, 85, 247, 0.05) 100%
+    );
+    border-radius: 12px;
+    padding: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.autocomplete-container .MuiAutocomplete-root:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(147, 51, 234, 0.06) 0%,
+        rgba(168, 85, 247, 0.08) 100%
+    );
+}
+
+.autocomplete-container .MuiInputBase-root {
+    border-radius: 10px;
+}
+
+.autocomplete-container .MuiInputBase-root.Mui-focused {
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
+}
+
+.loading-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.loading-container .MuiLinearProgress-root {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(
+        90deg,
+        rgba(147, 51, 234, 0.1) 0%,
+        rgba(192, 132, 252, 0.1) 100%
+    );
+}
+
+.loading-container .MuiLinearProgress-bar {
+    background: linear-gradient(
+        90deg,
+        #9333ea 0%,
+        #a855f7 50%,
+        #c084fc 100%
+    );
+    border-radius: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dashboard-paper {
+        background: linear-gradient(
+            135deg,
+            rgba(147, 51, 234, 0.08) 0%,
+            rgba(168, 85, 247, 0.12) 50%,
+            rgba(192, 132, 252, 0.08) 100%
+        );
+        border-color: rgba(147, 51, 234, 0.2);
+        box-shadow: 0 8px 32px rgba(147, 51, 234, 0.2);
+    }
+
+    .dashboard-paper:hover {
+        box-shadow: 0 12px 48px rgba(147, 51, 234, 0.3);
+    }
+
+    .autocomplete-container .MuiAutocomplete-root {
+        background: linear-gradient(
+            135deg,
+            rgba(147, 51, 234, 0.05) 0%,
+            rgba(168, 85, 247, 0.08) 100%
+        );
+    }
+
+    .autocomplete-container .MuiAutocomplete-root:hover {
+        background: linear-gradient(
+            135deg,
+            rgba(147, 51, 234, 0.08) 0%,
+            rgba(168, 85, 247, 0.12) 100%
+        );
+    }
+
+    .loading-container .MuiLinearProgress-root {
+        background: linear-gradient(
+            90deg,
+            rgba(147, 51, 234, 0.15) 0%,
+            rgba(192, 132, 252, 0.15) 100%
+        );
+    }
+}
+
+@media (max-width: 960px) {
+    .dashboard-paper {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-paper {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .dashboard-filters {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+.MuiAutocomplete-listbox::-webkit-scrollbar {
+    width: 8px;
+}
+
+.MuiAutocomplete-listbox::-webkit-scrollbar-track {
+    background: rgba(147, 51, 234, 0.05);
+    border-radius: 4px;
+}
+
+.MuiAutocomplete-listbox::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        180deg,
+        #9333ea 0%,
+        #a855f7 100%
+    );
+    border-radius: 4px;
+}
+
+.MuiAutocomplete-listbox::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        180deg,
+        #7c3aed 0%,
+        #9333ea 100%
+    );
+}
+
+.MuiAutocomplete-option:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(147, 51, 234, 0.08) 0%,
+        rgba(168, 85, 247, 0.12) 100%
+    ) !important;
+}
+
+.MuiAutocomplete-option.Mui-focused {
+    background: linear-gradient(
+        90deg,
+        rgba(147, 51, 234, 0.1) 0%,
+        rgba(168, 85, 247, 0.15) 100%
+    ) !important;
+}

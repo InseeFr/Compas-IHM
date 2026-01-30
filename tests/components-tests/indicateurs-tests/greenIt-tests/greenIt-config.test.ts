@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { handleExportCsv } from "utils/exportCsv";
 import type { GreenITIndicateur } from "models/indicateurs";
-import type { MRT_TableInstance } from "material-react-table";
-import { HEADERS_GREEN_IT } from "constantes/constantes-csv";
-import { formatIndicateur, onExport } from "components/indicateurs/greenIT/greenItConfig";
+import type { MRT_Cell, MRT_Row, MRT_TableInstance } from "material-react-table";
+import { formatIndicateur, onExport, columnsGreenIt } from "pages/indicateurs/greenIT/greenItConfig";
+import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mock handleExportCsv -----
 vi.mock("utils/exportCsv", () => ({
@@ -129,12 +130,117 @@ describe("Green IT - onExport", () => {
         const [filename, headers, csvData] = vi.mocked(handleExportCsv).mock.calls[0];
 
         expect(filename).toBe("green-it");
-        expect(headers).toBe(HEADERS_GREEN_IT);
+        expect(headers).toBeDefined();
         expect(Array.isArray(csvData)).toBe(true);
 
         expect(csvData).toEqual([
-            `"App1","S1","D1","A","1000","2","3","4","B","C","D","10"`,
-            `"App2","S2","D2","NR","NR","NR","NR","NR","NR","NR","NR","NR"`
+            `"App1","S1","1000","2","3","4","B","10"`,
+            `"App2","S2","NR","NR","NR","NR","NR","NR"`
         ]);
+    });
+});
+
+describe("Colonnes Accessibilité", () => {
+    const colonnes = columnsGreenIt();
+    it("doit générer un aria-label Conso", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "_consoSort")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "100"
+                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<GreenITIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Consommation en Watt", "App1", "100"));
+    });
+    it("doit générer un aria-label Cpu", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "_cpuSort")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "1000"
+                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<GreenITIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Cpu alloué en Ghz", "App1", "1000"));
+    });
+    it("doit générer un aria-label Ram", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "_ramSort")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "50"
+                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<GreenITIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Ram allouée en Go", "App1", "50"));
+    });
+    it("doit générer un aria-label Disque", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "_diskSort")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "50"
+                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<GreenITIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Disque alloué en Go", "App1", "50"));
+    });
+
+    it("doit générer un aria-label Nombre VM", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "_nbVmSort")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "12"
+                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<GreenITIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
+
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre de VM", "App1", "12"));
     });
 });

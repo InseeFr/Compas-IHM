@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { ControllerRenderProps, ControllerFieldState, UseFormStateReturn } from "react-hook-form";
 import type { Application, DemandeCreationMeteo } from "todos-api/client.gen";
-import { RenderAppSelections } from "components/saisies/meteo/meteoCell";
+import { RenderAppSelections } from "pages/saisies/meteo/meteoCell";
 
 describe("RenderAppSelections", () => {
     const apps: Application[] = [

@@ -3,12 +3,12 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFilterContext } from "store/filterContext";
 import { getModules1, listerModulesA11y } from "todos-api/client.gen";
-import { A11yIndicateurTable } from "components/indicateurs/a11y/A11yIndicateur";
-import * as a11yConfig from "components/indicateurs/a11y/a11yConfig";
+import { A11yIndicateurTable } from "pages/indicateurs/a11y/A11yIndicateur";
+import * as a11yConfig from "pages/indicateurs/a11y/a11yConfig";
 
 vi.mock("store/filterContext");
 vi.mock("todos-api/client.gen");
-vi.mock("components/indicateurs/a11y/a11yConfig", () => ({
+vi.mock("pages/indicateurs/a11y/a11yConfig", () => ({
     columnsTable: vi.fn(() => [
         { id: "modName", header: "Module" },
         { id: "score", header: "Score" }
@@ -24,22 +24,19 @@ vi.mock("components/indicateurs/a11y/a11yConfig", () => ({
     paginationConfig: { pageSize: 10 }
 }));
 
-vi.mock("pages/TablePageLayout", () => ({
+vi.mock("components/TablePageLayout", () => ({
     default: vi.fn(({ titleTable, data, isLoading }) => (
         <div data-testid="table-layout">
             <h1>{titleTable}</h1>
+            <div data-testid="filters">Filters</div>
             {isLoading && <div>Chargement...</div>}
             {!isLoading && <div data-testid="table-data">{JSON.stringify(data)}</div>}
         </div>
     ))
 }));
 
-vi.mock("pages/ButtonCsvExport", () => ({
+vi.mock("components/ButtonCsvExport", () => ({
     default: vi.fn(() => <button>Export CSV</button>)
-}));
-
-vi.mock("components/Filters", () => ({
-    Filters: vi.fn(() => <div data-testid="filters">Filters</div>)
 }));
 
 vi.mock("utils/filters-functions", () => ({
@@ -233,7 +230,7 @@ describe("A11yIndicateurTable", () => {
     });
 
     it("devrait passer les bonnes props à TablePageLayout après le chargement", async () => {
-        const TablePageLayoutMock = vi.mocked(await import("pages/TablePageLayout")).default;
+        const TablePageLayoutMock = vi.mocked(await import("components/TablePageLayout")).default;
 
         render(<A11yIndicateurTable />, { wrapper: createWrapper() });
 

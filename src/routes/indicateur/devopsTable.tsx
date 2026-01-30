@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DevopsIndicateurTable } from "../../components/indicateurs/devops/DevopsIndicateur";
+import { DevopsIndicateurTable } from "../../pages/indicateurs/devops/DevopsIndicateur";
 
 export const Route = createFileRoute("/indicateur/devopsTable")({
     component: RouteComponent

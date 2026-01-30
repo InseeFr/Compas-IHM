@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ApplicationSynthesis } from "components/dashboards/applications/ApplicationSynthesis";
+import { ApplicationSynthesis } from "pages/dashboards/applications/ApplicationSynthesis";
 
 vi.mock("store/filterContext", () => ({
     useFilterContext: () => ({
@@ -17,22 +17,18 @@ vi.mock("utils/filters-functions", () => ({
 
 const mockFetchApplicationSynthesis = vi.fn();
 
-vi.mock("components/dashboards/applications/application-synthesis-config", () => ({
+vi.mock("pages/dashboards/applications/application-synthesis-config", () => ({
     fetchApplicationSynthesis: () => mockFetchApplicationSynthesis(),
     handleGenerateReport: vi.fn(),
     normalize: (v: string) => v?.toLowerCase(),
     transformModuleData: (m: any) => m
 }));
 
-vi.mock("components/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
-}));
-
-vi.mock("pages/dashboardsPagesLayout/dashboardPageLayout", () => ({
+vi.mock("components/dashboardsPagesLayout/dashboardPageLayout", () => ({
     default: ({ title, dashboardData, setter, label, renderContent }: any) => (
         <div>
             <h1>{title}</h1>
-
+            <div data-testid="filters">Filtres</div>
             {dashboardData.map((app: any) => (
                 <button key={app.applicationId} onClick={() => setter(app)}>
                     {label(app)}
@@ -45,7 +41,7 @@ vi.mock("pages/dashboardsPagesLayout/dashboardPageLayout", () => ({
     )
 }));
 
-vi.mock("components/dashboards/applications/preview/ApplicationContent", () => ({
+vi.mock("pages/dashboards/applications/preview/ApplicationContent", () => ({
     default: ({ appDetails }: any) => (
         <div data-testid="app-preview">Preview {appDetails.applicationName}</div>
     ),

@@ -9,11 +9,10 @@ import {
     GreenItCell,
     A11yCell,
     MaturityCell
-} from "components/indicateurs/main-indicator/mainCell";
+} from "pages/indicateurs/main-indicator/mainCell";
 import type { GlobalIndicator } from "models/indicateurs";
 
-// Mock de ToolTipLayout
-vi.mock("pages/ToolTipLayout", () => ({
+vi.mock("components/ToolTipLayout", () => ({
     ToolTipLayout: ({ title, content }: any) => (
         <div data-testid="tooltip">
             <div data-testid="tooltip-title">{title}</div>
@@ -22,7 +21,6 @@ vi.mock("pages/ToolTipLayout", () => ({
     )
 }));
 
-// Mock des utilitaires
 vi.mock("utils/date-functions", () => ({
     isDateOlderThan31Days: vi.fn((date: string) => {
         const testDate = new Date(date);
@@ -36,7 +34,6 @@ vi.mock("utils/meteoIcon", () => ({
     getMeteoIcon: vi.fn((value: string) => <span data-testid="meteo-icon">{value}</span>)
 }));
 
-// Mock des icônes MUI
 vi.mock("@mui/icons-material/Error", () => ({
     default: () => <span data-testid="error-icon">ErrorIcon</span>
 }));
@@ -65,30 +62,52 @@ describe("QualityCell", () => {
         render(<QualityCell row={createRow()} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("Couverture de test: A (85)");
-        expect(title.textContent).toContain("Fiabilité: B");
-        expect(title.textContent).toContain("Dette technique: C (10 jours)");
+        expect(title.textContent).toContain(
+            `Couverture de test: A (
+                    85) 
+                    Fiabilité: B 
+                    Dette technique: C (10 
+                    jours)`
+        );
     });
 
     it("calcule correctement la dette technique en jours", () => {
         render(<QualityCell row={createRow({ detteTechnique: "840" })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("(2 jours)");
+        expect(title.textContent).toContain(
+            `Couverture de test: A (
+                    85) 
+                    Fiabilité: B 
+                    Dette technique: C (2 
+                    jours)`
+        );
     });
 
     it("utilise le singulier pour 1 jour de dette", () => {
         render(<QualityCell row={createRow({ detteTechnique: "420" })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("(1 jour)");
+        expect(title.textContent).toContain(
+            `Couverture de test: A (
+                    85) 
+                    Fiabilité: B 
+                    Dette technique: C (1 
+                    jour)`
+        );
     });
 
     it("utilise le singulier pour 0 jour de dette", () => {
         render(<QualityCell row={createRow({ detteTechnique: "100" })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("(0 jour)");
+        expect(title.textContent).toContain(
+            `Couverture de test: A (
+                    85) 
+                    Fiabilité: B 
+                    Dette technique: C (0 
+                    jour)`
+        );
     });
 
     it("gère les valeurs NR", () => {
@@ -112,7 +131,13 @@ describe("QualityCell", () => {
         render(<QualityCell row={createRow({ detteTechnique: undefined as any })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("(0 jour)");
+        expect(title.textContent).toContain(
+            `Couverture de test: A (
+                    85) 
+                    Fiabilité: B 
+                    Dette technique: C (0 
+                    jour)`
+        );
     });
 });
 
@@ -172,7 +197,13 @@ describe("SecurityCell", () => {
         render(<SecurityCell row={createRow({ nbCveCritical: "0" })} />);
 
         const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toContain("Cve critique : 0");
+        expect(title.textContent).toContain(
+            `Cve critique : 0
+                Cve élevé : 5
+                Cve moyenne : 10
+                Cve faible : 3
+                Nombre de VM non mises à jour : 4`
+        );
     });
 });
 

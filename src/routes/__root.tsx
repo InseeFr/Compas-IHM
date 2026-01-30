@@ -1,8 +1,9 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import Header from "../components/Header";
+import Header from "../pages/Header";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { useState } from "react";
 import { darkTheme, lightTheme } from "../themes/create-themes";
+import Footer from "pages/Footer";
 
 export const Route = createRootRouteWithContext()({
     component: RootComponent,
@@ -20,6 +21,7 @@ function RootComponent() {
             <main>
                 <Outlet />
             </main>
+            <Footer darkmode={darkMode} accessibility={"Non-conforme"} />
         </ThemeProvider>
     );
 }

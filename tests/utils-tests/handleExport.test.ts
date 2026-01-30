@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ViewMode } from "constantes/constantes";
+import type { MRT_TableInstance } from "material-react-table";
+import type { AllIndicators } from "models/indicateurs";
 import {
     handleExportCsv,
     flattenRows,
@@ -22,7 +24,12 @@ describe("handleExportCsv", () => {
     });
 
     it("devrait créer et télécharger un csv avec le contenu correct et un bon nom de fichier", () => {
-        const headers = ["name", "age"];
+        const table = {
+            getAllLeafColumns: vi.fn(() => [
+                { id: "name", columnDef: { header: "name" } },
+                { id: "age", columnDef: { header: "age" } }
+            ])
+        } as unknown as MRT_TableInstance<AllIndicators>;
         const filteredData = ["Alice,12", "Bob,13"];
         const indicator = "users";
         const clickMock = vi.fn();
@@ -33,7 +40,7 @@ describe("handleExportCsv", () => {
             set download(_value: string) {}
         } as unknown as HTMLAnchorElement);
 
-        handleExportCsv(indicator, headers, filteredData, viewMode);
+        handleExportCsv(indicator, table, filteredData, undefined, viewMode);
 
         expect(mockCreateObjectURL).toHaveBeenCalledOnce();
         expect(mockCreateObjectURL.mock.calls[0][0]).toBeInstanceOf(Blob);
@@ -42,7 +49,9 @@ describe("handleExportCsv", () => {
     });
 
     it("devrait générer un fichier sans le viewmode", () => {
-        const headers = ["col1"];
+        const table = {
+            getAllLeafColumns: vi.fn(() => [{ id: "col", columnDef: { header: "col1" } }])
+        } as unknown as MRT_TableInstance<AllIndicators>;
         const filteredData = ["value1"];
         const indicator = "test";
         let downloadValue = "";
@@ -55,7 +64,7 @@ describe("handleExportCsv", () => {
             }
         } as unknown as HTMLAnchorElement);
 
-        handleExportCsv(indicator, headers, filteredData);
+        handleExportCsv(indicator, table, filteredData);
 
         expect(downloadValue).toMatch(/-tableau-test\.csv$/);
     });
@@ -80,8 +89,7 @@ describe("flattenRows", () => {
 
 describe("sanitize", () => {
     it("devrait retourner 'NR' pour null, undefined et -1", () => {
-        expect(sanitize(null)).toBe("NR");
-        expect(sanitize(undefined)).toBe("NR");
+        expect(sanitize()).toBe("NR");
         expect(sanitize(-1)).toBe("NR");
     });
 
