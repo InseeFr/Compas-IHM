@@ -20,10 +20,10 @@ vi.mock("./custom/LinkCustom", () => ({
     }
 }));
 
-vi.mock("utils/markdown-files", () => ({
+vi.mock("components/accueilLayout/custom/markdownFile", () => ({
     markdownFiles: {
-        "../../assets/content/test.md": "# Hello world",
-        "../../assets/content/other.md": "## Other content"
+        "/assets/content/test.md": "# Hello world",
+        "/assets/content/other.md": "## Other content"
     }
 }));
 
