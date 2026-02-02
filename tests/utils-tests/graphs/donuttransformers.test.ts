@@ -18,7 +18,7 @@ describe("donutTransformers", () => {
 
             const result = transformQualiteData(data);
 
-            expect(result).toHaveLength(7); // A, B, C, D, E, NR, SO
+            expect(result).toHaveLength(7);
             expect(result[0]).toMatchObject({ name: "A", value: 2 });
             expect(result[1]).toMatchObject({ name: "B", value: 1 });
             expect(result[2]).toMatchObject({ name: "C", value: 1 });
