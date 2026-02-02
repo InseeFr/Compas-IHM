@@ -36,7 +36,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                             COMPAS
                         </Typography>
                     </Link>
-                    <NavBarLayout darkMode={darkMode} />
+                    <NavBarLayout darkMode={darkMode} id="navigation" />
                 </Box>
                 <IconButton
                     onClick={toggleDarkMode}

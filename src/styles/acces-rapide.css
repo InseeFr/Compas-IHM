@@ -1,0 +1,54 @@
+/* Liens d'évitement / accès rapide */
+.skip-links {
+    display: inline-block;
+    background-color: #fff;
+    padding: 0.5em;
+    position: absolute;
+    left: -99999px;
+    z-index: 2033;
+    top: 0;
+}
+
+.skip-links:focus-within {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2035;
+}
+
+.skip-links ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.skip-links ul li {
+    padding-right: 1em;
+}
+
+.skip-links ul a {
+    color: #000;
+    text-decoration: underline;
+    padding: 0.25em;
+    font-weight: 500;
+}
+
+.skip-links ul a:focus {
+    outline: 3px solid #0053b3;
+    outline-offset: 2px;
+}
+
+/* Mode sombre */
+.skip-links.dark-mode {
+    background-color: #1e1e1e;
+}
+
+.skip-links.dark-mode ul a {
+    color: #fff;
+}
+
+.skip-links.dark-mode ul a:focus {
+    outline-color: #90caf9;
+}

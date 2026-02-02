@@ -45,7 +45,7 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
     const config = getAccessibilityConfig();
 
     return (
-        <footer color="inherit">
+        <footer color="inherit" id="pied-de-page">
             <Box
                 sx={{
                     display: "flex",

@@ -29,7 +29,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
     props: Readonly<TablePageLayoutProps<T>>
 ): JSX.Element {
     return (
-        <Paper className="table-page-layout">
+        <Paper id="contenu" className="table-page-layout">
             <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
                 key={props.reactKey}
