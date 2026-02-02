@@ -93,34 +93,46 @@ export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
 
     const filteredRows: MRT_Row<GreenITIndicateur>[] = table.getPrePaginationRowModel().rows;
 
-    const csvData: string[] = filteredRows.map(row => {
-        return [
-            `"${row.original.applicationName}"`, // Nom d'application
-            `"${row.original.sndi}"`, // Service dev.
-            `"${row.original.domaine}"`, // Domaine dev.
-            `"${row.original.domaineFonc}"`, // Domaine fonctionnel
-            `"${row.original.lettreGreen ?? "NR"}"`, // Niveau GreenIT
-            `"${row.original.consoGlobal ?? "NR"}"`, // Conso GreenIT (brute)
-            `"${row.original.consoNormalized ?? "NR"}"`, // Score conso GreenIT (normalisé)
-            `"${row.original.impactNormalized ?? "NR"}"`, // Score impact GreenIT (normalisé)
-            `"${row.original.gaspillage ?? "NR"}"`, // Score gaspillage GreenIT
-            `"${row.original.nbVMGlobal ?? "NR"}"`, // Nb VM
-            `"${row.original.cpuAllocatedGlobal ?? "NR"}"`, // CPU alloué
-            `"${row.original.cpuAllocatedGlobal ?? "NR"}"`, // CPU maxi
-            `"${row.original.ramAllocatedGlobal ?? "NR"}"`, // RAM allouée
-            `"${row.original.ramAllocatedGlobal ?? "NR"}"`, // RAM maxi
-            `"${row.original.diskAllocatedGlobal ?? "NR"}"`, // Disque alloué
-            `"${row.original.diskAllocatedGlobal ?? "NR"}"`, // Disque utilisé
-            `"${row.original.nbVMProd ?? "NR"}"`, // Nb VM (prod)
-            `"${row.original.cpuAllocatedProd ?? "NR"}"`, // CPU alloué (prod)
-            `"${row.original.cpuAllocatedProd ?? "NR"}"`, // CPU maxi (prod)
-            `"${row.original.ramAllocatedProd ?? "NR"}"`, // RAM allouée (prod)
-            `"${row.original.ramAllocatedProd ?? "NR"}"`, // RAM maxi (prod)
-            `"${row.original.diskAllocatedProd ?? "NR"}"`, // Disque alloué (prod)
-            `"${row.original.diskAllocatedProd ?? "NR"}"`, // Disque utilisé (prod)
-            `"${row.original.consoProd ?? "NR"}"` // Conso GreenIT prod (brute)
-        ].join(",");
-    });
+    const buildCsvRow = (data: GreenITIndicateur): string => {
+        const getValue = (value: string | undefined): string => value ?? "NR";
+
+        const baseFields = [data.applicationName, data.sndi, data.domaine, data.domaineFonc];
+
+        const greenItMetrics = [
+            getValue(data.lettreGreen),
+            getValue(data.consoGlobal),
+            getValue(data.consoNormalized),
+            getValue(data.impactNormalized),
+            getValue(data.gaspillage)
+        ];
+
+        const globalResources = [
+            getValue(data.nbVMGlobal),
+            getValue(data.cpuAllocatedGlobal),
+            getValue(data.cpuAllocatedGlobal),
+            getValue(data.ramAllocatedGlobal),
+            getValue(data.ramAllocatedGlobal),
+            getValue(data.diskAllocatedGlobal),
+            getValue(data.diskAllocatedGlobal)
+        ];
+
+        const prodResources = [
+            getValue(data.nbVMProd),
+            getValue(data.cpuAllocatedProd),
+            getValue(data.cpuAllocatedProd),
+            getValue(data.ramAllocatedProd),
+            getValue(data.ramAllocatedProd),
+            getValue(data.diskAllocatedProd),
+            getValue(data.diskAllocatedProd),
+            getValue(data.consoProd)
+        ];
+
+        return [...baseFields, ...greenItMetrics, ...globalResources, ...prodResources]
+            .map(value => `"${value}"`)
+            .join(",");
+    };
+
+    const csvData: string[] = filteredRows.map(row => buildCsvRow(row.original));
 
     handleExportCsv("green-it", table, csvData, headers);
 };
