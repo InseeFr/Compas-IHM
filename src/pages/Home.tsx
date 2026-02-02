@@ -1,55 +1,38 @@
-import { Box, Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import ReactMarkdown, { type Components } from "react-markdown";
+import { Box, Container } from "@mui/material";
+import { Link } from "@tanstack/react-router";
+import pageTitles from "assets/content/pagesMdConfig.json";
+import type { PageItem } from "models/page-markdown";
 import "styles/markdown.css";
 
-const markdowns = import.meta.glob("../assets/content/compas-accueil.md", {
-    query: "?raw",
-    import: "default"
-});
-
-const markdownComponents: Components = {
-    a: ({ href, children }) => (
-        <a href={href} target="_blank" rel="noopener noreferrer">
-            {children}
-        </a>
-    ),
-    h1: ({ children }) => (
-        <Typography variant="h1" tabIndex={0}>
-            {children}
-        </Typography>
-    ),
-    h2: ({ children }) => (
-        <Typography variant="h2" tabIndex={0}>
-            {children}
-        </Typography>
-    ),
-    p: ({ children }) => <Typography tabIndex={0}>{children}</Typography>
-};
-
 export default function HomePageLayout() {
-    const [content, setContent] = useState<string>("");
-
-    useEffect(() => {
-        const loadMarkdown = async () => {
-            const loader = markdowns["../assets/content/compas-accueil.md"];
-            if (!loader) {
-                console.error("Markdown not found!");
-                return;
-            }
-
-            const text = await (loader as () => Promise<string>)();
-            setContent(text);
-        };
-
-        loadMarkdown();
-    }, []);
+    const grouped = pageTitles.reduce<Record<string, PageItem[]>>((acc, curr) => {
+        if (!acc[curr.parent]) acc[curr.parent] = [];
+        acc[curr.parent].push(curr);
+        return acc;
+    }, {});
 
     return (
         <Container disableGutters>
             <Box>
                 <div className="markdown-content">
-                    <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
+                    <h1>Accueil</h1>
+                    <p>Voici la liste de tous les indicateurs que vous pouvez retrouver ici :</p>
+                    <ul>
+                        {Object.entries(grouped).map(([parent, pages]) => (
+                            <li key={parent}>
+                                <strong>{parent}</strong>
+                                <ul>
+                                    {pages.map(page => (
+                                        <li key={page.file}>
+                                            <Link to="/$pageName" params={{ pageName: page.file }}>
+                                                {page.page}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </Box>
         </Container>

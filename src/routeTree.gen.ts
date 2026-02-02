@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PageNameRouteImport } from './routes/$pageName'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SaisieMeteoRouteImport } from './routes/saisie/meteo'
 import { Route as SaisieAccessibilitChar233RouteImport } from './routes/saisie/accessibilité'
@@ -23,6 +24,11 @@ import { Route as DashboardSyntheseRouteImport } from './routes/dashboard/synthe
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
 import { Route as DashboardMaturiteRouteImport } from './routes/dashboard/maturite'
 
+const PageNameRoute = PageNameRouteImport.update({
+  id: '/$pageName',
+  path: '/$pageName',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -94,6 +100,7 @@ const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$pageName': typeof PageNameRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$pageName': typeof PageNameRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$pageName': typeof PageNameRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$pageName'
     | '/dashboard/maturite'
     | '/dashboard/overview'
     | '/dashboard/synthese'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$pageName'
     | '/dashboard/maturite'
     | '/dashboard/overview'
     | '/dashboard/synthese'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$pageName'
     | '/dashboard/maturite'
     | '/dashboard/overview'
     | '/dashboard/synthese'
@@ -188,6 +200,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PageNameRoute: typeof PageNameRoute
   DashboardMaturiteRoute: typeof DashboardMaturiteRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
   DashboardSyntheseRoute: typeof DashboardSyntheseRoute
@@ -204,6 +217,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$pageName': {
+      id: '/$pageName'
+      path: '/$pageName'
+      fullPath: '/$pageName'
+      preLoaderRoute: typeof PageNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -300,6 +320,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PageNameRoute: PageNameRoute,
   DashboardMaturiteRoute: DashboardMaturiteRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
   DashboardSyntheseRoute: DashboardSyntheseRoute,

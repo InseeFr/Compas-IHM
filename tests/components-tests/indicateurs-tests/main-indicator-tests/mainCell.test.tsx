@@ -253,19 +253,14 @@ describe("DevopsCell", () => {
 });
 
 describe("MeteoCell", () => {
-    const createRow = (overrides: Partial<GlobalIndicator> = {}): { original: GlobalIndicator } => {
-        const recentDate = new Date();
-        recentDate.setDate(recentDate.getDate() - 5);
-
-        return {
-            original: {
-                meteo: 3,
-                meteoCommentaire: "Beau temps",
-                dateMeteoCommentaire: recentDate.toISOString(),
-                ...overrides
-            } as GlobalIndicator
-        };
-    };
+    const createRow = (overrides: Partial<GlobalIndicator> = {}): { original: GlobalIndicator } => ({
+        original: {
+            meteo: 3,
+            meteoCommentaire: "Beau temps",
+            dateMeteoCommentaire: new Date().toISOString().split('T')[0],
+            ...overrides
+        } as GlobalIndicator
+    });
 
     it("affiche l'icône météo pour une date récente", () => {
         render(<MeteoCell row={createRow()} />);

@@ -1,0 +1,10 @@
+[
+    { "file": "indicateurs-généraux", "page": "Les indicateurs généraux", "parent": "Indicateurs" },
+    { "file": "indicateurs-qualité", "page": "Les indicateurs qualités", "parent": "Indicateurs" },
+    { "file": "indicateurs-secu", "page": "Les indicateurs sécurités", "parent": "Indicateurs" },
+    { "file": "indicateurs-devops", "page": "Les indicateurs devops", "parent": "Indicateurs" },
+    { "file": "indicateurs-green", "page": "Les indicateurs greenIt", "parent": "Indicateurs" },
+    { "file": "indicateurs-meteo", "page": "Les indicateurs météos", "parent": "Indicateurs" },
+    { "file": "indicateurs-a11y", "page": "Les indicateurs accessibilités", "parent": "Indicateurs" },
+    { "file": "indicateurs-maturité", "page": "Les indicateurs maturité", "parent": "Indicateurs" }
+]
