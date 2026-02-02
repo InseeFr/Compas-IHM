@@ -65,7 +65,7 @@ const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
 
 export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL,

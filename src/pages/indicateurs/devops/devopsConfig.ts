@@ -10,7 +10,7 @@ import { DEVOPS_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL,

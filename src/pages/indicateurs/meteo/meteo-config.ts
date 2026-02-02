@@ -184,7 +184,7 @@ export const onExport = (table: MRT_TableInstance<MeteoIndicateur>) => {
     ).sort((a, b) => a.localeCompare(b));
 
     const baseHeaders = [
-        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL
