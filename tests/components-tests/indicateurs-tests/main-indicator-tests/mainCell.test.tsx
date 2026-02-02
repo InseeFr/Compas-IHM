@@ -257,7 +257,7 @@ describe("MeteoCell", () => {
         original: {
             meteo: 3,
             meteoCommentaire: "Beau temps",
-            dateMeteoCommentaire: "2026-01-01",
+            dateMeteoCommentaire: new Date().toISOString().split('T')[0],
             ...overrides
         } as GlobalIndicator
     });
