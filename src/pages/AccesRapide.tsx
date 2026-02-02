@@ -9,7 +9,7 @@ export default function AccesRapide({ darkMode }: Readonly<AccesRapideProps>) {
         <nav
             role="navigation"
             aria-label="Accès rapide"
-            className={`acces-rapide ${darkMode ? "dark-mode" : ""}`}
+            className={`skip-links ${darkMode ? "dark-mode" : ""}`}
         >
             <ul>
                 <li>
