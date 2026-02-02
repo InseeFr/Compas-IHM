@@ -30,11 +30,11 @@ describe("AccesRapide", () => {
         expect(piedLink).toHaveAttribute("href", "#pied-de-page");
     });
 
-    it("devrait appliquer la classe acces-rapide par défaut", () => {
+    it("devrait appliquer la classe skip-links par défaut", () => {
         render(<AccesRapide darkMode={false} />);
 
         const nav = screen.getByRole("navigation", { name: /accès rapide/i });
-        expect(nav).toHaveClass("acces-rapide");
+        expect(nav).toHaveClass("skip-links");
         expect(nav).not.toHaveClass("dark-mode");
     });
 
@@ -42,7 +42,7 @@ describe("AccesRapide", () => {
         render(<AccesRapide darkMode={true} />);
 
         const nav = screen.getByRole("navigation", { name: /accès rapide/i });
-        expect(nav).toHaveClass("acces-rapide");
+        expect(nav).toHaveClass("skip-links");
         expect(nav).toHaveClass("dark-mode");
     });
 
@@ -50,7 +50,7 @@ describe("AccesRapide", () => {
         render(<AccesRapide darkMode={false} />);
 
         const nav = screen.getByRole("navigation", { name: /accès rapide/i });
-        expect(nav).toHaveClass("acces-rapide");
+        expect(nav).toHaveClass("skip-links");
         expect(nav).not.toHaveClass("dark-mode");
     });
 
