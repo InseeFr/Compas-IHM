@@ -1,24 +1,49 @@
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
-import type { SecuriteIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { flattenRows, getName, handleExportCsv } from "utils/exportCsv";
 import { CveCell, MajVmCell } from "./SecuriteCell";
 import type { Application, Module, IndicateurSecuriteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
+import type { SecuriteIndicateur } from "models/indicateurs";
+import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { SECURITE_HEADERS, BASE_HEADERS, GLOBAL_HEADERS } from "constantes/constantes-headers";
 
 export const OnExport = (table: MRT_TableInstance<SecuriteIndicateur>) => {
+    const headers = [
+        BASE_HEADERS.NOM,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
+        GLOBAL_HEADERS.SECURITE,
+        SECURITE_HEADERS.NIVEAU_CVE,
+        SECURITE_HEADERS.CVE_CRITIQUE,
+        SECURITE_HEADERS.CVE_ELEVE,
+        SECURITE_HEADERS.CVE_MOYEN,
+        SECURITE_HEADERS.CVE_FAIBLE,
+        SECURITE_HEADERS.NB_VMS_HORS_DELAI,
+        SECURITE_HEADERS.MAX_DELAI_MAJ_VM
+    ].map(escapeCsvValue);
+
     const filteredRows: MRT_Row<SecuriteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
-    const csvData: string[] = filteredRows.map(row =>
-        [
-            `${getName(row)}`,
+
+    const csvData: string[] = filteredRows.map(row => {
+        return [
+            `"${row.original.applicationName}"`,
             `"${row.original.sndi}"`,
-            `"${row.original.lettreCve}"`,
-            `"${row.original.lettreMajVm}"`,
-            `"${row.original.delaiVmNonMiseAjour}"`
-        ].join(",")
-    );
-    handleExportCsv("sécurité", table, csvData);
+            `"${row.original.domaine}"`,
+            `"${row.original.domaineFonc}"`,
+            `"${row.original.lettreGlobaleSecurite ?? "NR"}"`,
+            `"${row.original.lettreNiveauCve ?? "NR"}"`,
+            `"${row.original.nbCveCritical ?? "NR"}"`,
+            `"${row.original.nbCveHigh ?? "NR"}"`,
+            `"${row.original.nbCveMedium ?? "NR"}"`,
+            `"${row.original.nbCveLow ?? "NR"}"`,
+            `"${row.original.nbVmNonMaj ?? "NR"}"`,
+            `"${row.original.delaiVmNonMiseAjour ?? "NR"}"`
+        ].join(",");
+    });
+
+    handleExportCsv("sécurité", table, csvData, headers);
 };
 
 export const paginationConfig: Pagination = {
@@ -32,20 +57,20 @@ export const columnsTable = (): MRT_ColumnDef<SecuriteIndicateur>[] => {
     const colonnes: MRT_ColumnDef<SecuriteIndicateur>[] = [
         {
             accessorKey: "lettreNiveauCve",
-            header: "CVE",
+            header: SECURITE_HEADERS.CVE,
             Cell: CveCell,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "CVE", cell: cell, row: row })
         },
         {
             accessorKey: "lettreMajVm",
-            header: "nb de VMs hors délai",
+            header: SECURITE_HEADERS.NB_VMS_HORS_DELAI,
             Cell: MajVmCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Maj VM", cell: cell, row: row })
         },
         {
             accessorKey: "delaiVmNonMiseAjour",
-            header: "Max delai Maj VM",
+            header: SECURITE_HEADERS.MAX_DELAI_MAJ_VM,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Délai des maj VM", cell: cell, row: row })
         }
@@ -57,7 +82,6 @@ function formatSecuriteIndicateurBase(
     securiteItem?: IndicateurSecuriteView
 ): Partial<SecuriteIndicateur> {
     const defaultValue = "NR";
-
     return {
         nbCveCritical: securiteItem?.nbCveCritical ?? defaultValue,
         nbCveHigh: securiteItem?.nbCveHigh ?? defaultValue,
@@ -78,7 +102,6 @@ export function formatApplicationSecurite(
     securiteItem?: IndicateurSecuriteView
 ): SecuriteIndicateur {
     const defaultValue = "NR";
-
     return {
         applicationId: app.idApplication,
         applicationName: app.appName ?? defaultValue,
@@ -95,7 +118,6 @@ export function formatModuleSecurite(
     securiteItem?: IndicateurSecuriteView
 ): SecuriteIndicateur {
     const defaultValue = "NR";
-
     return {
         moduleId: mod.id,
         applicationName: mod.modName ?? defaultValue,

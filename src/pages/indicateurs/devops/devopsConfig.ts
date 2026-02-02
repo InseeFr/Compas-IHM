@@ -1,25 +1,43 @@
 import type { MRT_TableInstance, MRT_Row, MRT_ColumnDef } from "material-react-table";
 import type { DevopsIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { flattenRows, getName, handleExportCsv } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
 import { DeploymentCell, DistanceCell } from "./DevopsCell";
 import type { IndicateurDevopsView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
+import { DEVOPS_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
-    const filteredRows: MRT_Row<DevopsIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
-    const csvData: string[] = filteredRows.map(row =>
-        [
-            `${getName(row)}`,
-            `"${row.original.sndi}"`,
-            /** `"${row.original.lettreContributorCount}"`,*/
-            `"${row.original.lettreDeploymentCount}"`,
-            `"${row.original.lettreDistanceCount}"`
-        ].join(",")
-    );
+    const headers = [
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
+        DEVOPS_HEADERS.CONTRIBUTEUR,
+        DEVOPS_HEADERS.NB_MEP,
+        DEVOPS_HEADERS.DERNIERE_MEP,
+        DEVOPS_HEADERS.NIVEAU_FRAICHEUR_MEP,
+        DEVOPS_HEADERS.DERNIERE_MEP_NOMBRE_JOURS
+    ].map(escapeCsvValue);
 
-    handleExportCsv("devops", table, csvData);
+    const filteredRows: MRT_Row<DevopsIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
+
+    const csvData: string[] = filteredRows.map(row => {
+        return [
+            `"${row.original.applicationName}"`,
+            `"${row.original.sndi}"`,
+            `"${row.original.domaine}"`,
+            `"${row.original.domaineFonc}"`,
+            `"${row.original.lettreContributorCount ?? "NR"}"`,
+            `"${row.original.lettreDeploymentCount ?? "NR"}"`,
+            `"${row.original.lettreDistanceCount ?? "NR"}"`,
+            `"${row.original.lettreGlobalDevops ?? "NR"}"`,
+            `"${row.original.distanceCount ?? "NR"}"`
+        ].join(",");
+    });
+
+    handleExportCsv("devops", table, csvData, headers);
 };
 
 export const paginationConfig: Pagination = {
@@ -33,27 +51,26 @@ export const columnsTable = (): MRT_ColumnDef<DevopsIndicateur>[] => {
     const colonnes: MRT_ColumnDef<DevopsIndicateur>[] = [
         /*{
             accessorKey: "lettreContributorCount",
-            header: "Contributeur",
+            header: DEVOPS_HEADERS.CONTRIBUTEUR,
             Cell: ContributorCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Note Contributeur", cell: cell, row: row })
         },*/
         {
             accessorKey: "lettreDeploymentCount",
-            header: "Nb de MEP",
+            header: DEVOPS_HEADERS.NB_MEP,
             Cell: DeploymentCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Note de déploiement", cell: cell, row: row })
         },
         {
             accessorKey: "lettreDistanceCount",
-            header: "Dernière MEP",
+            header: DEVOPS_HEADERS.DERNIERE_MEP,
             Cell: DistanceCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Note de distance", cell: cell, row: row })
         }
     ];
-
     return [...BASE_COLONNE<DevopsIndicateur>(), ...colonnes];
 };
 

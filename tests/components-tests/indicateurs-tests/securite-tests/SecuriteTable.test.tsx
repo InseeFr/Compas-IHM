@@ -14,6 +14,7 @@ vi.mock("store/filterContext", () => ({
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),
     flattenRows: vi.fn((rows: MRT_Row<SecuriteIndicateur>[]) => {
         const flatten = (arr: MRT_Row<SecuriteIndicateur>[]): MRT_Row<SecuriteIndicateur>[] => {
             return arr.flatMap((row: MRT_Row<SecuriteIndicateur>) => [

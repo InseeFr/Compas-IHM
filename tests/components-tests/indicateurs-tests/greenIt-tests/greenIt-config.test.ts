@@ -8,7 +8,8 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mock handleExportCsv -----
 vi.mock("utils/exportCsv", () => ({
-    handleExportCsv: vi.fn()
+    handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`)
 }));
 
 beforeEach(() => {
@@ -92,15 +93,21 @@ describe("Green IT - onExport", () => {
                             applicationName: "App1",
                             sndi: "S1",
                             domaine: "D1",
-                            _conso: "1000",
-                            _cpu: "2",
-                            _ram: "3",
-                            _disk: "4",
-                            _nbVm: "10",
+                            domaineFonc: "DF1",
                             lettreGreen: "A",
-                            gaspillage: "B",
+                            consoGlobal: "1000",
                             consoNormalized: "C",
-                            impactNormalized: "D"
+                            impactNormalized: "D",
+                            gaspillage: "B",
+                            nbVMGlobal: "10",
+                            cpuAllocatedGlobal: "2000",
+                            ramAllocatedGlobal: "3000",
+                            diskAllocatedGlobal: "4000",
+                            nbVMProd: "8",
+                            cpuAllocatedProd: "1800",
+                            ramAllocatedProd: "2800",
+                            diskAllocatedProd: "3800",
+                            consoProd: "900"
                         }
                     },
                     {
@@ -108,15 +115,21 @@ describe("Green IT - onExport", () => {
                             applicationName: "App2",
                             sndi: "S2",
                             domaine: "D2",
-                            _conso: "NR",
-                            _cpu: "NR",
-                            _ram: "NR",
-                            _disk: "NR",
-                            _nbVm: "NR",
-                            lettreGreen: "NR",
-                            gaspillage: "NR",
-                            consoNormalized: "NR",
-                            impactNormalized: "NR"
+                            domaineFonc: "DF2",
+                            lettreGreen: undefined,
+                            consoGlobal: undefined,
+                            consoNormalized: undefined,
+                            impactNormalized: undefined,
+                            gaspillage: undefined,
+                            nbVMGlobal: undefined,
+                            cpuAllocatedGlobal: undefined,
+                            ramAllocatedGlobal: undefined,
+                            diskAllocatedGlobal: undefined,
+                            nbVMProd: undefined,
+                            cpuAllocatedProd: undefined,
+                            ramAllocatedProd: undefined,
+                            diskAllocatedProd: undefined,
+                            consoProd: undefined
                         }
                     }
                 ]
@@ -127,15 +140,14 @@ describe("Green IT - onExport", () => {
 
         expect(handleExportCsv).toHaveBeenCalledTimes(1);
 
-        const [filename, headers, csvData] = vi.mocked(handleExportCsv).mock.calls[0];
+        const [filename, , csvData] = vi.mocked(handleExportCsv).mock.calls[0];
 
         expect(filename).toBe("green-it");
-        expect(headers).toBeDefined();
         expect(Array.isArray(csvData)).toBe(true);
 
         expect(csvData).toEqual([
-            `"App1","S1","1000","2","3","4","B","10"`,
-            `"App2","S2","NR","NR","NR","NR","NR","NR"`
+            `"App1","S1","D1","DF1","A","1000","C","D","B","10","2000","2000","3000","3000","4000","4000","8","1800","1800","2800","2800","3800","3800","900"`,
+            `"App2","S2","D2","DF2","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR","NR"`
         ]);
     });
 });

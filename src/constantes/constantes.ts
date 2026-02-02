@@ -1,6 +1,7 @@
 import type { MRT_ColumnDef, MRT_RowData } from "material-react-table";
 import type { NavBarModel } from "../models/navbar-models";
 import { muiAriaCell } from "utils/accessibility-functions";
+import { BASE_HEADERS } from "./constantes-headers";
 
 export type ACCESSIBILITE = "conforme" | "partiel" | "Non-conforme";
 
@@ -42,19 +43,19 @@ export const BASE_COLONNE = <T extends MRT_RowData>(isModule?: boolean): MRT_Col
     isModule
         ? {
               accessorKey: "modName",
-              header: "Module",
+              header: BASE_HEADERS.NOM_MODULE,
               muiTableBodyCellProps: ({ cell, row }) =>
                   muiAriaCell({ title: "Module", cell: cell, row: row })
           }
         : {
               accessorKey: "applicationName",
-              header: "Nom",
+              header: BASE_HEADERS.NOM,
               muiTableBodyCellProps: ({ cell, row }) =>
                   muiAriaCell({ title: "Application", cell: cell, row: row })
           },
     {
         accessorKey: "sndi",
-        header: "serviceDev",
+        header: BASE_HEADERS.SERVICE_DEV,
         muiTableBodyCellProps: ({ cell, row }) =>
             muiAriaCell({ title: "Service SNDI", cell: cell, row: row })
     }

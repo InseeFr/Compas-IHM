@@ -1,47 +1,45 @@
-import type { MRT_ColumnDef, MRT_TableInstance } from "material-react-table";
+import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { A11yIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { handleExportCsv, flattenRows } from "utils/exportCsv";
+import { handleExportCsv, flattenRows, escapeCsvValue } from "utils/exportCsv";
 import type { IndicateursModuleA11Y, Module } from "todos-api/client.gen";
 import { AuditCell, DeclarationCell, IssueA11yCell } from "./A11yCell";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
+import { ACCESSIBILITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 export const OnExport = (table: MRT_TableInstance<A11yIndicateur>) => {
-    const allRows = flattenRows(table.getExpandedRowModel().rows);
+    const headers = [
+        BASE_HEADERS.NOM_MODULE,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
+        ACCESSIBILITE_HEADERS.LETTRE_ACCESSIBILITE,
+        ACCESSIBILITE_HEADERS.SCORE_ACCESSIBILITE,
+        ACCESSIBILITE_HEADERS.TYPE_AUDIT,
+        ACCESSIBILITE_HEADERS.DATE_AUDIT,
+        ACCESSIBILITE_HEADERS.ISSUE_SONAR,
+        ACCESSIBILITE_HEADERS.NBR_ISSUE_SONAR
+    ].map(escapeCsvValue);
 
-    const csvEscape = (value?: string | number | boolean | null) =>
-        `"${String(value ?? "NR").replaceAll('"', '""')}"`;
+    const filteredRows: MRT_Row<A11yIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
 
-    const csvData = allRows.map(row => {
-        const sonar: string = row.original.lettreIssueAccessibilite
-            ? `${row.original.lettreIssueAccessibilite}`
-            : "NR";
-
-        const audit: string = row.original.audit
-            ? `Type: ${row.original.audit.auditType} - date:${row.original.audit.dateAudit} - Score:${row.original.audit.score}`
-            : "NR";
-
-        const declared = (declaration?: {
-            hasDeclaration: boolean;
-            dateDeclaration: string;
-        }): string => {
-            if (!declaration) return "Non déclarée";
-            return `Déclarée - Date: ${declaration.dateDeclaration ?? "NR"}`;
-        };
-        const declaration: string = declared(row.original.declaration);
-
+    const csvData: string[] = filteredRows.map(row => {
         return [
-            csvEscape(row.original.modName),
-            csvEscape(row.original.sndi),
-            csvEscape(row.original.notation),
-            csvEscape(declaration),
-            csvEscape(audit),
-            csvEscape(sonar)
+            `"${row.original.modName}"`,
+            `"${row.original.sndi}"`,
+            `"${row.original.domaine}"`,
+            `"${row.original.domaineFonc}"`,
+            `"${row.original.notation ?? "NR"}"`,
+            `"${row.original.audit.score ?? "NR"}"`,
+            `"${row.original.audit.auditType ?? "NR"}"`,
+            `"${row.original.audit.dateAudit ?? "NR"}"`,
+            `"${row.original.lettreIssueAccessibilite ?? "NR"}"`,
+            `"${row.original.nbIssueAccessibilite ?? "NR"}"`
         ].join(",");
     });
 
-    handleExportCsv("accessibilité", table, csvData);
+    handleExportCsv("accessibilité", table, csvData, headers);
 };
 
 export const paginationConfig: Pagination = {
@@ -55,7 +53,7 @@ export const columnsTable = (): MRT_ColumnDef<A11yIndicateur>[] => {
     const colonnes: MRT_ColumnDef<A11yIndicateur>[] = [
         {
             accessorKey: "notation",
-            header: "Notation Évaluation",
+            header: ACCESSIBILITE_HEADERS.LETTRE_ACCESSIBILITE,
             muiTableBodyCellProps: ({ cell, row }) => ({
                 "aria-label": generateAriaLabelCell(
                     "Notation",
@@ -104,7 +102,7 @@ export const columnsTable = (): MRT_ColumnDef<A11yIndicateur>[] => {
         },
         {
             accessorKey: "lettreIssueAccessibilite",
-            header: "Problème Sonar",
+            header: ACCESSIBILITE_HEADERS.ISSUE_SONAR,
             Cell: IssueA11yCell,
             muiTableBodyCellProps: ({ cell, row }) => ({
                 "aria-label": generateAriaLabelCell(

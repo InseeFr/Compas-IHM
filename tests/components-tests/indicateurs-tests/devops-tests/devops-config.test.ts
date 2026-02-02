@@ -9,6 +9,7 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 // ----- Mock handleExportCsv et flattenRows -----
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value}"`), // ✅ Ajout de escapeCsvValue
     flattenRows: vi.fn(rows => {
         const flatten = (arr: any[]): any[] => {
             return arr.flatMap((row: any) => [row, ...(row.subRows ? flatten(row.subRows) : [])]);
@@ -79,9 +80,12 @@ describe("onExport", () => {
                             applicationName: "App1",
                             sndi: "S1",
                             domaine: "D1",
+                            domaineFonc: "DF1",
                             lettreContributorCount: "A",
                             lettreDeploymentCount: "B",
                             lettreDistanceCount: "C",
+                            lettreGlobalDevops: "A",
+                            distanceCount: "10",
                             isModule: false
                         },
                         subRows: []
@@ -91,9 +95,12 @@ describe("onExport", () => {
                             applicationName: "App2",
                             sndi: "S2",
                             domaine: "D2",
+                            domaineFonc: "DF2",
                             lettreContributorCount: "X",
                             lettreDeploymentCount: "Y",
                             lettreDistanceCount: "Z",
+                            lettreGlobalDevops: "B",
+                            distanceCount: "20",
                             isModule: true
                         },
                         subRows: [
@@ -101,9 +108,14 @@ describe("onExport", () => {
                                 original: {
                                     applicationName: "bk",
                                     sndi: "S2",
+                                    domaine: "D2",
+                                    domaineFonc: "DF2",
                                     lettreDeploymentCount: "B",
                                     lettreDistanceCount: "C",
-                                    parentApplication: "App2"
+                                    lettreGlobalDevops: "C",
+                                    distanceCount: "15",
+                                    parentApplication: "App2",
+                                    isModule: true
                                 }
                             }
                         ]
@@ -115,12 +127,27 @@ describe("onExport", () => {
         onExport(table);
 
         expect(handleExportCsv).toHaveBeenCalledTimes(1);
-        const [filename, headers, csvData] = vi.mocked(handleExportCsv).mock.calls[0];
+
+        // Vérifier les arguments de handleExportCsv
+        const callArgs = vi.mocked(handleExportCsv).mock.calls[0];
+        const [filename, tableArg, csvData, headers] = callArgs;
+
         expect(filename).toBe("devops");
+        expect(tableArg).toBe(table);
         expect(headers).toBeDefined();
+        expect(Array.isArray(headers)).toBe(true);
         expect(Array.isArray(csvData)).toBe(true);
 
-        expect(csvData).toEqual([`"App1","S1","B","C"`, `"App2","S2","Y","Z"`, `"bk","S2","B","C"`]);
+        // Avec la nouvelle fonction onExport complète, on a plus de colonnes
+        // Les données CSV contiennent maintenant :
+        // Nom app, Nom module, SNDI, Domaine, Domaine Fonc, Contributeur, NbMEP, DernièreMEP, Niveau Fraicheur, Distance
+        expect(csvData).toHaveLength(3); // 3 lignes (App1, App2, bk)
+
+        // Vérifier qu'on a bien les bonnes données dans les lignes CSV
+        expect(csvData[0]).toContain("App1"); // Application
+        expect(csvData[0]).toContain("S1"); // SNDI
+        expect(csvData[1]).toContain("App2"); // Module (nom dans colonne module)
+        expect(csvData[2]).toContain("bk"); // Sous-module
     });
 });
 

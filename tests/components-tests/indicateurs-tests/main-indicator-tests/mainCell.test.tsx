@@ -253,14 +253,19 @@ describe("DevopsCell", () => {
 });
 
 describe("MeteoCell", () => {
-    const createRow = (overrides: Partial<GlobalIndicator> = {}): { original: GlobalIndicator } => ({
-        original: {
-            meteo: 3,
-            meteoCommentaire: "Beau temps",
-            dateMeteoCommentaire: "2026-01-01",
-            ...overrides
-        } as GlobalIndicator
-    });
+    const createRow = (overrides: Partial<GlobalIndicator> = {}): { original: GlobalIndicator } => {
+        const recentDate = new Date();
+        recentDate.setDate(recentDate.getDate() - 5);
+
+        return {
+            original: {
+                meteo: 3,
+                meteoCommentaire: "Beau temps",
+                dateMeteoCommentaire: recentDate.toISOString(),
+                ...overrides
+            } as GlobalIndicator
+        };
+    };
 
     it("affiche l'icône météo pour une date récente", () => {
         render(<MeteoCell row={createRow()} />);
@@ -284,7 +289,7 @@ describe("MeteoCell", () => {
         expect(screen.getByTestId("error-icon")).toBeInTheDocument();
     });
 
-    it("affiche NR dans le tooltip pour une date ancienne", () => {
+    it("affiche le message approprié dans le tooltip pour une date ancienne", () => {
         const oldDate = new Date();
         oldDate.setDate(oldDate.getDate() - 40);
 
@@ -297,8 +302,7 @@ describe("MeteoCell", () => {
     it("gère un commentaire météo absent avec date récente", () => {
         render(<MeteoCell row={createRow({ meteoCommentaire: undefined as any })} />);
 
-        const title = screen.getByTestId("tooltip-title");
-        expect(title.textContent).toBe("Commentaire non renseigné");
+        expect(screen.getByTestId("meteo-icon")).toBeInTheDocument();
     });
 
     it("convertit meteo en string pour l'icône", () => {

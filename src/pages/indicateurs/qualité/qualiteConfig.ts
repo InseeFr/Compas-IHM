@@ -1,24 +1,43 @@
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
-import type { QualiteIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { flattenRows, getName, handleExportCsv } from "utils/exportCsv";
 import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
+import type { QualiteIndicateur } from "models/indicateurs";
+import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
+    const headers = [
+        BASE_HEADERS.NOM,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
+        QUALITE_HEADERS.NIVEAU_COUVERTURE_TEST,
+        QUALITE_HEADERS.POURCENTAGE_COUVERTURE_TEST,
+        QUALITE_HEADERS.NIVEAU_FIABILITE,
+        QUALITE_HEADERS.NIVEAU_DETTE_TECHNIQUE,
+        QUALITE_HEADERS.DETTE_TECHNIQUE_JOURS
+    ].map(escapeCsvValue);
+
     const filteredRows: MRT_Row<QualiteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
-    const csvData: string[] = filteredRows.map(row =>
-        [
-            `${getName(row)}`,
+
+    const csvData: string[] = filteredRows.map(row => {
+        return [
+            `"${row.original.applicationName}"`,
             `"${row.original.sndi}"`,
-            `"${row.original.lettreCouvertureTestUniaire}"`,
-            `"${row.original.lettreFiabilite}"`,
-            `"${row.original.lettreDetteTechnique}"`
-        ].join(",")
-    );
-    handleExportCsv("qualité", table, csvData);
+            `"${row.original.domaine}"`,
+            `"${row.original.domaineFonc}"`,
+            `"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
+            `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
+            `"${row.original.lettreFiabilite ?? "NR"}"`,
+            `"${row.original.lettreDetteTechnique ?? "NR"}"`,
+            `"${row.original.detteTechnique ?? "NR"}"`
+        ].join(",");
+    });
+
+    handleExportCsv("qualité", table, csvData, headers);
 };
 
 export const paginationConfig: Pagination = {
@@ -32,20 +51,20 @@ export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
     const colonnes: MRT_ColumnDef<QualiteIndicateur>[] = [
         {
             accessorKey: "lettreCouvertureTestUniaire",
-            header: "Couverture de Test",
+            header: QUALITE_HEADERS.COUVERTURE_TEST,
             Cell: CouvertureTestUnitCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Couverture Test Unitaire", cell: cell, row: row })
         },
         {
             accessorKey: "lettreFiabilite",
-            header: "Fiabilité",
+            header: QUALITE_HEADERS.FIABILITE,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Fiabilité", cell: cell, row: row })
         },
         {
             accessorKey: "lettreDetteTechnique",
-            header: "Dette Technique",
+            header: QUALITE_HEADERS.DETTE_TECHNIQUE,
             Cell: DetteTechCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Dette technique", cell: cell, row: row })
@@ -56,27 +75,22 @@ export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
 
 export function formatIndicateur(item: IndicateurQualiteView, isModule = false): QualiteIndicateur {
     const defaultValue = "NR";
-
     const getApplicationName = () => {
         if (isModule) {
             return item.moduleName ?? defaultValue;
         }
         return item.applicationName ?? defaultValue;
     };
-
     const formatDetteTechnique = () => {
         return item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : defaultValue;
     };
-
     const getModuleSpecificFields = () => {
         if (!isModule) return {};
-
         return {
             parentApplication: item.applicationName ?? defaultValue,
             isModule: true
         };
     };
-
     return {
         applicationId: isModule ? undefined : item.applicationId,
         applicationName: getApplicationName(),

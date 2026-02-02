@@ -2,9 +2,10 @@ import type { MeteoIndicateur, MeteoPoint } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
 import type { Application, Meteo } from "todos-api/client.gen";
 import { MeteoCell } from "./meteoCell";
-import type { MRT_ColumnDef, MRT_TableInstance } from "material-react-table";
-import { handleExportCsv } from "utils/exportCsv";
+import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
+import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
+import { BASE_HEADERS, METEO_HEADERS } from "constantes/constantes-headers";
 
 export const frMonthLabel = (mk: string) => {
     const [y, m] = mk.split("-").map(s => Number.parseInt(s, 10));
@@ -133,7 +134,7 @@ export const buildMeteo = (
 export const columnsMeteo = (months: string[]): MRT_ColumnDef<MeteoIndicateur>[] => {
     const baseColumns: MRT_ColumnDef<MeteoIndicateur>[] = [
         {
-            header: "Nom",
+            header: METEO_HEADERS.NOM,
             accessorKey: "applicationName",
             muiTableBodyCellProps: ({ cell, row }) => ({
                 "aria-label": generateAriaLabelCell(
@@ -165,6 +166,7 @@ export const columnsMeteo = (months: string[]): MRT_ColumnDef<MeteoIndicateur>[]
 
     return [...baseColumns, ...monthColumns];
 };
+
 export const paginationConfig: Pagination = {
     pagination: {
         pageIndex: 0,
@@ -173,25 +175,38 @@ export const paginationConfig: Pagination = {
 };
 
 export const onExport = (table: MRT_TableInstance<MeteoIndicateur>) => {
-    const escapeCsv = (value: string | number | undefined) =>
-        `"${(value ?? "").toString().replaceAll('"', '""')}"`;
+    const rows: MRT_Row<MeteoIndicateur>[] = table.getPrePaginationRowModel().rows;
 
-    const rows = table.getPrePaginationRowModel().rows;
     if (rows.length === 0) return;
 
     const allMonths = Array.from(
         new Set(rows.flatMap(row => Object.keys(row.original.byMonth ?? {})))
     ).sort((a, b) => a.localeCompare(b));
 
+    const baseHeaders = [
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL
+    ];
+
+    const monthHeaders = allMonths.map(mk => frMonthLabel(mk));
+
+    const headers = [...baseHeaders, ...monthHeaders].map(escapeCsvValue);
+
     const csvData = rows.map(row => {
-        const { applicationName, byMonth } = row.original;
+        const { applicationName, sndi, domaine, domaineFonc, byMonth } = row.original;
 
-        const baseValues = [applicationName];
+        const baseValues = [`"${applicationName}"`, `"${sndi}"`, `"${domaine}"`, `"${domaineFonc}"`];
 
-        const monthValues = allMonths.map(mk => byMonth[mk]?.map(p => p.valeur).join(" ") ?? "");
+        const monthValues = allMonths.map(mk => {
+            const points = byMonth[mk] ?? [];
+            const values = points.map(p => p.valeur).join(" ");
+            return `"${values}"`;
+        });
 
-        return [...baseValues, ...monthValues].map(escapeCsv).join(",");
+        return [...baseValues, ...monthValues].join(",");
     });
 
-    handleExportCsv("meteo-mensuel", table, csvData);
+    handleExportCsv("meteo-mensuel", table, csvData, headers);
 };
