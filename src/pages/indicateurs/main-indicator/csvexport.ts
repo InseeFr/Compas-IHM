@@ -1,5 +1,5 @@
 import { handleExportCsv, escapeCsvValue, flattenRows, formatMainCsvRow } from "utils/exportCsv";
-import { CSV_HEADERS } from "constantes/constantes-csv";
+import { CSV_HEADERS } from "constantes/constantes-headers";
 import type { GlobalIndicator } from "models/indicateurs";
 import type { MRT_Row, MRT_TableInstance } from "material-react-table";
 

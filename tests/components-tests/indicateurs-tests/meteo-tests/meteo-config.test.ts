@@ -9,7 +9,8 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mocks -----
 vi.mock("utils/exportCsv", () => ({
-    handleExportCsv: vi.fn()
+    handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`)
 }));
 
 const mockApp: Application[] = [

@@ -10,7 +10,8 @@ import type { GreenITIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
 import type { Application, IndicateurApplicationGreenITView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
-import { handleExportCsv } from "utils/exportCsv";
+import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
+import { BASE_HEADERS, GREENIT_HEADERS } from "constantes/constantes-headers";
 
 const firstNumberOrNull = (s: string | null | undefined): number | null => {
     if (!s) return null;
@@ -63,21 +64,77 @@ const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
 };
 
 export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
-    const filteredRows: MRT_Row<GreenITIndicateur>[] = table.getPrePaginationRowModel().rows;
-    const csvData: string[] = filteredRows.map(row =>
-        [
-            `"${row.original.applicationName}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original._conso}"`,
-            `"${row.original._cpu}"`,
-            `"${row.original._ram}"`,
-            `"${row.original._disk}"`,
-            `"${row.original.gaspillage}"`,
-            `"${row.original._nbVm}"`
-        ].join(",")
-    );
+    const headers = [
+        BASE_HEADERS.NOM,
+        BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
+        GREENIT_HEADERS.NIVEAU_GREENIT,
+        GREENIT_HEADERS.CONSO_GREENIT_BRUTE,
+        GREENIT_HEADERS.SCORE_CONSO_GREENIT,
+        GREENIT_HEADERS.SCORE_IMPACT_GREENIT,
+        GREENIT_HEADERS.SCORE_GASPILLAGE_GREENIT,
+        GREENIT_HEADERS.NB_VM,
+        GREENIT_HEADERS.CPU_ALLOUE,
+        GREENIT_HEADERS.CPU_MAXI,
+        GREENIT_HEADERS.RAM_ALLOUEE,
+        GREENIT_HEADERS.RAM_MAXI,
+        GREENIT_HEADERS.DISQUE_ALLOUE,
+        GREENIT_HEADERS.DISQUE_UTILISE,
+        GREENIT_HEADERS.NB_VM_PROD,
+        GREENIT_HEADERS.CPU_ALLOUE_PROD,
+        GREENIT_HEADERS.CPU_MAXI_PROD,
+        GREENIT_HEADERS.RAM_ALLOUEE_PROD,
+        GREENIT_HEADERS.RAM_MAXI_PROD,
+        GREENIT_HEADERS.DISQUE_ALLOUE_PROD,
+        GREENIT_HEADERS.DISQUE_UTILISE_PROD,
+        GREENIT_HEADERS.CONSO_GREENIT_PROD_BRUTE
+    ].map(escapeCsvValue);
 
-    handleExportCsv("green-it", table, csvData);
+    const filteredRows: MRT_Row<GreenITIndicateur>[] = table.getPrePaginationRowModel().rows;
+
+    const buildCsvRow = (data: GreenITIndicateur): string => {
+        const getValue = (value: string | undefined): string => value ?? "NR";
+
+        const baseFields = [data.applicationName, data.sndi, data.domaine, data.domaineFonc];
+
+        const greenItMetrics = [
+            getValue(data.lettreGreen),
+            getValue(data.consoGlobal),
+            getValue(data.consoNormalized),
+            getValue(data.impactNormalized),
+            getValue(data.gaspillage)
+        ];
+
+        const globalResources = [
+            getValue(data.nbVMGlobal),
+            getValue(data.cpuAllocatedGlobal),
+            getValue(data.cpuAllocatedGlobal),
+            getValue(data.ramAllocatedGlobal),
+            getValue(data.ramAllocatedGlobal),
+            getValue(data.diskAllocatedGlobal),
+            getValue(data.diskAllocatedGlobal)
+        ];
+
+        const prodResources = [
+            getValue(data.nbVMProd),
+            getValue(data.cpuAllocatedProd),
+            getValue(data.cpuAllocatedProd),
+            getValue(data.ramAllocatedProd),
+            getValue(data.ramAllocatedProd),
+            getValue(data.diskAllocatedProd),
+            getValue(data.diskAllocatedProd),
+            getValue(data.consoProd)
+        ];
+
+        return [...baseFields, ...greenItMetrics, ...globalResources, ...prodResources]
+            .map(value => `"${value}"`)
+            .join(",");
+    };
+
+    const csvData: string[] = filteredRows.map(row => buildCsvRow(row.original));
+
+    handleExportCsv("green-it", table, csvData, headers);
 };
 
 export const filteredViewMode = (
@@ -167,7 +224,7 @@ export const paginationConfig: Pagination = {
 export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
     const colonnes: MRT_ColumnDef<GreenITIndicateur>[] = [
         {
-            header: "Conso (Wh)",
+            header: GREENIT_HEADERS.CONSO_WH,
             accessorKey: "_consoSort",
             Cell: ({ row }: MRT_RowData) => row.original._conso,
             sortingFn: sortHelper,
@@ -175,7 +232,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Consommation en Watt", cell: cell, row: row })
         },
         {
-            header: "CPU alloué (GHz)",
+            header: GREENIT_HEADERS.CPU_ALLOUE_GHZ,
             accessorKey: "_cpuSort",
             Cell: ({ row }: MRT_RowData) => row.original._cpu,
             sortingFn: sortHelper,
@@ -183,7 +240,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Cpu alloué en Ghz", cell: cell, row: row })
         },
         {
-            header: "RAM allouée (Go)",
+            header: GREENIT_HEADERS.RAM_ALLOUEE_GO,
             accessorKey: "_ramSort",
             Cell: ({ row }: MRT_RowData) => row.original._ram,
             sortingFn: sortHelper,
@@ -191,7 +248,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Ram allouée en Go", cell: cell, row: row })
         },
         {
-            header: "Disque alloué (Go)",
+            header: GREENIT_HEADERS.DISQUE_ALLOUE_GO,
             accessorKey: "_diskSort",
             Cell: ({ row }: MRT_RowData) => row.original._disk,
             sortingFn: sortHelper,
@@ -199,7 +256,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Disque alloué en Go", cell: cell, row: row })
         },
         {
-            header: "Nombre de VM",
+            header: GREENIT_HEADERS.NOMBRE_VM,
             accessorKey: "_nbVmSort",
             Cell: ({ row }: MRT_RowData) => row.original._nbVm,
             sortingFn: sortHelper,

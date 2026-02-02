@@ -9,6 +9,7 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),
     flattenRows: vi.fn((rows: MRT_Row<A11yIndicateur>[]) => {
         const flatten = (arr: MRT_Row<A11yIndicateur>[]): MRT_Row<A11yIndicateur>[] => {
             return arr.flatMap((row: MRT_Row<A11yIndicateur>) => [
@@ -103,8 +104,8 @@ describe("columnsTable", () => {
         const colonnes = columnsTable();
 
         expect(colonnes.map(c => c.header)).toEqual([
-            "Module",
-            "serviceDev",
+            "Nom de module",
+            "Service dev.",
             "Notation Évaluation",
             "Déclaration",
             "Audit",
@@ -140,8 +141,8 @@ describe("OnExport", () => {
         expect(entetes).toBeDefined();
 
         expect(csvData).toEqual([
-            `"Module1","S1","A","Déclarée - Date: 2025-10-11","Type: Audit partiel - date:2025-10-12 - Score:3","B"`,
-            `"Module2","S2","C","Déclarée - Date: 2025-10-11","Type: Audit complet - date:2025-10-12 - Score:4","D"`
+            `"Module1","S1","D1","NR","A","3","Audit partiel","2025-10-12","B","5"`,
+            `"Module2","S2","D2","NR","C","4","Audit complet","2025-10-12","D","10"`
         ]);
     });
 
@@ -179,7 +180,7 @@ describe("OnExport", () => {
 
         expect(headers).toBeDefined();
         expect(csvData).toEqual([
-            `"Module3","S3","NR","Déclarée - Date: 2025-10-11","Type: Audit complet - date:2025-10-12 - Score:3","NR"`
+            `"Module3","S3","D3","","NR","3","Audit complet","2025-10-12","NR","NR"`
         ]);
     });
 

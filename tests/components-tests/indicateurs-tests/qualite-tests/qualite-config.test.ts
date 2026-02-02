@@ -9,6 +9,7 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),
     flattenRows: vi.fn(rows => {
         const flatten = (arr: any[]): any[] => {
             return arr.flatMap((row: any) => [row, ...(row.subRows ? flatten(row.subRows) : [])]);
@@ -89,7 +90,7 @@ describe("columnsTable", () => {
         const colonnes = columnsTable();
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom",
-            "serviceDev",
+            "Service dev.",
             "Couverture de Test",
             "Fiabilité",
             "Dette Technique"
@@ -180,6 +181,10 @@ describe("OnExport", () => {
         const [nomFichier, entetes, csvData] = (handleExportCsv as any).mock.calls[0];
         expect(nomFichier).toBe("qualité");
         expect(entetes).toBeDefined();
-        expect(csvData).toEqual([`"App1","S1","A","B","C"`, `"Mod1","S1","X","Y","Z"`]);
+
+        expect(csvData).toEqual([
+            `"App1","S1","D1","NR","A","50%","B","C","123"`,
+            `"Mod1","S1","D1","NR","X","75%","Y","Z","456"`
+        ]);
     });
 });

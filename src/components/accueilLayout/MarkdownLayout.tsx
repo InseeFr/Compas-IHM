@@ -11,7 +11,6 @@ interface MarkdownLayoutProps {
     file: string;
 }
 
-
 export const MarkdownLayout: React.FC<MarkdownLayoutProps> = ({ file }) => {
     const [content, setContent] = useState<string>("");
 

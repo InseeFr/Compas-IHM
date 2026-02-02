@@ -36,7 +36,7 @@ export const SecurityCell = ({ row }: Readonly<{ row: { original: GlobalIndicato
 };
 
 export const DevopsCell = ({ row }: Readonly<{ row: { original: GlobalIndicator } }>) => {
-    const { lettreDistanceCount, distanceCount } = row.original;
+    const { lettreDistanceCount, distanceCount, lettreDevopsGenerale } = row.original;
 
     let tooltipLabel = "";
     if (lettreDistanceCount === "NR") {
@@ -46,7 +46,7 @@ export const DevopsCell = ({ row }: Readonly<{ row: { original: GlobalIndicator 
     } else {
         tooltipLabel = `Jours depuis la dernière livraison : ${distanceCount}`;
     }
-    return <ToolTipLayout title={tooltipLabel} content={lettreDistanceCount} />;
+    return <ToolTipLayout title={tooltipLabel} content={lettreDevopsGenerale} />;
 };
 
 export const MeteoCell = ({ row }: Readonly<{ row: { original: GlobalIndicator } }>) => {

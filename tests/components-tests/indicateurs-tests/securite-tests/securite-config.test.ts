@@ -14,6 +14,7 @@ import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),
     flattenRows: vi.fn((rows: MRT_Row<SecuriteIndicateur>[]) => {
         const flatten = (arr: MRT_Row<SecuriteIndicateur>[]): MRT_Row<SecuriteIndicateur>[] => {
             return arr.flatMap((row: MRT_Row<SecuriteIndicateur>) => [
@@ -146,7 +147,7 @@ describe("columnsTable", () => {
 
         expect(colonnes.map(c => c.header)).toEqual([
             "Nom",
-            "serviceDev",
+            "Service dev.",
             "CVE",
             "nb de VMs hors délai",
             "Max delai Maj VM"
@@ -249,6 +250,9 @@ describe("OnExport", () => {
         expect(nomFichier).toBe("sécurité");
         expect(entetes).toBeDefined();
 
-        expect(csvData).toEqual([`"App1","S1","B","C","45"`, `"Mod1","S1","A","A","20"`]);
+        expect(csvData).toEqual([
+            `"App1","S1","D1","NR","B","B","5","10","15","20","3","45"`,
+            `"Mod1","S1","D1","NR","A","A","2","4","6","8","1","20"`
+        ]);
     });
 });

@@ -79,7 +79,7 @@ describe("columnsGlobal", () => {
         });
 
         it("a le header 'serviceDev'", () => {
-            expect(sndiColumn.header).toBe("serviceDev");
+            expect(sndiColumn.header).toBe("Service dev.");
         });
         it("doit générer un aria-label servicedev", () => {
             const colContributeur = columns.find(c => c.accessorKey === "sndi")!;
@@ -386,7 +386,7 @@ describe("columnsGlobal", () => {
             const headers = columns.map(col => col.header);
             expect(headers).toEqual([
                 "Nom",
-                "serviceDev",
+                "Service dev.",
                 "Qualité",
                 "Sécurité",
                 "DevOps",
