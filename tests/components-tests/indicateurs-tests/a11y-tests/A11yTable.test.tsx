@@ -6,6 +6,17 @@ import { getModules1, listerModulesA11y } from "todos-api/client.gen";
 import { A11yIndicateurTable } from "pages/indicateurs/a11y/A11yIndicateur";
 import * as a11yConfig from "pages/indicateurs/a11y/a11yConfig";
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 vi.mock("store/filterContext");
 vi.mock("todos-api/client.gen");
 vi.mock("pages/indicateurs/a11y/a11yConfig", () => ({

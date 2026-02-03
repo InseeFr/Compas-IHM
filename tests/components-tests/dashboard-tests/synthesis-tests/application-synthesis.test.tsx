@@ -14,6 +14,15 @@ vi.mock("store/filterContext", () => ({
 vi.mock("utils/filters-functions", () => ({
     applyDevFilters: (item: any) => item
 }));
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 
 const mockFetchApplicationSynthesis = vi.fn();
 

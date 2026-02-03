@@ -12,3 +12,8 @@ interface NavItem {
     to?: string;
     subItem?: SubItem[];
 }
+
+export interface IArianeNav {
+    nav: string;
+    link: string;
+}

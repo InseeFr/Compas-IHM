@@ -12,6 +12,7 @@ import AnimatedTitle from "components/AnimatedTitleLayout";
 import type { Dispatch, JSX, ReactNode, SetStateAction } from "react";
 import DataPreview from "./DataPreview";
 import "styles/dashboard.css";
+import Ariane from "components/Ariane";
 
 interface DashboardPageLayoutProps<T extends AllIndicators> {
     title: string;
@@ -32,6 +33,7 @@ export default function DashboardPageLayout<T extends AllIndicators>(
 ): JSX.Element {
     return (
         <div className="dashboard-layout">
+            <Ariane items={[{ nav: props.title, link: "" }]} />
             <div className="dashboard-title-section">
                 <AnimatedTitle text={props.title} />
             </div>

@@ -2,8 +2,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-// ============= TOUS LES MOCKS DOIVENT ÊTRE ICI AVANT LES IMPORTS =============
-
 // Mock des modules API et utilitaires
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
@@ -27,6 +25,16 @@ vi.mock("utils/graphs/calculations", () => ({
 vi.mock("pages/indicateurs/main-indicator/formatted-mod-and-app", () => ({
     formattedApps: vi.fn()
 }));
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 
 vi.mock("utils/filters-functions", () => ({
     applyDevFilters: vi.fn(item => item)

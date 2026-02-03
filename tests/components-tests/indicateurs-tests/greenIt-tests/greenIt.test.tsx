@@ -5,13 +5,21 @@ import * as exportCsv from "components/ButtonCsvExport";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import type { Application } from "todos-api/client.gen";
 
-// ====================
-// Mocks API
-// ====================
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
     getApplications: vi.fn()
 }));
+
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 
 vi.mock("components/ButtonCsvExport", () => ({
     default: vi.fn(() => <button data-testid="button-export-csv">Export CSV</button>)

@@ -7,6 +7,16 @@ import { MeteoTable } from "pages/indicateurs/meteo/meteoTable";
 
 // Mock des dépendances
 vi.mock("store/filterContext");
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 vi.mock("todos-api/client.gen");
 vi.mock("./meteo-config", () => ({
     buildDomaineFoncMap: vi.fn(() => new Map()),

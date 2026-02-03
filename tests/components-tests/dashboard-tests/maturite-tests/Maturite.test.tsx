@@ -16,6 +16,17 @@ vi.mock("store/filterContext", () => ({
     }))
 }));
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 vi.mock("pages/dashboards/maturité/maturite-config", () => ({
     fetchMaturiteData: vi.fn(),
     fetchTipsData: vi.fn(),

@@ -12,6 +12,15 @@ vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
 }));
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
     escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),
