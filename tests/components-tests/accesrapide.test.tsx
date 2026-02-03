@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import AccesRapide from "pages/AccesRapide";
+import AccesRapide from "components/AccesRapide";
 
 describe("AccesRapide", () => {
     it("devrait afficher le composant avec tous les liens", () => {
