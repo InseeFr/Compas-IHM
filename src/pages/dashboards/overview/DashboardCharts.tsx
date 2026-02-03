@@ -53,6 +53,7 @@ import {
 } from "todos-api/client.gen";
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import { applyDevFilters } from "utils/filters-functions";
+import Ariane from "components/Ariane";
 
 const DashboardCharts = () => {
     const theme = useTheme();
@@ -148,8 +149,7 @@ const DashboardCharts = () => {
                 paddingTop: 10
             }}
         >
-            {/* Header avec filtres */}
-
+            <Ariane items={[{ nav: "Vue d'ensemble", link: "" }]} />
             <Filters data={globalInd} state={state} dispatch={dispatch} />
 
             {/* ========== SECTION 1: VUE D'ENSEMBLE ========== */}

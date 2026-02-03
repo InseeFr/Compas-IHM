@@ -39,6 +39,16 @@ vi.mock("react-hook-form", async () => {
     };
 });
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 // Mock des composants de rendu
 vi.mock("pages/saisies/a11y/a11yCell", () => ({
     RenderModuleSelections: vi.fn(field => (

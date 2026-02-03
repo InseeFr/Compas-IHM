@@ -11,6 +11,7 @@ import type { Pagination } from "../models/table-model";
 import AnimatedTitle from "./AnimatedTitleLayout";
 import { Paper, Stack } from "@mui/material";
 import "styles/tablePageLayout.css";
+import Ariane from "./Ariane";
 
 interface TablePageLayoutProps<T extends MRT_RowData> {
     titleTable: string;
@@ -30,6 +31,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
 ): JSX.Element {
     return (
         <Paper className="table-page-layout">
+            <Ariane items={[{ nav: props.titleTable, link: "" }]} />
             <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
                 key={props.reactKey}

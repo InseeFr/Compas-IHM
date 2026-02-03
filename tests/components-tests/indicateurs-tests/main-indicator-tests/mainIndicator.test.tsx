@@ -11,6 +11,15 @@ import { formattedApps, formattedModules } from "pages/indicateurs/main-indicato
 vi.mock("store/filterContext");
 vi.mock("utils/useQueryIndicators");
 vi.mock("todos-api/client.gen");
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
 vi.mock("pages/indicateurs/main-indicator/formatted-mod-and-app");
 vi.mock("components/TablePageLayout", () => ({
     default: ({ titleTable, isLoading, data, rowId, subRow, renderTopCustom }: any) => (
