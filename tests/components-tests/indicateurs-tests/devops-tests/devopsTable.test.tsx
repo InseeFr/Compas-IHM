@@ -16,6 +16,17 @@ vi.mock("components/ButtonCsvExport", () => ({
     default: ({ onExport }: any) => <button onClick={() => onExport("mockTable")}>Export CSV</button>
 }));
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 vi.mock("components/TablePageLayout", () => ({
     default: ({ data, renderTopCustom }: any) => (
         <div>

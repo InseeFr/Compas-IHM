@@ -13,6 +13,16 @@ vi.mock("todos-api/client.gen", () => ({
     creerMeteo: vi.fn()
 }));
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 vi.mock("components/formsPageLayout/MainPageLayout", () => ({
     MainFormPageLayout: ({ title, formulaires, onSubmit, reset }: any) => (
         <form onSubmit={onSubmit}>

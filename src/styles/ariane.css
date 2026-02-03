@@ -1,0 +1,51 @@
+.ariane {
+    padding: 0 1em .8em 1em;
+    background: inherit;
+}
+.ariane ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    font-size: 1rem;
+}
+
+.ariane li {
+    line-height: 1.75rem;
+}
+
+.ariane li:not(:first-child)::before {
+    --icon-size: 1rem;
+    background-color: currentColor;
+    content: "";
+    display: inline-block;
+    flex: 0 0 auto;
+    height: var(--icon-size);
+    margin-left: .25rem;
+    margin-right: 0;
+    -webkit-mask-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHBhdGggZD0iTTEzLjE3MiAxMmwtNC45NS00Ljk1IDEuNDE0LTEuNDE0TDE2IDEybC02LjM2NCA2LjM2NC0xLjQxNC0xLjQxNCA0Ljk1LTQuOTV6Ii8+PC9zdmc+);
+    mask-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHBhdGggZD0iTTEzLjE3MiAxMmwtNC45NS00Ljk1IDEuNDE0LTEuNDE0TDE2IDEybC02LjM2NCA2LjM2NC0xLjQxNC0xLjQxNCA0Ljk1LTQuOTV6Ii8+PC9zdmc+);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    vertical-align: calc(.325rem - var(--icon-size)*0.5);
+    width: var(--icon-size);
+}
+
+.ariane a {
+    text-decoration: underline;
+    color: var(--INSEE-BLEU-5-color);
+}
+
+.ariane a:hover,
+.ariane a:focus {
+    font-weight: bold;
+}
+
+.ariane a[aria-current="page"] {
+    color: var(--INSEE-GRIS-5-color);
+    text-decoration: none;
+    font-weight: bold;
+    pointer-events: none;
+}

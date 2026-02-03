@@ -13,6 +13,16 @@ vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
 }));
 
+vi.mock("@tanstack/react-router", async () => {
+    return {
+        Link: ({ to, children, ...rest }: any) => (
+            <a href={to} {...rest}>
+                {children}
+            </a>
+        )
+    };
+});
+
 vi.mock("todos-api/client.gen", () => ({
     getIndicateurQualiteByApplication: vi.fn(),
     getIndicateurQualiteByModule: vi.fn()
