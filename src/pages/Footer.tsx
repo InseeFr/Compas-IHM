@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import type { ACCESSIBILITE } from "constantes/constantes";
+import "styles/footer.css";
 
 interface FooterProps {
     accessibility: ACCESSIBILITE;
@@ -45,41 +46,22 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
     const config = getAccessibilityConfig();
 
     return (
-        <footer color="inherit">
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: 3,
-                    gap: 2
-                }}
-            >
-                <Box
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                    tabIndex={0}
-                    aria-label={`Accessibilité ${config.label}`}
+        <footer color="inherit" id="pied-de-page">
+            <Box className="footer-box">
+                <output
+                    className="footer-box-access"
+                    aria-live="polite"
                 >
-                    <Typography variant="body2" sx={{ color: "inherit" }}>
+                    <Typography variant="body2" className="footer-typo">
                         Accessibilité :
                     </Typography>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            padding: "4px 12px",
-                            borderRadius: "16px",
-                            color: config.color
-                        }}
-                    >
+                    <Box className="footer-box-access-icon" style={{ '--main-color': config.color } as React.CSSProperties}>
                         {config.icon}
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        <Typography variant="body2" className="footer-typo">
                             {config.label}
                         </Typography>
                     </Box>
-                </Box>
+                </output>
             </Box>
         </footer>
     );

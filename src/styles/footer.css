@@ -1,0 +1,28 @@
+.footer-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 26px;
+    gap: 8px;
+}
+
+.footer-box-access  {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+}
+.footer-box-access-icon  {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    color: var(--main-color);  
+}
+
+.footer-typo {
+    color: inherit;
+    font-weight: 500;
+}
+
