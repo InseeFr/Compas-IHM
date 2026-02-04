@@ -48,9 +48,8 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
     return (
         <footer color="inherit" id="pied-de-page">
             <Box className="footer-box">
-                <Box
+                <output
                     className="footer-box-access"
-                    role="status"
                     aria-live="polite"
                 >
                     <Typography variant="body2" className="footer-typo">
@@ -62,7 +61,7 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
                             {config.label}
                         </Typography>
                     </Box>
-                </Box>
+                </output>
             </Box>
         </footer>
     );
