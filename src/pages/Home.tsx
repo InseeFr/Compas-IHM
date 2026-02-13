@@ -10,20 +10,19 @@ export default function HomePageLayout() {
         acc[curr.parent].push(curr);
         return acc;
     }, {});
-
     return (
         <Container disableGutters>
             <Box>
                 <div className="markdown-content">
                     <h1>Accueil</h1>
-                    <p>Voici la liste de tous les indicateurs que vous pouvez retrouver ici :</p>
+                    <p>La liste de tous les indicateurs de Compas et leur explications :</p>
                     <ul>
                         {Object.entries(grouped).map(([parent, pages]) => (
                             <li key={parent}>
                                 <strong>{parent}</strong>
                                 <ul>
                                     {pages.map(page => (
-                                        <li key={page.file}>
+                                        <li key={page.page}>
                                             <Link to="/$pageName" params={{ pageName: page.file }}>
                                                 {page.page}
                                             </Link>

@@ -17,7 +17,6 @@ function RootComponent() {
     const location = useLocation();
     const skipToRef = useRef<HTMLDivElement>(null);
 
-    // Mettre le focus sur le début de la page (ie les liens d'accès rapide)
     useEffect(() => {
         window.scrollTo(0, 0);
         if (skipToRef.current) {

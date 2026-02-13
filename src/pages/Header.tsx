@@ -23,7 +23,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
             className={`header-container ${darkMode ? "dark-mode" : "light-mode"}`}
             data-testid="header"
         >
-            <Toolbar className="header-toolbar"  id="navigation">
+            <Toolbar className="header-toolbar" id="navigation">
                 <Box className="left-section">
                     <Link to="/" className="logo-container">
                         <img

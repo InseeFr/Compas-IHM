@@ -1,10 +1,11 @@
 [
-    { "file": "indicateurs-généraux", "page": "Les indicateurs généraux", "parent": "Indicateurs" },
-    { "file": "indicateurs-qualité", "page": "Les indicateurs qualités", "parent": "Indicateurs" },
-    { "file": "indicateurs-secu", "page": "Les indicateurs sécurités", "parent": "Indicateurs" },
+    { "file": "indicateurs-generaux", "page": "Les indicateurs généraux", "parent": "Indicateurs" },
+    { "file": "indicateurs-qualite", "page": "Les indicateurs qualité", "parent": "Indicateurs" },
+    { "file": "indicateurs-securite", "page": "Les indicateurs sécurité", "parent": "Indicateurs" },
     { "file": "indicateurs-devops", "page": "Les indicateurs devops", "parent": "Indicateurs" },
-    { "file": "indicateurs-green", "page": "Les indicateurs greenIt", "parent": "Indicateurs" },
-    { "file": "indicateurs-meteo", "page": "Les indicateurs météos", "parent": "Indicateurs" },
-    { "file": "indicateurs-a11y", "page": "Les indicateurs accessibilités", "parent": "Indicateurs" },
-    { "file": "indicateurs-maturité", "page": "Les indicateurs maturité", "parent": "Indicateurs" }
+    { "file": "indicateurs-greenIt", "page": "Les indicateurs green It", "parent": "Indicateurs" },
+    { "file": "indicateurs-meteo", "page": "Les indicateurs météo", "parent": "Indicateurs" },
+    { "file": "indicateurs-a11y", "page": "Les indicateurs d'accessibilité", "parent": "Indicateurs" },
+    { "file": "indicateurs-maturite", "page": "Les indicateurs maturité Cloud", "parent": "Indicateurs" },
+    { "file": "NR-et-SO", "page": "A quoi correspondent NR et SO ?", "parent": "Indicateurs" }
 ]

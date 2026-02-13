@@ -14,6 +14,15 @@ vi.mock("./custom/TableCustom", () => ({
     }
 }));
 
+vi.mock("store/MarkdownIndicatorsContext", () => ({
+    useMarkdown: () => ({
+        markdowns: {
+            test: "# Hello world",
+            other: "## Other content"
+        }
+    })
+}));
+
 vi.mock("./custom/LinkCustom", () => ({
     LinkCustom: {
         a: ({ href, children }: any) => <a href={href}>{children}</a>
@@ -63,6 +72,6 @@ describe("MarkdownLayout", () => {
     it("rend un container markdown même sans contenu", () => {
         render(<MarkdownLayout file="unknown" />);
 
-        expect(screen.getByTestId("markdown")).toBeInTheDocument();
+        expect(screen.getByTestId("markdown-non-trouvé")).toBeInTheDocument();
     });
 });
