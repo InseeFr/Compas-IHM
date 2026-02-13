@@ -48,14 +48,14 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
     return (
         <footer color="inherit" id="pied-de-page">
             <Box className="footer-box">
-                <output
-                    className="footer-box-access"
-                    aria-live="polite"
-                >
+                <output className="footer-box-access" aria-live="polite">
                     <Typography variant="body2" className="footer-typo">
                         Accessibilité :
                     </Typography>
-                    <Box className="footer-box-access-icon" style={{ '--main-color': config.color } as React.CSSProperties}>
+                    <Box
+                        className="footer-box-access-icon"
+                        style={{ "--main-color": config.color } as React.CSSProperties}
+                    >
                         {config.icon}
                         <Typography variant="body2" className="footer-typo">
                             {config.label}

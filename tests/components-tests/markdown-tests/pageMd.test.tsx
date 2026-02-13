@@ -5,29 +5,34 @@ import { useParams } from "@tanstack/react-router";
 import HomeLayout from "components/accueilLayout/PageMdLayout";
 
 vi.mock("@tanstack/react-router", () => ({
-  useParams: vi.fn(),
-  Link: ({ to, children, ...rest }: any) => (
-            <a href={to} {...rest}>
-                {children}
-            </a>
-        )
+    useParams: vi.fn(),
+    Link: ({ to, children, ...rest }: any) => (
+        <a href={to} {...rest}>
+            {children}
+        </a>
+    )
 }));
-
+vi.mock("store/MarkdownIndicatorsContext", () => ({
+    useMarkdown: () => ({
+        markdowns: {
+            "indicateurs-generaux":
+                "les indicateurs généraux synthétisent en général un domaine et porte le nom du domaine, cela vaut pour Qualité, Sécurité, Devops, GreenIt, Météo ressentie, Accessibilité et Maturité Cloud."
+        }
+    })
+}));
 vi.mock("components/Ariane", () => ({
-  default: ({ items }: any) => (
-    <div data-testid="ariane">{items[0].nav}</div>
-  ),
+    default: ({ items }: any) => <div data-testid="ariane">{items[0].nav}</div>
 }));
-
 
 describe("HomeLayout", () => {
-  it("Envoie un fil d'ariane et une page markdown", () => {
-    vi.mocked(useParams).mockReturnValue({ pageName: "indicateurs-généraux" });
+    it("Envoie un fil d'ariane et une page markdown", () => {
+        vi.mocked(useParams).mockReturnValue({ pageName: "indicateurs-generaux" });
 
-    render(<HomeLayout />);
+        render(<HomeLayout />);
 
-    expect(screen.getByTestId("ariane")).toHaveTextContent("indicateurs-généraux");
-    expect(screen.getAllByRole("paragraph")[0]).toHaveTextContent("les indicateurs généraux synthétisent en général un domaine et porte le nom du domaine, cela vaut pour Qualité, Sécurité, Devops, GreenIt, Météo ressentie, Accessibilité et Maturité Cloud.");
-  });
-
+        expect(screen.getByTestId("ariane")).toHaveTextContent("indicateurs-generaux");
+        expect(screen.getAllByRole("paragraph")[0]).toHaveTextContent(
+            "les indicateurs généraux synthétisent en général un domaine et porte le nom du domaine, cela vaut pour Qualité, Sécurité, Devops, GreenIt, Météo ressentie, Accessibilité et Maturité Cloud."
+        );
+    });
 });

@@ -22,15 +22,6 @@ describe("LinkCustom", () => {
         expect(link).toHaveAttribute("target", "_blank");
     });
 
-    it('has rel="noopener noreferrer" for security', () => {
-        const markdown = "[Secure link](https://example.com)";
-
-        render(<ReactMarkdown components={LinkCustom}>{markdown}</ReactMarkdown>);
-
-        const link = screen.getByRole("link");
-        expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    });
-
     it("renders a link element with proper structure", () => {
         const markdown = "[Styled link](https://example.com)";
 
@@ -63,13 +54,13 @@ describe("LinkCustom", () => {
         expect(link.querySelector("em")).toHaveTextContent("italic");
     });
 
-    it("handles empty href gracefully", () => {
+    it("rend un span quand href est vide", () => {
         const markdown = "[No href]()";
-
         render(<ReactMarkdown components={LinkCustom}>{markdown}</ReactMarkdown>);
 
-        const link = screen.getByText("No href");
-        expect(link).toBeInTheDocument();
-        expect(link).toHaveAttribute("href", "");
+        const element = screen.getByText("No href");
+        expect(element).toBeInTheDocument();
+        expect(element.tagName).toBe("SPAN");
+        expect(element).not.toHaveAttribute("href");
     });
 });

@@ -1,9 +1,6 @@
 import type { Components } from "react-markdown";
+import MarkdownLink from "./LinkWrapper/MarkdownLink";
 
 export const LinkCustom: Components = {
-    a: ({ href, children }) => (
-        <a href={href} target="_blank" rel="noopener noreferrer">
-            {children}
-        </a>
-    )
+    a: MarkdownLink
 };

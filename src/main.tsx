@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { FilterProvider } from "store/filterContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MarkdownProvider } from "store/MarkdownIndicatorsContext";
 
 //Récupération des routers via tanstack
 const router = createRouter({ routeTree });
@@ -27,9 +28,11 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
-            <FilterProvider>
-                <RouterProvider router={router} />
-            </FilterProvider>
+            <MarkdownProvider>
+                <FilterProvider>
+                    <RouterProvider router={router} />
+                </FilterProvider>
+            </MarkdownProvider>
         </QueryClientProvider>
     </StrictMode>
 );
