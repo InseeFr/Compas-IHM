@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState, useEffect } from "react";
-import { Box, Grid, CircularProgress, Divider, useTheme } from "@mui/material";
+import { Box, Grid, CircularProgress, Divider, useTheme, Typography } from "@mui/material";
 import {
     BuildCircleOutlined,
     CloudOutlined,
@@ -233,6 +233,17 @@ const DashboardCharts = () => {
                         </Grid>
                     </Grid>
                 </ChartCard>
+                <Typography
+                        variant="body2"
+                        sx={{
+                            textAlign: "right",
+                            color: "text.primary",
+                            mb: 3,
+                            mt: 2
+                        }}
+                    >
+                        💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
+                    </Typography>
             </Box>
 
             <Divider sx={{ my: 6, opacity: 0.3 }} />
@@ -257,6 +268,17 @@ const DashboardCharts = () => {
                             <CveTreemap data={filteredData} topN={25} />
                         </ChartCard>
                     </Grid>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            textAlign: "right",
+                            color: "text.primary",
+                            mb: 3,
+                            mt: 2
+                        }}
+                    >
+                        💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
+                    </Typography>
                 </Grid>
 
                 {/* Historique CVE */}

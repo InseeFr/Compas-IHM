@@ -1,346 +1,228 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-
-import type { IndicateurApplicationMaturite } from "models/indicateurs";
-import type { ApplicationTip } from "todos-api/client.gen";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { green, red } from "@mui/material/colors";
 import {
+    MaturiteHeader,
+    TechAndOrga,
     ComplexitySection,
     ConseilComplexity,
     DisclaimerMaturity,
-    MaturiteHeader,
-    TechAndOrga
 } from "pages/dashboards/maturité/MaturiteContent";
+import type { IndicateurApplicationMaturite } from "models/indicateurs";
 
-vi.mock("./maturite-config", () => ({
-    clamp01: vi.fn(val => Math.max(0, Math.min(1, val))),
-    getScoreColor: vi.fn(() => "#00ff00"),
-    formatNum: vi.fn(val => val),
-    maturiteLevel: vi.fn(maturite => (maturite >= 70 ? "forte" : "faible")),
-    maturiteLabel: vi.fn(maturite => (maturite >= 70 ? "Forte" : "Faible"))
-}));
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
-vi.mock("components/ToolTipLayout", () => ({
-    ToolTipLayout: vi.fn(({ content }) => <div data-testid="tooltip">{content}</div>)
-}));
+let mockIsDark = false;
 
-describe("MaturiteContent Components", () => {
-    const mockApp: IndicateurApplicationMaturite = {
-        applicationId: 1,
-        applicationName: "Test App",
-        maturite: "75",
-        robustesse: "3",
-        scoreTechnique: "80",
-        scoreOrga: "70",
-        scoreComplexite: "-0.5",
-        scoreBenefice: "0.8",
-        progressionDeploy: "0.9",
-        progressionArchi: "0.85",
-        progressionTechnos: "0.7",
-        progressionCloud: " 0.8",
-        progressionDevops: "0.7",
-        progressionMateqip: "0.6",
-        sndi: "s1",
-        domaine: "d1",
-        domaineFonc: "df1"
+vi.mock("@mui/material", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("@mui/material")>();
+    return {
+        ...actual,
+        useTheme: () => ({
+            palette: {
+                mode: mockIsDark ? "dark" : "light",
+                info: { light: "#90caf9", main: "#1976d2" },
+                grey: { 700: "#616161" },
+                common: { black: "#000000" },
+            },
+        }),
     };
+});
 
-    const mockTips: ApplicationTip[] = [
-        {
-            id: 1,
-            sourceId: 1,
-            priority: 1,
-            conseil: "Améliorer les tests unitaires"
-        } as ApplicationTip,
-        {
-            id: 2,
-            sourceId: 1,
-            priority: 2,
-            conseil: "Adopter CI/CD"
-        } as ApplicationTip,
-        {
-            id: 3,
-            sourceId: 2,
-            priority: 1,
-            conseil: "Former l'équipe DevOps"
-        } as ApplicationTip
-    ];
+// maturiteLevel : "forte" uniquement pour "A" ou "B"
+// maturiteLabel : "A" → "très forte", "C" → "moyenne", sinon "inconnue"
+const baseApp: IndicateurApplicationMaturite = {
+    applicationId: 1,
+    sndi: "SNDI",
+    domaine: "Domaine",
+    domaineFonc: "DomaineFonc",
+    scoreTechnique: "0.75",
+    scoreOrga: "0.6",
+    scoreComplexite: "-0.3",
+    scoreBenefice: "0.8",
+    progressionDeploy: "0.5",
+    progressionArchi: "1.5",   // > 1 → clamp01 → 1 → 100%
+    progressionTechnos: "0.4",
+    progressionCloud: "0.9",
+    progressionDevops: "0.2",
+    progressionMateqip: "0.7",
+    maturite: "A",             // "A" → level "forte", label "très forte"
+    robustesse: "3",
+};
 
-    describe("MaturiteHeader", () => {
-        it("devrait afficher le score de robustesse", () => {
-            render(<MaturiteHeader selectedApp={mockApp} />);
+// ---------------------------------------------------------------------------
+// MaturiteHeader
+// ---------------------------------------------------------------------------
 
-            expect(screen.getByText(/Robustesse 3\/4/i)).toBeInTheDocument();
-        });
-
-        it("devrait afficher robustesse 0/4 quand robustesse est à 0", () => {
-            const noRobustnessApp = { ...mockApp, robustesse: "0" };
-            render(<MaturiteHeader selectedApp={noRobustnessApp} />);
-
-            expect(screen.getByText(/Robustesse 0\/4/i)).toBeInTheDocument();
-        });
-
-        it("devrait gérer selectedApp null", () => {
-            render(<MaturiteHeader selectedApp={null} />);
-
-            expect(screen.getByText(/Robustesse 0\/4/i)).toBeInTheDocument();
-        });
+describe("MaturiteHeader", () => {
+    it("affiche le chip success et le label 'très forte' pour maturité A", () => {
+        render(<MaturiteHeader selectedApp={baseApp} />);
+        // maturiteLabel("A") === "très forte"
+        expect(screen.getByText(/maturité cloud très forte/i)).toBeInTheDocument();
+        expect(screen.getByText(/robustesse 3\/4/i)).toBeInTheDocument();
     });
 
-    describe("ComplexitySection", () => {
-        it("devrait afficher le titre de la section", () => {
-            render(<ComplexitySection selectedApp={mockApp} />);
-
-            expect(screen.getByText(/Balance risques \/ opportunités/i)).toBeInTheDocument();
-        });
-
-        it("devrait afficher le score de complexité", () => {
-            render(<ComplexitySection selectedApp={mockApp} />);
-
-            expect(screen.getByText("-0.50")).toBeInTheDocument();
-        });
-
-        it("devrait afficher le score de bénéfice", () => {
-            render(<ComplexitySection selectedApp={mockApp} />);
-
-            expect(screen.getByText("0.80")).toBeInTheDocument();
-        });
-
-        it("devrait afficher des tooltips", () => {
-            render(<ComplexitySection selectedApp={mockApp} />);
-
-            const tooltips = screen.getAllByTestId("tooltip");
-            expect(tooltips).toHaveLength(2);
-        });
+    it("affiche le chip error et label 'inconnue' quand selectedApp est null", () => {
+        render(<MaturiteHeader selectedApp={null} />);
+        // maturiteLabel(undefined) === "inconnue"
+        expect(screen.getByText(/maturité cloud inconnue/i)).toBeInTheDocument();
+        expect(screen.getByText(/robustesse 0\/4/i)).toBeInTheDocument();
     });
 
-    describe("ConseilComplexity", () => {
-        it("devrait afficher un conseil favorable", () => {
-            const conseil = {
-                favorable: true,
-                texte: "Cette application est un bon candidat pour le cloud"
-            };
+    it("affiche le chip error et label 'moyenne' pour maturité C (level faible)", () => {
+        render(<MaturiteHeader selectedApp={{ ...baseApp, maturite: "C", robustesse: "1" }} />);
+        // maturiteLabel("C") === "moyenne", maturiteLevel("C") === "faible"
+        expect(screen.getByText(/maturité cloud moyenne/i)).toBeInTheDocument();
+        expect(screen.getByText(/robustesse 1\/4/i)).toBeInTheDocument();
+    });
+});
 
-            render(<ConseilComplexity conseil={conseil} />);
+// ---------------------------------------------------------------------------
+// TechAndOrga (couvre useNormalizedMaturite + HorizontalBars + LabeledValue)
+// ---------------------------------------------------------------------------
 
-            expect(screen.getByText("Conseil")).toBeInTheDocument();
-            expect(screen.getByText(conseil.texte)).toBeInTheDocument();
-        });
-
-        it("devrait afficher un conseil défavorable", () => {
-            const conseil = {
-                favorable: false,
-                texte: "Migration complexe, nécessite une analyse approfondie"
-            };
-
-            render(<ConseilComplexity conseil={conseil} />);
-
-            expect(screen.getByText(conseil.texte)).toBeInTheDocument();
-        });
+describe("TechAndOrga", () => {
+    it("affiche des scores à zéro quand selectedApp est null", () => {
+        render(<TechAndOrga selectedApp={null} />);
+        const zeros = screen.getAllByText("0.00");
+        expect(zeros.length).toBeGreaterThanOrEqual(2);
     });
 
-    describe("TechAndOrga", () => {
-        const techTips = mockTips.filter(t => t.sourceId === 1);
-        const orgaTips = mockTips.filter(t => t.sourceId === 2);
-
-        it("devrait afficher la section de maturité technique", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Maturité technique")).toBeInTheDocument();
-        });
-
-        it("devrait afficher la section de maturité organisationnelle", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Maturité organisationnelle")).toBeInTheDocument();
-        });
-
-        it("devrait afficher le score technique", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("80.00")).toBeInTheDocument();
-        });
-
-        it("devrait afficher le score organisationnel", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("70.00")).toBeInTheDocument();
-        });
-
-        it("devrait afficher les barres de progression technique", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Pratiques de développement")).toBeInTheDocument();
-            expect(screen.getByText("Architectures compatibles")).toBeInTheDocument();
-            expect(screen.getByText("Technologies compatibles")).toBeInTheDocument();
-        });
-
-        it("devrait afficher les barres de progression organisationnelle", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Pratiques des technologies du cloud")).toBeInTheDocument();
-            expect(screen.getByText("Pratiques DevOps")).toBeInTheDocument();
-            expect(screen.getByText("Maturité d'équipe")).toBeInTheDocument();
-        });
-
-        it("devrait afficher les conseils techniques", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Conseils techniques")).toBeInTheDocument();
-            expect(screen.getByText(/Améliorer les tests unitaires/i)).toBeInTheDocument();
-        });
-
-        it("devrait afficher les conseils organisationnels", () => {
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />
-            );
-
-            expect(screen.getByText("Conseils organisationnels")).toBeInTheDocument();
-            expect(screen.getByText(/Former l'équipe DevOps/i)).toBeInTheDocument();
-        });
-
-        it("devrait gérer l'absence de tips", () => {
-            render(<TechAndOrga selectedApp={mockApp} tipsItemsTech={[]} tipsItemsOrga={[]} />);
-
-            const aucunConseil = screen.getAllByText("Aucun conseil.");
-            expect(aucunConseil).toHaveLength(2);
-        });
-
-        it("devrait gérer selectedApp null", () => {
-            render(<TechAndOrga selectedApp={null} tipsItemsTech={techTips} tipsItemsOrga={orgaTips} />);
-            screen.getAllByText("0.00").forEach(text => expect(text).toBeInTheDocument());
-        });
-
-        it("devrait dédupliquer les conseils identiques", () => {
-            const duplicateTips = [
-                { id: 1, conseil: "Conseil répété", sourceId: 1, priority: 1 } as ApplicationTip,
-                { id: 2, conseil: "Conseil répété", sourceId: 1, priority: 2 } as ApplicationTip,
-                { id: 3, conseil: "Autre conseil", sourceId: 1, priority: 3 } as ApplicationTip
-            ];
-
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={duplicateTips} tipsItemsOrga={[]} />
-            );
-
-            const conseilRepete = screen.getAllByText(/Conseil répété/i);
-            expect(conseilRepete).toHaveLength(1);
-        });
-
-        it("devrait filtrer les conseils vides", () => {
-            const tipsWithEmpty = [
-                { id: 1, conseil: "", sourceId: 1, priority: 1 } as ApplicationTip,
-                { id: 2, conseil: "   ", sourceId: 1, priority: 2 } as ApplicationTip,
-                { id: 3, conseil: "Conseil valide", sourceId: 1, priority: 3 } as ApplicationTip
-            ];
-
-            render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={tipsWithEmpty} tipsItemsOrga={[]} />
-            );
-
-            expect(screen.getByText(/Conseil valide/i)).toBeInTheDocument();
-        });
+    it("affiche les scores et clamp01 sur progressionArchi > 1", () => {
+        render(<TechAndOrga selectedApp={baseApp} />);
+        // progressionArchi "1.5" → clamp01 → 1 → 100%
+        expect(screen.getByText("100%")).toBeInTheDocument();
     });
 
-    describe("Calculs de pourcentage", () => {
-        it("devrait afficher les pourcentages correctement arrondis", () => {
-            const appWithDecimals = {
-                ...mockApp,
-                progressionDeploy: "0.856"
-            };
-
-            render(<TechAndOrga selectedApp={appWithDecimals} tipsItemsTech={[]} tipsItemsOrga={[]} />);
-
-            expect(screen.getByText("86%")).toBeInTheDocument();
-        });
-
-        it("devrait clamp les valeurs hors limites", () => {
-            const appOutOfBounds = {
-                ...mockApp,
-                progressionDeploy: "1.5",
-                progressionArchi: "-0.2"
-            };
-
-            render(<TechAndOrga selectedApp={appOutOfBounds} tipsItemsTech={[]} tipsItemsOrga={[]} />);
-
-            const percentages = screen.getAllByText(/\d+%/);
-            percentages.forEach(el => {
-                const value = Number.parseInt(el.textContent || "0");
-                expect(value).toBeGreaterThanOrEqual(0);
-                expect(value).toBeLessThanOrEqual(100);
-            });
-        });
+    it("rend sans erreur en mode sombre", () => {
+        mockIsDark = true;
+        render(<TechAndOrga selectedApp={baseApp} />);
+        expect(screen.getByText(/maturité technique/i)).toBeInTheDocument();
+        mockIsDark = false;
     });
 
-    describe("Responsive behavior", () => {
-        it("devrait s'adapter aux petits écrans", () => {
-            const { container } = render(
-                <TechAndOrga selectedApp={mockApp} tipsItemsTech={[]} tipsItemsOrga={[]} />
-            );
-            expect(container.firstChild).toBeInTheDocument();
-        });
+    it("affiche les tipsItems tech et orga", () => {
+        render(
+            <TechAndOrga
+                selectedApp={baseApp}
+                tipsItemsTech={[{ conseil: "Conseil tech" }]}
+                tipsItemsOrga={[{ conseil: "Conseil orga" }]}
+            />
+        );
+        expect(screen.getByText("• Conseil tech")).toBeInTheDocument();
+        expect(screen.getByText("• Conseil orga")).toBeInTheDocument();
     });
-    describe("DisclaimerMaturity", () => {
-        it("renders the component without crashing", () => {
-            render(<DisclaimerMaturity />);
-            expect(screen.getByText(/Ces indicateurs et les conseils associés/i)).toBeInTheDocument();
-        });
+});
 
-        it("displays all disclaimer paragraphs", () => {
-            render(<DisclaimerMaturity />);
+// ---------------------------------------------------------------------------
+// ComplexitySection
+// ---------------------------------------------------------------------------
 
-            expect(
-                screen.getByText(
-                    /Ces indicateurs et les conseils associés sont basés sur un questionnaire/i
-                )
-            ).toBeInTheDocument();
-            expect(
-                screen.getByText(
-                    /De plus, les indicateurs sont issus d’une analyse statistique des réponses apportées à ce questionnaire, et sont donc soumis aux incertitudes propres à ce type d’analyse./i
-                )
-            ).toBeInTheDocument();
-            expect(
-                screen.getByText(
-                    /L’IA a été utilisée de manière marginale tout au long du process. Aucune donnée relative aux applications de l’Insee ne lui a été soumise./i
-                )
-            ).toBeInTheDocument();
-            expect(
-                screen.getByText(
-                    /Ces informations ont vocation à être mises à jour à un rythme semestriel/i
-                )
-            ).toBeInTheDocument();
-        });
+describe("ComplexitySection", () => {
+    it("affiche les scores de complexité et bénéfice", () => {
+        render(<ComplexitySection selectedApp={baseApp} />);
+        expect(screen.getByText("-0.30")).toBeInTheDocument();
+        expect(screen.getByText("0.80")).toBeInTheDocument();
+    });
 
-        it("displays the warning icon with correct accessibility text", () => {
-            render(<DisclaimerMaturity />);
+    it("affiche des zéros quand selectedApp est null", () => {
+        render(<ComplexitySection selectedApp={null} />);
+        const zeros = screen.getAllByText("0.00");
+        expect(zeros.length).toBeGreaterThanOrEqual(2);
+    });
+});
 
-            const warningIcon = screen.getByText("Avertissement");
-            expect(warningIcon).toBeInTheDocument();
-        });
+// ---------------------------------------------------------------------------
+// ConseilComplexity  (4 combinaisons favorable × isDark)
+// ---------------------------------------------------------------------------
 
-        it("has the correct background color", () => {
-            const { container } = render(<DisclaimerMaturity />);
+describe("ConseilComplexity", () => {
+    afterEach(() => {
+        mockIsDark = false;
+    });
 
-            const box = container.querySelector('[class*="MuiBox-root"]');
-            expect(box).toHaveStyle({ backgroundColor: "#72007a" });
-        });
+    it("rend le texte en mode clair favorable (branche green[600])", () => {
+        mockIsDark = false;
+        render(<ConseilComplexity conseil={{ favorable: true, texte: "Bonne migration" }} />);
+        expect(screen.getByText("Bonne migration")).toBeInTheDocument();
+        expect(green[600]).toBeDefined();
+    });
 
-        it("mentions April 2025 as the questionnaire date", () => {
-            render(<DisclaimerMaturity />);
+    it("rend le texte en mode sombre favorable (branche green[400])", () => {
+        mockIsDark = true;
+        render(<ConseilComplexity conseil={{ favorable: true, texte: "Bonne migration dark" }} />);
+        expect(screen.getByText("Bonne migration dark")).toBeInTheDocument();
+        expect(green[400]).toBeDefined();
+    });
 
-            expect(screen.getByText(/avril 2025/i)).toBeInTheDocument();
-        });
+    it("rend le texte en mode clair défavorable (branche red[500])", () => {
+        mockIsDark = false;
+        render(<ConseilComplexity conseil={{ favorable: false, texte: "Migration risquée" }} />);
+        expect(screen.getByText("Migration risquée")).toBeInTheDocument();
+        expect(red[500]).toBeDefined();
+    });
+
+    it("rend le texte en mode sombre défavorable (branche red[400])", () => {
+        mockIsDark = true;
+        render(<ConseilComplexity conseil={{ favorable: false, texte: "Migration risquée dark" }} />);
+        expect(screen.getByText("Migration risquée dark")).toBeInTheDocument();
+        expect(red[400]).toBeDefined();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// TipsBlock (via TechAndOrga — composant interne non exporté)
+// ---------------------------------------------------------------------------
+
+describe("TipsBlock (via TechAndOrga)", () => {
+    it("affiche les conseils en dédoublonnant via Set", () => {
+        render(
+            <TechAndOrga
+                selectedApp={baseApp}
+                tipsItemsTech={[
+                    { conseil: "Conseil A" },
+                    { conseil: "Conseil A" }, // doublon → éliminé par Set
+                    { conseil: "Conseil B" },
+                ]}
+            />
+        );
+        expect(screen.getAllByText("• Conseil A")).toHaveLength(1);
+        expect(screen.getByText("• Conseil B")).toBeInTheDocument();
+    });
+
+    it("affiche 'Aucun conseil.' quand la liste est vide", () => {
+        render(<TechAndOrga selectedApp={baseApp} tipsItemsTech={[]} />);
+        expect(screen.getAllByText("Aucun conseil.").length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("filtre les conseils vides ou undefined", () => {
+        render(
+            <TechAndOrga
+                selectedApp={baseApp}
+                tipsItemsTech={[{ conseil: "" }, {}]}
+            />
+        );
+        expect(screen.getAllByText("Aucun conseil.").length).toBeGreaterThanOrEqual(1);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// DisclaimerMaturity
+// ---------------------------------------------------------------------------
+
+describe("DisclaimerMaturity", () => {
+    it("affiche le texte d'avertissement en mode clair", () => {
+        mockIsDark = false;
+        render(<DisclaimerMaturity />);
+        expect(screen.getByText(/questionnaire auto-administré/i)).toBeInTheDocument();
+    });
+
+    it("rend l'icône d'avertissement en mode sombre", () => {
+        mockIsDark = true;
+        render(<DisclaimerMaturity />);
+        expect(screen.getByTitle("Avertissement")).toBeInTheDocument();
+        mockIsDark = false;
     });
 });

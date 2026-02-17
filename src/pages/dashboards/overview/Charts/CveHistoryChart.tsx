@@ -29,7 +29,6 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
     const [selectedApp, setSelectedApp] = useState<string>("all");
 
     const chartData = useMemo(() => {
-        // Filtre les applications avec CVE critiques
         const appsWithCve = data
             .filter(d => !d.isModule && parseInt(d.nbCveCritical ?? "0", 10) > 0)
             .map(d => ({
@@ -39,25 +38,21 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
             }))
             .sort((a, b) => b.critical - a.critical);
 
-        // Top N apps pour la vue "all"
         const topApps = appsWithCve.slice(0, maxApps);
 
-        // Liste des apps pour le sélecteur
         const availableApps = appsWithCve.map(a => ({ id: a.id, name: a.name }));
 
-        // Traiter les données mensuelles de l'API
-        // Structure attendue: [{ date: "2025-01", applicationId: 123, nbCveCritical: 5 }, ...]
         const monthlyByApp = new Map<string, Map<string, number>>();
         const allMonths = new Set<string>();
 
         monthlyData.forEach((item: any) => {
             const appId = item.applicationId?.toString() ?? item.applicationName;
-            const month = new Date(item.date).toLocaleDateString("fr-FR", {
+            const month = new Date(item.month).toLocaleDateString("fr-FR", {
                 year: "numeric",
                 month: "short"
             });
             const cveCount = parseInt(item.nbCveCritical ?? "0", 10);
-
+        
             if (!monthlyByApp.has(appId)) {
                 monthlyByApp.set(appId, new Map());
             }
@@ -65,29 +60,26 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
             allMonths.add(month);
         });
 
-        // Trier les mois chronologiquement
         const months = Array.from(allMonths).sort((a, b) => {
             const dateA = new Date(a);
             const dateB = new Date(b);
             return dateA.getTime() - dateB.getTime();
         });
 
-        // Prendre les 6 derniers mois
         const last6Months = months.slice(-6);
 
-        // Construire les séries
         const series =
             selectedApp === "all"
                 ? topApps.map(app => ({
-                      name: app.name,
-                      data: last6Months.map(month => monthlyByApp.get(app.id)?.get(month) ?? 0)
-                  }))
+                    name: app.name,
+                    data: last6Months.map(month => monthlyByApp.get(app.id)?.get(month) ?? 0)
+                }))
                 : [
-                      {
-                          name: appsWithCve.find(a => a.id === selectedApp)?.name ?? "Application",
-                          data: last6Months.map(month => monthlyByApp.get(selectedApp)?.get(month) ?? 0)
-                      }
-                  ];
+                        {
+                            name: appsWithCve.find(a => a.id === selectedApp)?.name ?? "Application",
+                            data: last6Months.map(month => monthlyByApp.get(selectedApp)?.get(month) ?? 0)
+                        }
+                ];
 
         return { months: last6Months, series, availableApps };
     }, [data, monthlyData, maxApps, selectedApp]);

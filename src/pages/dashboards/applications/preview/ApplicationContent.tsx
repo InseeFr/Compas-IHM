@@ -215,7 +215,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
             <Divider sx={{ my: 3 }} />
 
             <Typography variant="body2" fontStyle="italic" color="textSecondary">
-                Rapport généré automatiquement depuis COMPAS – Données techniques et de qualité
+                Rapport généré automatiquement depuis COMPAS
                 consolidées.
             </Typography>
         </Box>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useEffect, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import * as echarts from "echarts";
 import { pickSixAxisScores, avgArrays, scoreToLetter } from "./radar-config";
 
@@ -13,7 +13,7 @@ export interface AppForRadar {
     lettreFiabilite?: string;
     lettreGreen?: string;
     maturite?: string;
-    domaineFonctionnel?: string;
+    domaineFonc?: string;
 }
 
 interface Props {
@@ -31,15 +31,15 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
-    const { appData, avgAll, avgDomain, domainName } = useMemo(() => {
+    const { appData, avgAll, avgDomain } = useMemo(() => {
         const appScores = pickSixAxisScores(app);
 
         const allRows = population.map(pickSixAxisScores);
         const allAvg = avgArrays(allRows);
 
-        const domain = app.domaineFonctionnel ?? "NR";
+        const domain = app.domaineFonc ?? "NR";
         const domainRows = population
-            .filter(p => (p.domaineFonctionnel ?? "NR") === domain)
+            .filter(p => (p.domaineFonc ?? "NR") === domain)
             .map(pickSixAxisScores);
         const domainAvg = avgArrays(domainRows);
 
@@ -64,50 +64,73 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
             "Green IT",
             "Qualité"
         ];
-
+    
         return {
             title: title
                 ? {
-                      text: title,
-                      left: "center",
-                      textStyle: { color: textColor }
-                  }
+                    text: title,
+                    left: "center",
+                    textStyle: { color: textColor }
+                }
                 : undefined,
             tooltip: {
                 trigger: "item",
+                backgroundColor: isDark ? "rgba(50,50,50,0.95)" : "rgba(255,255,255,0.95)",
+                borderColor: isDark ? "#666" : "#ccc",
+                borderWidth: 1,
+                textStyle: {
+                    color: textColor
+                },
                 formatter: (params: any) => {
-                    const val = params.value;
-                    return `${params.seriesName}: ${val.toFixed(2)} (${scoreToLetter(val)})`;
+                    if (!params.value || !Array.isArray(params.value)) {
+                        return "";
+                    }
+                    
+                    const seriesName = params.seriesName;
+                    let html = `<div style="font-weight: bold; margin-bottom: 8px;">${seriesName}</div>`;
+                    
+                    params.value.forEach((val: number, idx: number) => {
+                        const letter = scoreToLetter(val);
+                        const labelName = labels[idx];
+                        html += `
+                            <div style="display: flex; justify-content: space-between; gap: 16px; margin: 4px 0;">
+                                <span>${labelName}:</span>
+                                <span style="font-weight: bold;">${val.toFixed(2)} (${letter})</span>
+                            </div>
+                        `;
+                    });
+                    
+                    return html;
                 }
             },
             legend: {
                 data: [
                     app.applicationName,
                     "Moyenne globale",
-                    `Moyenne domaine (${domainName === "NR" ? "non renseigné" : domainName})`
+                    "Moyenne domaine"
                 ],
-                bottom: 0,
+                bottom: 20,
                 itemGap: 12,
                 textStyle: { color: textColor }
             },
             radar: {
                 center: ["50%", "40%"],
                 radius: "52%",
-
+    
                 indicator: labels.map(name => ({
                     name,
                     max: 5
                 })),
-
+    
                 splitNumber: 5,
-
+    
                 name: {
                     color: textColor,
                     fontSize: 12,
                     formatter: (value: string) => value,
                     padding: [4, 4]
                 },
-
+    
                 splitLine: {
                     lineStyle: { color: gridColor }
                 },
@@ -146,13 +169,13 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
                     ]
                 },
                 {
-                    name: `Moyenne domaine (${domainName})`,
+                    name: "Moyenne domaine",
                     type: "radar",
                     itemStyle: { color: domainColor },
                     data: [
                         {
                             value: avgDomain,
-                            name: `Moyenne domaine (${domainName === "NR" ? "non renseigné" : domainName})`,
+                            name: "Moyenne domaine",
                             lineStyle: { color: domainColor, width: 2 },
                             itemStyle: { color: domainColor },
                             areaStyle: { color: "rgba(38,166,154,0.18)" }
@@ -161,7 +184,7 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
                 }
             ]
         };
-    }, [app, appData, avgAll, avgDomain, domainName, title, textColor, gridColor]);
+    }, [app, appData, avgAll, avgDomain, title, textColor, gridColor, isDark, appColor, allColor, domainColor]);
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -177,17 +200,30 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }) => {
     }, [option]);
 
     return (
-        <Box
-            data-testid="radar-chart-container"
-            ref={chartRef}
-            sx={{
-                width: "100%",
-                height: "100%",
-                position: "relative",
-                padding: "24px"
-            }}
-        />
+        <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+            <Box
+                data-testid="radar-chart-container"
+                ref={chartRef}
+                sx={{
+                    width: "100%",
+                    height: "100%",
+                    padding: "24px"
+                }}
+            />
+            <Typography
+                variant="caption"
+                sx={{
+                    position: "absolute",
+                    bottom: -20,
+                    right: 16,
+                    color: "text.secondary",
+                    fontStyle: "italic"
+                }}
+            >
+                💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
+            </Typography>
+        </Box>
     );
-};
+}
 
 export default RadarQualiteChart;

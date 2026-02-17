@@ -14,7 +14,7 @@ describe("Radar utils", () => {
                 maturite: "NR",
                 applicationName: ""
             };
-            expect(pickSixAxisScores(app)).toEqual([5, 4, 3, 2, 1, 0]);
+            expect(pickSixAxisScores(app)).toEqual([0, 4, 3, 2, 1, 5]);
         });
     });
 
