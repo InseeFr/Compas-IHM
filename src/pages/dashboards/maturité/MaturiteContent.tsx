@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { alpha, Box, Chip, Divider, LinearProgress, Stack, Typography } from "@mui/material";
+import { alpha, Box, Chip, Divider, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
 import { green, grey, red } from "@mui/material/colors";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
@@ -79,6 +79,9 @@ function useNormalizedMaturite(selectedApp: IndicateurApplicationMaturite | null
 }
 
 function ScoreBox({ value }: Readonly<{ value: number }>) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <Box
             sx={{
@@ -86,10 +89,11 @@ function ScoreBox({ value }: Readonly<{ value: number }>) {
                 py: 0.5,
                 borderRadius: 2,
                 fontWeight: 700,
-                color: "black",
+                color: isDark ? "grey.100" : "black",
+                bgcolor: isDark ? alpha(grey[800], 0.4) : "background.paper",
                 minWidth: 64,
                 textAlign: "center",
-                boxShadow: t => `0 0 0 2px ${alpha(t.palette.common.black, 0.04)} inset`
+                boxShadow: t => `0 0 0 2px ${alpha(isDark ? t.palette.grey[700] : t.palette.common.black, 0.04)} inset`
             }}
         >
             {value.toFixed(2)}
@@ -124,6 +128,9 @@ function HorizontalBars({
 }: Readonly<{
     items: { label: string; value: number }[];
 }>) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <Stack spacing={1}>
             {items.map((item, idx) => {
@@ -133,7 +140,7 @@ function HorizontalBars({
                 return (
                     <Stack key={`${item.label}-${idx}`} spacing={0.5}>
                         <Stack direction="row" justifyContent="space-between">
-                            <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                            <Typography variant="caption" sx={{ opacity: isDark ? 0.9 : 0.8 }}>
                                 {item.label}
                             </Typography>
                             <Typography variant="caption" fontWeight={700}>
@@ -145,7 +152,7 @@ function HorizontalBars({
                             sx={{
                                 height: 10,
                                 borderRadius: 999,
-                                bgcolor: alpha(grey[500], 0.25),
+                                bgcolor: isDark ? alpha(grey[700], 0.4) : alpha(grey[500], 0.25),
                                 overflow: "hidden"
                             }}
                         >
@@ -271,6 +278,12 @@ export function ConseilComplexity({
 }: Readonly<{
     conseil: { favorable: boolean; texte: string };
 }>) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+    const greenShade = isDark ? 400 : 600;
+    const redShade = isDark ? 400 : 500;
+    const borderColor = conseil.favorable ? green[greenShade] : red[redShade];
+
     return (
         <Box
             sx={{
@@ -279,8 +292,8 @@ export function ConseilComplexity({
                 width: "100%",
                 maxWidth: 680,
                 borderRadius: 2,
-                bgcolor: t => alpha(t.palette.info.main, 0.08),
-                borderLeft: `4px solid ${conseil.favorable ? green[600] : red[500]}`
+                bgcolor: t => alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.15 : 0.08),
+                borderLeft: `4px solid ${borderColor}`
             }}
         >
             <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
@@ -294,9 +307,11 @@ export function ConseilComplexity({
 }
 
 function TipsBlock({ title, items, loading = false, error = null }: Readonly<TipsBlockProps>) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     const messages = useMemo(() => {
         const texts = items.map(t => (t.conseil ?? "").trim()).filter(Boolean);
-
         return Array.from(new Set(texts));
     }, [items]);
 
@@ -325,8 +340,8 @@ function TipsBlock({ title, items, loading = false, error = null }: Readonly<Tip
                     sx={{
                         p: 1,
                         borderRadius: 1.5,
-                        bgcolor: t => alpha(t.palette.info.main, 0.06),
-                        borderLeft: t => `3px solid ${alpha(t.palette.info.main, 0.6)}`
+                        bgcolor: t => alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.12 : 0.06),
+                        borderLeft: t => `3px solid ${alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.8 : 0.6)}`
                     }}
                 >
                     <Stack spacing={0.75}>
@@ -343,20 +358,23 @@ function TipsBlock({ title, items, loading = false, error = null }: Readonly<Tip
 }
 
 export function DisclaimerMaturity() {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <Box
-            sx={theme => ({
+            sx={{
                 p: { xs: 2, sm: 3, md: 4 },
                 display: "flex",
                 flexDirection: "column",
                 borderRadius: 2,
-                gap: theme.spacing(3),
-                bgcolor: "#72007a",
+                gap: 3,
+                bgcolor: isDark ? "#4a0051" : "#72007a",
                 color: "common.white",
                 width: "100%",
                 maxWidth: 900,
                 mx: "auto"
-            })}
+            }}
         >
             <Stack direction="row" alignItems="flex-start" spacing={2} justifyContent="space-between">
                 <Box sx={{ pr: 1 }}>

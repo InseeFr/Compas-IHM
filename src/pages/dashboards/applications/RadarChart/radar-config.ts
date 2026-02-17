@@ -30,12 +30,12 @@ export const scoreToLetter = (v: number): string => {
 };
 
 export const pickSixAxisScores = (a: AppForRadar): number[] => [
-    letterToScore(a.lettreQualiteGenerale),
+    letterToScore(a.maturite),
     letterToScore(a.lettreNiveauCve),
     letterToScore(a.distanceNote),
     letterToScore(a.lettreFiabilite),
     letterToScore(a.lettreGreen),
-    letterToScore(a.maturite)
+    letterToScore(a.lettreQualiteGenerale)
 ];
 
 export const avgArrays = (rows: number[][]): number[] => {
