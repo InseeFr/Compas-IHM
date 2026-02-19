@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { Alert } from "@mui/material";
 import { majInfosSaisiesA11Y, type InfosSaisiesA11yToSaveDTO } from "todos-api/client.gen";
@@ -34,10 +34,7 @@ export default function A11yForm() {
         fetchData();
     }, []);
 
-    const filteredData = useMemo(
-        () => modules.filter(item => applyDevFilters(item, state)),
-        [modules, state]
-    );
+    const filteredData = modules.filter(item => applyDevFilters(item, state));
 
     const defaultValues: A11yFormValues = {
         idsModule: [],

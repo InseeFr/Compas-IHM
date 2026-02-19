@@ -1,5 +1,5 @@
 import type { IndicateurApplicationSynthese } from "models/indicateurs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFilterContext } from "store/filterContext";
 import {
     fetchApplicationSynthesis,
@@ -37,25 +37,21 @@ export const ApplicationSynthesis = () => {
         fetchData();
     }, []);
 
-    const filteredData = useMemo(() => apps.filter(item => applyDevFilters(item, state)), [apps, state]);
+    const filteredData = apps.filter(item => applyDevFilters(item, state));
 
-    const selectedModules = useMemo(() => {
-        if (!selectedApp) return [];
+    const normalizedAppName = selectedApp ? normalize(selectedApp.applicationName) : null;
+    const normalizedAppId = selectedApp ? normalize(selectedApp.applicationId) : null;
 
-        const normalizedAppName = normalize(selectedApp.applicationName);
-        const normalizedAppId = normalize(selectedApp.applicationId);
-
-        return modules
-            .filter(module => {
-                const normalizedParent = normalize(module.parentApplication);
-                return normalizedParent === normalizedAppName || normalizedParent === normalizedAppId;
-            })
-            .map(transformModuleData);
-    }, [selectedApp, modules]);
+    const selectedModules = modules
+        .filter(module => {
+            const normalizedParent = normalize(module.parentApplication);
+            return normalizedParent === normalizedAppName || normalizedParent === normalizedAppId;
+        })
+        .map(transformModuleData);
 
     return (
         <DashboardPageLayout
-            title={"Synthèse d'une application"}
+            title={"Synthèse   d'une   application"}
             dashboardData={filteredData}
             filters={<Filters state={state} dispatch={dispatch} data={apps} />}
             loading={loading}

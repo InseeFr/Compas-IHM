@@ -6,7 +6,7 @@ import { useFilterContext } from "store/filterContext";
 import * as clientApi from "todos-api/client.gen";
 import * as qualiteConfig from "pages/indicateurs/qualité/qualiteConfig";
 import * as groupModuleUtils from "utils/group-module-by-apps";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 // ----- Mocks -----
 vi.mock("store/filterContext", () => ({
@@ -68,7 +68,7 @@ const mockModules = [
 ];
 
 vi.mock("utils/useQueryIndicators", () => ({
-    UseQueryIndicators: vi.fn()
+    useQueryIndicators: vi.fn()
 }));
 
 describe("QualiteIndicateurTable", () => {
@@ -83,7 +83,7 @@ describe("QualiteIndicateurTable", () => {
         vi.spyOn(groupModuleUtils, "groupModulesByApp").mockImplementation(data => ({
             App1: data.filter(d => d.isModule)
         }));
-        (UseQueryIndicators as any).mockReturnValue({
+        (useQueryIndicators as any).mockReturnValue({
             data: [...mockApps, ...mockModules],
             filteredData: mockApps,
             modulesByApp: { App1: [mockModules[0]] },
@@ -113,7 +113,7 @@ describe("QualiteIndicateurTable", () => {
     it("gère une erreur lors du fetch des indicateurs qualité", async () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-        (UseQueryIndicators as any).mockReturnValue({
+        (useQueryIndicators as any).mockReturnValue({
             data: undefined,
             filteredData: [],
             modulesByApp: {},

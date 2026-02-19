@@ -1,15 +1,14 @@
-import { useMemo } from "react";
 import { useFilterContext } from "store/filterContext";
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./a11yConfig";
 import { getModules1, listerModulesA11y } from "todos-api/client.gen";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Filters } from "pages/Filters";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 export const A11yIndicateurTable = () => {
     const { state, dispatch } = useFilterContext();
-    const columns = useMemo(() => columnsTable(), []);
+    const columns = columnsTable();
 
     const fetchData = async () => {
         try {
@@ -23,7 +22,7 @@ export const A11yIndicateurTable = () => {
         }
     };
 
-    const { data, isLoading, filteredData } = UseQueryIndicators({
+    const { data, isLoading, filteredData } = useQueryIndicators({
         queryKey: ["A11YIndicator"],
         fetchData,
         hasModules: true

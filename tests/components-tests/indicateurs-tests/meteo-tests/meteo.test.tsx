@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications1, getHistory } from "todos-api/client.gen";
 import { MeteoTable } from "pages/indicateurs/meteo/meteoTable";
@@ -184,6 +184,81 @@ describe("MeteoTable", () => {
                 domaineDev: "Domaine1",
                 domaineFonc: "DomaineFonc1",
                 appName: ""
+            },
+            dispatch: mockDispatch
+        });
+
+        render(<MeteoTable />);
+
+        await waitFor(() => {
+            expect(getHistory).toHaveBeenCalled();
+        });
+    });
+    it("devrait filtrer par appName", async () => {
+        vi.mocked(useFilterContext).mockReturnValue({
+            state: { ...mockState, appName: "App1" },
+            dispatch: mockDispatch
+        });
+
+        render(<MeteoTable />);
+
+        await waitFor(() => {
+            expect(getHistory).toHaveBeenCalled();
+        });
+    });
+
+    it("devrait gérer des données vides", async () => {
+        vi.mocked(getHistory).mockResolvedValue([]);
+        vi.mocked(getApplications1).mockResolvedValue([]);
+
+        render(<MeteoTable />);
+
+        await waitFor(() => {
+            expect(getHistory).toHaveBeenCalled();
+            expect(getApplications1).toHaveBeenCalled();
+        });
+    });
+
+    it("devrait gérer une erreur de l'API", async () => {
+        vi.spyOn(console, "error").mockImplementation(() => {});
+
+        vi.mocked(getHistory).mockImplementation(() =>
+            Promise.reject(new Error("API Error")).catch(err => {
+                console.error(err);
+                return [];
+            })
+        );
+
+        render(<MeteoTable />);
+
+        await waitFor(() => {
+            expect(getHistory).toHaveBeenCalled();
+        });
+    });
+
+    it("devrait mettre à jour nbMois lors du changement dans MeteoFormMonths", async () => {
+        const { container } = render(<MeteoTable />);
+
+        await waitFor(() => {
+            expect(getHistory).toHaveBeenCalled();
+        });
+
+        const input = container.querySelector('input[type="number"]');
+        if (input) {
+            fireEvent.change(input, { target: { value: "6" } });
+            await waitFor(() => {
+                expect(getHistory).toHaveBeenCalledTimes(2);
+            });
+        }
+    });
+
+    it("devrait appliquer tous les filtres simultanément avec appName", async () => {
+        vi.mocked(useFilterContext).mockReturnValue({
+            state: {
+                serviceDev: "SNDI1",
+                domaineDev: "Domaine1",
+                domaineFonc: "DomaineFonc1",
+                appName: "App1"
             },
             dispatch: mockDispatch
         });

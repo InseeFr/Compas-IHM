@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFilterContext } from "store/filterContext";
 import { groupModulesByApp } from "utils/group-module-by-apps";
@@ -11,20 +10,21 @@ interface UseQueryIndicatorsOptions<T> {
     hasModules: false | true;
 }
 
-export function UseQueryIndicators<T extends FilterableItem>({
+export function useQueryIndicators<T extends FilterableItem>({
     queryKey,
     fetchData
 }: UseQueryIndicatorsOptions<T>) {
     const { state } = useFilterContext();
 
+    console.log(fetchData);
     const { data = [], isLoading } = useQuery({
         queryKey: [queryKey.join(",")],
         queryFn: fetchData
     });
 
-    const modulesByApp = useMemo(() => groupModulesByApp(data), [data]);
+    const modulesByApp = groupModulesByApp(data);
 
-    const filteredData = useMemo(() => data.filter(item => applyDevFilters(item, state)), [data, state]);
+    const filteredData = data.filter(item => applyDevFilters(item, state));
 
     return {
         data,

@@ -15,7 +15,14 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
                     label: "Non conforme",
                     color: "#d32f2f",
                     icon: (
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            width="20"
+                            height="20"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                         </svg>
                     )
@@ -25,7 +32,14 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
                     label: "Partiellement conforme",
                     color: "#f57c00",
                     icon: (
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            width="20"
+                            height="20"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
                             <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
                         </svg>
                     )
@@ -35,7 +49,14 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
                     label: "Totalement conforme",
                     color: "#388e3c",
                     icon: (
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            width="20"
+                            height="20"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                         </svg>
                     )
@@ -46,7 +67,7 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
     const config = getAccessibilityConfig();
 
     return (
-        <footer color="inherit" id="pied-de-page">
+        <footer id="pied-de-page">
             <Box className="footer-box">
                 <output className="footer-box-access" aria-live="polite">
                     <Typography variant="body2" className="footer-typo">

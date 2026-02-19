@@ -1,16 +1,15 @@
-import { useMemo } from "react";
 import { getApplications2, getModules2 } from "../../../todos-api/client.gen";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import { useFilterContext } from "store/filterContext";
 import { Filters } from "pages/Filters";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 
 export const DevopsIndicateurTable = () => {
     const { state, dispatch } = useFilterContext();
 
-    const columns = useMemo(() => columnsTable(), []);
+    const columns = columnsTable();
 
     const fetchData = async () => {
         try {
@@ -25,7 +24,7 @@ export const DevopsIndicateurTable = () => {
         }
     };
 
-    const { data, isLoading, modulesByApp, filteredData } = UseQueryIndicators({
+    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
         queryKey: ["DevopsIndicator"],
         fetchData,
         hasModules: true

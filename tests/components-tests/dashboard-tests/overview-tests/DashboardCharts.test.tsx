@@ -426,7 +426,7 @@ describe("DashboardCharts", () => {
             );
 
             await waitFor(() => {
-                expect(calculations.calculateMaturiteStrongPct).toHaveBeenCalledTimes(2);
+                expect(calculations.calculateMaturiteStrongPct).toHaveBeenCalledTimes(3);
             });
         });
     });
@@ -542,7 +542,7 @@ describe("DashboardCharts", () => {
             );
 
             await waitFor(() => {
-                expect(calculations.calculateMaturiteStrongPct).toHaveBeenCalledTimes(2);
+                expect(calculations.calculateMaturiteStrongPct).toHaveBeenCalledTimes(3);
             });
         });
     });

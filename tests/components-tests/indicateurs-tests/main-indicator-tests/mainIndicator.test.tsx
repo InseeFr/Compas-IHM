@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MainIndicator } from "pages/indicateurs/main-indicator/mainIndicator";
 import { useFilterContext, type FilterState } from "store/filterContext";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 import * as clientGen from "todos-api/client.gen";
 import { formattedApps, formattedModules } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 
@@ -105,7 +105,7 @@ describe("MainIndicator", () => {
     });
 
     it("renders loading state", () => {
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: [],
             modulesByApp: {},
             isLoading: true,
@@ -124,7 +124,7 @@ describe("MainIndicator", () => {
             { applicationName: "App2", isModule: false }
         ];
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: mockData,
             modulesByApp: {},
             isLoading: false,
@@ -139,7 +139,7 @@ describe("MainIndicator", () => {
     it("generates correct rowId for application", () => {
         const mockData = [{ applicationName: "TestApp", isModule: false }];
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: mockData,
             modulesByApp: {},
             isLoading: false,
@@ -159,7 +159,7 @@ describe("MainIndicator", () => {
             isModule: true
         };
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: [mockApp],
             modulesByApp: {
                 TestApp: [mockModule]
@@ -182,7 +182,7 @@ describe("MainIndicator", () => {
             ]
         };
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: mockData,
             modulesByApp: mockModulesByApp,
             isLoading: false,
@@ -197,7 +197,7 @@ describe("MainIndicator", () => {
     it("returns undefined for modules (no sub-subRows)", () => {
         const mockData = [{ applicationName: "Module1", isModule: true }];
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: [],
             modulesByApp: {},
             isLoading: false,
@@ -212,7 +212,7 @@ describe("MainIndicator", () => {
     it("passes correct props to Filters component", () => {
         const mockData = [{ applicationName: "App1", isModule: false }];
 
-        vi.mocked(UseQueryIndicators).mockReturnValue({
+        vi.mocked(useQueryIndicators).mockReturnValue({
             data: mockData,
             modulesByApp: {},
             isLoading: false,
@@ -224,8 +224,8 @@ describe("MainIndicator", () => {
         expect(screen.getByTestId("filter-data")).toHaveTextContent("1");
     });
 
-    it("calls UseQueryIndicators with correct parameters", () => {
-        const mockUseQueryIndicators = vi.mocked(UseQueryIndicators);
+    it("calls useQueryIndicators with correct parameters", () => {
+        const mockUseQueryIndicators = vi.mocked(useQueryIndicators);
         mockUseQueryIndicators.mockReturnValue({
             data: [],
             modulesByApp: {},
@@ -245,7 +245,7 @@ describe("MainIndicator", () => {
     it("fetchData calls all API endpoints and formatting functions", async () => {
         let capturedFetchData: (() => Promise<any>) | null = null;
 
-        vi.mocked(UseQueryIndicators).mockImplementation(({ fetchData }: any) => {
+        vi.mocked(useQueryIndicators).mockImplementation(({ fetchData }: any) => {
             capturedFetchData = fetchData;
             return {
                 data: [],

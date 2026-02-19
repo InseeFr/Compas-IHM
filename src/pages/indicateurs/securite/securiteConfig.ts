@@ -129,3 +129,23 @@ export function formatModuleSecurite(
         isModule: true
     };
 }
+
+export function formatApplicationsData(
+    apps: Application[],
+    securiteApps: IndicateurSecuriteView[]
+): SecuriteIndicateur[] {
+    return apps.map(app => {
+        const securiteApp = securiteApps.find(s => s.applicationId === app.idApplication);
+        return formatApplicationSecurite(app, securiteApp);
+    });
+}
+
+export function formatModulesData(
+    modules: Module[],
+    securiteModules: IndicateurSecuriteView[]
+): SecuriteIndicateur[] {
+    return modules.map(mod => {
+        const securiteModule = securiteModules.find(s => s.moduleId === mod.id);
+        return formatModuleSecurite(mod, securiteModule);
+    });
+}

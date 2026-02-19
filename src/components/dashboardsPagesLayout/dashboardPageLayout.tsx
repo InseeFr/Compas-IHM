@@ -47,6 +47,13 @@ export default function DashboardPageLayout<T extends AllIndicators>(
                         getOptionLabel={props.label}
                         onChange={(_, value) => props.setter(value)}
                         renderInput={props.renderInputAutoComplete}
+                        slotProps={{
+                            popupIndicator: {
+                                "aria-label": "Ouvrir",
+                                title: "Ouvrir",
+                                tabIndex: 0
+                            }
+                        }}
                     />
                 </Box>
 

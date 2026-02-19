@@ -6,7 +6,7 @@ import {
     TechAndOrga,
     ComplexitySection,
     ConseilComplexity,
-    DisclaimerMaturity,
+    DisclaimerMaturity
 } from "pages/dashboards/maturité/MaturiteContent";
 import type { IndicateurApplicationMaturite } from "models/indicateurs";
 
@@ -16,7 +16,7 @@ import type { IndicateurApplicationMaturite } from "models/indicateurs";
 
 let mockIsDark = false;
 
-vi.mock("@mui/material", async (importOriginal) => {
+vi.mock("@mui/material", async importOriginal => {
     const actual = await importOriginal<typeof import("@mui/material")>();
     return {
         ...actual,
@@ -25,9 +25,9 @@ vi.mock("@mui/material", async (importOriginal) => {
                 mode: mockIsDark ? "dark" : "light",
                 info: { light: "#90caf9", main: "#1976d2" },
                 grey: { 700: "#616161" },
-                common: { black: "#000000" },
-            },
-        }),
+                common: { black: "#000000" }
+            }
+        })
     };
 });
 
@@ -43,13 +43,13 @@ const baseApp: IndicateurApplicationMaturite = {
     scoreComplexite: "-0.3",
     scoreBenefice: "0.8",
     progressionDeploy: "0.5",
-    progressionArchi: "1.5",   // > 1 → clamp01 → 1 → 100%
+    progressionArchi: "1.5", // > 1 → clamp01 → 1 → 100%
     progressionTechnos: "0.4",
     progressionCloud: "0.9",
     progressionDevops: "0.2",
     progressionMateqip: "0.7",
-    maturite: "A",             // "A" → level "forte", label "très forte"
-    robustesse: "3",
+    maturite: "A", // "A" → level "forte", label "très forte"
+    robustesse: "3"
 };
 
 // ---------------------------------------------------------------------------
@@ -76,6 +76,18 @@ describe("MaturiteHeader", () => {
         // maturiteLabel("C") === "moyenne", maturiteLevel("C") === "faible"
         expect(screen.getByText(/maturité cloud moyenne/i)).toBeInTheDocument();
         expect(screen.getByText(/robustesse 1\/4/i)).toBeInTheDocument();
+    });
+    it("affiche le chip success pour maturité B (level forte)", () => {
+        render(<MaturiteHeader selectedApp={{ ...baseApp, maturite: "B", robustesse: "2" }} />);
+        // maturiteLevel("B") === "forte"
+        expect(screen.getByText(/maturité cloud/i)).toBeInTheDocument();
+        expect(screen.getByText(/robustesse 2\/4/i)).toBeInTheDocument();
+    });
+
+    it("affiche robustesse 0/4 quand robustesse est undefined", () => {
+        const appSansRobustesse = { ...baseApp, robustesse: undefined as unknown as string };
+        render(<MaturiteHeader selectedApp={appSansRobustesse} />);
+        expect(screen.getByText(/robustesse 0\/4/i)).toBeInTheDocument();
     });
 });
 
@@ -113,6 +125,28 @@ describe("TechAndOrga", () => {
         );
         expect(screen.getByText("• Conseil tech")).toBeInTheDocument();
         expect(screen.getByText("• Conseil orga")).toBeInTheDocument();
+    });
+
+    it("ne plante pas si tipsItemsTech et tipsItemsOrga sont undefined", () => {
+        render(<TechAndOrga selectedApp={baseApp} />);
+        // Les deux TipsBlock doivent afficher "Aucun conseil."
+        expect(screen.getAllByText("Aucun conseil.")).toHaveLength(2);
+    });
+
+    it("affiche les titres de section technique et organisationnelle", () => {
+        render(<TechAndOrga selectedApp={baseApp} />);
+        expect(screen.getByText(/maturité technique/i)).toBeInTheDocument();
+        expect(screen.getByText(/maturité organisationnelle/i)).toBeInTheDocument();
+    });
+
+    it("affiche tous les libellés de barres", () => {
+        render(<TechAndOrga selectedApp={baseApp} />);
+        expect(screen.getByText(/pratiques de développement/i)).toBeInTheDocument();
+        expect(screen.getByText(/architectures compatibles/i)).toBeInTheDocument();
+        expect(screen.getByText(/technologies compatibles/i)).toBeInTheDocument();
+        expect(screen.getByText(/pratiques des technologies du cloud/i)).toBeInTheDocument();
+        expect(screen.getByText(/pratiques devops/i)).toBeInTheDocument();
+        expect(screen.getByText(/maturité d'équipe/i)).toBeInTheDocument();
     });
 });
 
@@ -170,6 +204,22 @@ describe("ConseilComplexity", () => {
         expect(screen.getByText("Migration risquée dark")).toBeInTheDocument();
         expect(red[400]).toBeDefined();
     });
+    it("affiche le titre 'Balance risques / opportunités'", () => {
+        render(<ComplexitySection selectedApp={baseApp} />);
+        expect(screen.getByText(/balance risques \/ opportunités/i)).toBeInTheDocument();
+    });
+
+    it("rend correctement en mode sombre", () => {
+        mockIsDark = true;
+        render(<ComplexitySection selectedApp={baseApp} />);
+        expect(screen.getByText("-0.30")).toBeInTheDocument();
+        mockIsDark = false;
+    });
+
+    it("affiche des scores négatifs correctement formatés", () => {
+        render(<ComplexitySection selectedApp={{ ...baseApp, scoreComplexite: "-0.99" }} />);
+        expect(screen.getByText("-0.99")).toBeInTheDocument();
+    });
 });
 
 // ---------------------------------------------------------------------------
@@ -184,7 +234,7 @@ describe("TipsBlock (via TechAndOrga)", () => {
                 tipsItemsTech={[
                     { conseil: "Conseil A" },
                     { conseil: "Conseil A" }, // doublon → éliminé par Set
-                    { conseil: "Conseil B" },
+                    { conseil: "Conseil B" }
                 ]}
             />
         );
@@ -198,12 +248,7 @@ describe("TipsBlock (via TechAndOrga)", () => {
     });
 
     it("filtre les conseils vides ou undefined", () => {
-        render(
-            <TechAndOrga
-                selectedApp={baseApp}
-                tipsItemsTech={[{ conseil: "" }, {}]}
-            />
-        );
+        render(<TechAndOrga selectedApp={baseApp} tipsItemsTech={[{ conseil: "" }, {}]} />);
         expect(screen.getAllByText("Aucun conseil.").length).toBeGreaterThanOrEqual(1);
     });
 });
@@ -224,5 +269,63 @@ describe("DisclaimerMaturity", () => {
         render(<DisclaimerMaturity />);
         expect(screen.getByTitle("Avertissement")).toBeInTheDocument();
         mockIsDark = false;
+    });
+});
+
+describe("HorizontalBars — valeurs limites", () => {
+    it("clamp01 ramène une valeur négative à 0%", () => {
+        render(<TechAndOrga selectedApp={{ ...baseApp, progressionDeploy: "-0.5" }} />);
+        // La barre "Pratiques de développement" doit afficher 0%
+        const zeros = screen.getAllByText("0%");
+        expect(zeros.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("clamp01 ramène exactement 1 à 100%", () => {
+        render(
+            <TechAndOrga
+                selectedApp={{
+                    ...baseApp,
+                    progressionDeploy: "1",
+                    progressionArchi: "0",
+                    progressionTechnos: "0"
+                }}
+            />
+        );
+        expect(screen.getByText("100%")).toBeInTheDocument();
+    });
+
+    it("une progression à 0.5 affiche 50%", () => {
+        render(
+            <TechAndOrga
+                selectedApp={{
+                    ...baseApp,
+                    progressionDeploy: "0.5",
+                    progressionArchi: "0",
+                    progressionTechnos: "0",
+                    progressionCloud: "0",
+                    progressionDevops: "0",
+                    progressionMateqip: "0"
+                }}
+            />
+        );
+        expect(screen.getByText("50%")).toBeInTheDocument();
+    });
+});
+
+describe("useNormalizedMaturite — valeurs extrêmes", () => {
+    it("gère scoreBenefice à 0 correctement", () => {
+        render(<ComplexitySection selectedApp={{ ...baseApp, scoreBenefice: "0" }} />);
+        const zeros = screen.getAllByText("0.00");
+        expect(zeros.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("gère scoreTechnique à 1 correctement via TechAndOrga", () => {
+        render(<TechAndOrga selectedApp={{ ...baseApp, scoreTechnique: "1" }} />);
+        expect(screen.getByText("1.00")).toBeInTheDocument();
+    });
+
+    it("gère maturite null en retournant null (chip error)", () => {
+        render(<MaturiteHeader selectedApp={{ ...baseApp, maturite: null as unknown as string }} />);
+        expect(screen.getByText(/maturité cloud inconnue/i)).toBeInTheDocument();
     });
 });

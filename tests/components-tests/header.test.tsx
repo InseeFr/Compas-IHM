@@ -37,9 +37,9 @@ describe("Header et NavBar", () => {
         render(<Header darkMode={false} toggleDarkMode={toggleDarkMode} />);
         const title = screen.getByTestId("header-title");
 
-        await user.click(title);
+        const link = title.closest("a");
 
-        expect(title.closest("a")).toHaveAttribute("href", "/");
+        expect(link).toHaveAttribute("href", "/");
     });
 
     it("ouvre un menu déroulant de la NavBar et clique sur un sous-item", async () => {
@@ -53,6 +53,13 @@ describe("Header et NavBar", () => {
 
         await user.click(subItem);
         expect(subItem.closest("a")).toHaveAttribute("href", "/indicateur/devopsTable");
+    });
+
+    it("rend un header avec rôle banner implicite", () => {
+        render(<Header darkMode={false} toggleDarkMode={toggleDarkMode} />);
+        const header = screen.getByTestId("header");
+        expect(header.tagName).toBe("HEADER");
+        expect(header).not.toHaveAttribute("role", "header");
     });
 
     it("le bouton dark mode est cliquable", async () => {

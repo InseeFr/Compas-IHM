@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
     Box,
     Typography,
@@ -12,7 +12,6 @@ import {
     Chip
 } from "@mui/material";
 import ReactECharts from "echarts-for-react";
-import type { EChartsOption } from "echarts";
 import type { GlobalIndicator } from "models/indicateurs";
 
 interface CorrelationChartProps {
@@ -32,19 +31,19 @@ const METRICS: MetricOption[] = [
     {
         key: "cveCritical",
         label: "CVE critiques",
-        getValue: d => parseInt(d.nbCveCritical ?? "0", 10),
+        getValue: d => Number.parseInt(d.nbCveCritical ?? "0", 10),
         unit: "CVE"
     },
     {
         key: "testCoverage",
         label: "Couverture tests unitaires",
-        getValue: d => parseFloat(d.pourcentageCouvertureTestUniaire ?? "0"),
+        getValue: d => Number.parseFloat(d.pourcentageCouvertureTestUniaire ?? "0"),
         unit: "%"
     },
     {
         key: "vmDelay",
         label: "Délai VM non mise à jour",
-        getValue: d => parseFloat(d.delaiVmNonMiseAjour ?? "0"),
+        getValue: d => Number.parseFloat(d.delaiVmNonMiseAjour ?? "0"),
         unit: "jours"
     },
     {
@@ -53,7 +52,7 @@ const METRICS: MetricOption[] = [
         getValue: d => {
             const val =
                 d.distanceCount !== undefined && d.distanceCount !== null ? Number(d.distanceCount) : -1;
-            return isNaN(val) || val === -1 ? 0 : val;
+            return Number.isNaN(val) || val === -1 ? 0 : val;
         },
         unit: "jours"
     },
@@ -61,8 +60,8 @@ const METRICS: MetricOption[] = [
         key: "dette",
         label: "Dette technique",
         getValue: d => {
-            const val = parseFloat(d.detteTechnique ?? "-1");
-            return isNaN(val) || val < 0 ? 0 : val / 420; // minutes → jours
+            const val = Number.parseFloat(d.detteTechnique ?? "-1");
+            return Number.isNaN(val) || val < 0 ? 0 : val / 420; // minutes → jours
         },
         unit: "jours"
     }
@@ -128,154 +127,41 @@ export function CorrelationChart({ data }: Readonly<CorrelationChartProps>) {
     const [metricX, setMetricX] = useState<MetricKey>("testCoverage");
     const [metricY, setMetricY] = useState<MetricKey>("cveCritical");
 
-    const chartData = useMemo(() => {
-        const metricXConfig = METRICS.find(m => m.key === metricX)!;
-        const metricYConfig = METRICS.find(m => m.key === metricY)!;
+    const metricXConfig = METRICS.find(m => m.key === metricX)!;
+    const metricYConfig = METRICS.find(m => m.key === metricY)!;
 
-        // Extraire les données (seulement applications, exclure valeurs nulles)
-        const points = data
-            .filter(d => !d.isModule)
-            .map(d => ({
-                name: d.applicationName,
-                x: metricXConfig.getValue(d),
-                y: metricYConfig.getValue(d)
-            }))
-            .filter(p => p.x > 0 && p.y > 0); // Exclure les valeurs nulles/négatives
+    // Extraire les données (seulement applications, exclure valeurs nulles)
+    const points = data
+        .filter(d => !d.isModule)
+        .map(d => ({
+            name: d.applicationName,
+            x: metricXConfig.getValue(d),
+            y: metricYConfig.getValue(d)
+        }))
+        .filter(p => p.x > 0 && p.y > 0); // Exclure les valeurs nulles/négatives
 
-        const xValues = points.map(p => p.x);
-        const yValues = points.map(p => p.y);
+    const xValues = points.map(p => p.x);
+    const yValues = points.map(p => p.y);
 
-        // Calculs statistiques
-        const correlation = calculateCorrelation(xValues, yValues);
-        const { slope, intercept } = calculateRegression(xValues, yValues);
+    // Calculs statistiques
+    const correlation = calculateCorrelation(xValues, yValues);
+    const { slope, intercept } = calculateRegression(xValues, yValues);
 
-        // Points de la ligne de régression
-        const minX = Math.min(...xValues);
-        const maxX = Math.max(...xValues);
-        const regressionLine = [
-            [minX, slope * minX + intercept],
-            [maxX, slope * maxX + intercept]
-        ];
+    // Points de la ligne de régression
+    const minX = Math.min(...xValues);
+    const maxX = Math.max(...xValues);
+    const regressionLine = [
+        [minX, slope * minX + intercept],
+        [maxX, slope * maxX + intercept]
+    ];
 
-        return {
-            points,
-            correlation,
-            regressionLine,
-            metricXConfig,
-            metricYConfig
-        };
-    }, [data, metricX, metricY]);
-
-    const option: EChartsOption = useMemo(
-        () => ({
-            backgroundColor: "transparent",
-            tooltip: {
-                trigger: "item",
-                backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                borderColor: isDark ? "#444" : "#ddd",
-                textStyle: {
-                    color: isDark ? "#fff" : "#000"
-                },
-                formatter: (params: any) => {
-                    if (params.seriesName === "Régression") return "";
-                    const point = chartData.points[params.dataIndex];
-                    return `
-                        <strong>${point.name}</strong><br/>
-                        ${chartData.metricXConfig.label}: <strong>${point.x.toFixed(1)} ${chartData.metricXConfig.unit}</strong><br/>
-                        ${chartData.metricYConfig.label}: <strong>${point.y.toFixed(1)} ${chartData.metricYConfig.unit}</strong>
-                    `;
-                }
-            },
-            grid: {
-                left: "10%",
-                right: "5%",
-                bottom: "12%",
-                top: "8%",
-                containLabel: true
-            },
-            xAxis: {
-                type: "value",
-                name: `${chartData.metricXConfig.label} (${chartData.metricXConfig.unit})`,
-                nameLocation: "middle",
-                nameGap: 30,
-                nameTextStyle: {
-                    color: isDark ? "#fff" : "#000",
-                    fontSize: 12
-                },
-                axisLabel: {
-                    color: isDark ? "#fff" : "#000"
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: isDark ? "#555" : "#ccc"
-                    }
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: isDark ? "#333" : "#eee"
-                    }
-                }
-            },
-            yAxis: {
-                type: "value",
-                name: `${chartData.metricYConfig.label} (${chartData.metricYConfig.unit})`,
-                nameLocation: "middle",
-                nameGap: 50,
-                nameTextStyle: {
-                    color: isDark ? "#fff" : "#000",
-                    fontSize: 12
-                },
-                axisLabel: {
-                    color: isDark ? "#fff" : "#000"
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: isDark ? "#555" : "#ccc"
-                    }
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: isDark ? "#333" : "#eee"
-                    }
-                }
-            },
-            series: [
-                {
-                    name: "Applications",
-                    type: "scatter",
-                    data: chartData.points.map(p => [p.x, p.y]),
-                    symbolSize: 8,
-                    itemStyle: {
-                        color: theme.palette.primary.main,
-                        opacity: 0.7
-                    },
-                    emphasis: {
-                        itemStyle: {
-                            color: theme.palette.primary.dark,
-                            opacity: 1,
-                            borderColor: theme.palette.primary.light,
-                            borderWidth: 2
-                        }
-                    }
-                },
-                {
-                    name: "Régression",
-                    type: "line",
-                    data: chartData.regressionLine,
-                    lineStyle: {
-                        color: theme.palette.error.main,
-                        width: 2,
-                        type: "dashed"
-                    },
-                    symbol: "none",
-                    tooltip: {
-                        show: false
-                    }
-                }
-            ]
-        }),
-        [chartData, isDark, theme]
-    );
+    const chartData = {
+        points,
+        correlation,
+        regressionLine,
+        metricXConfig,
+        metricYConfig
+    };
 
     return (
         <Box>
@@ -335,7 +221,113 @@ export function CorrelationChart({ data }: Readonly<CorrelationChartProps>) {
             </Stack>
 
             <ReactECharts
-                option={option}
+                option={{
+                    backgroundColor: "transparent",
+                    tooltip: {
+                        trigger: "item",
+                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                        borderColor: isDark ? "#444" : "#ddd",
+                        textStyle: {
+                            color: isDark ? "#fff" : "#000"
+                        },
+                        formatter: (params: any) => {
+                            if (params.seriesName === "Régression") return "";
+                            const point = chartData.points[params.dataIndex];
+                            return `
+                        <strong>${point.name}</strong><br/>
+                        ${chartData.metricXConfig.label}: <strong>${point.x.toFixed(1)} ${chartData.metricXConfig.unit}</strong><br/>
+                        ${chartData.metricYConfig.label}: <strong>${point.y.toFixed(1)} ${chartData.metricYConfig.unit}</strong>
+                    `;
+                        }
+                    },
+                    grid: {
+                        left: "10%",
+                        right: "5%",
+                        bottom: "12%",
+                        top: "8%",
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: "value",
+                        name: `${chartData.metricXConfig.label} (${chartData.metricXConfig.unit})`,
+                        nameLocation: "middle",
+                        nameGap: 30,
+                        nameTextStyle: {
+                            color: isDark ? "#fff" : "#000",
+                            fontSize: 12
+                        },
+                        axisLabel: {
+                            color: isDark ? "#fff" : "#000"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: isDark ? "#555" : "#ccc"
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: isDark ? "#333" : "#eee"
+                            }
+                        }
+                    },
+                    yAxis: {
+                        type: "value",
+                        name: `${chartData.metricYConfig.label} (${chartData.metricYConfig.unit})`,
+                        nameLocation: "middle",
+                        nameGap: 50,
+                        nameTextStyle: {
+                            color: isDark ? "#fff" : "#000",
+                            fontSize: 12
+                        },
+                        axisLabel: {
+                            color: isDark ? "#fff" : "#000"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: isDark ? "#555" : "#ccc"
+                            }
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: isDark ? "#333" : "#eee"
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: "Applications",
+                            type: "scatter",
+                            data: chartData.points.map(p => [p.x, p.y]),
+                            symbolSize: 8,
+                            itemStyle: {
+                                color: theme.palette.primary.main,
+                                opacity: 0.7
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    color: theme.palette.primary.dark,
+                                    opacity: 1,
+                                    borderColor: theme.palette.primary.light,
+                                    borderWidth: 2
+                                }
+                            }
+                        },
+                        {
+                            name: "Régression",
+                            type: "line",
+                            data: chartData.regressionLine,
+                            lineStyle: {
+                                color: theme.palette.error.main,
+                                width: 2,
+                                type: "dashed"
+                            },
+                            symbol: "none",
+                            tooltip: {
+                                show: false
+                            }
+                        }
+                    ]
+                }}
                 style={{ height: "400px", width: "100%" }}
                 opts={{ renderer: "canvas" }}
             />

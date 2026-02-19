@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import ExternalLink from "./external-link";
 import { generateLinkId } from "./helpers";
 
@@ -8,7 +7,7 @@ interface MarkdownLinkProps {
 }
 
 export default function MarkdownLink({ href, children, ...rest }: Readonly<MarkdownLinkProps>) {
-    const linkId = useMemo(() => generateLinkId(), []);
+    const linkId = generateLinkId();
     if (!href) {
         return <span id={linkId}>{children}</span>;
     }

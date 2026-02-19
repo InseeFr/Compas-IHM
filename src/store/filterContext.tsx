@@ -1,4 +1,4 @@
-import { createContext, useReducer, useMemo, type ReactNode, useContext } from "react";
+import { createContext, useReducer, type ReactNode, useContext, useMemo } from "react";
 
 export interface FilterState {
     serviceDev: string;
@@ -45,8 +45,10 @@ const FilterContext = createContext<{
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
     const [state, dispatch] = useReducer(filterReducer, initialState);
-    const memoState = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-    return <FilterContext.Provider value={memoState}>{children}</FilterContext.Provider>;
+    const values = useMemo(() => {
+        return { state, dispatch };
+    }, [state, dispatch]);
+    return <FilterContext.Provider value={values}>{children}</FilterContext.Provider>;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
