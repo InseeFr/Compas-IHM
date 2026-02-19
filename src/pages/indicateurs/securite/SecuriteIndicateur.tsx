@@ -1,10 +1,8 @@
-import type { SecuriteIndicateur } from "models/indicateurs";
-import { useMemo } from "react";
 import { useFilterContext } from "store/filterContext";
 import {
     columnsTable,
-    formatApplicationSecurite,
-    formatModuleSecurite,
+    formatApplicationsData,
+    formatModulesData,
     OnExport,
     paginationConfig
 } from "./securiteConfig";
@@ -12,39 +10,16 @@ import {
     getApplications1,
     getIndicateurSecuriteByApplication,
     getIndicateurSecuriteByModule,
-    getModules1,
-    type Application,
-    type Module,
-    type IndicateurSecuriteView
+    getModules1
 } from "todos-api/client.gen";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Filters } from "pages/Filters";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
-
-function formatApplicationsData(
-    apps: Application[],
-    securiteApps: IndicateurSecuriteView[]
-): SecuriteIndicateur[] {
-    return apps.map(app => {
-        const securiteApp = securiteApps.find(s => s.applicationId === app.idApplication);
-        return formatApplicationSecurite(app, securiteApp);
-    });
-}
-
-function formatModulesData(
-    modules: Module[],
-    securiteModules: IndicateurSecuriteView[]
-): SecuriteIndicateur[] {
-    return modules.map(mod => {
-        const securiteModule = securiteModules.find(s => s.moduleId === mod.id);
-        return formatModuleSecurite(mod, securiteModule);
-    });
-}
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 const SecuriteIndicateurTable = () => {
     const { state, dispatch } = useFilterContext();
-    const columns = useMemo(() => columnsTable(), []);
+    const columns = columnsTable();
 
     const fetchData = async () => {
         try {
@@ -54,17 +29,16 @@ const SecuriteIndicateurTable = () => {
                 getIndicateurSecuriteByApplication(),
                 getIndicateurSecuriteByModule()
             ]);
-
             const formattedApps = formatApplicationsData(apps, securiteApps);
             const formattedModules = formatModulesData(modules, securiteModules);
-
             return [...formattedApps, ...formattedModules];
         } catch (error) {
             console.error("Erreur lors de la récupération des données sécurité: ", error);
+            throw error;
         }
     };
 
-    const { data, isLoading, modulesByApp, filteredData } = UseQueryIndicators({
+    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
         queryKey: ["SecuriteIndicator"],
         fetchData,
         hasModules: true

@@ -3,11 +3,10 @@ import { Typography, Box } from "@mui/material";
 interface AnimatedTitleProps {
     text: string;
 }
-
 export default function AnimatedTitle({ text }: Readonly<AnimatedTitleProps>) {
     return (
         <Typography
-            component={"h1"}
+            component="h1"
             color="inherit"
             tabIndex={0}
             aria-label={text}
@@ -15,9 +14,9 @@ export default function AnimatedTitle({ text }: Readonly<AnimatedTitleProps>) {
                 fontFamily: '"Segoe UI Symbol"',
                 fontWeight: 500,
                 paddingTop: 5,
-                fontSize: { xs: "0.875rem", md: "1.75rem" },
+                fontSize: { xs: "0.875rem", md: "3rem" },
                 textAlign: "center",
-                letterSpacing: "0.08em",
+                letterSpacing: "0.05em",
                 mb: 5,
 
                 "@keyframes popWord": {
@@ -35,13 +34,18 @@ export default function AnimatedTitle({ text }: Readonly<AnimatedTitleProps>) {
             {text.split(" ").map((word, index) => (
                 <Box
                     key={word}
-                    component={"h1"}
+                    component="span"
                     sx={{
                         display: "inline-block",
                         opacity: 0,
                         animation: "popWord 0.6s ease-out forwards",
                         animationDelay: `${index * 0.15}s`,
-                        mr: 1
+                        mr: 1,
+                        fontFamily: "inherit",
+                        fontWeight: "inherit",
+                        fontSize: "inherit",
+                        lineHeight: "inherit",
+                        color: "inherit"
                     }}
                 >
                     {word}

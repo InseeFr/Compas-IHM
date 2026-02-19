@@ -5,7 +5,7 @@ import { DevopsIndicateurTable } from "pages/indicateurs/devops/DevopsIndicateur
 import { FilterProvider } from "store/filterContext";
 import * as devopsConfig from "pages/indicateurs/devops/devopsConfig";
 import { getApplications2, getModules2 } from "todos-api/client.gen";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 vi.mock("todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
@@ -53,12 +53,12 @@ const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
 const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
 
 vi.mock("utils/useQueryIndicators", () => ({
-    UseQueryIndicators: vi.fn()
+    useQueryIndicators: vi.fn()
 }));
 describe("DevopsIndicateurTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        (UseQueryIndicators as any).mockReturnValue({
+        (useQueryIndicators as any).mockReturnValue({
             data: [...mockApps, ...mockModules],
             filteredData: mockApps,
             modulesByApp: { App1: [mockModules[0]] },
@@ -105,7 +105,7 @@ describe("DevopsIndicateurTable", () => {
     it("gère une erreur lors du fetch des indicateurs devops", async () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-        (UseQueryIndicators as any).mockReturnValue({
+        (useQueryIndicators as any).mockReturnValue({
             data: undefined,
             filteredData: [],
             modulesByApp: {},

@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Box, Typography, useTheme, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import ReactECharts from "echarts-for-react";
-import type { EChartsOption } from "echarts";
 import type { GlobalIndicator } from "models/indicateurs";
 
 interface CveTreemapProps {
@@ -13,8 +12,8 @@ type ColorMetric = "dette" | "mep";
 
 // Catégorisation dette technique (minutes → jours)
 function getDetteBucket(minutesStr?: string): string {
-    const val = parseFloat(minutesStr ?? "-1");
-    if (isNaN(val) || val < 0) return "NR";
+    const val = Number.parseFloat(minutesStr ?? "-1");
+    if (Number.isNaN(val) || val < 0) return "NR";
     const jours = val / 420;
     if (jours <= 5) return "0-5j";
     if (jours <= 15) return "6-15j";
@@ -26,7 +25,7 @@ function getDetteBucket(minutesStr?: string): string {
 // Catégorisation MEP (jours)
 function getMepBucket(days?: number | string): string {
     const num = days !== undefined && days !== null ? Number(days) : -1;
-    if (isNaN(num) || num === -1) return "NR";
+    if (Number.isNaN(num) || num === -1) return "NR";
     if (num <= 30) return "0-30j";
     if (num <= 60) return "31-60j";
     if (num <= 90) return "61-90j";
@@ -60,34 +59,32 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
     const isDark = theme.palette.mode === "dark";
     const [colorMetric, setColorMetric] = useState<ColorMetric>("dette");
 
-    const chartData = useMemo(() => {
-        // Top N applications avec CVE critiques
-        const apps = data
-            .filter(d => !d.isModule && parseInt(d.nbCveCritical ?? "0", 10) > 0)
-            .map(d => ({
-                name: d.applicationName,
-                critical: parseInt(d.nbCveCritical ?? "0", 10),
-                high: parseInt(d.nbCveHigh ?? "0", 10),
-                medium: parseInt(d.nbCveMedium ?? "0", 10),
-                low: parseInt(d.nbCveLow ?? "0", 10),
-                detteBucket: getDetteBucket(d.detteTechnique),
-                mepBucket: getMepBucket(d.distanceCount)
-            }))
-            .sort((a, b) => b.critical - a.critical)
-            .slice(0, topN);
+    // Top N applications avec CVE critiques
+    const apps = data
+        .filter(d => !d.isModule && Number.parseInt(d.nbCveCritical ?? "0", 10) > 0)
+        .map(d => ({
+            name: d.applicationName,
+            critical: Number.parseInt(d.nbCveCritical ?? "0", 10),
+            high: Number.parseInt(d.nbCveHigh ?? "0", 10),
+            medium: Number.parseInt(d.nbCveMedium ?? "0", 10),
+            low: Number.parseInt(d.nbCveLow ?? "0", 10),
+            detteBucket: getDetteBucket(d.detteTechnique),
+            mepBucket: getMepBucket(d.distanceCount)
+        }))
+        .sort((a, b) => b.critical - a.critical)
+        .slice(0, topN);
 
-        return apps.map(app => ({
-            name: app.name,
-            value: app.critical,
-            itemStyle: {
-                color:
-                    colorMetric === "dette" ? DETTE_COLORS[app.detteBucket] : MEP_COLORS[app.mepBucket]
-            },
-            tooltip: {
-                formatter: () => {
-                    const bucket = colorMetric === "dette" ? app.detteBucket : app.mepBucket;
-                    const metricLabel = colorMetric === "dette" ? "Dette tech." : "Dernière MEP";
-                    return `
+    const chartData = apps.map(app => ({
+        name: app.name,
+        value: app.critical,
+        itemStyle: {
+            color: colorMetric === "dette" ? DETTE_COLORS[app.detteBucket] : MEP_COLORS[app.mepBucket]
+        },
+        tooltip: {
+            formatter: () => {
+                const bucket = colorMetric === "dette" ? app.detteBucket : app.mepBucket;
+                const metricLabel = colorMetric === "dette" ? "Dette tech." : "Dernière MEP";
+                return `
                         <strong>${app.name}</strong><br/>
                         CVE Critiques: <strong>${app.critical}</strong><br/>
                         CVE Élevées: <strong>${app.high}</strong><br/>
@@ -96,71 +93,9 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
                         <hr style="margin: 4px 0;"/>
                         ${metricLabel}: <strong>${bucket}</strong>
                     `;
-                }
             }
-        }));
-    }, [data, topN, colorMetric]);
-
-    const option: EChartsOption = useMemo(
-        () => ({
-            backgroundColor: "transparent",
-            tooltip: {
-                trigger: "item",
-                backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                borderColor: isDark ? "#444" : "#ddd",
-                textStyle: {
-                    color: isDark ? "#fff" : "#000"
-                }
-            },
-            series: [
-                {
-                    type: "treemap",
-                    data: chartData,
-                    left: "2%",
-                    right: "2%",
-                    top: "2%",
-                    bottom: "2%",
-                    roam: false,
-                    nodeClick: false,
-                    breadcrumb: {
-                        show: false
-                    },
-                    label: {
-                        show: true,
-                        formatter: "{b}\n{c}",
-                        color: "#fff",
-                        fontWeight: "bold",
-                        fontSize: 11,
-                        overflow: "truncate"
-                    },
-                    itemStyle: {
-                        borderColor: isDark ? "#121212" : "#fff",
-                        borderWidth: 2,
-                        gapWidth: 2
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 13
-                        },
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowColor: "rgba(0,0,0,0.5)"
-                        }
-                    },
-                    levels: [
-                        {
-                            itemStyle: {
-                                borderWidth: 0,
-                                gapWidth: 2
-                            }
-                        }
-                    ]
-                }
-            ]
-        }),
-        [chartData, isDark]
-    );
+        }
+    }));
 
     const legendColors = colorMetric === "dette" ? DETTE_COLORS : MEP_COLORS;
 
@@ -184,7 +119,63 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
             </Box>
 
             <ReactECharts
-                option={option}
+                option={{
+                    backgroundColor: "transparent",
+                    tooltip: {
+                        trigger: "item",
+                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                        borderColor: isDark ? "#444" : "#ddd",
+                        textStyle: {
+                            color: isDark ? "#fff" : "#000"
+                        }
+                    },
+                    series: [
+                        {
+                            type: "treemap",
+                            data: chartData,
+                            left: "2%",
+                            right: "2%",
+                            top: "2%",
+                            bottom: "2%",
+                            roam: false,
+                            nodeClick: false,
+                            breadcrumb: {
+                                show: false
+                            },
+                            label: {
+                                show: true,
+                                formatter: "{b}\n{c}",
+                                color: "#fff",
+                                fontWeight: "bold",
+                                fontSize: 11,
+                                overflow: "truncate"
+                            },
+                            itemStyle: {
+                                borderColor: isDark ? "#121212" : "#fff",
+                                borderWidth: 2,
+                                gapWidth: 2
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: 13
+                                },
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowColor: "rgba(0,0,0,0.5)"
+                                }
+                            },
+                            levels: [
+                                {
+                                    itemStyle: {
+                                        borderWidth: 0,
+                                        gapWidth: 2
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }}
                 style={{ height: "400px", width: "100%" }}
                 opts={{ renderer: "canvas" }}
             />

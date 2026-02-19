@@ -1,5 +1,5 @@
 import type { IndicateurApplicationMaturite } from "models/indicateurs";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useFilterContext } from "store/filterContext";
 import { bottom3ByPriority, computeConseil, fetchMaturiteData, fetchTipsData } from "./maturite-config";
 import { Filters } from "pages/Filters";
@@ -31,6 +31,8 @@ export default function MaturiteCloud() {
             try {
                 const result = await fetchMaturiteData();
                 setMaturiteData(result);
+            } catch (error) {
+                console.error("Erreur fetchMaturiteData:", error);
             } finally {
                 setLoading(false);
             }
@@ -46,25 +48,14 @@ export default function MaturiteCloud() {
         loadTips();
     }, [selectedApp]);
 
-    const filteredData = useMemo(
-        () => maturiteData.filter(item => applyDevFilters(item, state)),
-        [maturiteData, state]
-    );
+    const filteredData = maturiteData.filter(item => applyDevFilters(item, state));
 
-    const tipsTechTop3 = useMemo(() => bottom3ByPriority(tips.filter(t => t.sourceId === 1)), [tips]);
-    const tipsOrgaTop3 = useMemo(() => bottom3ByPriority(tips.filter(t => t.sourceId === 2)), [tips]);
+    const tipsTechTop3 = bottom3ByPriority(tips.filter(t => t.sourceId === 1));
+    const tipsOrgaTop3 = bottom3ByPriority(tips.filter(t => t.sourceId === 2));
 
-    const conseil: {
-        favorable: boolean;
-        texte: string;
-    } | null = useMemo(() => {
-        if (!selectedApp) return null;
-        return computeConseil(
-            selectedApp.maturite,
-            selectedApp.scoreBenefice,
-            selectedApp.scoreComplexite
-        );
-    }, [selectedApp]);
+    const conseil = selectedApp
+        ? computeConseil(selectedApp.maturite, selectedApp.scoreBenefice, selectedApp.scoreComplexite)
+        : null;
 
     return (
         <Fragment>

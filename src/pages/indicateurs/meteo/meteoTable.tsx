@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications1, getHistory } from "todos-api/client.gen";
 import {
@@ -39,12 +39,12 @@ export const MeteoTable = () => {
         staleTime: 0
     });
 
-    const data = useMemo(() => queryResult?.data ?? [], [queryResult?.data]);
-    const months = useMemo(() => queryResult?.months ?? [], [queryResult?.months]);
+    const data = queryResult?.data ?? [];
+    const months = queryResult?.months ?? [];
 
-    const columns = useMemo(() => columnsMeteo(months), [months]);
+    const columns = columnsMeteo(months);
 
-    const filteredData = useMemo(() => data.filter(item => applyDevFilters(item, state)), [data, state]);
+    const filteredData = data.filter(item => applyDevFilters(item, state));
 
     return (
         <TablePageLayout

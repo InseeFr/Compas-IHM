@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useFilterContext } from "store/filterContext";
 import {
     getIndicateurQualiteByApplication,
@@ -21,11 +20,11 @@ import { columnsGlobal, paginationConfig } from "./main-config";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Filters } from "pages/Filters";
 import { onExport } from "./csvexport";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 export const MainIndicator = () => {
     const { state, dispatch } = useFilterContext();
-    const columns = useMemo(() => columnsGlobal(), []);
+    const columns = columnsGlobal();
 
     const fetchData = async () => {
         const [
@@ -81,7 +80,7 @@ export const MainIndicator = () => {
         return [...formattedApplications, ...formattedModulesData];
     };
 
-    const { data, modulesByApp, isLoading, filteredData } = UseQueryIndicators({
+    const { data, modulesByApp, isLoading, filteredData } = useQueryIndicators({
         queryKey: ["GlobalIndicator"],
         fetchData,
         hasModules: true

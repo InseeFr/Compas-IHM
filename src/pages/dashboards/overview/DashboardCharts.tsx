@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Grid, CircularProgress, Divider, useTheme, Typography } from "@mui/material";
 import {
     BuildCircleOutlined,
@@ -113,21 +113,14 @@ const DashboardCharts = () => {
     }, []);
 
     // Filtrage des données
-    const filteredData = useMemo(
-        () => globalInd.filter(item => applyDevFilters(item, state)),
-        [globalInd, state]
-    );
-
+    const filteredData = globalInd.filter(item => applyDevFilters(item, state));
     // Calculs des KPIs
-    const kpis = useMemo(
-        () => ({
-            maturiteCloud: calculateMaturiteStrongPct(filteredData),
-            detteCumulee: calculateDetteCumulee(filteredData),
-            cveCritiques: calculateTotalCriticalCve(filteredData),
-            appsSansMep: countAppsSinceLastMep(filteredData, 30)
-        }),
-        [filteredData]
-    );
+    const kpis = {
+        maturiteCloud: calculateMaturiteStrongPct(filteredData),
+        detteCumulee: calculateDetteCumulee(filteredData),
+        cveCritiques: calculateTotalCriticalCve(filteredData),
+        appsSansMep: countAppsSinceLastMep(filteredData, 30)
+    };
 
     if (loading) {
         return (
@@ -234,16 +227,16 @@ const DashboardCharts = () => {
                     </Grid>
                 </ChartCard>
                 <Typography
-                        variant="body2"
-                        sx={{
-                            textAlign: "right",
-                            color: "text.primary",
-                            mb: 3,
-                            mt: 2
-                        }}
-                    >
-                        💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
-                    </Typography>
+                    variant="body2"
+                    sx={{
+                        textAlign: "right",
+                        color: "text.primary",
+                        mb: 3,
+                        mt: 2
+                    }}
+                >
+                    💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
+                </Typography>
             </Box>
 
             <Divider sx={{ my: 6, opacity: 0.3 }} />

@@ -6,6 +6,10 @@
     { "file": "indicateurs-greenIt", "page": "Les indicateurs green It", "parent": "Indicateurs" },
     { "file": "indicateurs-meteo", "page": "Les indicateurs météo", "parent": "Indicateurs" },
     { "file": "indicateurs-a11y", "page": "Les indicateurs d'accessibilité", "parent": "Indicateurs" },
-    { "file": "indicateurs-maturite", "page": "Les indicateurs maturité Cloud", "parent": "Indicateurs" },
+    {
+        "file": "indicateurs-maturite",
+        "page": "Les indicateurs maturité Cloud",
+        "parent": "Indicateurs"
+    },
     { "file": "NR-et-SO", "page": "A quoi correspondent NR et SO ?", "parent": "Indicateurs" }
 ]

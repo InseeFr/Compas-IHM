@@ -1,15 +1,14 @@
-import { useMemo } from "react";
 import { useFilterContext } from "store/filterContext";
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./qualiteConfig";
 import { getIndicateurQualiteByApplication, getIndicateurQualiteByModule } from "todos-api/client.gen";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Filters } from "pages/Filters";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 const QualiteIndicateurTable = () => {
     const { state, dispatch } = useFilterContext();
-    const columns = useMemo(() => columnsTable(), []);
+    const columns = columnsTable();
 
     const fetchData = async () => {
         try {
@@ -25,7 +24,7 @@ const QualiteIndicateurTable = () => {
         }
     };
 
-    const { data, isLoading, modulesByApp, filteredData } = UseQueryIndicators({
+    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
         queryKey: ["QualiteIndicator"],
         fetchData,
         hasModules: true

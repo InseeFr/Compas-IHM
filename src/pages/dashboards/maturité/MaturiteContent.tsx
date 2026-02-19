@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { alpha, Box, Chip, Divider, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
 import { green, grey, red } from "@mui/material/colors";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
@@ -43,39 +42,37 @@ interface TipsBlockProps {
 }
 
 function useNormalizedMaturite(selectedApp: IndicateurApplicationMaturite | null): NormalizedMaturite {
-    return useMemo(() => {
-        if (!selectedApp) {
-            return {
-                scoreTechnique: 0,
-                scoreOrga: 0,
-                scoreComplexite: 0,
-                scoreBenefice: 0,
-                progressionDeploy: 0,
-                progressionArchi: 0,
-                progressionTechnos: 0,
-                progressionCloud: 0,
-                progressionDevops: 0,
-                progressionMateqip: 0,
-                maturite: null,
-                robustesse: "0"
-            };
-        }
-
+    if (!selectedApp) {
         return {
-            scoreTechnique: formatNum(selectedApp.scoreTechnique, 0),
-            scoreOrga: formatNum(selectedApp.scoreOrga, 0),
-            scoreComplexite: formatNum(selectedApp.scoreComplexite, 0),
-            scoreBenefice: formatNum(selectedApp.scoreBenefice, 0),
-            progressionDeploy: clamp01(formatNum(selectedApp.progressionDeploy, 0)),
-            progressionArchi: clamp01(formatNum(selectedApp.progressionArchi, 0)),
-            progressionTechnos: clamp01(formatNum(selectedApp.progressionTechnos, 0)),
-            progressionCloud: clamp01(formatNum(selectedApp.progressionCloud, 0)),
-            progressionDevops: clamp01(formatNum(selectedApp.progressionDevops, 0)),
-            progressionMateqip: clamp01(formatNum(selectedApp.progressionMateqip, 0)),
-            maturite: selectedApp.maturite ?? null,
-            robustesse: selectedApp.robustesse ?? "0"
+            scoreTechnique: 0,
+            scoreOrga: 0,
+            scoreComplexite: 0,
+            scoreBenefice: 0,
+            progressionDeploy: 0,
+            progressionArchi: 0,
+            progressionTechnos: 0,
+            progressionCloud: 0,
+            progressionDevops: 0,
+            progressionMateqip: 0,
+            maturite: null,
+            robustesse: "0"
         };
-    }, [selectedApp]);
+    }
+
+    return {
+        scoreTechnique: formatNum(selectedApp.scoreTechnique, 0),
+        scoreOrga: formatNum(selectedApp.scoreOrga, 0),
+        scoreComplexite: formatNum(selectedApp.scoreComplexite, 0),
+        scoreBenefice: formatNum(selectedApp.scoreBenefice, 0),
+        progressionDeploy: clamp01(formatNum(selectedApp.progressionDeploy, 0)),
+        progressionArchi: clamp01(formatNum(selectedApp.progressionArchi, 0)),
+        progressionTechnos: clamp01(formatNum(selectedApp.progressionTechnos, 0)),
+        progressionCloud: clamp01(formatNum(selectedApp.progressionCloud, 0)),
+        progressionDevops: clamp01(formatNum(selectedApp.progressionDevops, 0)),
+        progressionMateqip: clamp01(formatNum(selectedApp.progressionMateqip, 0)),
+        maturite: selectedApp.maturite ?? null,
+        robustesse: selectedApp.robustesse ?? "0"
+    };
 }
 
 function ScoreBox({ value }: Readonly<{ value: number }>) {
@@ -93,7 +90,8 @@ function ScoreBox({ value }: Readonly<{ value: number }>) {
                 bgcolor: isDark ? alpha(grey[800], 0.4) : "background.paper",
                 minWidth: 64,
                 textAlign: "center",
-                boxShadow: t => `0 0 0 2px ${alpha(isDark ? t.palette.grey[700] : t.palette.common.black, 0.04)} inset`
+                boxShadow: t =>
+                    `0 0 0 2px ${alpha(isDark ? t.palette.grey[700] : t.palette.common.black, 0.04)} inset`
             }}
         >
             {value.toFixed(2)}
@@ -292,7 +290,8 @@ export function ConseilComplexity({
                 width: "100%",
                 maxWidth: 680,
                 borderRadius: 2,
-                bgcolor: t => alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.15 : 0.08),
+                bgcolor: t =>
+                    alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.15 : 0.08),
                 borderLeft: `4px solid ${borderColor}`
             }}
         >
@@ -310,10 +309,8 @@ function TipsBlock({ title, items, loading = false, error = null }: Readonly<Tip
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
 
-    const messages = useMemo(() => {
-        const texts = items.map(t => (t.conseil ?? "").trim()).filter(Boolean);
-        return Array.from(new Set(texts));
-    }, [items]);
+    const texts = items.map(t => (t.conseil ?? "").trim()).filter(Boolean);
+    const messages = Array.from(new Set(texts));
 
     return (
         <Stack spacing={1}>
@@ -340,8 +337,13 @@ function TipsBlock({ title, items, loading = false, error = null }: Readonly<Tip
                     sx={{
                         p: 1,
                         borderRadius: 1.5,
-                        bgcolor: t => alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.12 : 0.06),
-                        borderLeft: t => `3px solid ${alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.8 : 0.6)}`
+                        bgcolor: t =>
+                            alpha(
+                                isDark ? t.palette.info.light : t.palette.info.main,
+                                isDark ? 0.12 : 0.06
+                            ),
+                        borderLeft: t =>
+                            `3px solid ${alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.8 : 0.6)}`
                     }}
                 >
                     <Stack spacing={0.75}>

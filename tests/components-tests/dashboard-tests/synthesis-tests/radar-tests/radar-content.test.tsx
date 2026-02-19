@@ -30,8 +30,9 @@ vi.mock("pages/dashboards/applications/RadarChart/radar-config", () => ({
     avgArrays: vi.fn((rows: number[][]) => {
         if (rows.length === 0) return [0, 0, 0, 0, 0, 0];
         const len = rows[0].length;
-        return Array.from({ length: len }, (_, i) =>
-            rows.reduce((sum, r) => sum + r[i], 0) / rows.length
+        return Array.from(
+            { length: len },
+            (_, i) => rows.reduce((sum, r) => sum + r[i], 0) / rows.length
         );
     }),
     scoreToLetter: vi.fn((val: number) => {
@@ -105,27 +106,21 @@ describe("RadarQualiteChart", () => {
         });
 
         it("devrait appeler dispose au démontage", () => {
-            const { unmount } = render(
-                <RadarQualiteChart app={mockApp} population={mockPopulation} />
-            );
+            const { unmount } = render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
             unmount();
             expect(mockDispose).toHaveBeenCalledTimes(1);
         });
 
         it("devrait afficher l'indice d'utilisation de la légende", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
-            expect(
-                screen.getByText(/Cliquez sur les carrés de la légende/i)
-            ).toBeInTheDocument();
+            expect(screen.getByText(/Cliquez sur les carrés de la légende/i)).toBeInTheDocument();
         });
     });
 
     // -----------------------------------------------------------------------
     describe("Option ECharts — title", () => {
         it("devrait inclure le titre quand la prop title est fournie", () => {
-            render(
-                <RadarQualiteChart app={mockApp} population={mockPopulation} title="Mon radar" />
-            );
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} title="Mon radar" />);
             const option = getCapturedOption();
             expect(option.title).toBeDefined();
             expect(option.title.text).toBe("Mon radar");
@@ -205,9 +200,9 @@ describe("RadarQualiteChart", () => {
             const { formatter } = getCapturedOption().tooltip;
             // [4, 3, 2, 5, 1, 4] → scoreToLetter mock : B, C, D, A, E, B
             const html = formatter({ seriesName: "App1", value: [4, 3, 2, 5, 1, 4] });
-            expect(html).toContain("(B)");  // 4 → B
-            expect(html).toContain("(A)");  // 5 → A
-            expect(html).toContain("(E)");  // 1 → E
+            expect(html).toContain("(B)"); // 4 → B
+            expect(html).toContain("(A)"); // 5 → A
+            expect(html).toContain("(E)"); // 1 → E
         });
     });
 

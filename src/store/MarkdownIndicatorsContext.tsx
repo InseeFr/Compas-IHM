@@ -15,10 +15,10 @@ export const MarkdownProvider = ({ children }: { children: ReactNode }) => {
             .then(setMarkdowns)
             .catch(err => console.error("Erreur lors de la récupération des markdowns", err));
     }, []);
-
-    const memoMarkdowns = useMemo(() => ({ markdowns }), [markdowns]);
-
-    return <MarkdownContext.Provider value={memoMarkdowns}>{children}</MarkdownContext.Provider>;
+    const values = useMemo(() => {
+        return { markdowns };
+    }, [markdowns]);
+    return <MarkdownContext.Provider value={values}>{children}</MarkdownContext.Provider>;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

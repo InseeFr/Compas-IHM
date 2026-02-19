@@ -2,8 +2,8 @@
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteEnvs } from "vite-envs";
-import reactSwc from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-vite-plugin";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
     plugins: [
@@ -11,7 +11,11 @@ export default defineConfig({
             target: "react",
             autoCodeSplitting: true
         }),
-        reactSwc(),
+        react({
+            babel: {
+                plugins: ["babel-plugin-react-compiler"]
+            }
+        }),
         tsconfigPaths(),
         viteEnvs({
             declarationFile: ".env"

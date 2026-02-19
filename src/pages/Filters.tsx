@@ -1,6 +1,5 @@
 import type { AllIndicators } from "models/indicateurs";
 import { SelectedFiltersLayout } from "components/SelectedFiltersLayout";
-import { useMemo } from "react";
 import type { Action, FilterState } from "store/filterContext";
 
 interface FiltersProps {
@@ -12,29 +11,23 @@ interface FiltersProps {
 export const Filters = (props: Readonly<FiltersProps>) => {
     const { data, state, dispatch } = props;
 
-    const filteredForService = useMemo(() => {
-        return data.filter(
-            item =>
-                (!state.domaineDev || item.domaine === state.domaineDev) &&
-                (!state.domaineFonc || item.domaineFonc === state.domaineFonc)
-        );
-    }, [data, state.domaineDev, state.domaineFonc]);
+    const filteredForService = data.filter(
+        item =>
+            (!state.domaineDev || item.domaine === state.domaineDev) &&
+            (!state.domaineFonc || item.domaineFonc === state.domaineFonc)
+    );
 
-    const filteredForDomaine = useMemo(() => {
-        return data.filter(
-            item =>
-                (!state.serviceDev || item.sndi === state.serviceDev) &&
-                (!state.domaineFonc || item.domaineFonc === state.domaineFonc)
-        );
-    }, [data, state.serviceDev, state.domaineFonc]);
+    const filteredForDomaine = data.filter(
+        item =>
+            (!state.serviceDev || item.sndi === state.serviceDev) &&
+            (!state.domaineFonc || item.domaineFonc === state.domaineFonc)
+    );
 
-    const filteredForDomaineFonc = useMemo(() => {
-        return data.filter(
-            item =>
-                (!state.serviceDev || item.sndi === state.serviceDev) &&
-                (!state.domaineDev || item.domaine === state.domaineDev)
-        );
-    }, [data, state.serviceDev, state.domaineDev]);
+    const filteredForDomaineFonc = data.filter(
+        item =>
+            (!state.serviceDev || item.sndi === state.serviceDev) &&
+            (!state.domaineDev || item.domaine === state.domaineDev)
+    );
 
     return (
         <SelectedFiltersLayout

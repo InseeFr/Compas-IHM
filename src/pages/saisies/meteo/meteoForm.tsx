@@ -1,6 +1,6 @@
 import { Alert, TextField } from "@mui/material";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 import { MainFormPageLayout } from "components/formsPageLayout/MainPageLayout";
@@ -39,7 +39,7 @@ export function MeteoForm() {
         fetchData();
     }, []);
 
-    const filteredData = useMemo(() => apps.filter(item => applyDevFilters(item, state)), [apps, state]);
+    const filteredData = apps.filter(item => applyDevFilters(item, state));
     const defaultValues: DemandeCreationMeteo = {
         valeurMeteo: 4,
         idsApplication: [],

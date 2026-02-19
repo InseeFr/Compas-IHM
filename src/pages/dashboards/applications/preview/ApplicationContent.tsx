@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
     Button,
     Box,
@@ -81,14 +82,21 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
         >
             <Box display="flex" justifyContent="space-between">
                 <Box sx={{ my: 2, borderColor: theme.palette.divider }}>
-                    <Typography variant="h4" gutterBottom color="secondary">
-                        Rapport d'application : {appDetails.applicationName}
+                    <Typography
+                        variant="h2"
+                        fontSize={40}
+                        gutterBottom
+                        color="secondary"
+                        aria-label={`Rapport d'application : ${appDetails.applicationName}`}
+                        tabIndex={0}
+                    >
+                        Rapport d&apos;application : {appDetails.applicationName}
                     </Typography>
 
-                    <Typography variant="subtitle1">
+                    <Typography tabIndex={0}>
                         <strong>SNDI :</strong> {appDetails.sndi ?? "NR"}
                     </Typography>
-                    <Typography variant="subtitle1">
+                    <Typography tabIndex={0}>
                         <strong>Domaine fonctionnel :</strong> {appDetails.domaineFonc ?? "NR"}
                     </Typography>
                 </Box>
@@ -107,7 +115,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h3" tabIndex={0} fontSize={32} gutterBottom>
                 Indicateurs & Interprétations
             </Typography>
 
@@ -159,6 +167,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                     <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mt={2}>
                         {indicateurs.map(item => (
                             <Box
+                                tabIndex={0}
                                 key={item.titre}
                                 sx={{
                                     p: 2,
@@ -174,7 +183,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                                             : `0 1px 3px ${alpha(theme.palette.common.black, 0.1)}`
                                 }}
                             >
-                                <Typography variant="subtitle1" fontWeight="bold">
+                                <Typography fontWeight="bold">
                                     {item.titre} : {item.valeur}
                                 </Typography>
                                 <Typography variant="body2" mt={0.5}>
@@ -187,7 +196,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
             })()}
 
             <Box mt={4}>
-                <Typography variant="body2" fontStyle="italic">
+                <Typography variant="body2" fontStyle="italic" tabIndex={0}>
                     Ce rapport met en évidence les principaux leviers de progression pour{" "}
                     {appDetails.applicationName}.
                 </Typography>
@@ -195,13 +204,13 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h3" fontSize={32} gutterBottom tabIndex={0}>
                 Modules associés
             </Typography>
             <Box component="ul" sx={{ pl: 2 }}>
                 {modules.map(mod => (
                     <li key={mod.name}>
-                        <Typography>
+                        <Typography tabIndex={0}>
                             <strong>{mod.name}</strong> – Qualité: {mod.qualite ?? "NR"}, Dette:{" "}
                             {typeof mod.dette === "number" && mod.dette >= 0
                                 ? (mod.dette / 420).toFixed(1) + " j"
@@ -214,9 +223,8 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
 
             <Divider sx={{ my: 3 }} />
 
-            <Typography variant="body2" fontStyle="italic" color="textSecondary">
-                Rapport généré automatiquement depuis COMPAS
-                consolidées.
+            <Typography variant="body2" fontStyle="italic" color="textSecondary" tabIndex={0}>
+                Rapport généré automatiquement depuis COMPAS consolidées.
             </Typography>
         </Box>
     );

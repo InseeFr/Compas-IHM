@@ -1,5 +1,5 @@
 import type { ViewMode } from "constantes/constantes";
-import { useMemo, useState, Fragment } from "react";
+import { useState, Fragment } from "react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications, getApplications1 } from "todos-api/client.gen";
 import {
@@ -13,12 +13,12 @@ import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { Filters } from "pages/Filters";
-import { UseQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "utils/useQueryIndicators";
 
 export const GreenItTable = () => {
     const { state, dispatch } = useFilterContext();
     const [viewMode, setViewMode] = useState<ViewMode>("global");
-    const columns = useMemo(() => columnsGreenIt(), []);
+    const columns = columnsGreenIt();
 
     const fetchData = async () => {
         try {
@@ -32,7 +32,7 @@ export const GreenItTable = () => {
         }
     };
 
-    const { data, isLoading, filteredData } = UseQueryIndicators({
+    const { data, isLoading, filteredData } = useQueryIndicators({
         queryKey: ["GreenItIndicator"],
         fetchData,
         hasModules: false

@@ -1,12 +1,12 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import Ariane from "components/Ariane";
-import { type ReactNode } from "react";
+import { type ReactNode, type SubmitEventHandler } from "react";
 import "styles/formulaire.css";
 
 interface MainFormPageLayoutProps {
     title: string;
     formulaires: ReactNode;
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: SubmitEventHandler<HTMLFormElement>;
     reset: () => void;
     filtres: ReactNode;
 }
@@ -16,7 +16,13 @@ export function MainFormPageLayout(props: Readonly<MainFormPageLayoutProps>) {
         <div className="main-div">
             <Ariane items={[{ nav: props.title, link: "" }]} />
             <Paper className="main-paper">
-                <Typography variant="h4" className="main-title" tabIndex={0} aria-label={props.title}>
+                <Typography
+                    variant="h1"
+                    fontSize={40}
+                    className="main-title"
+                    tabIndex={0}
+                    aria-label={props.title}
+                >
                     {props.title}
                 </Typography>
 
