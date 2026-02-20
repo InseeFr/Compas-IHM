@@ -8,20 +8,17 @@ import * as qualiteConfig from "pages/indicateurs/qualité/qualiteConfig";
 import * as groupModuleUtils from "utils/group-module-by-apps";
 import { useQueryIndicators } from "utils/useQueryIndicators";
 
-// ----- Mocks -----
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
 }));
 
-vi.mock("@tanstack/react-router", async () => {
-    return {
-        Link: ({ to, children, ...rest }: any) => (
-            <a href={to} {...rest}>
-                {children}
-            </a>
-        )
-    };
-});
+vi.mock("@tanstack/react-router", () => ({
+    Link: ({ to, children, ...rest }: any) => (
+        <a href={to} {...rest}>
+            {children}
+        </a>
+    )
+}));
 
 vi.mock("todos-api/client.gen", () => ({
     getIndicateurQualiteByApplication: vi.fn(),
@@ -49,27 +46,26 @@ vi.mock("components/ButtonCsvExport", () => ({
 
 vi.mock("pages/indicateurs/qualité/qualiteConfig", () => ({
     columnsTable: vi.fn(() => []),
-    formatIndicateur: vi.fn((x: any) => x),
+    formatIndicateur: vi.fn((x: any, isModule = false) => ({ ...x, isModule })),
     OnExport: vi.fn(),
     paginationConfig: {}
 }));
 
-// ----- Données Mock -----
-const mockApps = [{ applicationName: "App1", sndi: "S1", domaineSndi: "D1" }];
-const mockModules = [
-    {
-        applicationName: "App1",
-        moduleName: "Mod1",
-        sndi: "S1",
-        domaineSndi: "D1",
-        isModule: true,
-        parentApplication: "App1"
-    }
-];
+vi.mock("pages/Filters", () => ({
+    Filters: () => <div data-testid="filters" />
+}));
 
 vi.mock("utils/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
+
+const mockApps = [
+    { applicationName: "App1", sndi: "S1", domaineSndi: "D1", isModule: false },
+    { applicationName: "App2", sndi: "S2", domaineSndi: "D2", isModule: false }
+];
+const mockModules = [
+    { applicationName: "Mod1", sndi: "S1", domaineSndi: "D1", isModule: true, parentApplication: "App1" }
+];
 
 describe("QualiteIndicateurTable", () => {
     const stateMock = {};
@@ -91,7 +87,7 @@ describe("QualiteIndicateurTable", () => {
         });
     });
 
-    it("renders applications and modules", async () => {
+    it("affiche les applications (hors modules) après le fetch", async () => {
         render(<QualiteIndicateurTable />);
 
         await waitFor(() => {
@@ -101,7 +97,34 @@ describe("QualiteIndicateurTable", () => {
         expect(screen.queryByText("Mod1")).toBeNull();
     });
 
-    it("calls OnExport when clicking Export CSV button", async () => {
+    it("affiche un état de chargement (isLoading = true)", () => {
+        (useQueryIndicators as any).mockReturnValue({
+            data: [],
+            filteredData: [],
+            modulesByApp: {},
+            isLoading: true
+        });
+
+        render(<QualiteIndicateurTable />);
+
+        expect(screen.queryByText("App1")).toBeNull();
+    });
+
+    it("affiche une liste vide si filteredData est vide", () => {
+        (useQueryIndicators as any).mockReturnValue({
+            data: [],
+            filteredData: [],
+            modulesByApp: {},
+            isLoading: false
+        });
+
+        render(<QualiteIndicateurTable />);
+
+        expect(screen.queryByText("App1")).toBeNull();
+        expect(screen.queryByText("Mod1")).toBeNull();
+    });
+
+    it("appelle OnExport avec la table quand on clique sur Export CSV", async () => {
         render(<QualiteIndicateurTable />);
 
         const exportButton = await screen.findByText("Export CSV");
@@ -110,23 +133,63 @@ describe("QualiteIndicateurTable", () => {
         expect(qualiteConfig.OnExport).toHaveBeenCalledWith("mockTable");
     });
 
-    it("gère une erreur lors du fetch des indicateurs qualité", async () => {
-        const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    it("fetchData appelle les deux endpoints et formate les résultats", async () => {
+        let capturedFetchData: (() => Promise<any>) | undefined;
 
-        (useQueryIndicators as any).mockReturnValue({
-            data: undefined,
-            filteredData: [],
-            modulesByApp: {},
-            isLoading: false
+        (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
+            capturedFetchData = fetchData;
+            return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
         });
 
         render(<QualiteIndicateurTable />);
 
-        expect(qualiteConfig.formatIndicateur).not.toHaveBeenCalled();
+        const result = await capturedFetchData!();
 
-        expect(screen.queryByText("App1")).toBeNull();
-        expect(screen.queryByText("Mod1")).toBeNull();
+        expect(clientApi.getIndicateurQualiteByApplication).toHaveBeenCalledOnce();
+        expect(clientApi.getIndicateurQualiteByModule).toHaveBeenCalledOnce();
+        expect(qualiteConfig.formatIndicateur).toHaveBeenCalledTimes(
+            mockApps.length + mockModules.length
+        );
+        // Les modules sont formatés avec isModule = true
+        expect(qualiteConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], true);
+        // Le résultat concatène apps + modules
+        expect(result).toHaveLength(mockApps.length + mockModules.length);
+    });
+
+    it("fetchData retourne undefined et log une erreur si le fetch échoue", async () => {
+        const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+        const fetchError = new Error("Network error");
+
+        (clientApi.getIndicateurQualiteByApplication as any).mockRejectedValue(fetchError);
+
+        let capturedFetchData: (() => Promise<any>) | undefined;
+
+        (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
+            capturedFetchData = fetchData;
+            return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
+        });
+
+        render(<QualiteIndicateurTable />);
+
+        const result = await capturedFetchData!();
+
+        expect(result).toBeUndefined();
+        expect(consoleSpy).toHaveBeenCalledWith(
+            "Erreur lors de la récupération des données qualité: ",
+            fetchError
+        );
 
         consoleSpy.mockRestore();
+    });
+
+    it("useQueryIndicators est appelé avec le bon queryKey et hasModules", () => {
+        render(<QualiteIndicateurTable />);
+
+        expect(useQueryIndicators).toHaveBeenCalledWith(
+            expect.objectContaining({
+                queryKey: ["QualiteIndicator"],
+                hasModules: true
+            })
+        );
     });
 });

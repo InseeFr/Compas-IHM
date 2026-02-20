@@ -6,8 +6,26 @@ import {
     paginationConfig,
     sortHelper
 } from "pages/indicateurs/main-indicator/main-config";
-import type { MRT_Cell, MRT_Row } from "material-react-table";
+import type { MRT_Cell, MRT_Row, MRT_RowData, MRT_TableInstance } from "material-react-table";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
+import { escapeCsvValue, flattenRows, formatMainCsvRow, handleExportCsv } from "utils/exportCsv";
+import { onExport } from "pages/indicateurs/main-indicator/csvexport";
+import { CSV_HEADERS } from "constantes/constantes-headers";
+
+vi.mock("utils/exportCsv", () => ({
+    handleExportCsv: vi.fn(),
+    escapeCsvValue: vi.fn(val => val),
+    flattenRows: vi.fn(),
+    formatMainCsvRow: vi.fn()
+}));
+
+vi.mock("constantes/constantes-headers", async importOriginal => {
+    const actual = await importOriginal<typeof import("constantes/constantes-headers")>();
+    return {
+        ...actual,
+        CSV_HEADERS: ["Colonne 1", "Colonne 2", "Colonne 3"]
+    };
+});
 
 describe("paginationConfig", () => {
     it("définit la configuration de pagination par défaut", () => {
@@ -473,5 +491,62 @@ describe("sortHelper sans mock", () => {
 
         expect((sortHelper as any)(a, b)).toBeLessThan(0);
         expect((sortHelper as any)(b, a)).toBeGreaterThan(0);
+    });
+});
+
+describe("onExport", () => {
+    const mockRows = [
+        { id: "1", original: { name: "Indicateur A" } },
+        { id: "2", original: { name: "Indicateur B" } }
+    ] as unknown as MRT_Row<GlobalIndicator>[];
+
+    const mockTable = {
+        getExpandedRowModel: vi.fn(() => ({ rows: mockRows }))
+    } as unknown as MRT_TableInstance<GlobalIndicator>;
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        vi.mocked(flattenRows).mockReturnValue(mockRows as unknown as MRT_Row<MRT_RowData>[]);
+        vi.mocked(formatMainCsvRow).mockImplementation(row => `csv-row-${row.id}`);
+    });
+
+    it("échappe les headers CSV", () => {
+        onExport(mockTable);
+
+        expect(escapeCsvValue).toHaveBeenCalledTimes(CSV_HEADERS.length);
+        CSV_HEADERS.forEach(header => {
+            expect(escapeCsvValue).toHaveBeenCalledWith(header, expect.any(Number), expect.any(Array));
+        });
+    });
+
+    it("récupère les lignes expandées et les aplatit", () => {
+        onExport(mockTable);
+
+        expect(mockTable.getExpandedRowModel).toHaveBeenCalled();
+        expect(flattenRows).toHaveBeenCalledWith(mockRows);
+    });
+
+    it("formate chaque ligne en CSV", () => {
+        onExport(mockTable);
+
+        expect(formatMainCsvRow).toHaveBeenCalledTimes(mockRows.length);
+        mockRows.forEach(row => {
+            expect(formatMainCsvRow).toHaveBeenCalledWith(row);
+        });
+    });
+
+    it("appelle handleExportCsv avec les bons arguments", () => {
+        onExport(mockTable);
+
+        const expectedCsvData = mockRows.map(row => `csv-row-${row.id}`);
+        const expectedHeaders = CSV_HEADERS.map(h => h);
+
+        expect(handleExportCsv).toHaveBeenCalledOnce();
+        expect(handleExportCsv).toHaveBeenCalledWith(
+            "indicateurs-globaux",
+            mockTable,
+            expectedCsvData,
+            expectedHeaders
+        );
     });
 });

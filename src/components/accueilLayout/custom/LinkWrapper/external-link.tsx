@@ -5,7 +5,7 @@ interface ExternalLinkProps {
 
 export default function ExternalLink({ href, children }: Readonly<ExternalLinkProps>) {
     return (
-        <a href={href} target="_blank" rel="noreferrer noopener">
+        <a href={href} target="_blank" rel="noreferrer noopener" data-testid={"external-link"}>
             {children}
         </a>
     );
