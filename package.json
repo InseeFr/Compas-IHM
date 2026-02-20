@@ -34,7 +34,7 @@
         "echarts": "^6.0.0",
         "echarts-for-react": "^3.0.5",
         "html2canvas": "^1.4.1",
-        "jspdf": "4.1.0",
+        "jspdf": "4.2.0",
         "material-react-table": "^3.2.1",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
@@ -56,7 +56,7 @@
         "@vitejs/plugin-react": "^5.1.4",
         "@vitest/coverage-v8": "^4.0.16",
         "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "^9.39.1",
+        "eslint": "9.39.2",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-refresh": "^0.5.0",
@@ -69,5 +69,8 @@
         "typescript-eslint": "^8.46.4",
         "vite": "^7.2.4",
         "vitest": "^4.0.16"
+    },
+    "overrides": {
+        "minimatch":"^10.2.1"
     }
 }
