@@ -8,7 +8,12 @@ import type {
 } from "material-react-table";
 import type { GreenITIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import type { Application, IndicateurApplicationGreenITView } from "todos-api/client.gen";
+import {
+    getApplications,
+    getApplications1,
+    type Application,
+    type IndicateurApplicationGreenITView
+} from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
 import { BASE_HEADERS, GREENIT_HEADERS } from "constantes/constantes-headers";
@@ -265,4 +270,17 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         }
     ];
     return [...BASE_COLONNE<GreenITIndicateur>(), ...colonnes];
+};
+
+export const fetchData = async () => {
+    try {
+        const [sndiAndDomainApp, appGreenIt] = await Promise.all([
+            getApplications1(),
+            getApplications()
+        ]);
+        return [...formatIndicateur(sndiAndDomainApp, appGreenIt)];
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données: ", error);
+        throw error;
+    }
 };

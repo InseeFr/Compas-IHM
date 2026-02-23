@@ -1,36 +1,24 @@
 import type { ViewMode } from "constantes/constantes";
 import { useState, Fragment } from "react";
 import { useFilterContext } from "store/filterContext";
-import { getApplications, getApplications1 } from "todos-api/client.gen";
 import {
     columnsGreenIt,
+    fetchData,
     filteredViewMode,
-    formatIndicateur,
     onExport,
     paginationConfig
 } from "./greenItConfig";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, Box } from "@mui/material";
 import { Filters } from "pages/Filters";
 import { useQueryIndicators } from "utils/useQueryIndicators";
+import { GreenItDate } from "components/GreenItDate";
 
 export const GreenItTable = () => {
     const { state, dispatch } = useFilterContext();
     const [viewMode, setViewMode] = useState<ViewMode>("global");
     const columns = columnsGreenIt();
-
-    const fetchData = async () => {
-        try {
-            const [sndiAndDomainApp, appGreenIt] = await Promise.all([
-                getApplications1(),
-                getApplications()
-            ]);
-            return [...formatIndicateur(sndiAndDomainApp, appGreenIt)];
-        } catch (error) {
-            console.error("Erreur lors de la récupération des données: ", error);
-        }
-    };
 
     const { data, isLoading, filteredData } = useQueryIndicators({
         queryKey: ["GreenItIndicator"],
@@ -41,7 +29,12 @@ export const GreenItTable = () => {
     return (
         <TablePageLayout
             titleTable="Table Indicateur GreenIT"
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
+            filters={
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
+                    <Filters data={data} state={state} dispatch={dispatch} />
+                    <GreenItDate />
+                </Box>
+            }
             data={filteredViewMode(viewMode, filteredData)}
             isLoading={isLoading}
             columns={columns}
