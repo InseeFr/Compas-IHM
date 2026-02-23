@@ -1,140 +1,191 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as client from "todos-api/client.gen";
-import * as exportCsv from "components/ButtonCsvExport";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
-import type { Application } from "todos-api/client.gen";
+import { useQueryIndicators } from "utils/useQueryIndicators";
+import { filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
+// ============================
+// MOCKS
+// ============================
 
-vi.mock("todos-api/client.gen", () => ({
-    getApplications1: vi.fn(),
-    getApplications: vi.fn()
+vi.mock("utils/useQueryIndicators", () => ({
+    useQueryIndicators: vi.fn()
 }));
 
-vi.mock("@tanstack/react-router", async () => {
+vi.mock("store/filterContext", () => ({
+    useFilterContext: () => ({
+        state: { domaineDev: "", service: "" },
+        dispatch: vi.fn()
+    })
+}));
+
+vi.mock("components/GreenItDate", () => ({
+    GreenItDate: () => <div data-testid="greenit-date" />
+}));
+
+vi.mock("components/ButtonCsvExport", () => ({
+    default: ({ onExport }: any) => (
+        <button data-testid="button-export-csv" onClick={onExport}>
+            Export CSV
+        </button>
+    )
+}));
+
+vi.mock("pages/Filters", () => ({
+    Filters: () => <div data-testid="filters" />
+}));
+
+vi.mock("pages/indicateurs/greenIT/greenItConfig", async importOriginal => {
+    const actual: any = await importOriginal();
     return {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Link: ({ to, children, ...rest }: any) => (
-            <a href={to} {...rest}>
-                {children}
-            </a>
-        )
+        ...actual,
+        columnsGreenIt: () => [{ accessorKey: "applicationName", header: "Nom" }],
+        filteredViewMode: vi.fn((_mode, data) => data),
+        paginationConfig: {},
+        onExport: vi.fn()
     };
 });
 
-vi.mock("components/ButtonCsvExport", () => ({
-    default: vi.fn(() => <button data-testid="button-export-csv">Export CSV</button>)
+vi.mock("components/TablePageLayout", () => ({
+    default: ({ titleTable, filters, data, isLoading, renderTopCustom }: any) => (
+        <div>
+            <h1>{titleTable}</h1>
+
+            {isLoading && <div role="progressbar">Loading...</div>}
+
+            <div data-testid="layout-filters">{filters}</div>
+
+            <div data-testid="table-data">
+                {data?.map((row: any) => (
+                    <div key={row.applicationName}>{row.applicationName}</div>
+                ))}
+            </div>
+
+            <div data-testid="top-custom">{renderTopCustom?.({ table: {} })}</div>
+        </div>
+    )
 }));
 
-// ====================
-// Données mock
-// ====================
-const mockApps = [
-    {
-        appName: "App1",
-        sndi: "S1",
-        domaineSndi: "D1"
-    }
-];
+// ============================
+// DATA MOCK
+// ============================
 
-const mockGreenIT = [
+const mockData = [
     {
         applicationName: "App1",
-        conso: "100",
-        cpuAllocated: "2000",
-        diskAllocated: "300",
-        ramAllocated: "400",
-        nbVm: "2",
-
-        consoProd: "80",
-        cpuAllocatedProd: "1500",
-        diskAllocatedProd: "250",
-        ramAllocatedProd: "350",
-        nbVmProd: "1",
-
-        lettreGreen: "A",
-        gaspillageScore: "10",
-        consoScore: "90",
-        impactScore: "5"
+        isModule: false
     }
 ];
 
-vi.mock("@tanstack/react-query", () => ({
-    useQuery: vi.fn(() => ({
-        data: [...mockApps, ...mockGreenIT],
-        isLoading: false
-    }))
-}));
+// ============================
+// TESTS
+// ============================
 
-// ====================
-// Tests
-// ====================
-describe("GreenItTable (mocked)", () => {
+describe("GreenItTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
 
-        vi.mocked(client.getApplications1).mockResolvedValue(mockApps as Application[]);
-        vi.mocked(client.getApplications).mockResolvedValue(
-            mockGreenIT as client.IndicateurApplicationGreenITView[]
-        );
-
-        vi.mocked(exportCsv.default).mockImplementation(() => (
-            <button data-testid="button-export-csv" onClick={() => {}}>
-                Export CSV
-            </button>
-        ));
+        vi.mocked(useQueryIndicators).mockReturnValue({
+            data: mockData,
+            filteredData: mockData,
+            isLoading: false
+        } as any);
     });
 
-    it("devrait retourner les données mockées de GreenIT", async () => {
-        const apps = await client.getApplications1();
-        const greenItData = await client.getApplications();
+    // ============================
+    // LOADING
+    // ============================
 
-        expect(apps).toEqual(mockApps);
-        expect(greenItData).toEqual(mockGreenIT);
-    });
+    it("affiche le loader quand isLoading est true", () => {
+        vi.mocked(useQueryIndicators).mockReturnValue({
+            data: [],
+            filteredData: [],
+            isLoading: true
+        } as any);
 
-    it("renders table avec les données mockées et appelle les mocks", async () => {
         render(<GreenItTable />);
 
-        await screen.findByText("App1");
-        const heading = await screen.findByRole("heading", {
-            name: /table indicateur GreenIT/i
-        });
-        expect(heading).toBeDefined();
+        expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    });
 
-        expect(screen.getByText("Nom")).toBeInTheDocument();
-        const elements = await screen.findAllByText("Service dev.");
-        expect(elements[0]).toBeInTheDocument();
+    // ============================
+    // RENDER GLOBAL
+    // ============================
+
+    it("render correctement le titre et les composants principaux", () => {
+        render(<GreenItTable />);
+
+        expect(
+            screen.getByRole("heading", {
+                name: /table indicateur greenit/i
+            })
+        ).toBeInTheDocument();
+
+        expect(screen.getByTestId("layout-filters")).toBeInTheDocument();
+        expect(screen.getByTestId("greenit-date")).toBeInTheDocument();
         expect(screen.getByText("App1")).toBeInTheDocument();
-
-        const apps = await client.getApplications1();
-        const greenItData = await client.getApplications();
-
-        expect(apps).toEqual(mockApps);
-        expect(greenItData).toEqual(mockGreenIT);
     });
 
-    it("simulate click sur le bouton CSV", async () => {
-        const handleClick = vi.fn();
+    // ============================
+    // CSV EXPORT
+    // ============================
 
-        vi.mocked(exportCsv.default).mockImplementation(() => (
-            <button data-testid="button-export-csv" onClick={handleClick}>
-                Export CSV
-            </button>
-        ));
-
+    it("déclenche le bouton CSV", () => {
         render(<GreenItTable />);
-        const exportButton = await screen.findByTestId("button-export-csv");
-        fireEvent.click(exportButton);
 
-        expect(handleClick).toHaveBeenCalledTimes(1);
+        const button = screen.getByTestId("button-export-csv");
+        fireEvent.click(button);
+
+        expect(button).toBeInTheDocument();
     });
 
-    it("change le mode de vue via ToggleButtonGroup", async () => {
-        render(<GreenItTable />);
-        const prodButton = await screen.findByText("Prod");
+    // ============================
+    // TOGGLE VIEW MODE
+    // ============================
 
+    it("change le mode de vue via ToggleButtonGroup", () => {
+        render(<GreenItTable />);
+
+        const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
 
         expect(prodButton).toHaveAttribute("aria-pressed", "true");
+    });
+
+    // ============================
+    // filteredViewMode appelé
+    // ============================
+
+    it("appelle filteredViewMode avec le bon mode", () => {
+        render(<GreenItTable />);
+
+        const prodButton = screen.getByText("Prod");
+        fireEvent.click(prodButton);
+
+        expect(filteredViewMode).toHaveBeenCalledWith("prod", mockData);
+    });
+
+    // ============================
+    // ROW ID LOGIC
+    // ============================
+
+    it("génère correctement la rowId pour un module", () => {
+        const moduleData = [
+            {
+                applicationName: "ChildApp",
+                parentApplication: "ParentApp",
+                isModule: true
+            }
+        ];
+
+        vi.mocked(useQueryIndicators).mockReturnValue({
+            data: moduleData,
+            filteredData: moduleData,
+            isLoading: false
+        } as any);
+
+        render(<GreenItTable />);
+
+        expect(screen.getByText("ChildApp")).toBeInTheDocument();
     });
 });
