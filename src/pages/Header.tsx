@@ -19,10 +19,9 @@ interface HeaderProps {
 export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
     return (
         <header
-            className={`header-container ${darkMode ? "dark-mode" : "light-mode"}`}
             data-testid="header"
         >
-            <AppBar sx={{ backgroundColor: "transparent" }}>
+            <AppBar className={`header-container ${darkMode ? "dark-mode" : "light-mode"}`}>
                 <Toolbar className="header-toolbar" id="navigation">
                     <Box className="left-section">
                         <Link to="/" className="logo-container">

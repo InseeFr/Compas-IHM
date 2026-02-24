@@ -12,9 +12,9 @@ export function ToolTipLayout(props: Readonly<ToolTipLayoutProps>): JSX.Element 
         <Tooltip
             title={props.title}
             key={props.key}
-            arrow
             tabIndex={0}
-            aria-label={props.title}
+            arrow
+            describeChild
             data-testid={"tooltip"}
         >
             <span>{props.content}</span>
