@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import * as echarts from "echarts";
 
@@ -22,7 +23,6 @@ vi.mock("echarts", () => ({
 // Mock radar-config : on contrôle les valeurs retournées pour des assertions précises
 vi.mock("pages/dashboards/applications/RadarChart/radar-config", () => ({
     pickSixAxisScores: vi.fn((app: AppForRadar) => {
-        // Retourne des scores fixes par application pour garder les tests déterministes
         if (app.applicationName === "App1") return [4, 3, 2, 5, 1, 4];
         if (app.applicationName === "App2") return [2, 4, 3, 1, 5, 2];
         return [0, 0, 0, 0, 0, 0];
@@ -113,6 +113,7 @@ describe("RadarQualiteChart", () => {
 
         it("devrait afficher l'indice d'utilisation de la légende", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            // aria-hidden="true" sur l'élément visible → { hidden: true } requis
             expect(screen.getByText(/Cliquez sur les carrés de la légende/i)).toBeInTheDocument();
         });
     });
@@ -189,8 +190,6 @@ describe("RadarQualiteChart", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
             const { formatter } = getCapturedOption().tooltip;
             const html = formatter({ seriesName: "App1", value: [4, 3, 2, 5, 1, 4] });
-
-            // Les valeurs entières doivent s'afficher avec .00
             expect(html).toContain("4.00");
             expect(html).toContain("3.00");
         });
@@ -198,7 +197,6 @@ describe("RadarQualiteChart", () => {
         it("le formatter devrait afficher la lettre correspondant à chaque score", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
             const { formatter } = getCapturedOption().tooltip;
-            // [4, 3, 2, 5, 1, 4] → scoreToLetter mock : B, C, D, A, E, B
             const html = formatter({ seriesName: "App1", value: [4, 3, 2, 5, 1, 4] });
             expect(html).toContain("(B)"); // 4 → B
             expect(html).toContain("(A)"); // 5 → A
@@ -241,18 +239,72 @@ describe("RadarQualiteChart", () => {
             expect(names).toContain("Moyenne domaine");
         });
 
-        it("devrait utiliser le nom de l'application dans la légende", () => {
+        it("devrait désactiver la légende ECharts (remplacée par légende HTML)", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
             const { legend } = getCapturedOption();
-            expect(legend.data).toContain("App1");
-            expect(legend.data).toContain("Moyenne globale");
-            expect(legend.data).toContain("Moyenne domaine");
+            expect(legend.show).toBe(false);
         });
 
         it("devrait fournir les données appData dans la première série", () => {
             render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
             const { series } = getCapturedOption();
             expect(series[0].data[0].value).toEqual([4, 3, 2, 5, 1, 4]);
+        });
+    });
+
+    // -----------------------------------------------------------------------
+    describe("Légende HTML accessible", () => {
+        it("devrait afficher 3 boutons de légende", () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            const buttons = screen.getAllByRole("button");
+            expect(buttons).toHaveLength(3);
+        });
+
+        it("devrait avoir aria-pressed=true par défaut sur tous les boutons", () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            const buttons = screen.getAllByRole("button");
+            buttons.forEach(btn => {
+                expect(btn).toHaveAttribute("aria-pressed", "true");
+            });
+        });
+
+        it("devrait toggler aria-pressed à false au clic", async () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            const buttons = screen.getAllByRole("button");
+            await userEvent.click(buttons[0]);
+            expect(buttons[0]).toHaveAttribute("aria-pressed", "false");
+        });
+
+        it("devrait re-toggler aria-pressed à true au second clic", async () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            const buttons = screen.getAllByRole("button");
+            await userEvent.click(buttons[0]);
+            await userEvent.click(buttons[0]);
+            expect(buttons[0]).toHaveAttribute("aria-pressed", "true");
+        });
+
+        it("devrait afficher le nom de l'application dans un bouton", () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            expect(screen.getByRole("button", { name: /App1/i })).toBeInTheDocument();
+        });
+
+        it("devrait afficher un bouton 'Moyenne globale'", () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            expect(screen.getByRole("button", { name: /Moyenne globale/i })).toBeInTheDocument();
+        });
+
+        it("devrait afficher un bouton 'Moyenne domaine'", () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            expect(screen.getByRole("button", { name: /Moyenne domaine/i })).toBeInTheDocument();
+        });
+
+        it("les boutons doivent être indépendants", async () => {
+            render(<RadarQualiteChart app={mockApp} population={mockPopulation} />);
+            const buttons = screen.getAllByRole("button");
+            await userEvent.click(buttons[0]);
+            expect(buttons[0]).toHaveAttribute("aria-pressed", "false");
+            expect(buttons[1]).toHaveAttribute("aria-pressed", "true");
+            expect(buttons[2]).toHaveAttribute("aria-pressed", "true");
         });
     });
 

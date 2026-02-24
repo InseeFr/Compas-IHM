@@ -55,14 +55,13 @@ export const MeteoCell = ({ row }: Readonly<{ row: { original: GlobalIndicator }
         icon.type === QuestionMarkIcon &&
         icon.props.sx?.color === "#d46407ff" &&
         icon.props.sx?.fontSize === 20;
-    const content: ReactNode = (
-        <span>
-            {isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
-                <ErrorIcon sx={{ color: "#b90404ff", fontSize: 20 }} />
-            ) : (
-                icon
-            )}
-        </span>
+    const content: ReactNode = isDateOlderThan31Days(row.original.dateMeteoCommentaire) ? (
+        <ErrorIcon
+            sx={{ color: "#b90404ff", fontSize: 20 }}
+            titleAccess="Météo vieille de plus de 31 jours"
+        />
+    ) : (
+        icon
     );
     const getMeteoComm: string = row.original.meteoCommentaire
         ? row.original.meteoCommentaire

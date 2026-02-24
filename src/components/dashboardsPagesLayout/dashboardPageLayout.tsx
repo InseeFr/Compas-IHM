@@ -1,7 +1,6 @@
 import {
     Autocomplete,
     Box,
-    Divider,
     LinearProgress,
     Paper,
     Stack,
@@ -38,7 +37,6 @@ export default function DashboardPageLayout<T extends AllIndicators>(
                 <AnimatedTitle text={props.title} />
             </div>
             <Stack className="dashboard-filters">{props.filters}</Stack>
-            <Divider className="dashboard-divider" />
             <Paper className="dashboard-paper">
                 <Box className="autocomplete-container">
                     <Autocomplete<T>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import * as echarts from "echarts";
@@ -36,6 +36,8 @@ const srOnly = {
     border: 0
 } as const;
 
+type VisibilityKey = "app" | "global" | "domain";
+
 const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly<Props>) => {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
@@ -44,6 +46,14 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
 
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstanceRef = useRef<echarts.ECharts | null>(null);
+
+    const [visible, setVisible] = useState<Record<VisibilityKey, boolean>>({
+        app: true,
+        global: true,
+        domain: true
+    });
+
+    const toggle = (key: VisibilityKey) => setVisible(prev => ({ ...prev, [key]: !prev[key] }));
 
     const appScores = pickSixAxisScores(app);
     const allRows = population.map(pickSixAxisScores);
@@ -66,17 +76,30 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
         ? `${title} — ${app.applicationName}`
         : `Graphique radar qualité pour ${app.applicationName}`;
 
+    const legendItems: { key: VisibilityKey; label: string; color: string }[] = [
+        { key: "app", label: app.applicationName, color: appColor },
+        { key: "global", label: "Moyenne globale", color: allColor },
+        { key: "domain", label: "Moyenne domaine", color: domainColor }
+    ];
+
     useEffect(() => {
         if (!chartRef.current) return;
 
         chartInstanceRef.current ??= echarts.init(chartRef.current);
+
         const canvas = chartRef.current.querySelector("canvas");
         if (canvas) {
             canvas.setAttribute("role", "img");
-            canvas.setAttribute("aria-label", chartLabel);
+            canvas.setAttribute(
+                "aria-label",
+                `${chartLabel}. Trois séries comparées : ${app.applicationName}, Moyenne globale, Moyenne domaine. Voir le tableau de données pour les valeurs détaillées.`
+            );
             canvas.setAttribute("aria-describedby", tableId);
             canvas.setAttribute("tabindex", "0");
         }
+
+        const opacity = (key: VisibilityKey) => (visible[key] ? 1 : 0);
+        const areaOpacity = (key: VisibilityKey, base: number) => (visible[key] ? base : 0);
 
         chartInstanceRef.current.setOption({
             title: title
@@ -86,6 +109,7 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
                       textStyle: { color: textColor }
                   }
                 : undefined,
+            legend: { show: false },
             tooltip: {
                 trigger: "item",
                 backgroundColor: isDark ? "rgba(50,50,50,0.95)" : "rgba(255,255,255,0.95)",
@@ -107,15 +131,9 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
                     return html;
                 }
             },
-            legend: {
-                data: [app.applicationName, "Moyenne globale", "Moyenne domaine"],
-                bottom: 20,
-                itemGap: 12,
-                textStyle: { color: textColor }
-            },
             radar: {
-                center: ["50%", "40%"],
-                radius: "52%",
+                center: ["50%", "50%"],
+                radius: "60%",
                 indicator: LABELS.map(name => ({ name, max: 5 })),
                 splitNumber: 5,
                 name: {
@@ -132,52 +150,53 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
                 {
                     name: app.applicationName,
                     type: "radar",
-                    itemStyle: { color: appColor },
                     data: [
                         {
                             value: appData,
                             name: app.applicationName,
-                            lineStyle: { color: appColor, width: 2 },
-                            itemStyle: { color: appColor },
-                            areaStyle: { color: "rgba(245,132,66,0.25)" }
+                            lineStyle: { color: appColor, width: 2, opacity: opacity("app") },
+                            itemStyle: { color: appColor, opacity: opacity("app") },
+                            areaStyle: { color: `rgba(192,19,19,${areaOpacity("app", 0.25)})` }
                         }
                     ]
                 },
                 {
                     name: "Moyenne globale",
                     type: "radar",
-                    itemStyle: { color: allColor },
                     data: [
                         {
                             value: avgAll,
                             name: "Moyenne globale",
-                            lineStyle: { color: allColor, width: 2 },
-                            itemStyle: { color: allColor },
-                            areaStyle: { color: "rgba(171,71,188,0.18)" }
+                            lineStyle: { color: allColor, width: 2, opacity: opacity("global") },
+                            itemStyle: { color: allColor, opacity: opacity("global") },
+                            areaStyle: { color: `rgba(25,207,40,${areaOpacity("global", 0.18)})` }
                         }
                     ]
                 },
                 {
                     name: "Moyenne domaine",
                     type: "radar",
-                    itemStyle: { color: domainColor },
                     data: [
                         {
                             value: avgDomain,
                             name: "Moyenne domaine",
-                            lineStyle: { color: domainColor, width: 2 },
-                            itemStyle: { color: domainColor },
-                            areaStyle: { color: "rgba(38,166,154,0.18)" }
+                            lineStyle: { color: domainColor, width: 2, opacity: opacity("domain") },
+                            itemStyle: { color: domainColor, opacity: opacity("domain") },
+                            areaStyle: { color: `rgba(81,18,228,${areaOpacity("domain", 0.18)})` }
                         }
                     ]
                 }
             ]
         });
+
         const patchCanvas = () => {
             const canvas = chartRef.current?.querySelector("canvas");
             if (canvas) {
                 canvas.setAttribute("role", "img");
-                canvas.setAttribute("aria-label", chartLabel);
+                canvas.setAttribute(
+                    "aria-label",
+                    `${chartLabel}. Trois séries comparées : ${app.applicationName}, Moyenne globale, Moyenne domaine. Voir le tableau de données pour les valeurs détaillées.`
+                );
                 canvas.setAttribute("aria-describedby", tableId);
                 canvas.setAttribute("tabindex", "0");
             }
@@ -201,31 +220,113 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
         isDark,
         tableId,
         textColor,
-        title
+        title,
+        visible
     ]);
 
     return (
         <Box
             component="section"
             aria-labelledby={sectionTitleId}
-            sx={{ width: "100%", height: "100%", position: "relative" }}
+            sx={{
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column"
+            }}
         >
             <Typography id={sectionTitleId} component="h2" variant="subtitle1" sx={srOnly}>
                 {title ?? `Radar qualité — ${app.applicationName}`}
             </Typography>
 
-            <Box
-                data-testid="radar-chart-container"
-                ref={chartRef}
-                sx={{
-                    width: "100%",
-                    height: "100%",
-                    padding: "24px"
-                }}
-            />
+            {/* Chart */}
+            <Box data-testid="radar-chart-container" ref={chartRef} sx={{ flex: 1, minHeight: 0 }} />
 
+            {/* Légende HTML accessible */}
+            <Box
+                component="ul"
+                aria-label="Légende du graphique radar"
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    p: 0,
+                    m: 0,
+                    mb: 1,
+                    listStyle: "none"
+                }}
+            >
+                {legendItems.map(({ key, label, color }) => (
+                    <li key={key}>
+                        <Box
+                            component="button"
+                            onClick={() => toggle(key)}
+                            aria-pressed={visible[key]}
+                            title={visible[key] ? `Masquer ${label}` : `Afficher ${label}`}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                opacity: visible[key] ? 1 : 0.4,
+                                color: textColor,
+                                fontSize: 12,
+                                p: "4px 8px",
+                                borderRadius: "4px",
+                                transition: "opacity 0.2s",
+                                "&:focus-visible": {
+                                    outline: `2px solid ${color}`,
+                                    outlineOffset: "2px"
+                                }
+                            }}
+                        >
+                            <Box
+                                aria-hidden="true"
+                                sx={{
+                                    width: 12,
+                                    height: 12,
+                                    borderRadius: "2px",
+                                    backgroundColor: color,
+                                    flexShrink: 0
+                                }}
+                            />
+                            {label}
+                        </Box>
+                    </li>
+                ))}
+            </Box>
+
+            {/* Hint visible */}
+            <Typography
+                component="p"
+                variant="caption"
+                aria-hidden="true"
+                sx={{
+                    textAlign: "right",
+                    pr: 2,
+                    pb: 0.5,
+                    color: "text.secondary",
+                    fontStyle: "italic"
+                }}
+            >
+                💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
+            </Typography>
+
+            {/* Hint accessible SR */}
+            <Typography component="p" variant="caption" sx={srOnly}>
+                Astuce : les séries peuvent être affichées ou masquées via les boutons de la légende.
+            </Typography>
+
+            {/* Table SR */}
             <Box component="table" id={tableId} sx={srOnly}>
-                <caption>{chartLabel}</caption>
+                <caption>
+                    {chartLabel}. Trois séries : {app.applicationName} (rouge), Moyenne globale (vert),
+                    Moyenne domaine (violet).
+                </caption>
                 <thead>
                     <tr>
                         <th scope="col">Axe</th>
@@ -257,21 +358,6 @@ const RadarQualiteChart: React.FC<Props> = ({ app, population, title }: Readonly
                     ))}
                 </tbody>
             </Box>
-
-            <Typography
-                component="p"
-                variant="caption"
-                aria-hidden="true"
-                sx={{
-                    position: "absolute",
-                    bottom: -20,
-                    right: 16,
-                    color: "text.secondary",
-                    fontStyle: "italic"
-                }}
-            >
-                💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
-            </Typography>
         </Box>
     );
 };

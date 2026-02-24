@@ -30,7 +30,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
     props: Readonly<TablePageLayoutProps<T>>
 ): JSX.Element {
     return (
-        <Paper id="contenu" className="table-page-layout">
+        <Paper className="table-page-layout">
             <Ariane items={[{ nav: props.titleTable, link: "" }]} />
             <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
@@ -71,6 +71,29 @@ export default function TablePageLayout<T extends MRT_RowData>(
                     </Stack>
                 )}
                 localization={MRT_Localization_FR}
+                muiSearchTextFieldProps={{
+                    type: "search",
+                    label: "Rechercher",
+                    InputLabelProps: { htmlFor: "recherche-global" },
+                    inputProps: { id: "recherche-global" }
+                }}
+                displayColumnDefOptions={{
+                    "mrt-row-expand": {
+                        muiTableHeadCellProps: {
+                            scope: "col"
+                        },
+                        muiTableBodyCellProps: ({ row }) => ({
+                            component: "th",
+                            scope: "row",
+                            id: `expand-${row.id}`
+                        })
+                    }
+                }}
+                muiExpandButtonProps={({ row }) => ({
+                    "aria-label": row.getIsExpanded() ? "Réduire la ligne" : "Développer la ligne",
+                    "aria-expanded": row.getIsExpanded(),
+                    "aria-controls": `expand-${row.id}`
+                })}
             />
         </Paper>
     );
