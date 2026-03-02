@@ -16,7 +16,6 @@ export function useQueryIndicators<T extends FilterableItem>({
 }: UseQueryIndicatorsOptions<T>) {
     const { state } = useFilterContext();
 
-    console.log(fetchData);
     const { data = [], isLoading } = useQuery({
         queryKey: [queryKey.join(",")],
         queryFn: fetchData

@@ -18,7 +18,6 @@ vi.mock("components/ButtonCsvExport", () => ({
 
 vi.mock("@tanstack/react-router", async () => {
     return {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         Link: ({ to, children, ...rest }: any) => (
             <a href={to} {...rest}>
                 {children}
@@ -176,34 +175,34 @@ describe("DevopsIndicateurTable", () => {
         expect(result).toHaveLength(mockApps.length + mockModules.length);
     });
 
-    it("fetchData retourne undefined et log une erreur si le fetch échoue", async () => {
+    it("fetchData retourne [] et log une erreur si le fetch échoue", async () => {
         const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         const fetchError = new Error("Network error");
-
+    
         (getApplications2 as any).mockRejectedValue(fetchError);
         (getModules2 as any).mockResolvedValue([]);
-
+    
         let capturedFetchData: (() => Promise<any>) | undefined;
-
+    
         (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
             capturedFetchData = fetchData;
             return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
         });
-
+    
         render(
             <FilterProvider>
                 <DevopsIndicateurTable />
             </FilterProvider>
         );
-
+    
         const result = await capturedFetchData!();
-
-        expect(result).toBeUndefined();
+    
+        expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
             "Erreur lors de la récupération des données :",
             fetchError
         );
-
+    
         consoleSpy.mockRestore();
     });
 

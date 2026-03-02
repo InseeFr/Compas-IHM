@@ -1,13 +1,8 @@
-import { useFilterContext } from "store/filterContext";
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./a11yConfig";
 import { getModules1, listerModulesA11y } from "todos-api/client.gen";
-import TablePageLayout from "components/TablePageLayout";
-import ButtonCsvExport from "components/ButtonCsvExport";
-import { Filters } from "pages/Filters";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 
 export const A11yIndicateurTable = () => {
-    const { state, dispatch } = useFilterContext();
     const columns = columnsTable();
 
     const fetchData = async () => {
@@ -19,25 +14,20 @@ export const A11yIndicateurTable = () => {
             return modulesA11y.map(mod => formatIndicateur(mod, modulesByName.get(mod.modName)));
         } catch (error) {
             console.error("Erreur lors de la récupération des données A11y: ", error);
+            return [];
         }
     };
 
-    const { data, isLoading, filteredData } = useQueryIndicators({
-        queryKey: ["A11YIndicator"],
-        fetchData,
-        hasModules: true
-    });
-
     return (
-        <TablePageLayout
-            titleTable="Table Indicateur Accessibilité"
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
-            data={filteredData}
+        <GenericIndicatorTable
+            title="Table Indicateur Accessibilité"
+            fetchData={fetchData}
             columns={columns}
-            isLoading={isLoading}
+            queryKey="A11YIndicator" // gitleaks:allow
+            hasModules={true}
             paginationConfig={paginationConfig}
+            onExport={OnExport}
             rowId={row => row.modName}
-            renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={OnExport} />}
         />
     );
 };

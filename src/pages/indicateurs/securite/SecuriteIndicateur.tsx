@@ -1,4 +1,3 @@
-import { useFilterContext } from "store/filterContext";
 import {
     columnsTable,
     formatApplicationsData,
@@ -12,13 +11,9 @@ import {
     getIndicateurSecuriteByModule,
     getModules1
 } from "todos-api/client.gen";
-import TablePageLayout from "components/TablePageLayout";
-import ButtonCsvExport from "components/ButtonCsvExport";
-import { Filters } from "pages/Filters";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 
 const SecuriteIndicateurTable = () => {
-    const { state, dispatch } = useFilterContext();
     const columns = columnsTable();
 
     const fetchData = async () => {
@@ -34,29 +29,19 @@ const SecuriteIndicateurTable = () => {
             return [...formattedApps, ...formattedModules];
         } catch (error) {
             console.error("Erreur lors de la récupération des données sécurité: ", error);
-            throw error;
+            return [];
         }
     };
 
-    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
-        queryKey: ["SecuriteIndicator"],
-        fetchData,
-        hasModules: true
-    });
-
     return (
-        <TablePageLayout
-            titleTable="Table Indicateur Sécurité"
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
-            data={filteredData.filter(item => (item.isModule ? null : item))}
+        <GenericIndicatorTable
+            title="Table Indicateur Sécurité"
+            fetchData={fetchData}
             columns={columns}
-            isLoading={isLoading}
+            queryKey="SecuriteIndicator"
+            hasModules={true}
             paginationConfig={paginationConfig}
-            rowId={row =>
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
-            subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
-            renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={OnExport} />}
+            onExport={OnExport}
         />
     );
 };

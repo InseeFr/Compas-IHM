@@ -182,6 +182,13 @@ export interface ModsIndicateur {
     urlCodeSource?: string;
 }
 
+export interface DemandeCreationStrategieCloud {
+    idsModule: number[];
+    strategieCloud: string;
+    envCibleProd: string;
+    commentaire: string;
+}
+
 export interface GlobalIndicator {
     idApplication?: number;
     applicationName: string;
@@ -295,6 +302,24 @@ export interface IndicateurApplicationSynthese {
     impactNormalized?: string;
 }
 
+export interface StrategieCloudIndicateur {
+    applicationName: string;
+    commentaire: string;
+    ecartCible: string;
+    envActuelProd: string;
+    envCibleProd: string;
+    idApp: number;
+    idModule: number;
+    isModule?: boolean;
+    maturiteCloud: string;
+    sndi: string;
+    domaine: string;
+    domaineFonc: string;
+    stratCloud: string;
+    tauxCloud: string;
+    parentApplication?: string;
+}
+
 export type AllIndicators =
     | MeteoIndicateur
     | QualiteIndicateur
@@ -306,4 +331,5 @@ export type AllIndicators =
     | ModsIndicateur
     | IndicateurApplicationMaturite
     | IndicateurApplicationSynthese
-    | GlobalIndicator;
+    | GlobalIndicator
+    | StrategieCloudIndicateur;
