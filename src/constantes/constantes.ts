@@ -26,14 +26,16 @@ export const NAV_TEXTS: NavBarModel = {
                 { label: "Green IT", to: "/indicateur/greenITTable" },
                 { label: "Sécurité", to: "/indicateur/securiteTable" },
                 { label: "Accessibilité", to: "/indicateur/accessibiliteTable" },
-                { label: "Dernières Méteo", to: "/indicateur/meteoTable" }
+                { label: "Dernières Méteo", to: "/indicateur/meteoTable" },
+                { label: "Stratégie Cloud", to: "/indicateur/strategieCloudTable" }
             ]
         },
         {
             title: "Saisie",
             subItem: [
                 { label: "Saisie météo", to: "/saisie/meteo" },
-                { label: "Saisie accessibilité", to: "/saisie/accessibilité" }
+                { label: "Saisie accessibilité", to: "/saisie/accessibilité" },
+                { label: "Saisie stratégie cloud", to: "/saisie/strategiecloud" }
             ]
         }
     ]

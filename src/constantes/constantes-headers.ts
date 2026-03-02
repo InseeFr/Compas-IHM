@@ -129,6 +129,20 @@ export const ACCESSIBILITE_HEADERS = {
     NBR_ISSUE_SONAR: "Nombre d'issue Sonar"
 } as const;
 
+// ============================================================
+// À AJOUTER dans constantes/constantes-headers.ts
+// ============================================================
+
+export const STRATEGIE_CLOUD_HEADERS = {
+    TAUX_CLOUD_PRODUCTION: "Taux cloud Production",
+    ENV_ACTUEL_PRODUCTION: "Env. actuel Production",
+    ENV_CIBLE_PRODUCTION: "Env. cible Production",
+    ECART_CIBLE: "Écart à la cible",
+    STRATEGIE_CLOUD: "Stratégie cloud",
+    COMMENTAIRE: "Commentaire",
+    MATURITE_CLOUD: "Maturité Cloud"
+} as const;
+
 // ============================================================================
 // EXPORT CSV GLOBAL - Construit à partir des headers existants
 // ============================================================================

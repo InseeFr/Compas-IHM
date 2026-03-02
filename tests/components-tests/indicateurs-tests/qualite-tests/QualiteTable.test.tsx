@@ -156,29 +156,29 @@ describe("QualiteIndicateurTable", () => {
         expect(result).toHaveLength(mockApps.length + mockModules.length);
     });
 
-    it("fetchData retourne undefined et log une erreur si le fetch échoue", async () => {
+    it("fetchData retourne [] et log une erreur si le fetch échoue", async () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
         const fetchError = new Error("Network error");
-
+    
         (clientApi.getIndicateurQualiteByApplication as any).mockRejectedValue(fetchError);
-
+    
         let capturedFetchData: (() => Promise<any>) | undefined;
-
+    
         (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
             capturedFetchData = fetchData;
             return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
         });
-
+    
         render(<QualiteIndicateurTable />);
-
+    
         const result = await capturedFetchData!();
-
-        expect(result).toBeUndefined();
+    
+        expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
             "Erreur lors de la récupération des données qualité: ",
             fetchError
         );
-
+    
         consoleSpy.mockRestore();
     });
 

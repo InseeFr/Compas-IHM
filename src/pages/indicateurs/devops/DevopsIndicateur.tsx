@@ -1,14 +1,8 @@
 import { getApplications2, getModules2 } from "../../../todos-api/client.gen";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
-import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
-import { useQueryIndicators } from "utils/useQueryIndicators";
-import TablePageLayout from "components/TablePageLayout";
-import ButtonCsvExport from "components/ButtonCsvExport";
+import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 
 export const DevopsIndicateurTable = () => {
-    const { state, dispatch } = useFilterContext();
-
     const columns = columnsTable();
 
     const fetchData = async () => {
@@ -21,28 +15,19 @@ export const DevopsIndicateurTable = () => {
             return [...formattedApplications, ...formattedModules];
         } catch (error) {
             console.error("Erreur lors de la récupération des données :", error);
+            return [];
         }
     };
 
-    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
-        queryKey: ["DevopsIndicator"],
-        fetchData,
-        hasModules: true
-    });
-
     return (
-        <TablePageLayout
-            titleTable="Table Indicateur DEVOPS"
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
-            data={filteredData.filter(item => (item.isModule ? null : item))}
+        <GenericIndicatorTable
+            title="Table Indicateur DEVOPS"
+            fetchData={fetchData}
             columns={columns}
-            isLoading={isLoading}
+            queryKey="DevopsIndicator"
+            hasModules={true}
             paginationConfig={paginationConfig}
-            rowId={row =>
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
-            subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
-            renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
+            onExport={onExport}
         />
     );
 };
