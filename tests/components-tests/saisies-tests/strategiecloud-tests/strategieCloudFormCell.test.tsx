@@ -29,7 +29,14 @@ const mockModules: ModsIndicateur[] = [
     { id: 1, modName: "Module Alpha", appName: "AppA", domaine: "DOM", domaineFonc: "FONC", sndi: "S1" },
     { id: 2, modName: "Module Beta", appName: "AppB", domaine: "DOM", domaineFonc: "FONC", sndi: "S2" },
     { id: 3, modName: "Module Gamma", appName: "AppC", domaine: "DOM", domaineFonc: "FONC", sndi: "S3" },
-    { id: undefined, modName: "Module Sans ID", appName: "AppD", domaine: "DOM", domaineFonc: "FONC", sndi: "S4" }
+    {
+        id: undefined,
+        modName: "Module Sans ID",
+        appName: "AppD",
+        domaine: "DOM",
+        domaineFonc: "FONC",
+        sndi: "S4"
+    }
 ];
 
 // ─── RenderModuleSelection ─────────────────────────────────────────────────────

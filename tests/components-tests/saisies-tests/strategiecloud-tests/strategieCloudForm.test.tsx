@@ -74,7 +74,13 @@ vi.mock("utils/filters-functions", () => ({
 }));
 
 vi.mock("components/formsPageLayout/FormPageLayout", () => ({
-    FormPageLayout: ({ render: renderFn, title }: { render: (field: any) => React.ReactNode; title: string }) => {
+    FormPageLayout: ({
+        render: renderFn,
+        title
+    }: {
+        render: (field: any) => React.ReactNode;
+        title: string;
+    }) => {
         const fakeField = {
             field: { value: "", onChange: vi.fn(), onBlur: vi.fn(), name: "test", ref: vi.fn() },
             fieldState: { invalid: false, isTouched: false, isDirty: false, error: undefined },
@@ -94,7 +100,12 @@ vi.mock("components/formsPageLayout/MainPageLayout", () => ({
         <div data-testid="main-layout">
             <h1>{title}</h1>
             <div data-testid="filtres-container">{filtres}</div>
-            <form onSubmit={e => { e.preventDefault(); onSubmit(e); }}>
+            <form
+                onSubmit={e => {
+                    e.preventDefault();
+                    onSubmit(e);
+                }}
+            >
                 {formulaires}
                 <button type="button" onClick={reset} data-testid="reset-button">
                     Réinitialiser
@@ -151,8 +162,12 @@ describe("StrategieCloudForm", () => {
         render(<StrategieCloudForm />);
         await waitFor(() => {
             expect(screen.getByTestId("form-section-Choisir les modules")).toBeInTheDocument();
-            expect(screen.getByTestId("form-section-État d'avancement de la stratégie")).toBeInTheDocument();
-            expect(screen.getByTestId("form-section-Environnement cible de production")).toBeInTheDocument();
+            expect(
+                screen.getByTestId("form-section-État d'avancement de la stratégie")
+            ).toBeInTheDocument();
+            expect(
+                screen.getByTestId("form-section-Environnement cible de production")
+            ).toBeInTheDocument();
         });
     });
 
@@ -205,8 +220,8 @@ describe("StrategieCloudForm", () => {
             expect(mockSaisirStrategieCloud).toHaveBeenCalledWith(
                 expect.objectContaining({
                     idsModule: [],
-                    avancement: 1,    // "A instruire" → 1
-                    envCibleProd: 1,  // "Kube" → 1
+                    avancement: 1, // "A instruire" → 1
+                    envCibleProd: 1, // "Kube" → 1
                     commentaire: ""
                 })
             );

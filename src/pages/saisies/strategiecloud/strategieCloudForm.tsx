@@ -85,11 +85,17 @@ export function StrategieCloudForm() {
         [modules, state]
     );
 
-    const { control, handleSubmit, register, reset, formState: { errors } } =
-        useForm<FormDemandeCreationStrategieCloud>({ defaultValues });
+    const {
+        control,
+        handleSubmit,
+        register,
+        reset,
+        formState: { errors }
+    } = useForm<FormDemandeCreationStrategieCloud>({ defaultValues });
 
     const strategieCloud = useWatch({ control, name: "strategieCloud" });
-    const isCommentaryRequired = strategieCloud !== undefined && ["En cours", "Validée"].includes(strategieCloud);
+    const isCommentaryRequired =
+        strategieCloud !== undefined && ["En cours", "Validée"].includes(strategieCloud);
 
     const creer: SubmitHandler<FormDemandeCreationStrategieCloud> = async data => {
         try {

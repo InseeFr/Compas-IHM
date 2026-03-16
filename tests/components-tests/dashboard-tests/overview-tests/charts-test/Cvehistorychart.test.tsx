@@ -61,12 +61,12 @@ describe("CveHistoryChart", () => {
 
     it("should render application selector with default option", () => {
         renderWithTheme(<CveHistoryChart data={mockData} monthlyData={mockMonthlyData} />);
-        expect(screen.getByText("Top 6 applications avec le plus de CVE")).toBeInTheDocument();
+        expect(screen.getByText("Les 6 applications avec le plus de CVE")).toBeInTheDocument();
     });
 
     it("should render application selector with custom maxApps", () => {
         renderWithTheme(<CveHistoryChart data={mockData} monthlyData={mockMonthlyData} maxApps={3} />);
-        expect(screen.getByText("Top 3 applications avec le plus de CVE")).toBeInTheDocument();
+        expect(screen.getByText("Les 3 applications avec le plus de CVE")).toBeInTheDocument();
     });
 
     it("should handle empty data", () => {

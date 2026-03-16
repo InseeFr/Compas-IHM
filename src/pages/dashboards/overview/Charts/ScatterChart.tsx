@@ -172,7 +172,7 @@ export function CorrelationChart({ data }: Readonly<CorrelationChartProps>) {
                     alignItems="center"
                     justifyContent="space-between"
                 >
-                    <Typography variant="subtitle2" color="text.primary">
+                    <Typography variant="h3" color="text.primary">
                         Analyse de corrélation croisée
                     </Typography>
                     <Stack direction="row" spacing={2}>
@@ -219,118 +219,119 @@ export function CorrelationChart({ data }: Readonly<CorrelationChartProps>) {
                     </Typography>
                 </Stack>
             </Stack>
-
-            <ReactECharts
-                option={{
-                    backgroundColor: "transparent",
-                    tooltip: {
-                        trigger: "item",
-                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                        borderColor: isDark ? "#444" : "#ddd",
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        formatter: (params: any) => {
-                            if (params.seriesName === "Régression") return "";
-                            const point = chartData.points[params.dataIndex];
-                            return `
-                        <strong>${point.name}</strong><br/>
-                        ${chartData.metricXConfig.label}: <strong>${point.x.toFixed(1)} ${chartData.metricXConfig.unit}</strong><br/>
-                        ${chartData.metricYConfig.label}: <strong>${point.y.toFixed(1)} ${chartData.metricYConfig.unit}</strong>
-                    `;
-                        }
-                    },
-                    grid: {
-                        left: "10%",
-                        right: "5%",
-                        bottom: "12%",
-                        top: "8%",
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: "value",
-                        name: `${chartData.metricXConfig.label} (${chartData.metricXConfig.unit})`,
-                        nameLocation: "middle",
-                        nameGap: 30,
-                        nameTextStyle: {
-                            color: isDark ? "#fff" : "#000",
-                            fontSize: 12
-                        },
-                        axisLabel: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
-                            }
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: isDark ? "#333" : "#eee"
-                            }
-                        }
-                    },
-                    yAxis: {
-                        type: "value",
-                        name: `${chartData.metricYConfig.label} (${chartData.metricYConfig.unit})`,
-                        nameLocation: "middle",
-                        nameGap: 50,
-                        nameTextStyle: {
-                            color: isDark ? "#fff" : "#000",
-                            fontSize: 12
-                        },
-                        axisLabel: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
-                            }
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: isDark ? "#333" : "#eee"
-                            }
-                        }
-                    },
-                    series: [
-                        {
-                            name: "Applications",
-                            type: "scatter",
-                            data: chartData.points.map(p => [p.x, p.y]),
-                            symbolSize: 8,
-                            itemStyle: {
-                                color: theme.palette.primary.main,
-                                opacity: 0.7
+            <figure>
+                <ReactECharts
+                    option={{
+                        backgroundColor: "transparent",
+                        tooltip: {
+                            trigger: "item",
+                            backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                            borderColor: isDark ? "#444" : "#ddd",
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
                             },
-                            emphasis: {
-                                itemStyle: {
-                                    color: theme.palette.primary.dark,
-                                    opacity: 1,
-                                    borderColor: theme.palette.primary.light,
-                                    borderWidth: 2
+                            formatter: (params: any) => {
+                                if (params.seriesName === "Régression") return "";
+                                const point = chartData.points[params.dataIndex];
+                                return `
+                            <strong>${point.name}</strong><br/>
+                            ${chartData.metricXConfig.label}: <strong>${point.x.toFixed(1)} ${chartData.metricXConfig.unit}</strong><br/>
+                            ${chartData.metricYConfig.label}: <strong>${point.y.toFixed(1)} ${chartData.metricYConfig.unit}</strong>
+                        `;
+                            }
+                        },
+                        grid: {
+                            left: "10%",
+                            right: "5%",
+                            bottom: "12%",
+                            top: "8%",
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: "value",
+                            name: `${chartData.metricXConfig.label} (${chartData.metricXConfig.unit})`,
+                            nameLocation: "middle",
+                            nameGap: 30,
+                            nameTextStyle: {
+                                color: isDark ? "#fff" : "#000",
+                                fontSize: 12
+                            },
+                            axisLabel: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: isDark ? "#333" : "#eee"
                                 }
                             }
                         },
-                        {
-                            name: "Régression",
-                            type: "line",
-                            data: chartData.regressionLine,
-                            lineStyle: {
-                                color: theme.palette.error.main,
-                                width: 2,
-                                type: "dashed"
+                        yAxis: {
+                            type: "value",
+                            name: `${chartData.metricYConfig.label} (${chartData.metricYConfig.unit})`,
+                            nameLocation: "middle",
+                            nameGap: 50,
+                            nameTextStyle: {
+                                color: isDark ? "#fff" : "#000",
+                                fontSize: 12
                             },
-                            symbol: "none",
-                            tooltip: {
-                                show: false
+                            axisLabel: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: isDark ? "#333" : "#eee"
+                                }
                             }
-                        }
-                    ]
-                }}
-                style={{ height: "400px", width: "100%" }}
-                opts={{ renderer: "canvas" }}
-            />
+                        },
+                        series: [
+                            {
+                                name: "Applications",
+                                type: "scatter",
+                                data: chartData.points.map(p => [p.x, p.y]),
+                                symbolSize: 8,
+                                itemStyle: {
+                                    color: theme.palette.primary.main,
+                                    opacity: 0.7
+                                },
+                                emphasis: {
+                                    itemStyle: {
+                                        color: theme.palette.primary.dark,
+                                        opacity: 1,
+                                        borderColor: theme.palette.primary.light,
+                                        borderWidth: 2
+                                    }
+                                }
+                            },
+                            {
+                                name: "Régression",
+                                type: "line",
+                                data: chartData.regressionLine,
+                                lineStyle: {
+                                    color: theme.palette.error.main,
+                                    width: 2,
+                                    type: "dashed"
+                                },
+                                symbol: "none",
+                                tooltip: {
+                                    show: false
+                                }
+                            }
+                        ]
+                    }}
+                    style={{ height: "400px", width: "100%" }}
+                    opts={{ renderer: "canvas" }}
+                />
+            </figure>
         </Box>
     );
 }

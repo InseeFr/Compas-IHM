@@ -5,7 +5,7 @@ import { DevopsIndicateurTable } from "pages/indicateurs/devops/DevopsIndicateur
 import { FilterProvider } from "store/filterContext";
 import * as devopsConfig from "pages/indicateurs/devops/devopsConfig";
 import { getApplications2, getModules2 } from "todos-api/client.gen";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 
 vi.mock("todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
@@ -51,7 +51,7 @@ vi.mock("pages/indicateurs/devops/devopsConfig", () => ({
 const mockApps = [{ applicationName: "App1" }, { applicationName: "App2" }];
 const mockModules = [{ applicationName: "Module1", isModule: true, parentApplication: "App1" }];
 
-vi.mock("utils/useQueryIndicators", () => ({
+vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
 describe("DevopsIndicateurTable", () => {
@@ -178,31 +178,31 @@ describe("DevopsIndicateurTable", () => {
     it("fetchData retourne [] et log une erreur si le fetch échoue", async () => {
         const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         const fetchError = new Error("Network error");
-    
+
         (getApplications2 as any).mockRejectedValue(fetchError);
         (getModules2 as any).mockResolvedValue([]);
-    
+
         let capturedFetchData: (() => Promise<any>) | undefined;
-    
+
         (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
             capturedFetchData = fetchData;
             return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
         });
-    
+
         render(
             <FilterProvider>
                 <DevopsIndicateurTable />
             </FilterProvider>
         );
-    
+
         const result = await capturedFetchData!();
-    
+
         expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
             "Erreur lors de la récupération des données :",
             fetchError
         );
-    
+
         consoleSpy.mockRestore();
     });
 

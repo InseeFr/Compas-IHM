@@ -2,13 +2,13 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
 // ============================
 // MOCKS
 // ============================
 
-vi.mock("utils/useQueryIndicators", () => ({
+vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
 

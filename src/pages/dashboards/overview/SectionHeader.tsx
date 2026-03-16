@@ -2,12 +2,13 @@ import { Box, Typography, useTheme } from "@mui/material";
 import type { ReactNode } from "react";
 
 interface SectionHeaderProps {
-    icon: ReactNode;
+    icon?: ReactNode;
     title: string;
     subtitle?: string;
 }
 
 export function SectionHeader({ icon, title, subtitle }: Readonly<SectionHeaderProps>) {
+    const defaultIcon = <span>📊</span>;
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
 
@@ -45,11 +46,12 @@ export function SectionHeader({ icon, title, subtitle }: Readonly<SectionHeaderP
                     fontSize: 28
                 }}
             >
-                {icon}
+                {icon || defaultIcon}
             </Box>
             <Box>
                 <Typography
-                    variant="h5"
+                    variant="h4"
+                    component="h1"
                     fontWeight={700}
                     color="text.primary"
                     sx={{

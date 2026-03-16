@@ -61,12 +61,12 @@ describe("CveTreemap", () => {
 
     it("should render title with default topN", () => {
         renderWithTheme(<CveTreemap data={mockData} />);
-        expect(screen.getByText("Top 25 applications avec CVE critiques")).toBeInTheDocument();
+        expect(screen.getByText("Les 25 applications avec CVE critiques")).toBeInTheDocument();
     });
 
     it("should render title with custom topN", () => {
         renderWithTheme(<CveTreemap data={mockData} topN={10} />);
-        expect(screen.getByText("Top 10 applications avec CVE critiques")).toBeInTheDocument();
+        expect(screen.getByText("Les 10 applications avec CVE critiques")).toBeInTheDocument();
     });
 
     it("should have dette as default color metric", () => {

@@ -3,13 +3,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MainIndicator } from "pages/indicateurs/main-indicator/mainIndicator";
 import { useFilterContext, type FilterState } from "store/filterContext";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 import * as clientGen from "todos-api/client.gen";
 import { formattedApps, formattedModules } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 
 // Mock all dependencies
 vi.mock("store/filterContext");
-vi.mock("utils/useQueryIndicators");
+vi.mock("hooks/useQueryIndicators");
 vi.mock("todos-api/client.gen");
 vi.mock("@tanstack/react-router", async () => {
     return {

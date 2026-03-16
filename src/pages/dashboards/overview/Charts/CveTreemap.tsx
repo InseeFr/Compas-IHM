@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Box, Typography, useTheme, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+    Box,
+    Typography,
+    useTheme,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    type SelectChangeEvent
+} from "@mui/material";
 import ReactECharts from "echarts-for-react";
 import type { GlobalIndicator } from "models/indicateurs";
 
@@ -59,6 +68,10 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
     const isDark = theme.palette.mode === "dark";
     const [colorMetric, setColorMetric] = useState<ColorMetric>("dette");
 
+    const handleColorMetricChange = (e: SelectChangeEvent<ColorMetric>) => {
+        setColorMetric(e.target.value as ColorMetric);
+    };
+
     // Top N applications avec CVE critiques
     const apps = data
         .filter(d => !d.isModule && Number.parseInt(d.nbCveCritical ?? "0", 10) > 0)
@@ -102,15 +115,17 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
     return (
         <Box>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="subtitle2" color="text.primary">
-                    Top {topN} applications avec CVE critiques
+                <Typography variant="subtitle1" component="h3" color="text.primary">
+                    Les {topN} applications avec CVE critiques
                 </Typography>
                 <FormControl size="small" sx={{ minWidth: 220 }}>
-                    <InputLabel>Colorier par</InputLabel>
+                    <InputLabel id="color-metric-label">Colorier par</InputLabel>
                     <Select
+                        labelId="color-metric-label"
+                        id="color-metric-select"
                         label="Colorier par"
                         value={colorMetric}
-                        onChange={e => setColorMetric(e.target.value as ColorMetric)}
+                        onChange={handleColorMetricChange}
                     >
                         <MenuItem value="dette">Dette technique (jours)</MenuItem>
                         <MenuItem value="mep">Dernière MEP (jours)</MenuItem>
@@ -118,68 +133,71 @@ export function CveTreemap({ data, topN = 25 }: Readonly<CveTreemapProps>) {
                 </FormControl>
             </Box>
 
-            <ReactECharts
-                option={{
-                    backgroundColor: "transparent",
-                    tooltip: {
-                        trigger: "item",
-                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                        borderColor: isDark ? "#444" : "#ddd",
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        }
-                    },
-                    series: [
-                        {
-                            type: "treemap",
-                            data: chartData,
-                            left: "2%",
-                            right: "2%",
-                            top: "2%",
-                            bottom: "2%",
-                            roam: false,
-                            nodeClick: false,
-                            breadcrumb: {
-                                show: false
-                            },
-                            label: {
-                                show: true,
-                                formatter: "{b}\n{c}",
-                                color: "#fff",
-                                fontWeight: "bold",
-                                fontSize: 11,
-                                overflow: "truncate"
-                            },
-                            itemStyle: {
-                                borderColor: isDark ? "#121212" : "#fff",
-                                borderWidth: 2,
-                                gapWidth: 2
-                            },
-                            emphasis: {
+            <figure
+                aria-label={`Treemap des ${topN} applications avec CVE critiques, coloré par ${colorMetric === "dette" ? "dette technique" : "dernière MEP"}`}
+            >
+                <ReactECharts
+                    option={{
+                        backgroundColor: "transparent",
+                        tooltip: {
+                            trigger: "item",
+                            backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                            borderColor: isDark ? "#444" : "#ddd",
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
+                            }
+                        },
+                        series: [
+                            {
+                                type: "treemap",
+                                data: chartData,
+                                left: "2%",
+                                right: "2%",
+                                top: "2%",
+                                bottom: "2%",
+                                roam: false,
+                                nodeClick: false,
+                                breadcrumb: {
+                                    show: false
+                                },
                                 label: {
                                     show: true,
-                                    fontSize: 13
+                                    formatter: "{b}\n{c}",
+                                    color: "#fff",
+                                    fontWeight: "bold",
+                                    fontSize: 11,
+                                    overflow: "truncate"
                                 },
                                 itemStyle: {
-                                    shadowBlur: 10,
-                                    shadowColor: "rgba(0,0,0,0.5)"
-                                }
-                            },
-                            levels: [
-                                {
+                                    borderColor: isDark ? "#121212" : "#fff",
+                                    borderWidth: 2,
+                                    gapWidth: 2
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        fontSize: 13
+                                    },
                                     itemStyle: {
-                                        borderWidth: 0,
-                                        gapWidth: 2
+                                        shadowBlur: 10,
+                                        shadowColor: "rgba(0,0,0,0.5)"
                                     }
-                                }
-                            ]
-                        }
-                    ]
-                }}
-                style={{ height: "400px", width: "100%" }}
-                opts={{ renderer: "canvas" }}
-            />
-
+                                },
+                                levels: [
+                                    {
+                                        itemStyle: {
+                                            borderWidth: 0,
+                                            gapWidth: 2
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }}
+                    style={{ height: "400px", width: "100%" }}
+                    opts={{ renderer: "canvas" }}
+                />
+            </figure>
             {/* Légende des couleurs */}
             <Box display="flex" flexWrap="wrap" gap={1.5} mt={2} justifyContent="center">
                 {Object.entries(legendColors).map(([label, color]) => (

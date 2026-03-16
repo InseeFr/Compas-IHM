@@ -90,7 +90,7 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
                 alignItems="center"
                 justifyContent="space-between"
             >
-                <Typography variant="subtitle2" color="text.primary">
+                <Typography variant="subtitle1" component="h3" color="text.primary">
                     Évolution mensuelle des CVE critiques
                 </Typography>
                 <FormControl size="small" sx={{ minWidth: 260 }}>
@@ -100,7 +100,7 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
                         value={selectedApp}
                         onChange={e => setSelectedApp(e.target.value)}
                     >
-                        <MenuItem value="all">Top {maxApps} applications avec le plus de CVE</MenuItem>
+                        <MenuItem value="all">Les {maxApps} applications avec le plus de CVE</MenuItem>
                         {chartData.availableApps.map(app => (
                             <MenuItem key={app.id} value={app.id}>
                                 {app.name}
@@ -109,85 +109,86 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
                     </Select>
                 </FormControl>
             </Stack>
-
-            <ReactECharts
-                option={{
-                    backgroundColor: "transparent",
-                    tooltip: {
-                        trigger: "axis",
-                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                        borderColor: isDark ? "#444" : "#ddd",
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        }
-                    },
-                    legend: {
-                        data: chartData.series.map(s => s.name),
-                        top: 0,
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        type: selectedApp === "all" ? "scroll" : "plain"
-                    },
-                    grid: {
-                        left: "3%",
-                        right: "4%",
-                        bottom: "10%",
-                        top: selectedApp === "all" ? "15%" : "10%",
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: "category",
-                        boundaryGap: false,
-                        data: chartData.months,
-                        axisLabel: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
-                            }
-                        }
-                    },
-                    yAxis: {
-                        type: "value",
-                        name: "CVE critiques",
-                        nameTextStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLabel: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
+            <figure>
+                <ReactECharts
+                    option={{
+                        backgroundColor: "transparent",
+                        tooltip: {
+                            trigger: "axis",
+                            backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                            borderColor: isDark ? "#444" : "#ddd",
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
                             }
                         },
-                        splitLine: {
-                            lineStyle: {
-                                color: isDark ? "#333" : "#eee"
+                        legend: {
+                            data: chartData.series.map(s => s.name),
+                            top: 0,
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            type: selectedApp === "all" ? "scroll" : "plain"
+                        },
+                        grid: {
+                            left: "3%",
+                            right: "4%",
+                            bottom: "10%",
+                            top: selectedApp === "all" ? "15%" : "10%",
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: "category",
+                            boundaryGap: false,
+                            data: chartData.months,
+                            axisLabel: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
                             }
-                        }
-                    },
-                    series: chartData.series.map(s => ({
-                        name: s.name,
-                        type: "line",
-                        smooth: true,
-                        emphasis: {
-                            focus: "series"
                         },
-                        data: s.data,
-                        lineStyle: {
-                            width: 2
+                        yAxis: {
+                            type: "value",
+                            name: "CVE critiques",
+                            nameTextStyle: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            axisLabel: {
+                                color: isDark ? "#fff" : "#000"
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: isDark ? "#333" : "#eee"
+                                }
+                            }
                         },
-                        itemStyle: {
-                            borderWidth: 2
-                        }
-                    }))
-                }}
-                style={{ height: "350px", width: "100%" }}
-                opts={{ renderer: "canvas" }}
-            />
+                        series: chartData.series.map(s => ({
+                            name: s.name,
+                            type: "line",
+                            smooth: true,
+                            emphasis: {
+                                focus: "series"
+                            },
+                            data: s.data,
+                            lineStyle: {
+                                width: 2
+                            },
+                            itemStyle: {
+                                borderWidth: 2
+                            }
+                        }))
+                    }}
+                    style={{ height: "350px", width: "100%" }}
+                    opts={{ renderer: "canvas" }}
+                />
+            </figure>
         </Box>
     );
 }

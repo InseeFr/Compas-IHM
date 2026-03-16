@@ -200,6 +200,7 @@ export interface GlobalIndicator {
     lettreDetteTechnique?: string;
     lettreGlobaleSecurite: string;
     pourcentageCouvertureTestUniaire: string;
+    nbLigneCode?: string;
     nbCveCritical: string;
     nbCveHigh: string;
     nbCveLow: string;
@@ -247,6 +248,8 @@ export interface GlobalIndicator {
 
     lettreA11y?: string;
     scoreAuditA11y?: number;
+    typeAuditA11yId?: number;
+    typeAuditA11yLibelle?: string;
     lettreQualiteGenerale?: string;
     lettreDevopsGenerale?: string;
     detteTechnique?: string;

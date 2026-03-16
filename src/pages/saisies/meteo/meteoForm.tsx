@@ -45,8 +45,13 @@ export function MeteoForm() {
         commentaire: ""
     };
 
-    const { control, handleSubmit, register, reset, formState: { errors } } =
-        useForm<DemandeCreationMeteo>({ defaultValues });
+    const {
+        control,
+        handleSubmit,
+        register,
+        reset,
+        formState: { errors }
+    } = useForm<DemandeCreationMeteo>({ defaultValues });
 
     const typeMeteo = useWatch({ control, name: "valeurMeteo" });
     const isCommentaryRequired = typeMeteo !== undefined && [1, 2].includes(typeMeteo);

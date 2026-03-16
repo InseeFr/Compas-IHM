@@ -76,7 +76,7 @@ vi.mock("pages/Filters", () => ({
 }));
 
 // CORRECTION 2 : camelCase pour correspondre à l'import du composant
-vi.mock("utils/useQueryIndicators", () => ({
+vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: (args: unknown) => mockUseQueryIndicators(args)
 }));
 
@@ -198,22 +198,22 @@ describe("fetchData dans StrategieCloudTable", () => {
     it("retourne [] et logue l'erreur si getIndicateur échoue", async () => {
         const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         mockGetIndicateur.mockRejectedValue(new Error("API KO"));
-    
+
         let capturedFetchData: (() => Promise<unknown>) | null = null;
         mockUseQueryIndicators.mockImplementationOnce((args: unknown) => {
             capturedFetchData = (args as { fetchData: () => Promise<unknown> }).fetchData;
             return { data: [], isLoading: false, modulesByApp: {}, filteredData: [] };
         });
-    
+
         render(<StrategieCloudTable />);
-    
+
         const result = await capturedFetchData!();
         expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
             "Erreur lors de la récupération des données :",
             expect.any(Error)
         );
-    
+
         consoleSpy.mockRestore();
     });
 

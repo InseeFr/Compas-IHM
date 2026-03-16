@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Box, Grid, CircularProgress, Divider, useTheme, Typography } from "@mui/material";
+import { Box, Grid, CircularProgress, useTheme, Typography } from "@mui/material";
 import {
     BuildCircleOutlined,
     CloudOutlined,
     SecurityOutlined,
     UpdateOutlined,
-    DashboardOutlined,
-    BugReportOutlined,
-    InsightsOutlined
+    DashboardOutlined
 } from "@mui/icons-material";
 
 // Components
@@ -16,12 +13,8 @@ import { Filters } from "pages/Filters";
 import { KpiTile } from "./KpiTile";
 import { ChartCard } from "./ChartCard";
 import { GenericDonut } from "./Charts/GenericDonut";
-import TreeGraphCveCritiques from "./Charts/Treegraph";
-import { CveBarChart } from "./Charts/CveBarChart";
-import { CveTreemap } from "./Charts/CveTreemap";
-import { CveHistoryChart } from "./Charts/CveHistoryChart";
-import { CorrelationChart } from "./Charts/ScatterChart";
 import { SectionHeader } from "./SectionHeader";
+import { SpecializedDashboardLinks } from "./SpecializedDashboardLinks";
 
 // Utils
 import {
@@ -48,8 +41,7 @@ import {
     listerApplicationA11y,
     getIndicateurSecuriteByApplication,
     getMaturiteCloud,
-    getApplications1,
-    getCveCriticalMonthly
+    getApplications1
 } from "todos-api/client.gen";
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import { applyDevFilters } from "utils/filters-functions";
@@ -59,7 +51,6 @@ const DashboardCharts = () => {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
     const [globalInd, setGlobalInd] = useState<GlobalIndicator[]>([]);
-    const [cveMonthlyData, setCveMonthlyData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const { state, dispatch } = useFilterContext();
 
@@ -75,8 +66,7 @@ const DashboardCharts = () => {
                     consoAppData,
                     a11yDataApps,
                     securiteApps,
-                    maturiteCloudApps,
-                    cveCriticalMonthly
+                    maturiteCloudApps
                 ] = await Promise.all([
                     getApplications1(),
                     getIndicateurQualiteByApplication(),
@@ -85,10 +75,8 @@ const DashboardCharts = () => {
                     getApplications(),
                     listerApplicationA11y(),
                     getIndicateurSecuriteByApplication(),
-                    getMaturiteCloud(),
-                    getCveCriticalMonthly()
+                    getMaturiteCloud()
                 ]);
-
                 const formattedApplications = formattedApps({
                     apps,
                     qualiteAppData,
@@ -101,7 +89,6 @@ const DashboardCharts = () => {
                 });
 
                 setGlobalInd(formattedApplications);
-                setCveMonthlyData(cveCriticalMonthly);
             } catch (error) {
                 console.error("Erreur chargement données:", error);
             } finally {
@@ -239,68 +226,7 @@ const DashboardCharts = () => {
                 </Typography>
             </Box>
 
-            <Divider sx={{ my: 6, opacity: 0.3 }} />
-
-            {/* ========== SECTION 2: CVE ========== */}
-            <Box mb={6}>
-                <SectionHeader
-                    icon={<BugReportOutlined />}
-                    title="Analyse des vulnérabilités"
-                    subtitle="Suivi détaillé des CVE critiques et tendances"
-                />
-
-                {/* Graphiques CVE côte à côte */}
-                <Grid container spacing={3} mb={3}>
-                    <Grid size={{ xs: 12, lg: 6 }}>
-                        <ChartCard>
-                            <CveBarChart data={filteredData} topN={10} />
-                        </ChartCard>
-                    </Grid>
-                    <Grid size={{ xs: 12, lg: 6 }}>
-                        <ChartCard>
-                            <CveTreemap data={filteredData} topN={25} />
-                        </ChartCard>
-                    </Grid>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            textAlign: "right",
-                            color: "text.primary",
-                            mb: 3,
-                            mt: 2
-                        }}
-                    >
-                        💡 Cliquez sur les carrés de la légende pour afficher/masquer les courbes
-                    </Typography>
-                </Grid>
-
-                {/* Historique CVE */}
-                <Box mb={3}>
-                    <ChartCard>
-                        <CveHistoryChart data={filteredData} monthlyData={cveMonthlyData} maxApps={6} />
-                    </ChartCard>
-                </Box>
-
-                {/* TreeGraph CVE */}
-                <ChartCard>
-                    <TreeGraphCveCritiques data={filteredData} maxAppsPerSndi={30} height="600px" />
-                </ChartCard>
-            </Box>
-
-            <Divider sx={{ my: 6, opacity: 0.3 }} />
-
-            {/* ========== SECTION 3: ANALYSE CROISÉE ========== */}
-            <Box mb={6}>
-                <SectionHeader
-                    icon={<InsightsOutlined />}
-                    title="Analyse croisée"
-                    subtitle="Corrélations et insights entre métriques"
-                />
-
-                <ChartCard>
-                    <CorrelationChart data={filteredData} />
-                </ChartCard>
-            </Box>
+            <SpecializedDashboardLinks />
         </Box>
     );
 };

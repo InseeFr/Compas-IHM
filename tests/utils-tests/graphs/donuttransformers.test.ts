@@ -18,7 +18,8 @@ describe("donutTransformers", () => {
 
             const result = transformQualiteData(data);
 
-            expect(result).toHaveLength(7);
+            // ORDERED_QUALITE = ["A", "B", "C", "D", "E", "X", "NR", "SO"] → 8 entrées
+            expect(result).toHaveLength(8);
             expect(result[0]).toMatchObject({ name: "A", value: 2 });
             expect(result[1]).toMatchObject({ name: "B", value: 1 });
             expect(result[2]).toMatchObject({ name: "C", value: 1 });
@@ -39,7 +40,8 @@ describe("donutTransformers", () => {
         it("should handle empty data", () => {
             const result = transformQualiteData([]);
 
-            expect(result).toHaveLength(7); // A, B, C, D, E, NR, SO
+            // ORDERED_QUALITE = ["A", "B", "C", "D", "E", "X", "NR", "SO"] → 8 entrées
+            expect(result).toHaveLength(8);
             result.forEach(item => {
                 expect(item.value).toBe(0);
             });
@@ -56,6 +58,20 @@ describe("donutTransformers", () => {
             const nrItem = result.find(item => item.name === "NR");
 
             expect(nrItem?.value).toBe(2); // null et undefined comptent comme NR
+        });
+
+        it("should include X as a valid quality letter", () => {
+            const data: any[] = [
+                { lettreQualiteGenerale: "X" },
+                { lettreQualiteGenerale: "X" },
+                { lettreQualiteGenerale: "A" }
+            ];
+
+            const result = transformQualiteData(data);
+            const xItem = result.find(item => item.name === "X");
+
+            expect(xItem).toBeDefined();
+            expect(xItem?.value).toBe(2);
         });
     });
 
@@ -98,11 +114,11 @@ describe("donutTransformers", () => {
     describe("transformDetteData", () => {
         it("should categorize debt by buckets", () => {
             const data: any[] = [
-                { detteTechnique: "420" }, // 1 jour -> 0-5
-                { detteTechnique: "2520" }, // 6 jours -> 6-15
-                { detteTechnique: "6720" }, // 16 jours -> 16-30
-                { detteTechnique: "13020" }, // 31 jours -> 31-90
-                { detteTechnique: "40000" } // 95 jours -> >90
+                { detteTechnique: "420" }, // 1 jour  → 0-5
+                { detteTechnique: "2520" }, // 6 jours → 6-15
+                { detteTechnique: "6720" }, // 16 jours → 16-30
+                { detteTechnique: "13020" }, // 31 jours → 31-90
+                { detteTechnique: "40000" } // 95 jours → >90
             ];
 
             const result = transformDetteData(data);

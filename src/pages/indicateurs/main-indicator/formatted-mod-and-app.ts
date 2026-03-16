@@ -62,7 +62,8 @@ const createQualiteIndicators = (qualite?: IndicateurQualiteView) => ({
     lettreDetteTechnique: stringOrNR(qualite?.lettreDetteTechnique),
     lettreQualiteGenerale: stringOrNR(qualite?.lettreGlobalQualite),
     pourcentageCouvertureTestUniaire: stringOrNR(qualite?.pourcentageCouvertureTestUniaire),
-    detteTechnique: qualite?.detteTechnique ? qualite.detteTechnique.replace(/\.00$/, "") : NR
+    detteTechnique: qualite?.detteTechnique ? qualite.detteTechnique.replace(/\.00$/, "") : NR,
+    nbLigneCode: qualite?.nbLigneCode ? qualite.nbLigneCode.replace(/\.00$/, "") : NR
 });
 
 const createSecuriteIndicators = (securite?: IndicateurSecuriteView) => ({
@@ -146,6 +147,8 @@ const MODULE_GREEN_IT_DEFAULTS = {
 const createA11yIndicators = (a11y?: IndicateursModuleA11Y) => ({
     lettreA11y: stringOrNR(a11y?.notation),
     scoreAuditA11y: numberOrDefault(a11y?.scoreAudit),
+    typeAuditA11yId: a11y?.typeAuditId,
+    typeAuditA11yLibelle: a11y?.typeAuditLibelle,
     declarationA11y: a11y?.isDeclaration ?? undefined,
     dateDeclarationA11y: stringOrNR(a11y?.dateDeclaration)
 });
