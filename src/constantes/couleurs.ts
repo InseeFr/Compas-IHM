@@ -13,7 +13,7 @@ export const QUALITE_COLORS: Record<string, string> = {
     SO: "#90a4ae"
 };
 
-export const ORDERED_QUALITE = ["A", "B", "C", "D", "E", "NR", "SO"] as const;
+export const ORDERED_QUALITE = ["A", "B", "C", "D", "E", "X", "NR", "SO"] as const;
 
 // Météo ressentie (1=Orage, 4=Soleil)
 export const METEO_LABELS: Record<string, string> = {

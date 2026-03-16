@@ -53,12 +53,12 @@ describe("CveBarChart", () => {
 
     it("should render title with default topN", () => {
         const { getByText } = renderWithTheme(<CveBarChart data={mockData} />);
-        expect(getByText("Top 10 applications avec le plus de CVE")).toBeInTheDocument();
+        expect(getByText("Les 10 applications avec le plus de CVE")).toBeInTheDocument();
     });
 
     it("should render title with custom topN", () => {
         const { getByText } = renderWithTheme(<CveBarChart data={mockData} topN={5} />);
-        expect(getByText("Top 5 applications avec le plus de CVE")).toBeInTheDocument();
+        expect(getByText("Les 5 applications avec le plus de CVE")).toBeInTheDocument();
     });
 
     it("should handle empty data", () => {

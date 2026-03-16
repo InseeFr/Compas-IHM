@@ -92,7 +92,8 @@ export function KpiTile({ label, value, helper, accent, icon }: Readonly<KpiTile
                         {label}
                     </Typography>
                     <Typography
-                        variant="h4"
+                        variant="h2"
+                        component="p"
                         fontWeight={700}
                         color="text.primary"
                         mb={0.5}

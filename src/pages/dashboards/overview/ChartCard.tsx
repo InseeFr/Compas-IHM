@@ -1,13 +1,15 @@
 import { Box, Card, Typography, useTheme } from "@mui/material";
+import type { SxProps, Theme } from "@mui/material";
 import type { ReactNode } from "react";
 
 interface ChartCardProps {
     title?: string;
     children: ReactNode;
     minHeight?: number | string;
+    sx?: SxProps<Theme>;
 }
 
-export function ChartCard({ title, children, minHeight = 320 }: Readonly<ChartCardProps>) {
+export function ChartCard({ title, children, minHeight = 320, sx }: Readonly<ChartCardProps>) {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
 
@@ -41,25 +43,19 @@ export function ChartCard({ title, children, minHeight = 320 }: Readonly<ChartCa
                     height: 3,
                     background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                     opacity: 0.8
-                }
+                },
+                ...sx
             }}
         >
-            <Box
-                sx={{
-                    p: 3,
-                    minHeight
-                }}
-            >
+            <Box sx={{ p: 3, minHeight }}>
                 {title && (
                     <Typography
                         variant="h6"
+                        component="h3"
                         fontWeight={600}
                         color="text.primary"
                         mb={2}
-                        sx={{
-                            letterSpacing: -0.3,
-                            fontSize: "1.1rem"
-                        }}
+                        sx={{ letterSpacing: -0.3, fontSize: "1.1rem" }}
                     >
                         {title}
                     </Typography>

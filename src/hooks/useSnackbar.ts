@@ -13,11 +13,9 @@ export function useSnackbar() {
         message: ""
     });
 
-    const showSuccess = (message: string) =>
-        setSnackbar({ open: true, severity: "success", message });
+    const showSuccess = (message: string) => setSnackbar({ open: true, severity: "success", message });
 
-    const showError = (message: string) =>
-        setSnackbar({ open: true, severity: "error", message });
+    const showError = (message: string) => setSnackbar({ open: true, severity: "error", message });
 
     const close = () => setSnackbar(prev => ({ ...prev, open: false }));
 

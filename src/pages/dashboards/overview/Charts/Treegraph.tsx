@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTheme } from "@mui/material";
 import ReactECharts from "echarts-for-react";
+import React from "react";
 
 type Row = {
     applicationName: string;
@@ -91,69 +92,71 @@ const TreeGraphCveCritiques: React.FC<TreeGraphCveCritiquesProps> = ({
     };
 
     return (
-        <ReactECharts
-            option={{
-                backgroundColor: "transparent",
-                tooltip: {
-                    trigger: "item",
-                    triggerOn: "mousemove",
-                    backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                    borderColor: isDark ? "#444" : "#ddd",
-                    textStyle: {
-                        color: isDark ? "#fff" : "#000"
-                    },
-                    formatter: (params: any) => params.name
-                },
-                series: [
-                    {
-                        type: "tree",
-                        data: [treeData],
-                        top: "5%",
-                        bottom: "5%",
-                        left: "10%",
-                        right: "20%",
-                        layout: "orthogonal",
-                        orient: "LR",
-                        symbol: "rect",
-                        symbolSize: 8,
-                        initialTreeDepth: 2,
-                        expandAndCollapse: true,
-                        animationDuration: 550,
-                        animationDurationUpdate: 750,
-                        label: {
-                            position: "right",
-                            verticalAlign: "middle",
-                            align: "left",
-                            fontSize: 12,
-                            color: isDark ? "#fff" : "#000",
-                            backgroundColor: "transparent"
+        <figure>
+            <ReactECharts
+                option={{
+                    backgroundColor: "transparent",
+                    tooltip: {
+                        trigger: "item",
+                        triggerOn: "mousemove",
+                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                        borderColor: isDark ? "#444" : "#ddd",
+                        textStyle: {
+                            color: isDark ? "#fff" : "#000"
                         },
-                        leaves: {
+                        formatter: (params: any) => params.name
+                    },
+                    series: [
+                        {
+                            type: "tree",
+                            data: [treeData],
+                            top: "5%",
+                            bottom: "5%",
+                            left: "10%",
+                            right: "20%",
+                            layout: "orthogonal",
+                            orient: "LR",
+                            symbol: "rect",
+                            symbolSize: 8,
+                            initialTreeDepth: 2,
+                            expandAndCollapse: true,
+                            animationDuration: 550,
+                            animationDurationUpdate: 750,
                             label: {
                                 position: "right",
                                 verticalAlign: "middle",
-                                align: "left"
+                                align: "left",
+                                fontSize: 12,
+                                color: isDark ? "#fff" : "#000",
+                                backgroundColor: "transparent"
+                            },
+                            leaves: {
+                                label: {
+                                    position: "right",
+                                    verticalAlign: "middle",
+                                    align: "left"
+                                }
+                            },
+                            emphasis: {
+                                focus: "descendant"
+                            },
+                            itemStyle: {
+                                color: theme.palette.primary.main,
+                                borderColor: isDark ? "#444" : "#ccc",
+                                borderWidth: 1
+                            },
+                            lineStyle: {
+                                color: isDark ? "#555" : "#ccc",
+                                width: 1.5,
+                                curveness: 0.5
                             }
-                        },
-                        emphasis: {
-                            focus: "descendant"
-                        },
-                        itemStyle: {
-                            color: theme.palette.primary.main,
-                            borderColor: isDark ? "#444" : "#ccc",
-                            borderWidth: 1
-                        },
-                        lineStyle: {
-                            color: isDark ? "#555" : "#ccc",
-                            width: 1.5,
-                            curveness: 0.5
                         }
-                    }
-                ]
-            }}
-            style={{ height: typeof height === "number" ? `${height}px` : height, width: "100%" }}
-            opts={{ renderer: "canvas" }}
-        />
+                    ]
+                }}
+                style={{ height: typeof height === "number" ? `${height}px` : height, width: "100%" }}
+                opts={{ renderer: "canvas" }}
+            />
+        </figure>
     );
 };
 

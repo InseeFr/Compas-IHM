@@ -20,7 +20,7 @@ import { columnsGlobal, paginationConfig } from "./main-config";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Filters } from "pages/Filters";
 import { onExport } from "./csvexport";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 
 export const MainIndicator = () => {
     const { state, dispatch } = useFilterContext();

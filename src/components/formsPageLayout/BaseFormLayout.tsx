@@ -37,11 +37,7 @@ export function BaseFormLayout({
                 onClose={onCloseSnackbar}
                 autoDuration={4000}
                 render={
-                    <Alert
-                        severity={snackbar.severity}
-                        sx={{ width: "100%" }}
-                        onClose={onCloseSnackbar}
-                    >
+                    <Alert severity={snackbar.severity} sx={{ width: "100%" }} onClose={onCloseSnackbar}>
                         {snackbar.message}
                     </Alert>
                 }

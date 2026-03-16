@@ -23,8 +23,14 @@ import { Route as IndicateurGreenITTableRouteImport } from './routes/indicateur/
 import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
 import { Route as IndicateurAccessibiliteTableRouteImport } from './routes/indicateur/accessibiliteTable'
 import { Route as DashboardSyntheseRouteImport } from './routes/dashboard/synthese'
+import { Route as DashboardSecuriteRouteImport } from './routes/dashboard/securite'
+import { Route as DashboardQualiteRouteImport } from './routes/dashboard/qualite'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
+import { Route as DashboardMeteoRouteImport } from './routes/dashboard/meteo'
 import { Route as DashboardMaturiteRouteImport } from './routes/dashboard/maturite'
+import { Route as DashboardGreenitRouteImport } from './routes/dashboard/greenit'
+import { Route as DashboardDevopsRouteImport } from './routes/dashboard/devops'
+import { Route as DashboardAccessibiliteRouteImport } from './routes/dashboard/accessibilite'
 
 const PageNameRoute = PageNameRouteImport.update({
   id: '/$pageName',
@@ -100,9 +106,24 @@ const DashboardSyntheseRoute = DashboardSyntheseRouteImport.update({
   path: '/dashboard/synthese',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardSecuriteRoute = DashboardSecuriteRouteImport.update({
+  id: '/dashboard/securite',
+  path: '/dashboard/securite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardQualiteRoute = DashboardQualiteRouteImport.update({
+  id: '/dashboard/qualite',
+  path: '/dashboard/qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   id: '/dashboard/overview',
   path: '/dashboard/overview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardMeteoRoute = DashboardMeteoRouteImport.update({
+  id: '/dashboard/meteo',
+  path: '/dashboard/meteo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
@@ -110,12 +131,33 @@ const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
   path: '/dashboard/maturite',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardGreenitRoute = DashboardGreenitRouteImport.update({
+  id: '/dashboard/greenit',
+  path: '/dashboard/greenit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardDevopsRoute = DashboardDevopsRouteImport.update({
+  id: '/dashboard/devops',
+  path: '/dashboard/devops',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAccessibiliteRoute = DashboardAccessibiliteRouteImport.update({
+  id: '/dashboard/accessibilite',
+  path: '/dashboard/accessibilite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
+  '/dashboard/devops': typeof DashboardDevopsRoute
+  '/dashboard/greenit': typeof DashboardGreenitRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/meteo': typeof DashboardMeteoRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/qualite': typeof DashboardQualiteRoute
+  '/dashboard/securite': typeof DashboardSecuriteRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
@@ -132,8 +174,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
+  '/dashboard/devops': typeof DashboardDevopsRoute
+  '/dashboard/greenit': typeof DashboardGreenitRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/meteo': typeof DashboardMeteoRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/qualite': typeof DashboardQualiteRoute
+  '/dashboard/securite': typeof DashboardSecuriteRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
@@ -151,8 +199,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
+  '/dashboard/devops': typeof DashboardDevopsRoute
+  '/dashboard/greenit': typeof DashboardGreenitRoute
   '/dashboard/maturite': typeof DashboardMaturiteRoute
+  '/dashboard/meteo': typeof DashboardMeteoRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/qualite': typeof DashboardQualiteRoute
+  '/dashboard/securite': typeof DashboardSecuriteRoute
   '/dashboard/synthese': typeof DashboardSyntheseRoute
   '/indicateur/accessibiliteTable': typeof IndicateurAccessibiliteTableRoute
   '/indicateur/devopsTable': typeof IndicateurDevopsTableRoute
@@ -171,8 +225,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$pageName'
+    | '/dashboard/accessibilite'
+    | '/dashboard/devops'
+    | '/dashboard/greenit'
     | '/dashboard/maturite'
+    | '/dashboard/meteo'
     | '/dashboard/overview'
+    | '/dashboard/qualite'
+    | '/dashboard/securite'
     | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
@@ -189,8 +249,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$pageName'
+    | '/dashboard/accessibilite'
+    | '/dashboard/devops'
+    | '/dashboard/greenit'
     | '/dashboard/maturite'
+    | '/dashboard/meteo'
     | '/dashboard/overview'
+    | '/dashboard/qualite'
+    | '/dashboard/securite'
     | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
@@ -207,8 +273,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$pageName'
+    | '/dashboard/accessibilite'
+    | '/dashboard/devops'
+    | '/dashboard/greenit'
     | '/dashboard/maturite'
+    | '/dashboard/meteo'
     | '/dashboard/overview'
+    | '/dashboard/qualite'
+    | '/dashboard/securite'
     | '/dashboard/synthese'
     | '/indicateur/accessibiliteTable'
     | '/indicateur/devopsTable'
@@ -226,8 +298,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PageNameRoute: typeof PageNameRoute
+  DashboardAccessibiliteRoute: typeof DashboardAccessibiliteRoute
+  DashboardDevopsRoute: typeof DashboardDevopsRoute
+  DashboardGreenitRoute: typeof DashboardGreenitRoute
   DashboardMaturiteRoute: typeof DashboardMaturiteRoute
+  DashboardMeteoRoute: typeof DashboardMeteoRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
+  DashboardQualiteRoute: typeof DashboardQualiteRoute
+  DashboardSecuriteRoute: typeof DashboardSecuriteRoute
   DashboardSyntheseRoute: typeof DashboardSyntheseRoute
   IndicateurAccessibiliteTableRoute: typeof IndicateurAccessibiliteTableRoute
   IndicateurDevopsTableRoute: typeof IndicateurDevopsTableRoute
@@ -342,11 +420,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSyntheseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/securite': {
+      id: '/dashboard/securite'
+      path: '/dashboard/securite'
+      fullPath: '/dashboard/securite'
+      preLoaderRoute: typeof DashboardSecuriteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/qualite': {
+      id: '/dashboard/qualite'
+      path: '/dashboard/qualite'
+      fullPath: '/dashboard/qualite'
+      preLoaderRoute: typeof DashboardQualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/overview': {
       id: '/dashboard/overview'
       path: '/dashboard/overview'
       fullPath: '/dashboard/overview'
       preLoaderRoute: typeof DashboardOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/meteo': {
+      id: '/dashboard/meteo'
+      path: '/dashboard/meteo'
+      fullPath: '/dashboard/meteo'
+      preLoaderRoute: typeof DashboardMeteoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/maturite': {
@@ -356,14 +455,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMaturiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/greenit': {
+      id: '/dashboard/greenit'
+      path: '/dashboard/greenit'
+      fullPath: '/dashboard/greenit'
+      preLoaderRoute: typeof DashboardGreenitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/devops': {
+      id: '/dashboard/devops'
+      path: '/dashboard/devops'
+      fullPath: '/dashboard/devops'
+      preLoaderRoute: typeof DashboardDevopsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/accessibilite': {
+      id: '/dashboard/accessibilite'
+      path: '/dashboard/accessibilite'
+      fullPath: '/dashboard/accessibilite'
+      preLoaderRoute: typeof DashboardAccessibiliteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PageNameRoute: PageNameRoute,
+  DashboardAccessibiliteRoute: DashboardAccessibiliteRoute,
+  DashboardDevopsRoute: DashboardDevopsRoute,
+  DashboardGreenitRoute: DashboardGreenitRoute,
   DashboardMaturiteRoute: DashboardMaturiteRoute,
+  DashboardMeteoRoute: DashboardMeteoRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
+  DashboardQualiteRoute: DashboardQualiteRoute,
+  DashboardSecuriteRoute: DashboardSecuriteRoute,
   DashboardSyntheseRoute: DashboardSyntheseRoute,
   IndicateurAccessibiliteTableRoute: IndicateurAccessibiliteTableRoute,
   IndicateurDevopsTableRoute: IndicateurDevopsTableRoute,

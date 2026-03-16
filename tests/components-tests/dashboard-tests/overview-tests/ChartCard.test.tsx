@@ -98,3 +98,29 @@ describe("ChartCard", () => {
         expect(screen.getByTestId("child2")).toBeInTheDocument();
     });
 });
+
+const darkTheme = createTheme({ palette: { mode: "dark" } });
+
+const renderWithDarkTheme = (component: React.ReactElement) => {
+    return render(<ThemeProvider theme={darkTheme}>{component}</ThemeProvider>);
+};
+
+describe("ChartCard - thème sombre", () => {
+    it("s'affiche correctement en mode dark", () => {
+        renderWithDarkTheme(
+            <ChartCard>
+                <div data-testid="chart-content">Content</div>
+            </ChartCard>
+        );
+        expect(screen.getByTestId("chart-content")).toBeInTheDocument();
+    });
+
+    it("affiche le titre en mode dark", () => {
+        renderWithDarkTheme(
+            <ChartCard title="Dark Title">
+                <div>Content</div>
+            </ChartCard>
+        );
+        expect(screen.getByText("Dark Title")).toBeInTheDocument();
+    });
+});

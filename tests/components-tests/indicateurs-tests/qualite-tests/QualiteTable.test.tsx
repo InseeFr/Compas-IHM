@@ -6,7 +6,7 @@ import { useFilterContext } from "store/filterContext";
 import * as clientApi from "todos-api/client.gen";
 import * as qualiteConfig from "pages/indicateurs/qualité/qualiteConfig";
 import * as groupModuleUtils from "utils/group-module-by-apps";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
@@ -55,7 +55,7 @@ vi.mock("pages/Filters", () => ({
     Filters: () => <div data-testid="filters" />
 }));
 
-vi.mock("utils/useQueryIndicators", () => ({
+vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
 
@@ -159,26 +159,26 @@ describe("QualiteIndicateurTable", () => {
     it("fetchData retourne [] et log une erreur si le fetch échoue", async () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
         const fetchError = new Error("Network error");
-    
+
         (clientApi.getIndicateurQualiteByApplication as any).mockRejectedValue(fetchError);
-    
+
         let capturedFetchData: (() => Promise<any>) | undefined;
-    
+
         (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
             capturedFetchData = fetchData;
             return { data: [], filteredData: [], modulesByApp: {}, isLoading: false };
         });
-    
+
         render(<QualiteIndicateurTable />);
-    
+
         const result = await capturedFetchData!();
-    
+
         expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
             "Erreur lors de la récupération des données qualité: ",
             fetchError
         );
-    
+
         consoleSpy.mockRestore();
     });
 

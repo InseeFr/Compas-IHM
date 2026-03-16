@@ -12,7 +12,7 @@ import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { ToggleButton, ToggleButtonGroup, Box } from "@mui/material";
 import { Filters } from "pages/Filters";
-import { useQueryIndicators } from "utils/useQueryIndicators";
+import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { GreenItDate } from "components/GreenItDate";
 
 export const GreenItTable = () => {

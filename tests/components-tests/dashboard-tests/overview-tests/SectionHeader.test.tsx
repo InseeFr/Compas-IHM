@@ -47,7 +47,7 @@ describe("SectionHeader", () => {
         renderWithTheme(<SectionHeader icon={<DashboardOutlined />} title="Test Title" />);
 
         const title = screen.getByText("Test Title");
-        expect(title.tagName).toBe("H5");
+        expect(title.tagName).toBe("H1");
     });
 
     it("should apply correct styles for title", () => {

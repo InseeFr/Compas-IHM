@@ -15,7 +15,7 @@ export function CveBarChart({ data, topN = 10 }: Readonly<CveBarChartProps>) {
     const isDark = theme.palette.mode === "dark";
 
     const appsWithCve = data
-        .filter(d => !d.isModule) // Seulement les applications
+        .filter(d => !d.isModule)
         .map(d => ({
             name: d.applicationName,
             critical: Number.parseInt(d.nbCveCritical ?? "0", 10),
@@ -41,124 +41,116 @@ export function CveBarChart({ data, topN = 10 }: Readonly<CveBarChartProps>) {
 
     return (
         <Box>
-            <Typography variant="subtitle2" gutterBottom textAlign="center" color="text.primary">
-                Top {topN} applications avec le plus de CVE
+            <Typography
+                variant="subtitle1"
+                component="h3"
+                gutterBottom
+                textAlign="center"
+                color="text.primary"
+            >
+                Les {topN} applications avec le plus de CVE
             </Typography>
-            <ReactECharts
-                option={{
-                    backgroundColor: "transparent",
-                    tooltip: {
-                        trigger: "axis",
-                        axisPointer: {
-                            type: "shadow"
-                        },
-                        backgroundColor: isDark ? "#1d1d1d" : "#fff",
-                        borderColor: isDark ? "#444" : "#ddd",
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        }
-                    },
-                    legend: {
-                        data: ["Faible", "Moyen", "Élevé", "Critique"],
-                        bottom: 0,
-                        textStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        }
-                    },
-                    grid: {
-                        left: "3%",
-                        right: "4%",
-                        bottom: "15%",
-                        top: "5%",
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: "category",
-                        data: chartData.applications,
-                        axisLabel: {
-                            rotate: 45,
-                            color: isDark ? "#fff" : "#000",
-                            fontSize: 11
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
-                            }
-                        }
-                    },
-                    yAxis: {
-                        type: "value",
-                        nameTextStyle: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLabel: {
-                            color: isDark ? "#fff" : "#000"
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: isDark ? "#555" : "#ccc"
+            <figure aria-label={`Graphique à barres : les ${topN} applications avec le plus de CVE`}>
+                <ReactECharts
+                    option={{
+                        backgroundColor: "transparent",
+                        tooltip: {
+                            trigger: "axis",
+                            axisPointer: {
+                                type: "shadow"
+                            },
+                            backgroundColor: isDark ? "#1d1d1d" : "#fff",
+                            borderColor: isDark ? "#444" : "#ddd",
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
                             }
                         },
-                        splitLine: {
-                            lineStyle: {
-                                color: isDark ? "#333" : "#eee"
+                        legend: {
+                            data: ["Faible", "Moyen", "Élevé", "Critique"],
+                            bottom: 0,
+                            textStyle: {
+                                color: isDark ? "#fff" : "#000"
                             }
-                        }
-                    },
-                    series: [
-                        {
-                            name: "Faible",
-                            type: "bar",
-                            stack: "total",
-                            emphasis: {
-                                focus: "series"
-                            },
-                            itemStyle: {
-                                color: "#388e3c"
-                            },
-                            data: chartData.low
                         },
-                        {
-                            name: "Moyen",
-                            type: "bar",
-                            stack: "total",
-                            emphasis: {
-                                focus: "series"
-                            },
-                            itemStyle: {
-                                color: "#fbc02d"
-                            },
-                            data: chartData.medium
+                        grid: {
+                            left: "3%",
+                            right: "4%",
+                            bottom: "15%",
+                            top: "5%",
+                            containLabel: true
                         },
-                        {
-                            name: "Élevé",
-                            type: "bar",
-                            stack: "total",
-                            emphasis: {
-                                focus: "series"
+                        xAxis: {
+                            type: "category",
+                            data: chartData.applications,
+                            axisLabel: {
+                                rotate: 45,
+                                color: isDark ? "#fff" : "#000",
+                                fontSize: 11
                             },
-                            itemStyle: {
-                                color: "#f57c00"
-                            },
-                            data: chartData.high
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
+                            }
                         },
-                        {
-                            name: "Critique",
-                            type: "bar",
-                            stack: "total",
-                            emphasis: {
-                                focus: "series"
+                        yAxis: {
+                            type: "value",
+                            nameTextStyle: {
+                                color: isDark ? "#fff" : "#000"
                             },
-                            itemStyle: {
-                                color: "#d32f2f"
+                            axisLabel: {
+                                color: isDark ? "#fff" : "#000"
                             },
-                            data: chartData.critical
-                        }
-                    ]
-                }}
-                style={{ height: "400px", width: "100%" }}
-                opts={{ renderer: "canvas" }}
-            />
+                            axisLine: {
+                                lineStyle: {
+                                    color: isDark ? "#555" : "#ccc"
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: isDark ? "#333" : "#eee"
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: "Faible",
+                                type: "bar",
+                                stack: "total",
+                                emphasis: { focus: "series" },
+                                itemStyle: { color: "#388e3c" },
+                                data: chartData.low
+                            },
+                            {
+                                name: "Moyen",
+                                type: "bar",
+                                stack: "total",
+                                emphasis: { focus: "series" },
+                                itemStyle: { color: "#fbc02d" },
+                                data: chartData.medium
+                            },
+                            {
+                                name: "Élevé",
+                                type: "bar",
+                                stack: "total",
+                                emphasis: { focus: "series" },
+                                itemStyle: { color: "#f57c00" },
+                                data: chartData.high
+                            },
+                            {
+                                name: "Critique",
+                                type: "bar",
+                                stack: "total",
+                                emphasis: { focus: "series" },
+                                itemStyle: { color: "#d32f2f" },
+                                data: chartData.critical
+                            }
+                        ]
+                    }}
+                    style={{ height: "400px", width: "100%" }}
+                    opts={{ renderer: "canvas" }}
+                />
+            </figure>
         </Box>
     );
 }
