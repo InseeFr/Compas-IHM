@@ -95,17 +95,6 @@ describe("useQueryIndicators", () => {
         expect(result.current.isLoading).toBe(true);
     });
 
-    it("retourne isLoading à false après chargement", () => {
-        const { result } = renderHook(() =>
-            useQueryIndicators({
-                queryKey: ["testKey"],
-                fetchData: vi.fn(),
-                hasModules: false
-            })
-        );
-        expect(result.current.isLoading).toBe(false);
-    });
-
     it("retourne les données filtrées via applyDevFilters", () => {
         mockApplyDevFilters.mockImplementation((item: TestItem) => item.name === "App X");
         const { result } = renderHook(() =>

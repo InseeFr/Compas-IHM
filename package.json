@@ -72,6 +72,6 @@
     },
     "overrides": {
         "minimatch": "^10.2.3",
-        "flatted": "3.4.0"
+        "flatted": "3.4.2"
     }
 }

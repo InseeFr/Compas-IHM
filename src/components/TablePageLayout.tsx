@@ -12,11 +12,13 @@ import AnimatedTitle from "./AnimatedTitleLayout";
 import { Paper, Stack } from "@mui/material";
 import "styles/tablePageLayout.css";
 import Ariane from "./Ariane";
+import RefreshButton from "./RefreshButton";
 
 interface TablePageLayoutProps<T extends MRT_RowData> {
     titleTable: string;
     columns: MRT_ColumnDef<T>[];
     data: T[];
+    fetch: () => Promise<unknown>;
     isLoading: boolean;
     paginationConfig: Pagination;
     reactKey?: string;
@@ -39,7 +41,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 columns={props.columns}
                 enableFullScreenToggle={false}
                 enableExpanding={true}
-                enableColumnFilters={false}
+                enableColumnFilters={true}
                 enableColumnActions={false}
                 enableHiding={false}
                 enableGlobalFilter={true}
@@ -61,12 +63,16 @@ export default function TablePageLayout<T extends MRT_RowData>(
                         alignItems="flex-start"
                         width={"100%"}
                         gap={2}
+                        sx={{
+                            padding: "0 16px"
+                        }}
                     >
                         <Stack direction="row" gap={4}>
                             {props.filters}
                         </Stack>
                         <Stack direction={"row"} gap={10}>
                             {props.renderTopCustom({ table })}
+                            <RefreshButton refetch={props.fetch} disabled={props.isLoading} />
                         </Stack>
                     </Stack>
                 )}

@@ -1,5 +1,4 @@
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
 
 import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 import { BaseFormLayout } from "components/formsPageLayout/BaseFormLayout";
@@ -14,10 +13,10 @@ import {
 } from "./strategieCloudFormCell";
 import { useFilterContext } from "store/filterContext";
 import { Filters } from "pages/Filters";
-import { applyDevFilters } from "utils/filters-functions";
-import type { AllIndicators, ModsIndicateur } from "models/indicateurs";
+import type { ModsIndicateur } from "models/indicateurs";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";
+import { useQueryForm } from "hooks/useQueryForm";
 
 interface FormDemandeCreationStrategieCloud {
     idsModule: number[];
@@ -47,43 +46,36 @@ const defaultValues: FormDemandeCreationStrategieCloud = {
 };
 
 export function StrategieCloudForm() {
-    const [modules, setModules] = useState<ModsIndicateur[]>([]);
     const { state, dispatch } = useFilterContext();
     const { snackbar, showSuccess, showError, close } = useSnackbar();
+    const fetchData = async (): Promise<ModsIndicateur[]> => {
+        const items = await getModules1();
+        return (items ?? [])
+            .filter(item => item.id != null)
+            .map(item => ({
+                id: item.id!,
+                modName: item.modName ?? item.nomTechnique ?? "NR",
+                domaine: item.domaineSndi ?? "",
+                sndi: item.sndi ?? "",
+                domaineFonc: item.domaineFonctionnel ?? "",
+                nomTechnique: item.nomTechnique,
+                applicationTechnique: item.applicationTechnique,
+                sourceCreation: item.sourceCreation,
+                idApplication: item.idApplication,
+                appName: item.appName,
+                keySonar: item.keySonar,
+                statut: item.statut,
+                dateDerniereLivraisonEnProduction: item.dateDerniereLivraisonEnProduction,
+                typeLivrable: item.typeLivrable,
+                urlCodeSource: item.urlCodeSource
+            }))
+            .sort((a, b) => (a.modName ?? "").localeCompare(b.modName ?? ""));
+    };
 
-    useEffect(() => {
-        async function fetchData() {
-            const items = await getModules1();
-            setModules(
-                (items ?? [])
-                    .filter(item => item.id != null)
-                    .map(item => ({
-                        id: item.id!,
-                        modName: item.modName ?? item.nomTechnique ?? "NR",
-                        domaine: item.domaineSndi ?? "",
-                        sndi: item.sndi ?? "",
-                        domaineFonc: item.domaineFonctionnel ?? "",
-                        nomTechnique: item.nomTechnique,
-                        applicationTechnique: item.applicationTechnique,
-                        sourceCreation: item.sourceCreation,
-                        idApplication: item.idApplication,
-                        appName: item.appName,
-                        keySonar: item.keySonar,
-                        statut: item.statut,
-                        dateDerniereLivraisonEnProduction: item.dateDerniereLivraisonEnProduction,
-                        typeLivrable: item.typeLivrable,
-                        urlCodeSource: item.urlCodeSource
-                    }))
-                    .sort((a, b) => (a.modName ?? "").localeCompare(b.modName ?? ""))
-            );
-        }
-        fetchData();
-    }, []);
-
-    const filteredData = useMemo(
-        () => modules.filter(item => applyDevFilters(item, state)),
-        [modules, state]
-    );
+    const { data, filteredData } = useQueryForm({
+        queryKey: ["StrategieCloudForm"],
+        fetchData
+    });
 
     const {
         control,
@@ -107,24 +99,18 @@ export function StrategieCloudForm() {
                 date: new Date().toISOString().split("T")[0]
             };
             await saisirStrategieCloud(apiData);
-            showSuccess("Création de la stratégie cloud réussie.");
+            showSuccess("Mise à jour de la stratégie cloud réussie.");
             reset(defaultValues);
         } catch (error) {
-            console.error("Erreur création stratégie cloud:", error);
-            showError("Une erreur est survenue lors de la création de la stratégie cloud.");
+            console.error("Erreur Mise à jour de la stratégie cloud:", error);
+            showError("Une erreur est survenue lors de la mise à jour de la stratégie cloud.");
         }
     };
 
     return (
         <BaseFormLayout
             title="Saisir une stratégie cloud"
-            filtres={
-                <Filters
-                    state={state}
-                    dispatch={dispatch}
-                    data={modules as unknown as AllIndicators[]}
-                />
-            }
+            filtres={<Filters state={state} dispatch={dispatch} data={data} />}
             formulaires={
                 <>
                     <FormPageLayout
@@ -155,6 +141,7 @@ export function StrategieCloudForm() {
                         register={register}
                         isRequired={isCommentaryRequired}
                         errors={errors}
+                        commentaryMessage="Le commentaire est obligatoire pour cet état d’avancement."
                     />
                 </>
             }

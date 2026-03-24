@@ -51,9 +51,13 @@ export function StrategieCloudCell({ row }: Readonly<{ row: { original: Strategi
 
 export function CommentaireCell({ row }: Readonly<{ row: { original: StrategieCloudIndicateur } }>) {
     const { commentaire } = row.original;
+    const nPremiereLettre: number = 30;
+    const commentaires: string = row.original.isModule
+        ? commentaire.slice(0, nPremiereLettre)
+        : commentaire.slice(0, nPremiereLettre).concat("...");
     if (commentaire === "NR") return <ToolTipLayout title="Non renseigné" content={commentaire} />;
     if (commentaire === "SO") return <ToolTipLayout title="Sans objet" content={commentaire} />;
-    return <ToolTipLayout title={commentaire} content={commentaire} />;
+    return <ToolTipLayout title={commentaire} content={commentaires} />;
 }
 
 export function MaturiteCloudCell({ row }: Readonly<{ row: { original: StrategieCloudIndicateur } }>) {

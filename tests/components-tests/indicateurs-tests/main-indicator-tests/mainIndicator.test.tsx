@@ -6,6 +6,8 @@ import { useFilterContext, type FilterState } from "store/filterContext";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import * as clientGen from "todos-api/client.gen";
 import { formattedApps, formattedModules } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
+import type { QueryObserverResult } from "@tanstack/react-query";
+import type { FilterableItem } from "models/indicateurs";
 
 // Mock all dependencies
 vi.mock("store/filterContext");
@@ -109,7 +111,10 @@ describe("MainIndicator", () => {
             data: [],
             modulesByApp: {},
             isLoading: true,
-            filteredData: []
+            filteredData: [],
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -128,7 +133,10 @@ describe("MainIndicator", () => {
             data: mockData,
             modulesByApp: {},
             isLoading: false,
-            filteredData: mockData
+            filteredData: mockData,
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -143,7 +151,10 @@ describe("MainIndicator", () => {
             data: mockData,
             modulesByApp: {},
             isLoading: false,
-            filteredData: mockData
+            filteredData: mockData,
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -165,7 +176,10 @@ describe("MainIndicator", () => {
                 TestApp: [mockModule]
             },
             isLoading: false,
-            filteredData: [mockApp]
+            filteredData: [mockApp],
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -186,7 +200,10 @@ describe("MainIndicator", () => {
             data: mockData,
             modulesByApp: mockModulesByApp,
             isLoading: false,
-            filteredData: mockData
+            filteredData: mockData,
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -201,7 +218,10 @@ describe("MainIndicator", () => {
             data: [],
             modulesByApp: {},
             isLoading: false,
-            filteredData: mockData
+            filteredData: mockData,
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -216,7 +236,10 @@ describe("MainIndicator", () => {
             data: mockData,
             modulesByApp: {},
             isLoading: false,
-            filteredData: mockData
+            filteredData: mockData,
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -230,7 +253,10 @@ describe("MainIndicator", () => {
             data: [],
             modulesByApp: {},
             isLoading: false,
-            filteredData: []
+            filteredData: [],
+            refetch: function (): Promise<QueryObserverResult<FilterableItem[] | undefined, Error>> {
+                throw new Error("Function not implemented.");
+            }
         });
 
         render(<MainIndicator />);
@@ -251,7 +277,9 @@ describe("MainIndicator", () => {
                 data: [],
                 modulesByApp: {},
                 isLoading: false,
-                filteredData: []
+                filteredData: [],
+                refetch: () =>
+                    Promise.resolve({} as QueryObserverResult<FilterableItem[] | undefined, Error>)
             };
         });
 

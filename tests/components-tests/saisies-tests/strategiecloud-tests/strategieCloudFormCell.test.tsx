@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import {
     RenderModuleSelection,
     RenderStrategieCloudSelection,
@@ -40,62 +39,86 @@ const mockModules: ModsIndicateur[] = [
 ];
 
 // ─── RenderModuleSelection ─────────────────────────────────────────────────────
-
 describe("RenderModuleSelection", () => {
-    it("affiche l'autocomplete avec le label 'Modules'", () => {
+    it("affiche le select des modules", () => {
         const field = makeField([]);
         render(<ModuleWrapper field={field} modules={mockModules} />);
-        expect(screen.getByLabelText(/modules/i)).toBeInTheDocument();
+        expect(screen.getByRole("combobox")).toBeInTheDocument();
     });
 
-    it("filtre les modules sans id", () => {
+    it("filtre les modules sans id", async () => {
         const field = makeField([]);
         render(<ModuleWrapper field={field} modules={mockModules} />);
-        const input = screen.getByRole("combobox");
-        fireEvent.click(input);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
         expect(screen.queryByText(/Module Sans ID/)).not.toBeInTheDocument();
     });
 
-    it("affiche les modules déjà sélectionnés", () => {
+    it("affiche les chips des modules déjà sélectionnés", () => {
         const field = makeField([1, 2]);
         render(<ModuleWrapper field={field} modules={mockModules} />);
-        expect(screen.getByText(/Module Alpha/)).toBeInTheDocument();
-        expect(screen.getByText(/Module Beta/)).toBeInTheDocument();
+        expect(screen.getByText("AppA / Module Alpha")).toBeInTheDocument();
+        expect(screen.getByText("AppB / Module Beta")).toBeInTheDocument();
     });
 
-    it("appelle onChange avec les ids lors d'une sélection", async () => {
+    it("affiche l'option Tout sélectionner", () => {
+        const field = makeField([]);
+        render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        expect(screen.getByText("Tout sélectionner")).toBeInTheDocument();
+    });
+
+    it("sélectionne tous les modules via Tout sélectionner", () => {
         const onChange = vi.fn();
         const field = makeField([], onChange);
         render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        fireEvent.click(screen.getByText("Tout sélectionner"));
+        expect(onChange).toHaveBeenCalledWith([1, 2, 3]);
+    });
 
-        const input = screen.getByRole("combobox");
-        await userEvent.type(input, "Alpha");
-        const option = await screen.findByText(/Module Alpha \(AppA\)/);
-        await userEvent.click(option);
+    it("désélectionne tous les modules si tous déjà sélectionnés", () => {
+        const onChange = vi.fn();
+        const field = makeField([1, 2, 3], onChange);
+        render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        fireEvent.click(screen.getByText("Tout sélectionner"));
+        expect(onChange).toHaveBeenCalledWith([]);
+    });
 
+    it("appelle onChange avec l'id lors d'une sélection", () => {
+        const onChange = vi.fn();
+        const field = makeField([], onChange);
+        render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        fireEvent.click(screen.getByText("AppA / Module Alpha"));
         expect(onChange).toHaveBeenCalledWith([1]);
     });
 
-    it("filtre les options selon la saisie (modName)", async () => {
+    it("affiche les groupes par appName", () => {
         const field = makeField([]);
         render(<ModuleWrapper field={field} modules={mockModules} />);
-
-        const input = screen.getByRole("combobox");
-        await userEvent.type(input, "Beta");
-
-        expect(await screen.findByText(/Module Beta/)).toBeInTheDocument();
-        expect(screen.queryByText(/Module Alpha/)).not.toBeInTheDocument();
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        expect(screen.getByText("AppA")).toBeInTheDocument();
+        expect(screen.getByText("AppB")).toBeInTheDocument();
+        expect(screen.getByText("AppC")).toBeInTheDocument();
     });
 
-    it("filtre les options selon la saisie (appName)", async () => {
-        const field = makeField([]);
+    it("coche la checkbox du module sélectionné", () => {
+        const field = makeField([1]);
         render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        const checkboxes = screen.getAllByRole("checkbox");
+        // index 0 = Tout sélectionner (indeterminate), index 1 = Module Alpha
+        expect(checkboxes[1]).toBeChecked();
+        expect(checkboxes[2]).not.toBeChecked();
+    });
 
-        const input = screen.getByRole("combobox");
-        await userEvent.type(input, "AppC");
-
-        expect(await screen.findByText(/Module Gamma/)).toBeInTheDocument();
-        expect(screen.queryByText(/Module Alpha/)).not.toBeInTheDocument();
+    it("checkbox Tout sélectionner est indeterminate si sélection partielle", () => {
+        const field = makeField([1]);
+        render(<ModuleWrapper field={field} modules={mockModules} />);
+        fireEvent.mouseDown(screen.getByRole("combobox"));
+        const selectAll = screen.getAllByRole("checkbox")[0];
+        expect(selectAll).toHaveAttribute("data-indeterminate", "true");
     });
 
     it("gère une valeur non-tableau gracieusement", () => {

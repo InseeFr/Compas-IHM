@@ -16,7 +16,12 @@ export function useQueryIndicators<T extends FilterableItem>({
 }: UseQueryIndicatorsOptions<T>) {
     const { state } = useFilterContext();
 
-    const { data = [], isLoading } = useQuery({
+    const {
+        data = [],
+        isLoading,
+        refetch,
+        isFetching
+    } = useQuery({
         queryKey: [queryKey.join(",")],
         queryFn: fetchData
     });
@@ -27,8 +32,9 @@ export function useQueryIndicators<T extends FilterableItem>({
 
     return {
         data,
-        isLoading,
+        isLoading: isLoading || isFetching,
         modulesByApp,
-        filteredData
+        filteredData,
+        refetch
     };
 }

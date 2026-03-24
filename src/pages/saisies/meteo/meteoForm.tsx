@@ -1,5 +1,4 @@
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
-import { useEffect, useState } from "react";
 
 import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 
@@ -8,36 +7,32 @@ import { creerMeteo, getApplications1, type DemandeCreationMeteo } from "todos-a
 import { RenderAppSelections, RenderMeteoSelection } from "./meteoCell";
 import { useFilterContext } from "store/filterContext";
 import { Filters } from "pages/Filters";
-import type { AppsIndicateur } from "models/indicateurs";
-import { applyDevFilters } from "utils/filters-functions";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";
+import type { AppsIndicateur } from "models/indicateurs";
+import { useQueryForm } from "hooks/useQueryForm";
 import { BaseFormLayout } from "components/formsPageLayout/BaseFormLayout";
 
 export function MeteoForm() {
-    const [apps, setApps] = useState<AppsIndicateur[]>([]);
     const { state, dispatch } = useFilterContext();
     const { snackbar, showSuccess, showError, close } = useSnackbar();
+    const fetchData = async (): Promise<AppsIndicateur[]> => {
+        const getApps = await getApplications1();
+        return getApps
+            .map(app => ({
+                idApplication: app.idApplication ?? 0,
+                appName: app.appName ?? "",
+                domaine: app.domaineSndi ?? "",
+                domaineFonc: app.domaineFonctionnel ?? "",
+                sndi: app.sndi ?? ""
+            }))
+            .sort((a, b) => a.appName.localeCompare(b.appName));
+    };
+    const { data, filteredData } = useQueryForm({
+        queryKey: ["MeteoForm"],
+        fetchData
+    });
 
-    useEffect(() => {
-        async function fetchData() {
-            const getApps = await getApplications1();
-            setApps(
-                getApps
-                    .map(app => ({
-                        idApplication: app.idApplication ?? 0,
-                        appName: app.appName ?? "",
-                        domaine: app.domaineSndi ?? "",
-                        domaineFonc: app.domaineFonctionnel ?? "",
-                        sndi: app.sndi ?? ""
-                    }))
-                    .sort((a, b) => a.appName.localeCompare(b.appName))
-            );
-        }
-        fetchData();
-    }, []);
-
-    const filteredData = apps.filter(item => applyDevFilters(item, state));
     const defaultValues: DemandeCreationMeteo = {
         valeurMeteo: 4,
         idsApplication: [],
@@ -70,7 +65,7 @@ export function MeteoForm() {
     return (
         <BaseFormLayout
             title="Saisir une météo"
-            filtres={<Filters state={state} dispatch={dispatch} data={apps} />}
+            filtres={<Filters state={state} dispatch={dispatch} data={data} />}
             formulaires={
                 <>
                     <FormPageLayout
@@ -93,6 +88,7 @@ export function MeteoForm() {
                         register={register}
                         isRequired={isCommentaryRequired}
                         errors={errors}
+                        commentaryMessage="Le commentaire est obligatoire pour cette météo."
                     />
                 </>
             }

@@ -80,7 +80,7 @@ export const MainIndicator = () => {
         return [...formattedApplications, ...formattedModulesData];
     };
 
-    const { data, modulesByApp, isLoading, filteredData } = useQueryIndicators({
+    const { data, modulesByApp, isLoading, filteredData, refetch } = useQueryIndicators({
         queryKey: ["GlobalIndicator"],
         fetchData,
         hasModules: true
@@ -98,6 +98,7 @@ export const MainIndicator = () => {
             }
             subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
             renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
+            fetch={refetch}
         />
     );
 };

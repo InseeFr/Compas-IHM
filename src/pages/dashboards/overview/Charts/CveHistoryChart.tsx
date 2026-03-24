@@ -185,6 +185,7 @@ export function CveHistoryChart({ data, monthlyData, maxApps = 6 }: Readonly<Cve
                             }
                         }))
                     }}
+                    notMerge={true}
                     style={{ height: "350px", width: "100%" }}
                     opts={{ renderer: "canvas" }}
                 />

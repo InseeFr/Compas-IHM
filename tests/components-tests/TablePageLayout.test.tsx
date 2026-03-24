@@ -46,6 +46,9 @@ describe("TablePageLayout", () => {
                 paginationConfig={{ pagination: { pageIndex: 0, pageSize: 10 } }}
                 renderTopCustom={() => null}
                 filters={null}
+                fetch={function (): Promise<unknown> {
+                    throw new Error("Function not implemented.");
+                }}
             />
         );
 
@@ -62,6 +65,9 @@ describe("TablePageLayout", () => {
                 paginationConfig={{ pagination: { pageIndex: 0, pageSize: 10 } }}
                 renderTopCustom={() => null}
                 filters={null}
+                fetch={function (): Promise<unknown> {
+                    throw new Error("Function not implemented.");
+                }}
             />
         );
 
@@ -79,6 +85,9 @@ describe("TablePageLayout", () => {
                 paginationConfig={{ pagination: { pageIndex: 0, pageSize: 10 } }}
                 renderTopCustom={() => null}
                 filters={null}
+                fetch={function (): Promise<unknown> {
+                    throw new Error("Function not implemented.");
+                }}
             />
         );
 

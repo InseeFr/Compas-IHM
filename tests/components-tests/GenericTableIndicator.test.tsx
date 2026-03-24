@@ -9,7 +9,9 @@ import { GenericIndicatorTable } from "components/indicators/GenericIndicatorTab
 vi.mock("@tanstack/react-router", () => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Link: ({ to, children, ...rest }: any) => (
-        <a href={to} {...rest}>{children}</a>
+        <a href={to} {...rest}>
+            {children}
+        </a>
     ),
     useRouter: vi.fn(),
     useNavigate: vi.fn(() => vi.fn()),
@@ -52,9 +54,7 @@ vi.mock("components/TablePageLayout", () => ({
             <div data-testid="table-data">{data.length} rows</div>
             {isLoading && <div data-testid="table-loading">loading</div>}
             {renderTopCustom && (
-                <div data-testid="table-top-custom">
-                    {renderTopCustom({ table: {} })}
-                </div>
+                <div data-testid="table-top-custom">{renderTopCustom({ table: {} })}</div>
             )}
         </div>
     )
@@ -79,10 +79,12 @@ const mockModulesByApp: Record<string, AllIndicators[]> = {
     "App X": [{ applicationName: "Module X", isModule: true } as unknown as AllIndicators]
 };
 
-const defaultPagination: Pagination = { pagination:{
-    pageIndex:0,
-    pageSize:10,
-}};
+const defaultPagination: Pagination = {
+    pagination: {
+        pageIndex: 0,
+        pageSize: 10
+    }
+};
 
 const defaultProps = {
     title: "Test Table",
@@ -155,9 +157,7 @@ describe("GenericIndicatorTable", () => {
         it("appelle useQueryIndicators avec fetchData", () => {
             const fetchData = vi.fn();
             render(<GenericIndicatorTable {...defaultProps} fetchData={fetchData} />);
-            expect(mockUseQueryIndicators).toHaveBeenCalledWith(
-                expect.objectContaining({ fetchData })
-            );
+            expect(mockUseQueryIndicators).toHaveBeenCalledWith(expect.objectContaining({ fetchData }));
         });
 
         it("appelle useQueryIndicators avec hasModules=false par défaut", () => {

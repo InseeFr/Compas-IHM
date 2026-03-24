@@ -20,7 +20,7 @@ export const GreenItTable = () => {
     const [viewMode, setViewMode] = useState<ViewMode>("global");
     const columns = columnsGreenIt();
 
-    const { data, isLoading, filteredData } = useQueryIndicators({
+    const { data, isLoading, filteredData, refetch } = useQueryIndicators({
         queryKey: ["GreenItIndicator"],
         fetchData,
         hasModules: false
@@ -58,6 +58,7 @@ export const GreenItTable = () => {
                     <ButtonCsvExport table={table} onExport={onExport} />
                 </Fragment>
             )}
+            fetch={refetch}
         />
     );
 };

@@ -6,6 +6,7 @@ interface CommentaryProps<U extends FieldValues> {
     isRequired: boolean;
     register: UseFormRegister<U>;
     errors: FieldErrors<U>;
+    commentaryMessage: string;
 }
 
 export default function CommentaryLayout<U extends FieldValues>(
@@ -17,10 +18,10 @@ export default function CommentaryLayout<U extends FieldValues>(
             multiline
             rows={3}
             required={props.isRequired}
-            helperText={props.isRequired ? "Le commentaire est obligatoire pour cette météo" : ""}
+            helperText={props.isRequired ? props.commentaryMessage : ""}
             error={!!props.errors.commentaire}
             {...props.register("commentaire" as Path<U>, {
-                required: props.isRequired ? "Le commentaire est obligatoire pour cette météo" : false
+                required: props.isRequired ? props.commentaryMessage : false
             })}
             fullWidth
             margin="normal"

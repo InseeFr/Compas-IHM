@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Type local pour les props de TablePageLayout ─────────────────────────────
@@ -7,6 +7,7 @@ type MockTablePageLayoutProps = {
     titleTable: string;
     isLoading: boolean;
     data: unknown[];
+    fetch: () => Promise<unknown>;
     columns: unknown[];
     paginationConfig: unknown;
     rowId: (row: Record<string, unknown>) => string;
@@ -28,7 +29,10 @@ const { mockGetIndicateur, mockUseQueryIndicators, mockTablePageLayout } = vi.ho
         <div>
             <h1>{props.titleTable}</h1>
             {props.isLoading && <div data-testid="loading">Chargement...</div>}
-            {props.renderTopCustom && props.renderTopCustom({ table: {} })}
+            {props.renderTopCustom?.({ table: {} })}
+            <button data-testid="button-refresh" onClick={props.fetch}>
+                Rafraichir les données
+            </button>
         </div>
     ))
 }));
@@ -93,6 +97,14 @@ vi.mock("components/ButtonCsvExport", () => ({
     )
 }));
 
+vi.mock("components/RefreshButton", () => ({
+    default: ({ refetch }: { refetch: () => Promise<unknown>; disabled: boolean }) => (
+        <button onClick={refetch} data-testid="button-refresh">
+            Rafraichir les données
+        </button>
+    )
+}));
+
 // ─── Import du composant (après les mocks) ────────────────────────────────────
 
 import { StrategieCloudTable } from "pages/indicateurs/strategiecloud/strategieCloudTable";
@@ -113,7 +125,7 @@ describe("StrategieCloudTable", () => {
             <div>
                 <h1>{props.titleTable}</h1>
                 {props.isLoading && <div data-testid="loading">Chargement...</div>}
-                {props.renderTopCustom && props.renderTopCustom({ table: {} })}
+                {props.renderTopCustom?.({ table: {} })}
             </div>
         ));
     });
@@ -144,7 +156,7 @@ describe("StrategieCloudTable – état isLoading", () => {
             <div>
                 <h1>{props.titleTable}</h1>
                 {props.isLoading && <div data-testid="loading">Chargement...</div>}
-                {props.renderTopCustom && props.renderTopCustom({ table: {} })}
+                {props.renderTopCustom?.({ table: {} })}
             </div>
         ));
     });
@@ -170,6 +182,9 @@ describe("fetchData dans StrategieCloudTable", () => {
         mockTablePageLayout.mockImplementation((props: MockTablePageLayoutProps) => (
             <div>
                 <h1>{props.titleTable}</h1>
+                <button data-testid="button-refresh" onClick={props.fetch}>
+                    Rafraichir les données
+                </button>
             </div>
         ));
     });
@@ -215,6 +230,34 @@ describe("fetchData dans StrategieCloudTable", () => {
         );
 
         consoleSpy.mockRestore();
+    });
+
+    it("Rafraichit les données via le bouton", async () => {
+        mockGetIndicateur.mockResolvedValue([]);
+
+        let capturedRefetch: (() => Promise<unknown>) | null = null;
+        mockUseQueryIndicators.mockImplementationOnce((args: unknown) => {
+            capturedRefetch = vi
+                .fn()
+                .mockImplementation((args as { fetchData: () => Promise<unknown> }).fetchData);
+            return {
+                data: [],
+                isLoading: false,
+                modulesByApp: {},
+                filteredData: [],
+                refetch: capturedRefetch
+            };
+        });
+
+        render(<StrategieCloudTable />);
+
+        const refreshButton = screen.getByTestId("button-refresh");
+        fireEvent.click(refreshButton);
+
+        await waitFor(() => {
+            expect(capturedRefetch).toHaveBeenCalled();
+            expect(mockGetIndicateur).toHaveBeenCalled();
+        });
     });
 
     it("gère le cas où getIndicateur retourne null/undefined", async () => {
