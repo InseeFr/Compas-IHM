@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-
 vi.mock("@tanstack/react-router", () => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Link: ({ to, children, ...rest }: any) => (
@@ -36,7 +35,6 @@ vi.mock("hooks/useQueryDashboard", () => ({
     useQueryDashboard: vi.fn()
 }));
 
-
 vi.mock("pages/dashboards/overview/ChartCard", () => ({
     ChartCard: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="chart-card">{children}</div>
@@ -68,15 +66,13 @@ vi.mock("pages/dashboards/overview/Charts/Treegraph", () => ({
     default: () => <div data-testid="tree-graph" />
 }));
 
-
 import { useQueryDashboard } from "hooks/useQueryDashboard";
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import * as api from "todos-api/client.gen";
 import SecuriteDashboard from "pages/dashboards/specialized/SecuriteDashboard";
 import type { GlobalIndicator } from "models/indicateurs";
 
-
-const mockApps:api.Application[] = [{ idApplication: 1, appName: "Application 1" }];
+const mockApps: api.Application[] = [{ idApplication: 1, appName: "Application 1" }];
 
 const mockCveMonthly = [
     { month: "2024-01", critical: 5 },
@@ -104,7 +100,6 @@ const mockFormattedApps: GlobalIndicator[] = [
     }
 ];
 
-
 const setupApiMocks = () => {
     vi.mocked(api.getApplications1).mockResolvedValue(mockApps);
     vi.mocked(api.getIndicateurQualiteByApplication).mockResolvedValue([]);
@@ -118,13 +113,11 @@ const setupApiMocks = () => {
     vi.mocked(formattedApps).mockReturnValue(mockFormattedApps);
 };
 
-
 describe("SecuriteDashboard", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         setupApiMocks();
     });
-
 
     describe("État de chargement", () => {
         it("affiche un CircularProgress quand isLoading est true", () => {
@@ -151,7 +144,6 @@ describe("SecuriteDashboard", () => {
             expect(screen.queryByTestId("specialized-layout")).not.toBeInTheDocument();
         });
     });
-
 
     describe("Rendu principal (données chargées)", () => {
         beforeEach(() => {
@@ -184,7 +176,6 @@ describe("SecuriteDashboard", () => {
             expect(screen.getAllByTestId("chart-card")).toHaveLength(4);
         });
     });
-
 
     describe("Appels API via fetchData", () => {
         it("appelle useQueryDashboard avec la bonne queryKey", () => {
@@ -258,7 +249,6 @@ describe("SecuriteDashboard", () => {
             );
         });
     });
-
 
     describe("Gestion des erreurs API", () => {
         it("fetchData retourne undefined si une API échoue", async () => {

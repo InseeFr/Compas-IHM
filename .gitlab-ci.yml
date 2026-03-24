@@ -4,4 +4,86 @@ include:
       package_manager: "npm" 
       sonar_project_key: "dsi_compas_compas-ui-v2_3395f55b-6671-4c39-9a53-6585284c1b56"
       sonar_token: "${SONAR_TOKEN}"
-  
+  - project: 'ressources-humaines/outils/ci-templates'
+    ref: main
+    file:
+      - '/templates/workflow.yaml'
+      - 'templates/formatting.yaml'
+      - 'templates/build-test.yaml'
+      - '/templates/quality.yaml'
+      - '/templates/pages.yaml'
+      - '/templates/kube/docker.yaml'
+      - '/templates/kube/deploy.yaml'
+
+stages:
+  - check-source-branch
+  - security-app
+  - build-app-and-test
+  - quality
+  - calculate-version-and-release
+  - tag
+  - docker
+  - release-gitops
+
+release-gitops-dev1:
+  stage: release-gitops
+  extends: .template:gitops-updater
+  variables:
+    REPO: "https://gitlab.insee.fr/dsi/Compas/CompasGitops.git"
+    BRANCH: "master"
+    PATH_TO_VALUE: "apps/compas-ui-dev1/values.yaml"
+    KEY_TO_CHANGE: "ui-compas.image.tag"
+    NEW_VALUE: "$CI_COMMIT_REF_NAME"
+    USERNAME: "${GITOPS_USERNAME}"
+    PASSWORD_VAR: "${GITOPS_TOKEN}"
+    AUTOMERGE: "true"
+
+  rules:
+    - when: manual
+
+release-gitops-dev2:
+  stage: release-gitops
+  extends: .template:gitops-updater
+  variables:
+    REPO: "https://gitlab.insee.fr/dsi/Compas/CompasGitops.git"
+    BRANCH: "master"
+    PATH_TO_VALUE: "apps/compas-ui-dev2/values.yaml"
+    KEY_TO_CHANGE: "ui-compas.image.tag"
+    NEW_VALUE: "$CI_COMMIT_REF_NAME"
+    USERNAME: "${GITOPS_USERNAME}"
+    PASSWORD_VAR: "${GITOPS_TOKEN}"
+    AUTOMERGE: "true"
+  rules:
+    - when: manual
+
+release-gitops-dev3:
+  stage: release-gitops
+  extends: .template:gitops-updater
+  variables:
+    REPO: "https://gitlab.insee.fr/dsi/Compas/CompasGitops.git"
+    BRANCH: "master"
+    PATH_TO_VALUE: "apps/compas-ui-dev3/values.yaml"
+    KEY_TO_CHANGE: "ui-compas.image.tag"
+    NEW_VALUE: "$CI_COMMIT_REF_NAME"
+    USERNAME: "${GITOPS_USERNAME}"
+    PASSWORD_VAR: "${GITOPS_TOKEN}"
+    AUTOMERGE: "true"
+  rules:
+    - when: manual
+
+
+release-gitops-prod:
+  stage: release-gitops
+  extends: .template:gitops-updater
+  variables:
+    REPO: "https://gitlab.insee.fr/dsi/Compas/Compas-gitops-production.git"
+    BRANCH: "main"
+    PATH_TO_VALUE: "apps/compas-ui/values.yaml"
+    KEY_TO_CHANGE: "ui-compas.image.tag"
+    NEW_VALUE: "${NEXT_TAG}"
+    USERNAME: "${GITOPS_USERNAME_PROD}"
+    PASSWORD_VAR: "${GITOP_TOKEN_PROD_TAG}"
+    AUTOMERGE: "true"
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_NAME =~ /^main/'
+      when: manual

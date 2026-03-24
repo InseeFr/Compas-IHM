@@ -134,8 +134,8 @@ export const ACCESSIBILITE_HEADERS = {
 // ============================================================
 
 export const STRATEGIE_CLOUD_HEADERS = {
-    TAUX_CLOUD_PRODUCTION: "Taux cloud Production",
-    ENV_ACTUEL_PRODUCTION: "Env. actuel Production",
+    TAUX_CLOUD_PRODUCTION: "Taux cloud Prod (Dev à défaut)",
+    ENV_ACTUEL_PRODUCTION: "Env. actuel Prod (Dev à défaut)",
     ENV_CIBLE_PRODUCTION: "Env. cible Production",
     ECART_CIBLE: "Écart à la cible",
     STRATEGIE_CLOUD: "Stratégie cloud",

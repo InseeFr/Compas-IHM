@@ -101,9 +101,7 @@ describe("SpecializedDashboardLinks", () => {
         it("affiche la carte Accessibilité avec le bon titre et la bonne description", () => {
             render(<SpecializedDashboardLinks />);
             expect(screen.getByText("Accessibilité")).toBeInTheDocument();
-            expect(
-                screen.getByText("Conformité et indicateurs d'accessibilité")
-            ).toBeInTheDocument();
+            expect(screen.getByText("Conformité et indicateurs d'accessibilité")).toBeInTheDocument();
         });
     });
 

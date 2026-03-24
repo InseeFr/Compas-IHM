@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import type { ACCESSIBILITE } from "constantes/constantes";
+import { useEffect, useState } from "react";
 import "styles/footer.css";
+import { getTags, type TagsView } from "todos-api/client.gen";
 
 interface FooterProps {
     accessibility: ACCESSIBILITE;
@@ -8,6 +10,15 @@ interface FooterProps {
 }
 
 export default function Footer({ accessibility }: Readonly<FooterProps>) {
+    const [tags, setTags] = useState<TagsView>({});
+    useEffect(() => {
+        async function Tags(): Promise<void> {
+            const data: TagsView = await getTags();
+            setTags(data);
+        }
+        Tags();
+    }, []);
+
     const getAccessibilityConfig = () => {
         switch (accessibility) {
             case "Non-conforme":
@@ -81,6 +92,20 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
                         <Typography variant="body2" className="footer-typo">
                             {config.label}
                         </Typography>
+                    </Box>
+                    <Box className="footer-tags">
+                        <Box className="footer-tag-row">
+                            <span className="footer-tag-label">API</span>
+                            <span className="footer-tag-badge footer-tag-badge--api">
+                                {tags.apiTagView?.tag || "Non défini"}
+                            </span>
+                        </Box>
+                        <Box className="footer-tag-row">
+                            <span className="footer-tag-label">IHM</span>
+                            <span className="footer-tag-badge footer-tag-badge--ihm">
+                                {tags.ihmTagView?.tag || "Non défini"}
+                            </span>
+                        </Box>
                     </Box>
                 </output>
             </Box>

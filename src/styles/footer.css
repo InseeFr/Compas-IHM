@@ -5,6 +5,7 @@
     align-items: center;
     padding: 26px;
     gap: 8px;
+    position: relative;
 }
 
 .footer-box-access  {
@@ -26,3 +27,56 @@
     font-weight: 500;
 }
 
+.footer-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    position:absolute;
+    left: 26px;
+}
+
+.footer-tag-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.footer-tag-badge--api {
+    color: #1565c0;
+    background-color: rgba(21, 101, 192, 0.1);
+}
+
+.footer-tag-badge--ihm {
+    color: #6a1b9a;
+    background-color: rgba(106, 27, 154, 0.1);
+}
+
+.footer-tag-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.footer-tag-date {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    font-style: italic;
+}

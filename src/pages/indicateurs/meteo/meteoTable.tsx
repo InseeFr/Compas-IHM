@@ -33,7 +33,11 @@ export const MeteoTable = () => {
         return { data: meteoData, months: getMonths };
     };
 
-    const { data: queryResult, isLoading } = useQuery({
+    const {
+        data: queryResult,
+        isLoading,
+        refetch
+    } = useQuery({
         queryKey: ["meteoIndicator", nbMois],
         queryFn: fetchData,
         staleTime: 0
@@ -49,6 +53,7 @@ export const MeteoTable = () => {
     return (
         <TablePageLayout
             reactKey={months.join("|")}
+            fetch={refetch}
             titleTable="Table Indicateur Météo"
             filters={<Filters data={data} state={state} dispatch={dispatch} />}
             columns={columns}

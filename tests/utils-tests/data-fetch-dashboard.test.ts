@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fetchData } from "utils/data-fetch-dashboard";
 import type { GlobalIndicator } from "models/indicateurs";
 
-
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
     getIndicateurQualiteByApplication: vi.fn(),
@@ -21,12 +20,10 @@ vi.mock("pages/indicateurs/main-indicator/formatted-mod-and-app", () => ({
 import * as api from "todos-api/client.gen";
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 
-
 const mockApps = [{ idApplication: 1, appName: "App X" }];
 const mockFormattedApps: GlobalIndicator[] = [
     { applicationName: "App X", domaine: "D1" } as unknown as GlobalIndicator
 ];
-
 
 describe("fetchData", () => {
     beforeEach(() => {
@@ -82,10 +79,7 @@ describe("fetchData", () => {
         const result = await fetchData();
 
         expect(result).toBeUndefined();
-        expect(consoleSpy).toHaveBeenCalledWith(
-            "Erreur chargement données qualité:",
-            expect.any(Error)
-        );
+        expect(consoleSpy).toHaveBeenCalledWith("Erreur chargement données qualité:", expect.any(Error));
         consoleSpy.mockRestore();
     });
 

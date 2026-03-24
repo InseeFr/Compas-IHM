@@ -3,10 +3,6 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
-// ─── Données et mocks hoistés ─────────────────────────────────────────────────
-// vi.hoisted() est exécuté AVANT les imports, ce qui permet de les référencer
-// dans les factories vi.mock() sans erreur "Cannot access before initialization".
-
 const { mockModules, mockGetModules1, mockSaisirStrategieCloud } = vi.hoisted(() => {
     const mockModules = [
         {
@@ -129,6 +125,24 @@ vi.mock("components/formsPageLayout/CommentaryPageLayout", () => ({
     )
 }));
 
+vi.mock("@tanstack/react-router", () => ({
+    Link: ({ to, children, ...rest }: any) => (
+        <a href={to} {...rest}>
+            {children}
+        </a>
+    )
+}));
+
+const { mockUseQueryForm } = vi.hoisted(() => {
+    return {
+        mockUseQueryForm: vi.fn()
+    };
+});
+
+vi.mock("hooks/useQueryForm", () => ({
+    useQueryForm: mockUseQueryForm
+}));
+
 // ─── Import du composant (après les mocks) ────────────────────────────────────
 
 import { StrategieCloudForm } from "pages/saisies/strategiecloud/strategieCloudForm";
@@ -138,6 +152,11 @@ import { StrategieCloudForm } from "pages/saisies/strategiecloud/strategieCloudF
 describe("StrategieCloudForm", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+
+        mockUseQueryForm.mockReturnValue({
+            data: [],
+            filteredData: []
+        });
         mockGetModules1.mockResolvedValue(mockModules);
         mockSaisirStrategieCloud.mockResolvedValue(undefined);
     });
@@ -151,10 +170,11 @@ describe("StrategieCloudForm", () => {
         });
     });
 
-    it("charge les modules au montage via getModules1", async () => {
+    it("appelle useQueryForm au montage", async () => {
         render(<StrategieCloudForm />);
+
         await waitFor(() => {
-            expect(mockGetModules1).toHaveBeenCalledTimes(1);
+            expect(mockUseQueryForm).toHaveBeenCalled();
         });
     });
 
@@ -206,7 +226,7 @@ describe("StrategieCloudForm", () => {
 
         await waitFor(() => {
             expect(screen.getByTestId("snackbar")).toBeInTheDocument();
-            expect(screen.getByText(/Création de la stratégie cloud réussie/)).toBeInTheDocument();
+            expect(screen.getByText(/Mise à jour de la stratégie cloud réussie/)).toBeInTheDocument();
         });
     });
 
@@ -253,7 +273,7 @@ describe("StrategieCloudForm", () => {
         await waitFor(() => {
             expect(screen.getByTestId("snackbar")).toBeInTheDocument();
             expect(
-                screen.getByText(/erreur est survenue lors de la création de la stratégie cloud/i)
+                screen.getByText(/Une erreur est survenue lors de la mise à jour de la stratégie cloud/i)
             ).toBeInTheDocument();
         });
     });
@@ -280,14 +300,15 @@ describe("StrategieCloudForm", () => {
     });
 
     it("filtre les modules sans id retournés par l'API", async () => {
-        mockGetModules1.mockResolvedValueOnce([
-            ...mockModules,
-            { id: null, modName: "Sans ID", appName: "AppX" }
-        ]);
+        mockUseQueryForm.mockReturnValue({
+            data: [...mockModules, { id: null, modName: "Sans ID", appName: "AppX" }],
+            filteredData: mockModules
+        });
 
         render(<StrategieCloudForm />);
+
         await waitFor(() => {
-            expect(mockGetModules1).toHaveBeenCalled();
+            expect(screen.queryByText("Sans ID")).not.toBeInTheDocument();
         });
     });
 });

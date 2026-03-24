@@ -35,13 +35,12 @@ export const GenericIndicatorTable = ({
 }: GenericIndicatorTableProps) => {
     const { state, dispatch } = useFilterContext();
 
-    const { data, isLoading, modulesByApp, filteredData } = useQueryIndicators({
+    const { data, isLoading, modulesByApp, filteredData, refetch } = useQueryIndicators({
         queryKey: [queryKey],
         fetchData,
         hasModules
     });
 
-    // Logique par défaut pour rowId si non fourni
     const defaultRowId = (row: any) => {
         if (row?.isModule) {
             return `${row.parentApplication}-${row.applicationName}`;
@@ -49,7 +48,6 @@ export const GenericIndicatorTable = ({
         return row.applicationName || row.modName;
     };
 
-    // Logique par défaut pour subRow si non fourni et hasModules est true
     const defaultSubRow = (row: any) => {
         if (row?.isModule) {
             return undefined;
@@ -76,6 +74,7 @@ export const GenericIndicatorTable = ({
                 )
             }
             data={processedData}
+            fetch={refetch}
             columns={columns}
             isLoading={isLoading}
             paginationConfig={paginationConfig}

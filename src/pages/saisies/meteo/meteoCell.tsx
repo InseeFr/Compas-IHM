@@ -6,8 +6,7 @@ import {
     ListItemText,
     MenuItem,
     Radio,
-    RadioGroup,
-    Select
+    RadioGroup
 } from "@mui/material";
 import {
     type ControllerFieldState,
@@ -19,6 +18,7 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import WbCloudyIcon from "@mui/icons-material/WbCloudy";
 import WaterDropTwoToneIcon from "@mui/icons-material/WaterDropTwoTone";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
+import SelectLayoutAppOrMod from "components/formsPageLayout/SelectLayoutAppOrMod";
 
 type Field = {
     field: ControllerRenderProps<
@@ -29,7 +29,6 @@ type Field = {
     formState: UseFormStateReturn<DemandeCreationMeteo>;
 };
 
-const ALL: string = "__all__";
 
 export function RenderAppSelections(field: Field, apps: Application[]) {
     const selected = Array.isArray(field.field.value) ? field.field.value : [];
@@ -46,19 +45,13 @@ export function RenderAppSelections(field: Field, apps: Application[]) {
     const selectId: string = `app-select-${selected}`;
 
     return (
-        <Select
+        <SelectLayoutAppOrMod<number>
             id={selectId}
             labelId={labelId}
-            multiple
-            value={selected}
-            onChange={e => {
-                const value = e.target.value as (number | string)[];
-                if (value.includes(ALL)) {
-                    field.field.onChange(allSelected ? [] : allIds);
-                } else {
-                    field.field.onChange(value as number[]);
-                }
-            }}
+            selected={selected}
+            allIds={allIds}
+            allSelected={allSelected}
+            onChange={value => field.field.onChange(value)}
             renderValue={selected => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map(id => {
@@ -67,27 +60,14 @@ export function RenderAppSelections(field: Field, apps: Application[]) {
                     })}
                 </Box>
             )}
-            MenuProps={{
-                PaperProps: {
-                    style: {
-                        maxHeight: 48 * 4.5 + 8,
-                        width: 250
-                    }
-                }
-            }}
         >
-            <MenuItem value={ALL}>
-                <Checkbox checked={allSelected} indeterminate={selected.length > 0 && !allSelected} />
-                <ListItemText primary="Tout sélectionner" />
-            </MenuItem>
-
             {validApps.map(app => (
                 <MenuItem key={app.idApplication} value={app.idApplication}>
                     <Checkbox checked={selected.includes(app.idApplication)} />
                     <ListItemText primary={app.appName} />
                 </MenuItem>
             ))}
-        </Select>
+        </SelectLayoutAppOrMod>
     );
 }
 

@@ -108,7 +108,7 @@ export function RenderDateDeclaration(field: Readonly<Field<"dateDeclaration">>)
 export function RenderTypeAudit({ field }: Readonly<Field<"idIndicateurTypeAudit">>) {
     return (
         <>
-            <FormLabel id="type-audit-label">Type d'audit</FormLabel>
+            <FormLabel id="type-audit-label">Type d&apos;audit</FormLabel>
             <Select
                 labelId="type-audit-label"
                 value={field.value}
