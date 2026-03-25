@@ -20,6 +20,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloudIcon from "@mui/icons-material/Cloud";
 import DnsIcon from "@mui/icons-material/Dns";
 import SettingsIcon from "@mui/icons-material/Settings";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import type { DemandeCreationStrategieCloud, ModsIndicateur } from "models/indicateurs";
 import SelectLayoutAppOrMod from "components/formsPageLayout/SelectLayoutAppOrMod";
 
@@ -137,6 +138,14 @@ export function RenderStrategieCloudSelection(field: Readonly<Field>) {
 export function RenderEnvCibleSelection(field: Readonly<Field>) {
     return (
         <RadioGroup row value={field.field.value} onChange={e => field.field.onChange(e.target.value)}>
+            <FormControlLabel
+                value="NonDefini"
+                control={
+                    <Radio checkedIcon={<QuestionMarkIcon sx={{ color: "#e53241", fontSize: 20 }} />} />
+                }
+                label="Non Defini"
+                tabIndex={0}
+            />
             <FormControlLabel
                 value="Kube"
                 control={<Radio checkedIcon={<CloudIcon sx={{ color: "#326ce5", fontSize: 20 }} />} />}
