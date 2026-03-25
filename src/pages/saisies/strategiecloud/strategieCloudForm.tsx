@@ -32,6 +32,7 @@ const STRATEGIE_CLOUD_MAPPING: Record<string, number> = {
 };
 
 const ENV_CIBLE_MAPPING: Record<string, number> = {
+    NonDefini: 0,
     Kube: 1,
     VM: 2,
     "cloud externe": 3,
@@ -101,9 +102,13 @@ export function StrategieCloudForm() {
             await saisirStrategieCloud(apiData);
             showSuccess("Mise à jour de la stratégie cloud réussie.");
             reset(defaultValues);
-        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             console.error("Erreur Mise à jour de la stratégie cloud:", error);
-            showError("Une erreur est survenue lors de la mise à jour de la stratégie cloud.");
+            const message = error.response?.data?.detail || "";
+            showError(
+                `Une erreur est survenue lors de la mise à jour de la stratégie cloud. ${message}`
+            );
         }
     };
 

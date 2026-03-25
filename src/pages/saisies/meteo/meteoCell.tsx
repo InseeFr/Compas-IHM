@@ -29,7 +29,6 @@ type Field = {
     formState: UseFormStateReturn<DemandeCreationMeteo>;
 };
 
-
 export function RenderAppSelections(field: Field, apps: Application[]) {
     const selected = Array.isArray(field.field.value) ? field.field.value : [];
 

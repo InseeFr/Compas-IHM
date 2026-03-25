@@ -3,6 +3,7 @@ import { ToolTipLayout } from "components/ToolTipLayout";
 
 function envTooltip(value: string): string {
     if (value === "NR") return "Non renseigné";
+    if (value === "ND") return "Non défini";
     if (value === "SO") return "Sans objet";
     if (value === "VM") return "Machine Virtuelle";
     if (value === "Kube") return "Kubernetes";
