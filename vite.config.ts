@@ -1,6 +1,5 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { viteEnvs } from "vite-envs";
 import { tanstackRouter } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
@@ -16,11 +15,13 @@ export default defineConfig({
                 plugins: ["babel-plugin-react-compiler"]
             }
         }),
-        tsconfigPaths(),
         viteEnvs({
             declarationFile: ".env"
         })
     ],
+    resolve: {
+        tsconfigPaths: true,
+    },
     test: {
         environment: "jsdom",
         globals: true,
