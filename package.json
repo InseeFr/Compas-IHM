@@ -30,7 +30,7 @@
         "@tanstack/react-query": "^5.90.19",
         "@tanstack/react-router": "^1.142.8",
         "@tanstack/router-vite-plugin": "^1.142.8",
-        "axios": "^1.13.5",
+        "axios": "^1.15.0",
         "echarts": "^6.0.0",
         "echarts-for-react": "^3.0.5",
         "html2canvas": "^1.4.1",
@@ -42,8 +42,7 @@
         "react-markdown": "^10.1.0",
         "remark-gfm": "^4.0.1",
         "tsafe": "^1.8.12",
-        "vite-envs": "^4.6.2",
-        "vite-tsconfig-paths": "^6.0.3"
+        "vite-envs": "^4.6.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.1",
@@ -67,11 +66,12 @@
         "prettier": "^3.7.4",
         "typescript": "~5.9.3",
         "typescript-eslint": "^8.46.4",
-        "vite": "^7.2.4",
+        "vite": "^8.0.5",
         "vitest": "^4.0.16"
     },
     "overrides": {
-        "minimatch": "^10.2.3",
-        "flatted": "3.4.2"
+        "minimatch": "^10.2.5",
+        "flatted": "3.4.2",
+        "picomatch": "4.0.4"
     }
 }
