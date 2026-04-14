@@ -28,7 +28,7 @@ describe("formattedApps", () => {
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
             lettreGlobalQualite: "B",
-            pourcentageCouvertureTestUniaire: "85",
+            pourcentageCouvertureTestUnitaire: "85",
             detteTechnique: "10.00"
         };
 
@@ -233,7 +233,7 @@ describe("formattedModules", () => {
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
             lettreGlobalQualite: "B",
-            pourcentageCouvertureTestUniaire: "90",
+            pourcentageCouvertureTestUnitaire: "90",
             detteTechnique: "5.00"
         };
 

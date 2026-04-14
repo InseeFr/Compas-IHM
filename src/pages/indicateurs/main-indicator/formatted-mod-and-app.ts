@@ -61,7 +61,7 @@ const createQualiteIndicators = (qualite?: IndicateurQualiteView) => ({
     lettreFiabilite: stringOrNR(qualite?.lettreFiabilite),
     lettreDetteTechnique: stringOrNR(qualite?.lettreDetteTechnique),
     lettreQualiteGenerale: stringOrNR(qualite?.lettreGlobalQualite),
-    pourcentageCouvertureTestUniaire: stringOrNR(qualite?.pourcentageCouvertureTestUniaire),
+    pourcentageCouvertureTestUniaire: stringOrNR(qualite?.pourcentageCouvertureTestUnitaire),
     detteTechnique: qualite?.detteTechnique ? qualite.detteTechnique.replace(/\.00$/, "") : NR,
     nbLigneCode: qualite?.nbLigneCode ? qualite.nbLigneCode.replace(/\.00$/, "") : NR
 });

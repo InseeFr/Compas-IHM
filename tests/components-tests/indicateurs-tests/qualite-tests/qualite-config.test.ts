@@ -28,7 +28,7 @@ const mockApp: IndicateurQualiteView = {
     lettreCouvertureTestUniaire: "A",
     lettreFiabilite: "B",
     lettreDetteTechnique: "C",
-    pourcentageCouvertureTestUniaire: "50%",
+    pourcentageCouvertureTestUnitaire: "50%",
     lettreGlobalQualite: "G",
     detteTechnique: "123.00"
 };
@@ -42,7 +42,7 @@ const mockModule: IndicateurQualiteView = {
     lettreCouvertureTestUniaire: "X",
     lettreFiabilite: "Y",
     lettreDetteTechnique: "Z",
-    pourcentageCouvertureTestUniaire: "75%",
+    pourcentageCouvertureTestUnitaire: "75%",
     lettreGlobalQualite: "H",
     detteTechnique: "456.00"
 };
