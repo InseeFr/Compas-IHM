@@ -1,12 +1,14 @@
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { Pagination } from "models/table-model";
-import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
+import { CouvertureTestUnitCell, DetteTechCell, FiabiliteCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import type { QualiteIndicateur } from "models/indicateurs";
 import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
+import { getTrend } from '../../../constantes/trend.utils';
+
 
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const headers = [
@@ -59,6 +61,7 @@ export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
         {
             accessorKey: "lettreFiabilite",
             header: QUALITE_HEADERS.FIABILITE,
+            Cell: FiabiliteCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Fiabilité", cell: cell, row: row })
         },
@@ -100,9 +103,12 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? defaultValue,
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
-        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? defaultValue,
+        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
         detteTechnique: formatDetteTechnique(),
+        tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire) ,
+        tendanceDetteTechnique: getTrend(item.evolutionDetteTechnique),
+        tendanceFiabilite: getTrend(item.evolutionFiabilite),
         ...getModuleSpecificFields()
     };
 }

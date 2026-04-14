@@ -1,3 +1,5 @@
+import type {Trend} from "constantes/trend.utils";
+
 export interface IndicateurApplicationMaturite {
     applicationId?: number;
     sndi: string;
@@ -53,6 +55,9 @@ export interface QualiteIndicateur {
     parentApplication?: string;
     detteTechnique?: string;
     lettreQualiteGenerale?: string;
+    tendanceTestUnitaire: Trend;
+    tendanceFiabilite: Trend;
+    tendanceDetteTechnique: Trend;
 }
 
 export interface GreenITIndicateur {

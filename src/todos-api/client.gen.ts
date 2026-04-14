@@ -13,11 +13,16 @@ export interface DemandeCreationMeteo {
 }
 
 export interface DemandeCreationStrategieCloud {
-    idsModule?: number[];
-    avancement?: number;
+    /** @minItems 1 */
+    idsModule: number[];
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    avancement: number;
     commentaire?: string;
-    envCibleProd?: number;
-    date?: string;
+    envCibleProd: number;
+    date: string;
 }
 
 export interface InfosSaisiesA11yToSaveDTO {
@@ -78,13 +83,16 @@ export interface IndicateurQualiteView {
     domaineFonctionnel?: string;
     nbLigneCode?: string;
     nbLigneCodeNonTeste?: string;
-    pourcentageCouvertureTestUniaire?: string;
     detteTechnique?: string;
+    pourcentageCouvertureTestUnitaire?: string;
     fiabilite?: string;
     lettreDetteTechnique?: string;
     lettreFiabilite?: string;
     lettreCouvertureTestUniaire?: string;
     lettreGlobalQualite?: string;
+    evolutionCouvertureTestUnitaire?: number;
+    evolutionDetteTechnique?: number;
+    evolutionFiabilite?: number;
     lettreGlobale?: string;
 }
 
