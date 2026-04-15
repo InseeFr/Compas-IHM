@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import type { QualiteIndicateur } from "models/indicateurs";
-import { CouvertureTestUnitCell, DetteTechCell } from "pages/indicateurs/qualité/QualiteCell";
+import { CouvertureTestUnitCell, DetteTechCell, FiabiliteCell } from "pages/indicateurs/qualité/QualiteCell";
 import type { ReactNode } from "react";
 import { describe, it, expect, vi } from "vitest";
 
@@ -86,5 +86,44 @@ describe("CouvertureTestUnitCell", () => {
     it("affiche la lettre de couverture dans le content", () => {
         render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUniaire: "B" })} />);
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
+    });
+});
+
+
+// ─────────────────────────────────────────────
+// FiabiliteCell
+// ─────────────────────────────────────────────
+describe("FiabiliteCell", () => {
+    it("s'affiche sans erreur", () => {
+        render(<FiabiliteCell row={makeRow()} />);
+        expect(screen.getByTestId("tooltip")).toBeInTheDocument();
+    });
+
+    it("affiche la lettre A dans le title", () => {
+        render(<FiabiliteCell row={makeRow({ lettreFiabilite: "A" })} />);
+        expect(screen.getByTestId("tooltip-title").textContent).toMatch(/A/);
+    });
+
+
+
+    it("affiche la lettre  dans le content", () => {
+        render(<FiabiliteCell row={makeRow({ lettreFiabilite: "B" })} />);
+        expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
+    });
+
+    
+    it("affiche l'icône de tendance haussière", () => {
+        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "up" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône de tendance baissière", () => {
+        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "down" })} />);
+            expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône stable", () => {
+        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "flat" })} />);
+            expect(document.querySelector("svg")).toBeInTheDocument();
     });
 });
