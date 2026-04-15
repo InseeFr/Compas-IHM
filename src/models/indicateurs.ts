@@ -1,4 +1,4 @@
-import type {Trend} from "constantes/trend.utils";
+import type { Trend } from "constantes/trend.utils";
 
 export interface IndicateurApplicationMaturite {
     applicationId?: number;

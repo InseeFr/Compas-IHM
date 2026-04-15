@@ -21,9 +21,9 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         domaineFonc: "domaineFonc-test",
         lettreCouvertureTestUniaire: "A",
         pourcentageCouvertureTestUnitaire: "0",
-        tendanceDetteTechnique:'up',
-        tendanceFiabilite:'up',
-        tendanceTestUnitaire:'up',
+        tendanceDetteTechnique: "up",
+        tendanceFiabilite: "up",
+        tendanceTestUnitaire: "up",
         ...overrides
     };
     return { original: base };

@@ -7,8 +7,7 @@ import { BASE_COLONNE } from "constantes/constantes";
 import type { QualiteIndicateur } from "models/indicateurs";
 import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
-import { getTrend } from '../../../constantes/trend.utils';
-
+import { getTrend } from "../../../constantes/trend.utils";
 
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const headers = [
@@ -106,7 +105,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
         detteTechnique: formatDetteTechnique(),
-        tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire) ,
+        tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire),
         tendanceDetteTechnique: getTrend(item.evolutionDetteTechnique),
         tendanceFiabilite: getTrend(item.evolutionFiabilite),
         ...getModuleSpecificFields()

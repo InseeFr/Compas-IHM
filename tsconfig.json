@@ -21,7 +21,21 @@
         "verbatimModuleSyntax": true,
         "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"],
 
-        "baseUrl": "src"
+        "paths": {
+            "components/*": ["./src/components/*"],
+            "hooks/*": ["./src/hooks/*"],
+            "utils/*": ["./src/utils/*"],
+            "types/*": ["./src/types/*"],
+            "pages/*": ["./src/pages/*"],
+            "models/*": ["./src/models/*"],
+            "routes/*": ["./src/routes/*"],
+            "themes/*": ["./src/themes/*"],
+            "todos-api/*": ["./src/todos-api/*"],
+            "constantes/*": ["./src/constantes/*"],
+            "assets/*": ["./src/assets/*"],
+            "styles/*": ["./src/styles/*"],
+            "store/*": ["./src/store/*"]
+        }
     },
     "include": ["src", "**/*.test.tsx", "**/*.test.ts"],
     "references": [{ "path": "tsconfig.node.json" }]
