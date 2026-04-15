@@ -87,6 +87,22 @@ describe("CouvertureTestUnitCell", () => {
         render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUniaire: "B" })} />);
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
+
+    
+    it("affiche l'icône de tendance haussière", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "up" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône de tendance baissière", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "down" })} />);
+            expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône stable", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "flat" })} />);
+            expect(document.querySelector("svg")).toBeInTheDocument();
+    });
 });
 
 
