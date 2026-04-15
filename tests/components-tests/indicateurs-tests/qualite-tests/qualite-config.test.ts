@@ -2,7 +2,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { OnExport, columnsTable, formatIndicateur } from "pages/indicateurs/qualité/qualiteConfig";
 import { handleExportCsv } from "utils/exportCsv";
-import type { IndicateurQualiteView } from "todos-api/client.gen";
 import type { QualiteIndicateur } from "models/indicateurs";
 import type { MRT_Cell, MRT_Row } from "material-react-table";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
@@ -19,7 +18,7 @@ vi.mock("utils/exportCsv", () => ({
     getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
-const mockApp: IndicateurQualiteView = {
+const mockApp = {
     applicationId: 1,
     applicationName: "App1",
     sndi: "S1",
@@ -30,10 +29,13 @@ const mockApp: IndicateurQualiteView = {
     lettreDetteTechnique: "C",
     pourcentageCouvertureTestUnitaire: "50%",
     lettreGlobalQualite: "G",
-    detteTechnique: "123.00"
+    detteTechnique: "123.00",
+    "tendanceDetteTechnique": "flat",
+    "tendanceFiabilite": "flat",
+   "tendanceTestUnitaire": "flat",
 };
 
-const mockModule: IndicateurQualiteView = {
+const mockModule = {
     moduleName: "Mod1",
     applicationName: "App1",
     sndi: "S1",
@@ -44,7 +46,10 @@ const mockModule: IndicateurQualiteView = {
     lettreDetteTechnique: "Z",
     pourcentageCouvertureTestUnitaire: "75%",
     lettreGlobalQualite: "H",
-    detteTechnique: "456.00"
+    detteTechnique: "456.00",
+    "tendanceDetteTechnique": "flat",
+    "tendanceFiabilite": "flat",
+   "tendanceTestUnitaire": "flat",
 };
 
 describe("formatIndicateur", () => {
@@ -61,7 +66,10 @@ describe("formatIndicateur", () => {
             lettreDetteTechnique: "C",
             pourcentageCouvertureTestUnitaire: "50%",
             lettreQualiteGenerale: "G",
-            detteTechnique: "123"
+            detteTechnique: "123",
+            "tendanceDetteTechnique": "flat",
+    "tendanceFiabilite": "flat",
+   "tendanceTestUnitaire": "flat",
         });
     });
 
@@ -80,7 +88,10 @@ describe("formatIndicateur", () => {
             parentApplication: "App1",
             isModule: true,
             lettreQualiteGenerale: undefined,
-            detteTechnique: "456"
+            detteTechnique: "456",
+            "tendanceDetteTechnique": "flat",
+    "tendanceFiabilite": "flat",
+   "tendanceTestUnitaire": "flat",
         });
     });
 });
