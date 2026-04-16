@@ -68,6 +68,15 @@ const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
     return a - b;
 };
 
+const formatOrNR = (value: number | null | undefined) =>
+  value == null ? "NR" : formatNumberWithSpaces(value);
+
+const formatOrNRWithUnit = (value: number | null | undefined) =>
+  value == null ? "NR" : formatNumberWithSpaces(value, true);
+
+const formatCpu = (value: number | null | undefined) =>
+  value == null ? "NR" : formatNumberWithSpaces(value / 1000, true);
+
 export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
     const headers = [
         BASE_HEADERS.NOM,
@@ -179,29 +188,29 @@ export const filteredViewMode = (
         return {
             ...item,
 
-            _conso: conso == null ? "NR" : formatNumberWithSpaces(conso),
-            _cpu: cpu == null ? "NR" : formatNumberWithSpaces(cpu / 1000, true),
-            _ram: ram == null ? "NR" : formatNumberWithSpaces(ram),
-            _disk: disk == null ? "NR" : formatNumberWithSpaces(disk),
-            _nbVm: nbVm == null ? "NR" : formatNumberWithSpaces(nbVm, true),
+            _conso: formatOrNR(conso),
+            _cpu: formatCpu(cpu),
+            _ram: formatOrNR(ram),
+            _disk: formatOrNR(disk),
+            _nbVm: formatOrNRWithUnit(nbVm),
 
-            _ramMaxi: ramMaxi == null ? "NR" : formatNumberWithSpaces(ramMaxi),
-            _cpuMaxi: cpuMaxi == null ? "NR" : formatNumberWithSpaces(cpuMaxi / 1000, true),
-            _cpuUsed: cpuUsed == null ? "NR" : formatNumberWithSpaces(cpuUsed / 1000, true),
-            _ramUsed: ramUsed == null ? "NR" : formatNumberWithSpaces(ramUsed),
-            _diskUsed: diskUsed == null ? "NR" : formatNumberWithSpaces(diskUsed),
-            _s3Used: s3Used == null ? "NR" : formatNumberWithSpaces(s3Used),
-            _pvcUsed: pvcUsed == null ? "NR" : formatNumberWithSpaces(pvcUsed),
-            _nbPodMaxi: nbPodMaxi == null ? "NR" : formatNumberWithSpaces(nbPodMaxi, true),
+            _ramMaxi: formatOrNR(ramMaxi),
+            _cpuMaxi: formatCpu(cpuMaxi),
+            _cpuUsed: formatCpu(cpuUsed),
+            _ramUsed: formatOrNR(ramUsed),
+            _diskUsed: formatOrNR(diskUsed),
+            _s3Used: formatOrNR(s3Used),
+            _pvcUsed: formatOrNR(pvcUsed),
+            _nbPodMaxi: formatOrNRWithUnit(nbPodMaxi),
 
-            _ramMaxiProd: ramMaxiProd == null ? "NR" : formatNumberWithSpaces(ramMaxiProd),
-            _cpuMaxiProd: cpuMaxiProd == null ? "NR" : formatNumberWithSpaces(cpuMaxiProd / 1000, true),
-            _cpuUsedProd: cpuUsedProd == null ? "NR" : formatNumberWithSpaces(cpuUsedProd / 1000, true),
-            _ramUsedProd: ramUsedProd == null ? "NR" : formatNumberWithSpaces(ramUsedProd),
-            _diskUsedProd: diskUsedProd == null ? "NR" : formatNumberWithSpaces(diskUsedProd),
-            _s3UsedProd: s3UsedProd == null ? "NR" : formatNumberWithSpaces(s3UsedProd),
-            _pvcUsedProd: pvcUsedProd == null ? "NR" : formatNumberWithSpaces(pvcUsedProd),
-            _nbPodMaxiProd: nbPodMaxiProd == null ? "NR" : formatNumberWithSpaces(nbPodMaxiProd, true),
+            _ramMaxiProd: formatOrNR(ramMaxiProd),
+            _cpuMaxiProd: formatCpu(cpuMaxiProd),
+            _cpuUsedProd: formatCpu(cpuUsedProd),
+            _ramUsedProd: formatOrNR(ramUsedProd),
+            _diskUsedProd: formatOrNR(diskUsedProd),
+            _s3UsedProd: formatOrNR(s3UsedProd),
+            _pvcUsedProd: formatOrNR(pvcUsedProd),
+            _nbPodMaxiProd: formatOrNRWithUnit(nbPodMaxiProd),
 
             _consoSort: conso,
             _cpuSort: cpu == null ? null : cpu / 1000,
