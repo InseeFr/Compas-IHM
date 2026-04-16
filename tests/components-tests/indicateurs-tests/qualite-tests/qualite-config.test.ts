@@ -30,9 +30,9 @@ const mockApp = {
     pourcentageCouvertureTestUnitaire: "50%",
     lettreGlobalQualite: "G",
     detteTechnique: "123.00",
-    "tendanceDetteTechnique": "flat",
-    "tendanceFiabilite": "flat",
-   "tendanceTestUnitaire": "flat",
+    tendanceDetteTechnique: "flat",
+    tendanceFiabilite: "flat",
+    tendanceTestUnitaire: "flat"
 };
 
 const mockModule = {
@@ -47,9 +47,9 @@ const mockModule = {
     pourcentageCouvertureTestUnitaire: "75%",
     lettreGlobalQualite: "H",
     detteTechnique: "456.00",
-    "tendanceDetteTechnique": "flat",
-    "tendanceFiabilite": "flat",
-   "tendanceTestUnitaire": "flat",
+    tendanceDetteTechnique: "flat",
+    tendanceFiabilite: "flat",
+    tendanceTestUnitaire: "flat"
 };
 
 describe("formatIndicateur", () => {
@@ -67,9 +67,9 @@ describe("formatIndicateur", () => {
             pourcentageCouvertureTestUnitaire: "50%",
             lettreQualiteGenerale: "G",
             detteTechnique: "123",
-            "tendanceDetteTechnique": "flat",
-    "tendanceFiabilite": "flat",
-   "tendanceTestUnitaire": "flat",
+            tendanceDetteTechnique: "flat",
+            tendanceFiabilite: "flat",
+            tendanceTestUnitaire: "flat"
         });
     });
 
@@ -89,9 +89,9 @@ describe("formatIndicateur", () => {
             isModule: true,
             lettreQualiteGenerale: undefined,
             detteTechnique: "456",
-            "tendanceDetteTechnique": "flat",
-    "tendanceFiabilite": "flat",
-   "tendanceTestUnitaire": "flat",
+            tendanceDetteTechnique: "flat",
+            tendanceFiabilite: "flat",
+            tendanceTestUnitaire: "flat"
         });
     });
 });
@@ -197,5 +197,156 @@ describe("OnExport", () => {
             `"App1","S1","D1","NR","A","50%","B","C","123"`,
             `"Mod1","S1","D1","NR","X","75%","Y","Z","456"`
         ]);
+    });
+});
+
+// ─── formatIndicateur — cas supplémentaires ───────────────────────────────
+
+describe("formatIndicateur — valeurs manquantes", () => {
+    it("doit remplacer les champs null par 'NR'", () => {
+        const vide = {
+            applicationId: 2,
+            applicationName: null,
+            sndi: null,
+            domaineSndi: null,
+            domaineFonctionnel: null,
+            lettreCouvertureTestUniaire: null,
+            lettreFiabilite: null,
+            lettreDetteTechnique: null,
+            pourcentageCouvertureTestUnitaire: null,
+            lettreGlobalQualite: null,
+            detteTechnique: null,
+            evolutionCouvertureTestUnitaire: null,
+            evolutionDetteTechnique: null,
+            evolutionFiabilite: null
+        };
+        const resultat = formatIndicateur(vide as any, false);
+        expect(resultat.applicationName).toBe("NR");
+        expect(resultat.sndi).toBe("NR");
+        expect(resultat.domaine).toBe("NR");
+        expect(resultat.domaineFonc).toBe("NR");
+        expect(resultat.lettreCouvertureTestUniaire).toBe("NR");
+        expect(resultat.lettreFiabilite).toBe("NR");
+        expect(resultat.lettreDetteTechnique).toBe("NR");
+        expect(resultat.detteTechnique).toBe("NR");
+        expect(resultat.lettreQualiteGenerale).toBe("NR");
+    });
+
+    it("ne doit pas supprimer '.00' si la valeur ne se termine pas par '.00'", () => {
+        const item = { ...mockApp, detteTechnique: "456.50" };
+        const resultat = formatIndicateur(item as any, false);
+        expect(resultat.detteTechnique).toBe("456.50");
+    });
+
+    it("doit gérer detteTechnique sans '.00' (valeur entière sans suffixe)", () => {
+        const item = { ...mockApp, detteTechnique: "10" };
+        const resultat = formatIndicateur(item as any, false);
+        expect(resultat.detteTechnique).toBe("10");
+    });
+
+    it("doit utiliser 'NR' comme applicationName si moduleName est null en mode module", () => {
+        const item = { ...mockModule, moduleName: null };
+        const resultat = formatIndicateur(item as any, true);
+        expect(resultat.applicationName).toBe("NR");
+        expect(resultat.isModule).toBe(true);
+        expect(resultat.parentApplication).toBe("App1");
+    });
+
+    it("ne doit pas inclure parentApplication ni isModule pour une application", () => {
+        const resultat = formatIndicateur(mockApp as any, false);
+        expect((resultat as any).isModule).toBeUndefined();
+        expect((resultat as any).parentApplication).toBeUndefined();
+    });
+});
+
+// ─── columnsTable — cas supplémentaires ──────────────────────────────────
+
+describe("columnsTable — structure", () => {
+    it("doit contenir exactement 5 colonnes dans le bon ordre", () => {
+        const colonnes = columnsTable();
+        expect(colonnes).toHaveLength(5);
+        expect(colonnes.map(c => c.accessorKey)).toEqual([
+            "applicationName",
+            "sndi",
+            "lettreCouvertureTestUniaire",
+            "lettreFiabilite",
+            "lettreDetteTechnique"
+        ]);
+    });
+
+    it("toutes les colonnes doivent avoir un accessorKey défini", () => {
+        columnsTable().forEach(col => {
+            expect(col.accessorKey).toBeDefined();
+        });
+    });
+});
+
+// ─── OnExport — cas supplémentaires ──────────────────────────────────────
+
+describe("OnExport — cas limites", () => {
+    it("doit produire un CSV vide si la table n'a aucune ligne", () => {
+        const mockTableVide: any = {
+            getExpandedRowModel: () => ({ rows: [] })
+        };
+        OnExport(mockTableVide);
+        const csvData = (handleExportCsv as any).mock.calls.at(-1)[2];
+        expect(csvData).toEqual([]);
+    });
+
+    it("doit afficher 'NR' pour les champs absents dans le CSV", () => {
+        const appSansData = formatIndicateur(
+            {
+                applicationId: 3,
+                applicationName: "AppVide",
+                sndi: null,
+                domaineSndi: null,
+                domaineFonctionnel: null,
+                lettreCouvertureTestUniaire: null,
+                lettreFiabilite: null,
+                lettreDetteTechnique: null,
+                pourcentageCouvertureTestUnitaire: null,
+                lettreGlobalQualite: null,
+                detteTechnique: null,
+                evolutionCouvertureTestUnitaire: null,
+                evolutionDetteTechnique: null,
+                evolutionFiabilite: null
+            } as any,
+            false
+        );
+
+        const mockTable: any = {
+            getExpandedRowModel: () => ({
+                rows: [{ original: appSansData, subRows: [] }]
+            })
+        };
+        OnExport(mockTable);
+        const csvData = (handleExportCsv as any).mock.calls.at(-1)[2];
+        expect(csvData[0]).toBe(`"AppVide","NR","NR","NR","NR","NR","NR","NR","NR"`);
+    });
+
+    it("doit aplatir les subRows et les inclure dans le CSV", () => {
+        const mockTable: any = {
+            getExpandedRowModel: () => ({
+                rows: [
+                    {
+                        original: formatIndicateur(mockApp as any),
+                        subRows: [{ original: formatIndicateur(mockModule as any, true), subRows: [] }]
+                    }
+                ]
+            })
+        };
+        OnExport(mockTable);
+        const csvData = (handleExportCsv as any).mock.calls.at(-1)[2];
+        expect(csvData).toHaveLength(2);
+        expect(csvData[1]).toContain('"Mod1"');
+    });
+
+    it("doit passer le nom de fichier 'qualité'", () => {
+        const mockTable: any = {
+            getExpandedRowModel: () => ({ rows: [] })
+        };
+        OnExport(mockTable);
+        const nomFichier = (handleExportCsv as any).mock.calls.at(-1)[0];
+        expect(nomFichier).toBe("qualité");
     });
 });

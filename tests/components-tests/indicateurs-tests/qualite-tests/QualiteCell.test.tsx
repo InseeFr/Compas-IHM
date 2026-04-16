@@ -1,6 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import type { QualiteIndicateur } from "models/indicateurs";
-import { CouvertureTestUnitCell, DetteTechCell, FiabiliteCell } from "pages/indicateurs/qualité/QualiteCell";
+import {
+    CouvertureTestUnitCell,
+    DetteTechCell,
+    FiabiliteCell
+} from "pages/indicateurs/qualité/QualiteCell";
 import type { ReactNode } from "react";
 import { describe, it, expect, vi } from "vitest";
 
@@ -88,7 +92,6 @@ describe("CouvertureTestUnitCell", () => {
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
 
-    
     it("affiche l'icône de tendance haussière", () => {
         render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "up" })} />);
         expect(document.querySelector("svg")).toBeInTheDocument();
@@ -96,15 +99,14 @@ describe("CouvertureTestUnitCell", () => {
 
     it("affiche l'icône de tendance baissière", () => {
         render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "down" })} />);
-            expect(document.querySelector("svg")).toBeInTheDocument();
+        expect(document.querySelector("svg")).toBeInTheDocument();
     });
 
     it("affiche l'icône stable", () => {
         render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "flat" })} />);
-            expect(document.querySelector("svg")).toBeInTheDocument();
+        expect(document.querySelector("svg")).toBeInTheDocument();
     });
 });
-
 
 // ─────────────────────────────────────────────
 // FiabiliteCell
@@ -120,14 +122,11 @@ describe("FiabiliteCell", () => {
         expect(screen.getByTestId("tooltip-title").textContent).toMatch(/A/);
     });
 
-
-
     it("affiche la lettre  dans le content", () => {
         render(<FiabiliteCell row={makeRow({ lettreFiabilite: "B" })} />);
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
 
-    
     it("affiche l'icône de tendance haussière", () => {
         render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "up" })} />);
         expect(document.querySelector("svg")).toBeInTheDocument();
@@ -135,11 +134,11 @@ describe("FiabiliteCell", () => {
 
     it("affiche l'icône de tendance baissière", () => {
         render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "down" })} />);
-            expect(document.querySelector("svg")).toBeInTheDocument();
+        expect(document.querySelector("svg")).toBeInTheDocument();
     });
 
     it("affiche l'icône stable", () => {
         render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "flat" })} />);
-            expect(document.querySelector("svg")).toBeInTheDocument();
+        expect(document.querySelector("svg")).toBeInTheDocument();
     });
 });
