@@ -92,6 +92,40 @@ export interface GreenITIndicateur {
     _ramSort?: number | null;
     _diskSort?: number | null;
     _nbVmSort?: number | null;
+        
+    ramMaxi?: string;
+    cpuMaxi?: string;
+    cpuUsed?: string;
+    ramUsed?: string;
+    diskUsed?: string;
+    s3Used?: string;
+    pvcUsed?: string;
+    nbPodMaxi?: string;
+    ramMaxiProd?: string;
+    cpuMaxiProd?: string;
+    cpuUsedProd?: string;
+    ramUsedProd?: string;
+    diskUsedProd?: string;
+    s3UsedProd?: string;
+    pvcUsedProd?: string;
+    nbPodMaxiProd?: string;
+
+    _ramMaxiSort?: number | null;
+    _cpuMaxiSort?: number | null;
+    _cpuUsedSort?: number | null;
+    _ramUsedSort?: number | null;
+    _diskUsedSort?: number | null;
+    _s3UsedSort?: number | null;
+    _pvcUsedSort?: number | null;
+    _nbPodMaxiSort?: number | null;
+    _ramMaxiProdSort?: number | null;
+    _cpuMaxiProdSort?: number | null;
+    _cpuUsedProdSort?: number | null;
+    _ramUsedProdSort?: number | null;
+    _diskUsedProdSort?: number | null;
+    _s3UsedProdSort?: number | null;
+    _pvcUsedProdSort?: number | null;
+    _nbPodMaxiProdSort?: number | null;
 }
 
 export interface SecuriteIndicateur {

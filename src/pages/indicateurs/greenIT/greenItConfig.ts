@@ -158,6 +158,23 @@ export const filteredViewMode = (
         const ram = pickNumeric(item.ramAllocatedGlobal, item.ramAllocatedProd);
         const disk = pickNumeric(item.diskAllocatedGlobal, item.diskAllocatedProd);
         const nbVm = pickNumeric(item.nbVMGlobal, item.nbVMProd);
+        const ramMaxi = firstNumberOrNull(item.ramMaxi);
+        const cpuMaxi = firstNumberOrNull(item.cpuMaxi);
+        const cpuUsed = firstNumberOrNull(item.cpuUsed);
+        const ramUsed = firstNumberOrNull(item.ramUsed);
+        const diskUsed = firstNumberOrNull(item.diskUsed);
+        const s3Used = firstNumberOrNull(item.s3Used);
+        const pvcUsed = firstNumberOrNull(item.pvcUsed);
+        const nbPodMaxi = firstNumberOrNull(item.nbPodMaxi);
+
+        const ramMaxiProd = firstNumberOrNull(item.ramMaxiProd);
+        const cpuMaxiProd = firstNumberOrNull(item.cpuMaxiProd);
+        const cpuUsedProd = firstNumberOrNull(item.cpuUsedProd);
+        const ramUsedProd = firstNumberOrNull(item.ramUsedProd);
+        const diskUsedProd = firstNumberOrNull(item.diskUsedProd);
+        const s3UsedProd = firstNumberOrNull(item.s3UsedProd);
+        const pvcUsedProd = firstNumberOrNull(item.pvcUsedProd);
+        const nbPodMaxiProd = firstNumberOrNull(item.nbPodMaxiProd);
 
         return {
             ...item,
@@ -168,11 +185,47 @@ export const filteredViewMode = (
             _disk: disk == null ? "NR" : formatNumberWithSpaces(disk),
             _nbVm: nbVm == null ? "NR" : formatNumberWithSpaces(nbVm, true),
 
+            _ramMaxi: ramMaxi == null ? "NR" : formatNumberWithSpaces(ramMaxi),
+            _cpuMaxi: cpuMaxi == null ? "NR" : formatNumberWithSpaces(cpuMaxi / 1000, true),
+            _cpuUsed: cpuUsed == null ? "NR" : formatNumberWithSpaces(cpuUsed / 1000, true),
+            _ramUsed: ramUsed == null ? "NR" : formatNumberWithSpaces(ramUsed),
+            _diskUsed: diskUsed == null ? "NR" : formatNumberWithSpaces(diskUsed),
+            _s3Used: s3Used == null ? "NR" : formatNumberWithSpaces(s3Used),
+            _pvcUsed: pvcUsed == null ? "NR" : formatNumberWithSpaces(pvcUsed),
+            _nbPodMaxi: nbPodMaxi == null ? "NR" : formatNumberWithSpaces(nbPodMaxi, true),
+
+            _ramMaxiProd: ramMaxiProd == null ? "NR" : formatNumberWithSpaces(ramMaxiProd),
+            _cpuMaxiProd: cpuMaxiProd == null ? "NR" : formatNumberWithSpaces(cpuMaxiProd / 1000, true),
+            _cpuUsedProd: cpuUsedProd == null ? "NR" : formatNumberWithSpaces(cpuUsedProd / 1000, true),
+            _ramUsedProd: ramUsedProd == null ? "NR" : formatNumberWithSpaces(ramUsedProd),
+            _diskUsedProd: diskUsedProd == null ? "NR" : formatNumberWithSpaces(diskUsedProd),
+            _s3UsedProd: s3UsedProd == null ? "NR" : formatNumberWithSpaces(s3UsedProd),
+            _pvcUsedProd: pvcUsedProd == null ? "NR" : formatNumberWithSpaces(pvcUsedProd),
+            _nbPodMaxiProd: nbPodMaxiProd == null ? "NR" : formatNumberWithSpaces(nbPodMaxiProd, true),
+
             _consoSort: conso,
             _cpuSort: cpu == null ? null : cpu / 1000,
             _ramSort: ram,
             _diskSort: disk,
-            _nbVmSort: nbVm
+            _nbVmSort: nbVm,
+
+            _ramMaxiSort: ramMaxi,
+            _cpuMaxiSort: cpuMaxi == null ? null : cpuMaxi / 1000,
+            _cpuUsedSort: cpuUsed == null ? null : cpuUsed / 1000,
+            _ramUsedSort: ramUsed,
+            _diskUsedSort: diskUsed,
+            _s3UsedSort: s3Used,
+            _pvcUsedSort: pvcUsed,
+            _nbPodMaxiSort: nbPodMaxi,
+
+            _ramMaxiProdSort: ramMaxiProd,
+            _cpuMaxiProdSort: cpuMaxiProd == null ? null : cpuMaxiProd / 1000,
+            _cpuUsedProdSort: cpuUsedProd == null ? null : cpuUsedProd / 1000,
+            _ramUsedProdSort: ramUsedProd,
+            _diskUsedProdSort: diskUsedProd,
+            _s3UsedProdSort: s3UsedProd,
+            _pvcUsedProdSort: pvcUsedProd,
+            _nbPodMaxiProdSort: nbPodMaxiProd
         };
     });
 };
@@ -289,7 +342,137 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Nombre de VM", cell: cell, row: row })
-        }
+        },
+        {
+            header: "RAM maxi (Go)",
+            accessorKey: "_ramMaxiSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ramMaxi,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM maxi en Go", cell: cell, row: row })
+        },
+        {
+            header: "CPU maxi (GHz)",
+            accessorKey: "_cpuMaxiSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpuMaxi,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU maxi en GHz", cell: cell, row: row })
+        },
+        {
+            header: "CPU utilisé (GHz)",
+            accessorKey: "_cpuUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpuUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU utilisé en GHz", cell: cell, row: row })
+        },
+        {
+            header: "RAM utilisée (Go)",
+            accessorKey: "_ramUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ramUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM utilisée en Go", cell: cell, row: row })
+        },
+        {
+            header: "Disque utilisé (Go)",
+            accessorKey: "_diskUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._diskUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "Disque utilisé en Go", cell: cell, row: row })
+        },
+        {
+            header: "S3 utilisé",
+            accessorKey: "_s3UsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._s3Used,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "S3 utilisé", cell: cell, row: row })
+        },
+        {
+            header: "PVC utilisé",
+            accessorKey: "_pvcUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._pvcUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "PVC utilisé", cell: cell, row: row })
+        },
+        {
+            header: "Nombre de pods maxi",
+            accessorKey: "_nbPodMaxiSort",
+            Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "Nombre de pods maxi", cell: cell, row: row })
+        },
+        {
+            header: "RAM maxi prod (Go)",
+            accessorKey: "_ramMaxiProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ramMaxiProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM maxi prod en Go", cell: cell, row: row })
+        },
+        {
+            header: "CPU maxi prod (GHz)",
+            accessorKey: "_cpuMaxiProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpuMaxiProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU maxi prod en GHz", cell: cell, row: row })
+        },
+        {
+            header: "CPU utilisé prod (GHz)",
+            accessorKey: "_cpuUsedProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpuUsedProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU utilisé prod en GHz", cell: cell, row: row })
+        },
+        {
+            header: "RAM utilisée prod (Go)",
+            accessorKey: "_ramUsedProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ramUsedProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM utilisée prod en Go", cell: cell, row: row })
+        },
+        {
+            header: "Disque utilisé prod (Go)",
+            accessorKey: "_diskUsedProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._diskUsedProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "Disque utilisé prod en Go", cell: cell, row: row })
+        },
+        {
+            header: "S3 utilisé prod",
+            accessorKey: "_s3UsedProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._s3UsedProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "S3 utilisé prod", cell: cell, row: row })
+        },
+        {
+            header: "PVC utilisé prod",
+            accessorKey: "_pvcUsedProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._pvcUsedProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "PVC utilisé prod", cell: cell, row: row })
+        },
+        {
+            header: "Nombre de pods maxi prod",
+            accessorKey: "_nbPodMaxiProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxiProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "Nombre de pods maxi prod", cell: cell, row: row })
+        },
+        
+
     ];
     return [...BASE_COLONNE<GreenITIndicateur>(), ...colonnes];
 };
