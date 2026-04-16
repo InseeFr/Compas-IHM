@@ -214,6 +214,28 @@ export function formatIndicateur(
             consoNormalized: getValue(greenITApp, "consoScore"),
             impactNormalized: getValue(greenITApp, "impactScore"),
 
+            nbPodMaxi : getValue(greenITApp, "nbPodMaxi"),
+            nbPodMaxiProd : getValue(greenITApp,"nbPodMaxiProd"),
+
+            diskUsed: getValue(greenITApp, "diskUsed"),
+            pvcUsed: getValue(greenITApp, "pvcUsed"),
+            diskUsedProd: getValue(greenITApp, "diskUsedProd"),
+            pvcUsedProd: getValue(greenITApp, "pvcUsedProd"),
+
+            s3Used: getValue(greenITApp, "s3Used"),
+            s3UsedProd: getValue(greenITApp, "s3UsedProd"),
+
+            cpuUsed: getValue(greenITApp, "cpuUsed"),
+            cpuUsedProd: getValue(greenITApp, "cpuUsedProd"),
+
+            ramUsed: getValue(greenITApp, "ramUsed"),
+            ramUsedProd: getValue(greenITApp, "ramUsedProd"),
+
+            ramMaxi: getValue(greenITApp, "ramMaxi"),
+            cpuMaxi: getValue(greenITApp, "cpuMaxi"),
+            ramMaxiProd: getValue(greenITApp, "ramMaxiProd"),
+            cpuMaxiProd: getValue(greenITApp, "cpuMaxiProd"),
+
             isModule: false
         };
     });
