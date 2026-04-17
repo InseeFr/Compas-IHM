@@ -1,14 +1,14 @@
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
+import SouthEastIcon from "@mui/icons-material/SouthEast";
 
 export const TREND_CONFIG = {
     up: {
-        icon: ArrowUpwardIcon,
+        icon: NorthEastIcon,
         color: "success.main"
     },
     down: {
-        icon: ArrowDownwardIcon,
+        icon: SouthEastIcon,
         color: "error.main"
     },
     flat: {
