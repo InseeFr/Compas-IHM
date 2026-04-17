@@ -2,7 +2,7 @@ import type { MRT_TableInstance, MRT_Row, MRT_ColumnDef } from "material-react-t
 import type { DevopsIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
 import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
-import { DeploymentCell, DistanceCell } from "./DevopsCell";
+import { ContributorCell, DeploymentCell, DistanceCell } from "./DevopsCell";
 import type { IndicateurDevopsView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
@@ -49,13 +49,13 @@ export const paginationConfig: Pagination = {
 
 export const columnsTable = (): MRT_ColumnDef<DevopsIndicateur>[] => {
     const colonnes: MRT_ColumnDef<DevopsIndicateur>[] = [
-        /*{
+        {
             accessorKey: "lettreContributorCount",
             header: DEVOPS_HEADERS.CONTRIBUTEUR,
             Cell: ContributorCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Note Contributeur", cell: cell, row: row })
-        },*/
+        },
         {
             accessorKey: "lettreDeploymentCount",
             header: DEVOPS_HEADERS.NB_MEP,
