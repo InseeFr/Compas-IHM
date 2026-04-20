@@ -13,11 +13,16 @@ export interface DemandeCreationMeteo {
 }
 
 export interface DemandeCreationStrategieCloud {
-    idsModule?: number[];
-    avancement?: number;
+    /** @minItems 1 */
+    idsModule: number[];
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    avancement: number;
     commentaire?: string;
-    envCibleProd?: number;
-    date?: string;
+    envCibleProd: number;
+    date: string;
 }
 
 export interface InfosSaisiesA11yToSaveDTO {
@@ -744,10 +749,19 @@ export const getIndicatorsMarkdowns = (
 };
 
 /**
- * @summary Lister tous les modules et informations accessibilité
+ * @summary Lister tous les modules et informations accessibilité pour les IHM
  */
 export const listerModulesA11y = (options?: SecondParameter<typeof fetch<IndicateursModuleA11Y[]>>) => {
     return fetch<IndicateursModuleA11Y[]>({ url: `/a11y/modules`, method: "GET" }, options);
+};
+
+/**
+ * @summary Lister tous les modules et informations accessibilité
+ */
+export const listerModulesALL11y = (
+    options?: SecondParameter<typeof fetch<IndicateursModuleA11Y[]>>
+) => {
+    return fetch<IndicateursModuleA11Y[]>({ url: `/a11y/modules-all`, method: "GET" }, options);
 };
 
 /**
@@ -832,4 +846,5 @@ export type GetIndicatorsMarkdownsResult = NonNullable<
     Awaited<ReturnType<typeof getIndicatorsMarkdowns>>
 >;
 export type ListerModulesA11yResult = NonNullable<Awaited<ReturnType<typeof listerModulesA11y>>>;
+export type ListerModulesALL11yResult = NonNullable<Awaited<ReturnType<typeof listerModulesALL11y>>>;
 export type ListerApplicationA11yResult = NonNullable<Awaited<ReturnType<typeof listerApplicationA11y>>>;
