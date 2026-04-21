@@ -30,7 +30,7 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
             `"${row.original.sndi}"`,
             `"${row.original.domaine}"`,
             `"${row.original.domaineFonc}"`,
-            `"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
+            `"${row.original.lettreCouvertureTestUnitaire ?? "NR"}"`,
             `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
             `"${row.original.lettreFiabilite ?? "NR"}"`,
             `"${row.original.lettreDetteTechnique ?? "NR"}"`,

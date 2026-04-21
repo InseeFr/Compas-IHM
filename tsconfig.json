@@ -20,7 +20,6 @@
         "noFallthroughCasesInSwitch": true,
         "verbatimModuleSyntax": true,
         "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"],
-
         "paths": {
             "components/*": ["./src/components/*"],
             "hooks/*": ["./src/hooks/*"],
@@ -36,6 +35,7 @@
             "styles/*": ["./src/styles/*"],
             "store/*": ["./src/store/*"]
         }
+
     },
     "include": ["src", "**/*.test.tsx", "**/*.test.ts"],
     "references": [{ "path": "tsconfig.node.json" }]
