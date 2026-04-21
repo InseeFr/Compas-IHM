@@ -99,7 +99,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         sndi: item.sndi ?? defaultValue,
         domaine: item.domaineSndi ?? defaultValue,
         domaineFonc: item.domaineFonctionnel ?? defaultValue,
-        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? defaultValue,
+        lettreCouvertureTestUnitaire: item.lettreCouvertureTestUnitaire ?? defaultValue,
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
         pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,

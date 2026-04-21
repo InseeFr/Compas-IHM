@@ -46,7 +46,7 @@ export interface QualiteIndicateur {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
     pourcentageCouvertureTestUnitaire: string;

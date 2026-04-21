@@ -86,9 +86,12 @@ export interface IndicateurQualiteView {
     detteTechnique?: string;
     pourcentageCouvertureTestUnitaire?: string;
     fiabilite?: string;
+    detteTechniquePast?: string;
+    pourcentageCouvertureTestUnitairePast?: string;
+    fiabilitePast?: string;
     lettreDetteTechnique?: string;
     lettreFiabilite?: string;
-    lettreCouvertureTestUniaire?: string;
+    lettreCouvertureTestUnitaire?: string;
     lettreGlobalQualite?: string;
     evolutionCouvertureTestUnitaire?: number;
     evolutionDetteTechnique?: number;
@@ -345,6 +348,36 @@ export type ImportApplicationTipsBody = {
 
 export type ImportApplicationTips200 = { [key: string]: unknown };
 
+export type GetIndicateurQualiteByModuleParams = {
+    periode?: GetIndicateurQualiteByModulePeriode;
+};
+
+export type GetIndicateurQualiteByModulePeriode =
+    (typeof GetIndicateurQualiteByModulePeriode)[keyof typeof GetIndicateurQualiteByModulePeriode];
+
+export const GetIndicateurQualiteByModulePeriode = {
+    VEILLE: "VEILLE",
+    MOIS: "MOIS",
+    TRIMESTRE: "TRIMESTRE",
+    SEMESTRE: "SEMESTRE",
+    ANNEE: "ANNEE"
+} as const;
+
+export type GetIndicateurQualiteByApplicationParams = {
+    periode?: GetIndicateurQualiteByApplicationPeriode;
+};
+
+export type GetIndicateurQualiteByApplicationPeriode =
+    (typeof GetIndicateurQualiteByApplicationPeriode)[keyof typeof GetIndicateurQualiteByApplicationPeriode];
+
+export const GetIndicateurQualiteByApplicationPeriode = {
+    VEILLE: "VEILLE",
+    MOIS: "MOIS",
+    TRIMESTRE: "TRIMESTRE",
+    SEMESTRE: "SEMESTRE",
+    ANNEE: "ANNEE"
+} as const;
+
 export type GetHistoryParams = {
     /**
      * Nombre de mois à remonter
@@ -573,15 +606,20 @@ export const getCveCriticalMonthly = (
 };
 
 export const getIndicateurQualiteByModule = (
+    params?: GetIndicateurQualiteByModuleParams,
     options?: SecondParameter<typeof fetch<IndicateurQualiteView[]>>
 ) => {
-    return fetch<IndicateurQualiteView[]>({ url: `/qualite/modules`, method: "GET" }, options);
+    return fetch<IndicateurQualiteView[]>({ url: `/qualite/modules`, method: "GET", params }, options);
 };
 
 export const getIndicateurQualiteByApplication = (
+    params?: GetIndicateurQualiteByApplicationParams,
     options?: SecondParameter<typeof fetch<IndicateurQualiteView[]>>
 ) => {
-    return fetch<IndicateurQualiteView[]>({ url: `/qualite/applications`, method: "GET" }, options);
+    return fetch<IndicateurQualiteView[]>(
+        { url: `/qualite/applications`, method: "GET", params },
+        options
+    );
 };
 
 /**
