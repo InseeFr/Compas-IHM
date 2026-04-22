@@ -20,7 +20,6 @@ import { BASE_HEADERS, GREENIT_HEADERS } from "constantes/constantes-headers";
 import type { InfraType } from "utils/greenit-type";
 
 
-
 const firstNumberOrNull = (s: string | null | undefined): number | null => {
     if (!s) return null;
     const m = new RegExp(/[\d.,]+/).exec(String(s));
@@ -29,6 +28,7 @@ const firstNumberOrNull = (s: string | null | undefined): number | null => {
     const num = Number(normalized);
     return Number.isFinite(num) ? num : null;
 };
+
 const diff = (globalVal?: string, prodVal?: string): number | null => {
     const g = firstNumberOrNull(globalVal);
     const p = firstNumberOrNull(prodVal);
@@ -36,11 +36,9 @@ const diff = (globalVal?: string, prodVal?: string): number | null => {
     return g - p;
 };
 
-
 const formatNumberWithSpaces = (num: number, forceInteger = false): string => {
     const n = forceInteger ? Math.round(num) : num;
     const [intPart, decPartRaw] = String(n).split(".");
-
     const intSpaced = intPart
         .split("")
         .reverse()
@@ -49,29 +47,23 @@ const formatNumberWithSpaces = (num: number, forceInteger = false): string => {
         .split("")
         .reverse()
         .join("");
-
     let decPart = "";
     if (!forceInteger && decPartRaw) {
         let i = decPartRaw.length;
         while (i > 0 && decPartRaw[i - 1] === "0") i--;
         if (i > 0) decPart = "," + decPartRaw.slice(0, i);
     }
-
     return intSpaced + decPart;
 };
 
 const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
     const a = rowA.getValue<number>(columnId);
     const b = rowB.getValue<number>(columnId);
-
     if (a == null && b == null) return 0;
     if (a == null) return -1;
     if (b == null) return 1;
-
     return a - b;
 };
-
-const toNumber = (v?: string) => firstNumberOrNull(v);
 
 const hasValue = (value: unknown) => {
     if (value === null || value === undefined) return false;
@@ -98,10 +90,8 @@ const filterByInfraType = (
     infraType: InfraType,
     viewMode: ViewMode
 ): GreenITIndicateur[] => {
-
     if (infraType === "ALL") {
         if (viewMode === "global") return [...data];
-
         return data.filter(item =>
             INFRA_PROPERTIES.VM.prod.some(prop => hasValue(item[prop]))   ||
             INFRA_PROPERTIES.KUB.prod.some(prop => hasValue(item[prop]))  ||
@@ -109,16 +99,11 @@ const filterByInfraType = (
             INFRA_PROPERTIES.KUB.global.some(prop => hasValue(item[prop]))
         );
     }
-
     const config = INFRA_PROPERTIES[infraType];
     if (!config) return [...data];
-
     const properties = viewMode === "prod" ? config.prod : config.global;
-
     return data.filter(item => properties.some(prop => hasValue(item[prop])));
 };
-
-
 
 export const filteredViewMode = (
     viewMode: ViewMode,
@@ -131,27 +116,39 @@ export const filteredViewMode = (
     return filtered.map(item => {
 
         const conso = firstNumberOrNull(
-            viewMode === "prod" ? item.consoProd : item.consoGlobal
+            viewMode === "prod"     ? item.consoProd    :
+            viewMode === "horsprod" ? undefined         :
+            item.consoGlobal
         );
-
         const cpu = firstNumberOrNull(
-            viewMode === "prod"
-                ? item.cpuUsedProd ?? item.cpuAllocatedProd
-                : item.cpuUsed    ?? item.cpuAllocatedGlobal
+            viewMode === "prod"     ? item.cpuUsedProd ?? item.cpuAllocatedProd :
+            viewMode === "horsprod" ? undefined :
+            item.cpuUsed ?? item.cpuAllocatedGlobal
         );
-
         const ram = firstNumberOrNull(
-            viewMode === "prod"
-                ? item.ramUsedProd ?? item.ramAllocatedProd
-                : item.ramUsed    ?? item.ramAllocatedGlobal
+            viewMode === "prod"     ? item.ramUsedProd ?? item.ramAllocatedProd :
+            viewMode === "horsprod" ? undefined :
+            item.ramUsed ?? item.ramAllocatedGlobal
         );
-
         const nbVm = firstNumberOrNull(
-            viewMode === "prod" ? item.nbVMProd : item.nbVMGlobal
+            viewMode === "prod"     ? item.nbVMProd    :
+            viewMode === "horsprod" ? undefined        :
+            item.nbVMGlobal
         );
-
         const disk = firstNumberOrNull(
-            viewMode === "prod" ? item.diskUsedProd : item.diskUsed
+            viewMode === "prod"     ? item.diskUsedProd :
+            viewMode === "horsprod" ? undefined         :
+            item.diskUsed
+        );
+        const ramMaxi = firstNumberOrNull(
+            viewMode === "prod"     ? item.ramMaxiProd :
+            viewMode === "horsprod" ? undefined        :
+            item.ramMaxi
+        );
+        const cpuMaxi = firstNumberOrNull(
+            viewMode === "prod"     ? item.cpuMaxiProd :
+            viewMode === "horsprod" ? undefined        :
+            item.cpuMaxi
         );
 
         const cpuHorsProd         = diff(item.cpuAllocatedGlobal, item.cpuAllocatedProd);
@@ -160,20 +157,12 @@ export const filteredViewMode = (
         const diskHorsProd        = diff(item.diskUsed,           item.diskUsedProd);
         const ramMaxiHorsProd     = diff(item.ramMaxi,            item.ramMaxiProd);
         const cpuMaxiHorsProd     = diff(item.cpuMaxi,            item.cpuMaxiProd);
-
-        const kubCpuHorsProd      = diff(item.cpuUsed,    item.cpuUsedProd);
-        const kubRamHorsProd      = diff(item.ramUsed,    item.ramUsedProd);
-        const kubDiskHorsProd     = diff(item.diskUsed,   item.diskUsedProd);
-        const kubS3HorsProd       = diff(item.s3Used,     item.s3UsedProd);
-        const kubPvcHorsProd      = diff(item.pvcUsed,    item.pvcUsedProd);
-        const kubPodHorsProd      = diff(item.nbPodMaxi,  item.nbPodMaxiProd);
-
-        const ramMaxi = firstNumberOrNull(
-            viewMode === "prod" ? item.ramMaxiProd : item.ramMaxi
-        );
-        const cpuMaxi = firstNumberOrNull(
-            viewMode === "prod" ? item.cpuMaxiProd : item.cpuMaxi
-        );
+        const kubCpuHorsProd      = diff(item.cpuUsed,            item.cpuUsedProd);
+        const kubRamHorsProd      = diff(item.ramUsed,            item.ramUsedProd);
+        const kubDiskHorsProd     = diff(item.diskUsed,           item.diskUsedProd);
+        const kubS3HorsProd       = diff(item.s3Used,             item.s3UsedProd);
+        const kubPvcHorsProd      = diff(item.pvcUsed,            item.pvcUsedProd);
+        const kubPodHorsProd      = diff(item.nbPodMaxi,          item.nbPodMaxiProd);
 
         const fmt  = (v: number | null, integer = false) =>
             v == null ? "NR" : formatNumberWithSpaces(v, integer);
@@ -183,51 +172,24 @@ export const filteredViewMode = (
         return {
             ...item,
 
-            _consoSort: conso,
-            _cpuSort:   cpu,
-            _ramSort:   ram,
-            _nbVmSort:  nbVm,
-            _diskSort:  disk,
-
-            _ramMaxiSort: ramMaxi,
-            _cpuMaxiSort: cpuMaxi,
+            // ── GLOBAL ──────────────────────────────────────────────
+            _consoSort:     conso,
+            _cpuSort:       cpu,
+            _ramSort:       ram,
+            _nbVmSort:      nbVm,
+            _diskSort:      disk,
+            _ramMaxiSort:   ramMaxi,
+            _cpuMaxiSort:   cpuMaxi,
 
             _conso:   fmt(conso),
             _cpu:     fmtK(cpu),
-            _ram:     fmt(ram,   true),
-            _nbVm:    fmt(nbVm,  true),
-            _disk:    fmt(disk,  true),
+            _ram:     fmt(ram,     true),
+            _nbVm:    fmt(nbVm,    true),
+            _disk:    fmt(disk,    true),
             _ramMaxi: fmt(ramMaxi, true),
             _cpuMaxi: fmtK(cpuMaxi),
 
-            _nbVmHorsProdSort:    nbVmHorsProd,
-            _cpuHorsProdSort:     cpuHorsProd,
-            _ramHorsProdSort:     ramHorsProd,
-            _diskHorsProdSort:    diskHorsProd,
-            _ramMaxiHorsProdSort: ramMaxiHorsProd,
-            _cpuMaxiHorsProdSort: cpuMaxiHorsProd,
-
-            _nbVmHorsProd:    nbVmHorsProd    == null ? "NR" : formatNumberWithSpaces(nbVmHorsProd, true),
-            _cpuHorsProd:     cpuHorsProd     == null ? "NR" : formatNumberWithSpaces(cpuHorsProd / 1000, true),
-            _ramHorsProd:     ramHorsProd     == null ? "NR" : formatNumberWithSpaces(ramHorsProd, true),
-            _diskHorsProd:    diskHorsProd    == null ? "NR" : formatNumberWithSpaces(diskHorsProd, true),
-            _ramMaxiHorsProd: ramMaxiHorsProd == null ? "NR" : formatNumberWithSpaces(ramMaxiHorsProd, true),
-            _cpuMaxiHorsProd: cpuMaxiHorsProd == null ? "NR" : formatNumberWithSpaces(cpuMaxiHorsProd / 1000, true),
-
-            _cpuUsedHorsProdSort:   kubCpuHorsProd,
-            _ramUsedHorsProdSort:   kubRamHorsProd,
-            _diskUsedHorsProdSort:  kubDiskHorsProd,
-            _s3UsedHorsProdSort:    kubS3HorsProd,
-            _pvcUsedHorsProdSort:   kubPvcHorsProd,
-            _nbPodMaxiHorsProdSort: kubPodHorsProd,
-
-            _cpuUsedHorsProd:   kubCpuHorsProd  == null ? "NR" : formatNumberWithSpaces(kubCpuHorsProd / 1000, true),
-            _ramUsedHorsProd:   kubRamHorsProd  == null ? "NR" : formatNumberWithSpaces(kubRamHorsProd, true),
-            _diskUsedHorsProd:  kubDiskHorsProd == null ? "NR" : formatNumberWithSpaces(kubDiskHorsProd, true),
-            _s3UsedHorsProd:    kubS3HorsProd   == null ? "NR" : formatNumberWithSpaces(kubS3HorsProd, true),
-            _pvcUsedHorsProd:   kubPvcHorsProd  == null ? "NR" : formatNumberWithSpaces(kubPvcHorsProd, true),
-            _nbPodMaxiHorsProd: kubPodHorsProd  == null ? "NR" : formatNumberWithSpaces(kubPodHorsProd, true),
-
+            // ── PROD ────────────────────────────────────────────────
             _nbVmProdSort:      firstNumberOrNull(item.nbVMProd),
             _cpuUsedProdSort:   firstNumberOrNull(item.cpuUsedProd),
             _ramUsedProdSort:   firstNumberOrNull(item.ramUsedProd),
@@ -238,6 +200,7 @@ export const filteredViewMode = (
             _ramMaxiProdSort:   firstNumberOrNull(item.ramMaxiProd),
             _cpuMaxiProdSort:   firstNumberOrNull(item.cpuMaxiProd),
 
+            _nbVmProd:      fmt(firstNumberOrNull(item.nbVMProd),      true),
             _cpuUsedProd:   fmtK(firstNumberOrNull(item.cpuUsedProd)),
             _ramUsedProd:   fmt(firstNumberOrNull(item.ramUsedProd),   true),
             _diskUsedProd:  fmt(firstNumberOrNull(item.diskUsedProd),  true),
@@ -247,6 +210,7 @@ export const filteredViewMode = (
             _ramMaxiProd:   fmt(firstNumberOrNull(item.ramMaxiProd),   true),
             _cpuMaxiProd:   fmtK(firstNumberOrNull(item.cpuMaxiProd)),
 
+            // ── GLOBAL KUB ──────────────────────────────────────────
             _cpuUsedSort:   firstNumberOrNull(item.cpuUsed),
             _ramUsedSort:   firstNumberOrNull(item.ramUsed),
             _diskUsedSort:  firstNumberOrNull(item.diskUsed),
@@ -260,11 +224,43 @@ export const filteredViewMode = (
             _s3Used:    fmt(firstNumberOrNull(item.s3Used),    true),
             _pvcUsed:   fmt(firstNumberOrNull(item.pvcUsed),   true),
             _nbPodMaxi: fmt(firstNumberOrNull(item.nbPodMaxi), true),
+
+            // ── HORS-PROD VM ────────────────────────────────────────
+            _nbVmHorsProdSort:    nbVmHorsProd,
+            _cpuHorsProdSort:     cpuHorsProd,
+            _ramHorsProdSort:     ramHorsProd,
+            _diskHorsProdSort:    diskHorsProd,
+            _ramMaxiHorsProdSort: ramMaxiHorsProd,
+            _cpuMaxiHorsProdSort: cpuMaxiHorsProd,
+
+            _nbVmHorsProd:    fmt(nbVmHorsProd,    true),
+            _cpuHorsProd:     cpuHorsProd     == null ? "NR" : formatNumberWithSpaces(cpuHorsProd / 1000,     true),
+            _ramHorsProd:     fmt(ramHorsProd,     true),
+            _diskHorsProd:    fmt(diskHorsProd,    true),
+            _ramMaxiHorsProd: fmt(ramMaxiHorsProd, true),
+            _cpuMaxiHorsProd: cpuMaxiHorsProd  == null ? "NR" : formatNumberWithSpaces(cpuMaxiHorsProd / 1000, true),
+
+            // ── HORS-PROD KUB ───────────────────────────────────────
+            _cpuUsedHorsProdSort:   kubCpuHorsProd,
+            _ramUsedHorsProdSort:   kubRamHorsProd,
+            _diskUsedHorsProdSort:  kubDiskHorsProd,
+            _s3UsedHorsProdSort:    kubS3HorsProd,
+            _pvcUsedHorsProdSort:   kubPvcHorsProd,
+            _nbPodMaxiHorsProdSort: kubPodHorsProd,
+
+            _cpuUsedHorsProd:   kubCpuHorsProd  == null ? "NR" : formatNumberWithSpaces(kubCpuHorsProd / 1000, true),
+            _ramUsedHorsProd:   fmt(kubRamHorsProd,  true),
+            _diskUsedHorsProd:  fmt(kubDiskHorsProd, true),
+            _s3UsedHorsProd:    fmt(kubS3HorsProd,   true),
+            _pvcUsedHorsProd:   fmt(kubPvcHorsProd,  true),
+            _nbPodMaxiHorsProd: fmt(kubPodHorsProd,  true),
         };
     });
 };
 
-
+/* =========================================================
+   EXPORT CSV
+========================================================= */
 
 export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
     const headers = [
@@ -298,12 +294,10 @@ export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
 
     const buildCsvRow = (data: GreenITIndicateur): string => {
         const getValue = (value: string | undefined): string => value ?? "NR";
-
-        const baseFields       = [data.applicationName, data.sndi, data.domaine, data.domaineFonc];
-        const greenItMetrics   = [getValue(data.lettreGreen), getValue(data.consoGlobal), getValue(data.consoNormalized), getValue(data.impactNormalized), getValue(data.gaspillage)];
-        const globalResources  = [getValue(data.nbVMGlobal), getValue(data.cpuAllocatedGlobal), getValue(data.cpuAllocatedGlobal), getValue(data.ramAllocatedGlobal), getValue(data.ramAllocatedGlobal), getValue(data.diskAllocatedGlobal), getValue(data.diskAllocatedGlobal)];
-        const prodResources    = [getValue(data.nbVMProd), getValue(data.cpuAllocatedProd), getValue(data.cpuAllocatedProd), getValue(data.ramAllocatedProd), getValue(data.ramAllocatedProd), getValue(data.diskAllocatedProd), getValue(data.diskAllocatedProd), getValue(data.consoProd)];
-
+        const baseFields      = [data.applicationName, data.sndi, data.domaine, data.domaineFonc];
+        const greenItMetrics  = [getValue(data.lettreGreen), getValue(data.consoGlobal), getValue(data.consoNormalized), getValue(data.impactNormalized), getValue(data.gaspillage)];
+        const globalResources = [getValue(data.nbVMGlobal), getValue(data.cpuAllocatedGlobal), getValue(data.cpuAllocatedGlobal), getValue(data.ramAllocatedGlobal), getValue(data.ramAllocatedGlobal), getValue(data.diskAllocatedGlobal), getValue(data.diskAllocatedGlobal)];
+        const prodResources   = [getValue(data.nbVMProd), getValue(data.cpuAllocatedProd), getValue(data.cpuAllocatedProd), getValue(data.ramAllocatedProd), getValue(data.ramAllocatedProd), getValue(data.diskAllocatedProd), getValue(data.diskAllocatedProd), getValue(data.consoProd)];
         return [...baseFields, ...greenItMetrics, ...globalResources, ...prodResources]
             .map(value => `"${value}"`)
             .join(",");
@@ -313,73 +307,14 @@ export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
     handleExportCsv("green-it", table, csvData, headers);
 };
 
-export function transformGreenItData(
-    data: GreenITIndicateur[],
-    viewMode: ViewMode
-): GreenITIndicateur[] {
-
-    return data.map(item => {
-
-        const vmCpuHorsProd = diff(item.cpuAllocatedGlobal, item.cpuAllocatedProd);
-        const vmRamHorsProd = diff(item.ramAllocatedGlobal, item.ramAllocatedProd);
-        const vmNbHorsProd  = diff(item.nbVMGlobal, item.nbVMProd);
-
-        const kubCpuHorsProd = diff(item.cpuUsed, item.cpuUsedProd);
-        const kubRamHorsProd = diff(item.ramUsed, item.ramUsedProd);
-        const kubDiskHorsProd = diff(item.diskUsed, item.diskUsedProd);
-        const kubS3HorsProd = diff(item.s3Used, item.s3UsedProd);
-        const kubPvcHorsProd = diff(item.pvcUsed, item.pvcUsedProd);
-        const kubPodHorsProd = diff(item.nbPodMaxi, item.nbPodMaxiProd);
-
-        return {
-            ...item,
-
-
-            _nbVmSort: toNumber(item.nbVMGlobal),
-            _cpuSort: toNumber(item.cpuAllocatedGlobal),
-            _ramSort: toNumber(item.ramAllocatedGlobal),
-            _diskSort: toNumber(item.diskAllocatedGlobal),
-
-            _ramMaxiSort: toNumber(item.ramMaxi),
-            _cpuMaxiSort: toNumber(item.cpuMaxi),
-
-            _ramMaxiProdSort: toNumber(item.ramMaxiProd),
-            _cpuMaxiProdSort: toNumber(item.cpuMaxiProd),
-
-            _cpuUsedProdSort: toNumber(item.cpuUsedProd),
-            _ramUsedProdSort: toNumber(item.ramUsedProd),
-            _diskUsedProdSort: toNumber(item.diskUsedProd),
-
-            _cpuHorsProdSort: vmCpuHorsProd,
-            _ramHorsProdSort: vmRamHorsProd,
-            _nbVmHorsProdSort: vmNbHorsProd,
-
-
-
-            _cpuUsedSort: toNumber(item.cpuUsed),
-            _ramUsedSort: toNumber(item.ramUsed),
-            _diskUsedSort: toNumber(item.diskUsed),
-            _s3UsedSort: toNumber(item.s3Used),
-            _pvcUsedSort: toNumber(item.pvcUsed),
-            _nbPodMaxiSort: toNumber(item.nbPodMaxi),
-
-            _s3UsedProdSort: toNumber(item.s3UsedProd),
-            _pvcUsedProdSort: toNumber(item.pvcUsedProd),
-            _nbPodMaxiProdSort: toNumber(item.nbPodMaxiProd),
-
-            _cpuUsedHorsProdSort: kubCpuHorsProd,
-            _ramUsedHorsProdSort: kubRamHorsProd,
-            _diskUsedHorsProdSort: kubDiskHorsProd,
-            _s3UsedHorsProdSort: kubS3HorsProd,
-            _pvcUsedHorsProdSort: kubPvcHorsProd,
-            _nbPodMaxiHorsProdSort: kubPodHorsProd,
-        };
-    });
-}
-
+/* =========================================================
+    COLUMNS
+========================================================= */
 
 export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
     const colonnes: MRT_ColumnDef<GreenITIndicateur>[] = [
+
+        // ══ GLOBAL VM ══════════════════════════════════════════════
         {
             header: GREENIT_HEADERS.CONSO_WH,
             accessorKey: "_consoSort",
@@ -429,6 +364,8 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "CPU maxi en GHz", cell, row })
         },
+
+        // ══ GLOBAL KUB ═════════════════════════════════════════════
         {
             header: "CPU utilisé (GHz)",
             accessorKey: "_cpuUsedSort",
@@ -470,6 +407,15 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "Nombre de pods maxi", cell, row })
+        },
+
+        // ══ PROD ═══════════════════════════════════════════════════
+        {
+            header: "Nombre de VM prod",
+            accessorKey: "_nbVmProdSort",
+            Cell: ({ row }: MRT_RowData) => row.original._nbVmProd,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "Nombre de VM prod", cell, row })
         },
         {
             header: "RAM maxi prod (Go)",
@@ -527,20 +473,8 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "Nombre de pods maxi prod", cell, row })
         },
-        {
-            header: "CPU hors prod (GHz)",
-            accessorKey: "_cpuHorsProdSort",
-            Cell: ({ row }: MRT_RowData) => row.original._cpuHorsProd,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "CPU hors prod en GHz", cell, row })
-        },
-        {
-            header: "RAM hors prod (Go)",
-            accessorKey: "_ramHorsProdSort",
-            Cell: ({ row }: MRT_RowData) => row.original._ramHorsProd,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "RAM hors prod en Go", cell, row })
-        },
+
+        // ══ HORS-PROD VM ═══════════════════════════════════════════
         {
             header: "Nombre de VM hors prod",
             accessorKey: "_nbVmHorsProdSort",
@@ -583,6 +517,8 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "CPU maxi hors prod en GHz", cell, row })
         },
+
+        // ══ HORS-PROD KUB ══════════════════════════════════════════
         {
             header: "CPU utilisé hors prod (GHz)",
             accessorKey: "_cpuUsedHorsProdSort",
@@ -625,12 +561,10 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "Nombre de pods maxi hors prod", cell, row })
         },
-
     ];
 
     return [...BASE_COLONNE<GreenITIndicateur>(), ...colonnes];
 };
-
 
 
 const DEFAULT_VALUE = "NR";
@@ -646,67 +580,50 @@ export function formatIndicateur(
 ): GreenITIndicateur[] {
     return sndiAndDomain.map(app => {
         const greenITApp = greentItApp.find(aG => aG.applicationName === app.appName);
-
         return {
-            applicationName: app.appName ?? DEFAULT_VALUE,
-            sndi:            app.sndi ?? DEFAULT_VALUE,
-            domaine:         app.domaineSndi ?? DEFAULT_VALUE,
-            domaineFonc:     app.domaineFonctionnel ?? DEFAULT_VALUE,
-
-            consoGlobal:        getValue(greenITApp, "conso"),
-            cpuAllocatedGlobal: getValue(greenITApp, "cpuAllocated"),
+            applicationName:     app.appName ?? DEFAULT_VALUE,
+            sndi:                app.sndi ?? DEFAULT_VALUE,
+            domaine:             app.domaineSndi ?? DEFAULT_VALUE,
+            domaineFonc:         app.domaineFonctionnel ?? DEFAULT_VALUE,
+            consoGlobal:         getValue(greenITApp, "conso"),
+            cpuAllocatedGlobal:  getValue(greenITApp, "cpuAllocated"),
             diskAllocatedGlobal: getValue(greenITApp, "diskAllocated"),
-            ramAllocatedGlobal: getValue(greenITApp, "ramAllocated"),
-            nbVMGlobal:         getValue(greenITApp, "nbVm"),
-
-            consoProd:          getValue(greenITApp, "consoProd"),
-            cpuAllocatedProd:   getValue(greenITApp, "cpuAllocatedProd"),
-            diskAllocatedProd:  getValue(greenITApp, "diskAllocatedProd"),
-            ramAllocatedProd:   getValue(greenITApp, "ramAllocatedProd"),
-            nbVMProd:           getValue(greenITApp, "nbVmProd"),
-
-            lettreGreen:       getValue(greenITApp, "lettreGreen"),
-            gaspillage:        getValue(greenITApp, "gaspillageScore"),
-            consoNormalized:   getValue(greenITApp, "consoScore"),
-            impactNormalized:  getValue(greenITApp, "impactScore"),
-
+            ramAllocatedGlobal:  getValue(greenITApp, "ramAllocated"),
+            nbVMGlobal:          getValue(greenITApp, "nbVm"),
+            consoProd:           getValue(greenITApp, "consoProd"),
+            cpuAllocatedProd:    getValue(greenITApp, "cpuAllocatedProd"),
+            diskAllocatedProd:   getValue(greenITApp, "diskAllocatedProd"),
+            ramAllocatedProd:    getValue(greenITApp, "ramAllocatedProd"),
+            nbVMProd:            getValue(greenITApp, "nbVmProd"),
+            lettreGreen:         getValue(greenITApp, "lettreGreen"),
+            gaspillage:          getValue(greenITApp, "gaspillageScore"),
+            consoNormalized:     getValue(greenITApp, "consoScore"),
+            impactNormalized:    getValue(greenITApp, "impactScore"),
             nbPodMaxi:     getValue(greenITApp, "nbPodMaxi"),
             nbPodMaxiProd: getValue(greenITApp, "nbPodMaxiProd"),
-
             diskUsed:     getValue(greenITApp, "diskUsed"),
             pvcUsed:      getValue(greenITApp, "pvcUsed"),
             diskUsedProd: getValue(greenITApp, "diskUsedProd"),
             pvcUsedProd:  getValue(greenITApp, "pvcUsedProd"),
-
-            s3Used:     getValue(greenITApp, "s3Used"),
-            s3UsedProd: getValue(greenITApp, "s3UsedProd"),
-
-            cpuUsed:     getValue(greenITApp, "cpuUsed"),
-            cpuUsedProd: getValue(greenITApp, "cpuUsedProd"),
-
-            ramUsed:     getValue(greenITApp, "ramUsed"),
-            ramUsedProd: getValue(greenITApp, "ramUsedProd"),
-
-            ramMaxi:     getValue(greenITApp, "ramMaxi"),
-            cpuMaxi:     getValue(greenITApp, "cpuMaxi"),
-            ramMaxiProd: getValue(greenITApp, "ramMaxiProd"),
-            cpuMaxiProd: getValue(greenITApp, "cpuMaxiProd"),
-
+            s3Used:       getValue(greenITApp, "s3Used"),
+            s3UsedProd:   getValue(greenITApp, "s3UsedProd"),
+            cpuUsed:      getValue(greenITApp, "cpuUsed"),
+            cpuUsedProd:  getValue(greenITApp, "cpuUsedProd"),
+            ramUsed:      getValue(greenITApp, "ramUsed"),
+            ramUsedProd:  getValue(greenITApp, "ramUsedProd"),
+            ramMaxi:      getValue(greenITApp, "ramMaxi"),
+            cpuMaxi:      getValue(greenITApp, "cpuMaxi"),
+            ramMaxiProd:  getValue(greenITApp, "ramMaxiProd"),
+            cpuMaxiProd:  getValue(greenITApp, "cpuMaxiProd"),
             isModule: false
         };
     });
 }
 
 
-
 export const paginationConfig: Pagination = {
-    pagination: {
-        pageIndex: 0,
-        pageSize: 30
-    }
+    pagination: { pageIndex: 0, pageSize: 30 }
 };
-
-
 
 export const fetchData = async () => {
     try {
