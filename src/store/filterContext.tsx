@@ -5,6 +5,7 @@ export interface FilterState {
     domaineDev: string;
     appName: string;
     domaineFonc: string;
+    periode?: string;
 }
 
 export type Action =
@@ -12,13 +13,15 @@ export type Action =
     | { type: "SET_DOMAINE_DEV"; payload: string }
     | { type: "SET_APP_NAME"; payload: string }
     | { type: "SET_DOMAINE_FONC"; payload: string }
+    | { type: "SET_PERIODE"; payload: string }
     | { type: "RESET_FILTERS" };
 
 const initialState: FilterState = {
     serviceDev: "",
     domaineDev: "",
     appName: "",
-    domaineFonc: ""
+    domaineFonc: "",
+    periode: "MOIS"
 };
 
 function filterReducer(state: FilterState, action: Action): FilterState {
@@ -33,6 +36,8 @@ function filterReducer(state: FilterState, action: Action): FilterState {
             return { ...state, domaineFonc: action.payload };
         case "RESET_FILTERS":
             return initialState;
+        case "SET_PERIODE": // 👈 AJOUT
+            return { ...state, periode: action.payload };    
         default:
             return state;
     }

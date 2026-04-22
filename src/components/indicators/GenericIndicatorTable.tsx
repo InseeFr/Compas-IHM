@@ -12,7 +12,7 @@ interface GenericIndicatorTableProps {
     title: string;
     fetchData: () => Promise<AllIndicators[] | undefined>;
     columns: any[];
-    queryKey: string;
+    queryKey: [string, ...unknown[]]
     hasModules?: boolean;
     rowId?: (row: any) => string;
     subRow?: (row: any) => any[] | undefined;

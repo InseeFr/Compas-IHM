@@ -10,7 +10,13 @@ interface FiltersProps {
 
 export const Filters = (props: Readonly<FiltersProps>) => {
     const { data, state, dispatch } = props;
-
+    const PERIODES = [
+    "VEILLE",
+    "MOIS",
+    "ANNEE",
+    "TRIMESTRE",
+    "SEMESTRE"
+];
     const filteredForService = data.filter(
         item =>
             (!state.domaineDev || item.domaine === state.domaineDev) &&
@@ -64,7 +70,18 @@ export const Filters = (props: Readonly<FiltersProps>) => {
                         }),
                     dataFilter: filteredForDomaineFonc,
                     getValue: item => item.domaineFonc
-                }
+                },
+                 {
+                title: "Période",
+                selectedOne: state.periode ?? "MOIS",
+                onChange: e =>
+                    dispatch({
+                        type: "SET_PERIODE",
+                        payload: e.target.value
+                    }),
+                dataFilter: PERIODES as unknown as AllIndicators[],
+                getValue: (item: unknown) => item as string
+            }
             ]}
         />
     );
