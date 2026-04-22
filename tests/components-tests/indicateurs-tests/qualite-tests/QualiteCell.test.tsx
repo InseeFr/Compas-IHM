@@ -24,10 +24,13 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         domaine: "domaine-test",
         domaineFonc: "domaineFonc-test",
         lettreCouvertureTestUnitaire: "A",
+        lettreFiabilite:"B",
+        lettreDetteTechnique:"C",
         pourcentageCouvertureTestUnitaire: "0",
         tendanceDetteTechnique: "up",
         tendanceFiabilite: "up",
         tendanceTestUnitaire: "up",
+
         ...overrides
     };
     return { original: base };
