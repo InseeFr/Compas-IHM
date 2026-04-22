@@ -23,7 +23,7 @@ const mockApp: IndicateurApplicationSynthese = {
     maturite: "B",
     applicationId: 0,
     domaine: "",
-    lettreCouvertureTestUniaire: "",
+    lettreCouvertureTestUnitaire: "",
     nbCveCritical: "",
     nbCveHigh: "",
     nbCveLow: "",

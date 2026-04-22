@@ -15,7 +15,7 @@ const COUVERTURE_LEVELS = [
 ];
 
 const QUALITY_ASPECTS = [
-    { name: "Couverture", key: "lettreCouvertureTestUniaire" },
+    { name: "Couverture", key: "lettreCouvertureTestUnitaire" },
     { name: "Fiabilité", key: "lettreFiabilite" },
     { name: "Dette", key: "lettreDetteTechnique" },
     { name: "Qualité globale", key: "lettreQualiteGenerale" }
@@ -77,10 +77,10 @@ export function QualiteCoverageChart({ data }: Readonly<QualiteCoverageChartProp
 
     const countByLevel = COUVERTURE_LEVELS.map(level => {
         if (level.key === "X") {
-            return appsWithCoverage.filter(app => app.lettreCouvertureTestUniaire === "X").length;
+            return appsWithCoverage.filter(app => app.lettreCouvertureTestUnitaire === "X").length;
         }
         return appsWithCoverage.filter(app => {
-            if (app.lettreCouvertureTestUniaire === "X") return false;
+            if (app.lettreCouvertureTestUnitaire === "X") return false;
             const coverage = Number.parseFloat(app.pourcentageCouvertureTestUniaire);
             if (Number.isNaN(coverage)) return false;
             return coverage >= (level.min ?? 0) && coverage < (level.max ?? 0);

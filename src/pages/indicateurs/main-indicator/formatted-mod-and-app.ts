@@ -57,7 +57,7 @@ const numberOrDefault = (value?: number | null): number | undefined => value ?? 
 const stringOrNR = (value?: string | null): string => value ?? NR;
 
 const createQualiteIndicators = (qualite?: IndicateurQualiteView) => ({
-    lettreCouvertureTestUniaire: stringOrNR(qualite?.lettreCouvertureTestUniaire),
+    lettreCouvertureTestUnitaire: stringOrNR(qualite?.lettreCouvertureTestUnitaire),
     lettreFiabilite: stringOrNR(qualite?.lettreFiabilite),
     lettreDetteTechnique: stringOrNR(qualite?.lettreDetteTechnique),
     lettreQualiteGenerale: stringOrNR(qualite?.lettreGlobalQualite),

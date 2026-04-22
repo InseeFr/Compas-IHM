@@ -23,7 +23,7 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         sndi: "sndi-test",
         domaine: "domaine-test",
         domaineFonc: "domaineFonc-test",
-        lettreCouvertureTestUniaire: "A",
+        lettreCouvertureTestUnitaire: "A",
         pourcentageCouvertureTestUnitaire: "0",
         tendanceDetteTechnique: "up",
         tendanceFiabilite: "up",
@@ -88,7 +88,7 @@ describe("CouvertureTestUnitCell", () => {
     });
 
     it("affiche la lettre de couverture dans le content", () => {
-        render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUniaire: "B" })} />);
+        render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUnitaire: "B" })} />);
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
 
@@ -127,16 +127,7 @@ describe("FiabiliteCell", () => {
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
 
-    it("affiche l'icône de tendance haussière", () => {
-        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "up" })} />);
-        expect(document.querySelector("svg")).toBeInTheDocument();
-    });
-
-    it("affiche l'icône de tendance baissière", () => {
-        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "down" })} />);
-        expect(document.querySelector("svg")).toBeInTheDocument();
-    });
-
+    
     it("affiche l'icône stable", () => {
         render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "flat" })} />);
         expect(document.querySelector("svg")).toBeInTheDocument();

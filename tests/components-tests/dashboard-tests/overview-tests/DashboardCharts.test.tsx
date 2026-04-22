@@ -96,7 +96,7 @@ const createMockGlobalIndicator = (overrides: Partial<GlobalIndicator> = {}): Gl
         sndi: "MOCK",
         domaine: "MockDomaine",
         domaineFonc: "MockFonc",
-        lettreCouvertureTestUniaire: "A",
+        lettreCouvertureTestUnitaire: "A",
         lettreGlobaleSecurite: "A",
         pourcentageCouvertureTestUnitaire: "80",
         nbCveCritical: "0",

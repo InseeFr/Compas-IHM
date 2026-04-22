@@ -24,7 +24,7 @@ const mockApp = {
     sndi: "S1",
     domaineSndi: "D1",
     domaineFonctionnel: "NR",
-    lettreCouvertureTestUniaire: "A",
+    lettreCouvertureTestUnitaire: "A",
     lettreFiabilite: "B",
     lettreDetteTechnique: "C",
     pourcentageCouvertureTestUnitaire: "50%",
@@ -41,7 +41,7 @@ const mockModule = {
     sndi: "S1",
     domaineSndi: "D1",
     domaineFonctionnel: "NR",
-    lettreCouvertureTestUniaire: "X",
+    lettreCouvertureTestUnitaire: "X",
     lettreFiabilite: "Y",
     lettreDetteTechnique: "Z",
     pourcentageCouvertureTestUnitaire: "75%",
@@ -61,7 +61,7 @@ describe("formatIndicateur", () => {
             sndi: "S1",
             domaine: "D1",
             domaineFonc: "NR",
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
             pourcentageCouvertureTestUnitaire: "50%",
@@ -81,7 +81,7 @@ describe("formatIndicateur", () => {
             sndi: "S1",
             domaine: "D1",
             domaineFonc: "NR",
-            lettreCouvertureTestUniaire: "X",
+            lettreCouvertureTestUnitaire: "X",
             lettreFiabilite: "Y",
             lettreDetteTechnique: "Z",
             pourcentageCouvertureTestUnitaire: "75%",
@@ -106,12 +106,12 @@ describe("columnsTable", () => {
             "Fiabilité",
             "Dette Technique"
         ]);
-        const couvertureCol = colonnes.find(c => c.accessorKey === "lettreCouvertureTestUniaire");
+        const couvertureCol = colonnes.find(c => c.accessorKey === "lettreCouvertureTestUnitaire");
         expect(couvertureCol?.Cell).toBeDefined();
     });
     it("doit générer un aria-label Couverture", () => {
         const colContributeur = columnsTable().find(
-            c => c.accessorKey === "lettreCouvertureTestUniaire"
+            c => c.accessorKey === "lettreCouvertureTestUnitaire"
         )!;
         const props =
             typeof colContributeur.muiTableBodyCellProps === "function"
@@ -210,7 +210,7 @@ describe("formatIndicateur — valeurs manquantes", () => {
             sndi: null,
             domaineSndi: null,
             domaineFonctionnel: null,
-            lettreCouvertureTestUniaire: null,
+            lettreCouvertureTestUnitaire: null,
             lettreFiabilite: null,
             lettreDetteTechnique: null,
             pourcentageCouvertureTestUnitaire: null,
@@ -225,7 +225,7 @@ describe("formatIndicateur — valeurs manquantes", () => {
         expect(resultat.sndi).toBe("NR");
         expect(resultat.domaine).toBe("NR");
         expect(resultat.domaineFonc).toBe("NR");
-        expect(resultat.lettreCouvertureTestUniaire).toBe("NR");
+        expect(resultat.lettreCouvertureTestUnitaire).toBe("NR");
         expect(resultat.lettreFiabilite).toBe("NR");
         expect(resultat.lettreDetteTechnique).toBe("NR");
         expect(resultat.detteTechnique).toBe("NR");
@@ -268,7 +268,7 @@ describe("columnsTable — structure", () => {
         expect(colonnes.map(c => c.accessorKey)).toEqual([
             "applicationName",
             "sndi",
-            "lettreCouvertureTestUniaire",
+            "lettreCouvertureTestUnitaire",
             "lettreFiabilite",
             "lettreDetteTechnique"
         ]);
@@ -301,7 +301,7 @@ describe("OnExport — cas limites", () => {
                 sndi: null,
                 domaineSndi: null,
                 domaineFonctionnel: null,
-                lettreCouvertureTestUniaire: null,
+                lettreCouvertureTestUnitaire: null,
                 lettreFiabilite: null,
                 lettreDetteTechnique: null,
                 pourcentageCouvertureTestUnitaire: null,

@@ -91,7 +91,7 @@ describe("application-synthesis-config", () => {
                 sndi: "",
                 domaine: "",
                 domaineFonc: "",
-                lettreCouvertureTestUniaire: "",
+                lettreCouvertureTestUnitaire: "",
                 nbCveCritical: "",
                 nbCveHigh: "",
                 nbCveLow: "",

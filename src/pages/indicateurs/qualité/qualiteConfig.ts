@@ -51,7 +51,7 @@ export const paginationConfig: Pagination = {
 export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
     const colonnes: MRT_ColumnDef<QualiteIndicateur>[] = [
         {
-            accessorKey: "lettreCouvertureTestUniaire",
+            accessorKey: "lettreCouvertureTestUnitaire",
             header: QUALITE_HEADERS.COUVERTURE_TEST,
             Cell: CouvertureTestUnitCell,
             muiTableBodyCellProps: ({ cell, row }) =>

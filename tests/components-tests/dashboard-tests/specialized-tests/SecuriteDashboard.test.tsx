@@ -88,7 +88,7 @@ const mockFormattedApps: GlobalIndicator[] = [
         sndi: "",
         domaine: "",
         domaineFonc: "",
-        lettreCouvertureTestUniaire: "",
+        lettreCouvertureTestUnitaire: "",
         lettreGlobaleSecurite: "",
         pourcentageCouvertureTestUniaire: "",
         nbCveHigh: "",

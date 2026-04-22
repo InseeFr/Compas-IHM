@@ -200,7 +200,7 @@ export interface GlobalIndicator {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
     lettreGlobaleSecurite: string;
@@ -280,7 +280,7 @@ export interface IndicateurApplicationSynthese {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
     lettreNiveauCve: string;
