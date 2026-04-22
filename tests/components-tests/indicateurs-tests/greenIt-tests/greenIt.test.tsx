@@ -162,7 +162,7 @@ describe("GreenItTable", () => {
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
 
-        expect(filteredViewMode).toHaveBeenCalledWith("prod", mockData);
+        expect(filteredViewMode).toHaveBeenCalledWith("global", mockData, "ALL");
     });
 
     // ============================
