@@ -437,35 +437,35 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "CPU utilisé en GHz", cell, row })
         },
         {
-            header: "RAM utilisée (Go)",
+            header: "RAM utilisée Kube (Go)",
             accessorKey: "_ramUsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._ramUsed,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "RAM utilisée en Go", cell, row })
         },
         {
-            header: "Disque utilisé (Go)",
+            header: "Stockage utilisé VM (Go)",
             accessorKey: "_diskUsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._diskUsed,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "Disque utilisé en Go", cell, row })
         },
         {
-            header: "S3 utilisé",
+            header: "Stockage utilisé S3 (Go)",
             accessorKey: "_s3UsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._s3Used,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "S3 utilisé", cell, row })
         },
         {
-            header: "PVC utilisé",
+            header: "Stockage utilisé Kube (Go)",
             accessorKey: "_pvcUsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._pvcUsed,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) => muiAriaCell({ title: "PVC utilisé", cell, row })
         },
         {
-            header: "Nombre de pods maxi",
+            header: "Nombre (maxi) de POD",
             accessorKey: "_nbPodMaxiSort",
             Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
             sortingFn: sortHelper,

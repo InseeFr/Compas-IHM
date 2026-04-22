@@ -118,14 +118,6 @@ export interface GreenITIndicateur {
     _s3UsedSort?: number | null;
     _pvcUsedSort?: number | null;
     _nbPodMaxiSort?: number | null;
-    _ramMaxiProdSort?: number | null;
-    _cpuMaxiProdSort?: number | null;
-    _cpuUsedProdSort?: number | null;
-    _ramUsedProdSort?: number | null;
-    _diskUsedProdSort?: number | null;
-    _s3UsedProdSort?: number | null;
-    _pvcUsedProdSort?: number | null;
-    _nbPodMaxiProdSort?: number | null;
 }
 
 export interface SecuriteIndicateur {
