@@ -35,7 +35,6 @@
             "styles/*": ["./src/styles/*"],
             "store/*": ["./src/store/*"]
         }
-
     },
     "include": ["src", "**/*.test.tsx", "**/*.test.ts"],
     "references": [{ "path": "tsconfig.node.json" }]
