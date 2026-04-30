@@ -1,30 +1,25 @@
-import {
-    columnsTable,
-    formatIndicateur,
-    OnExport,
-    paginationConfig
-} from "./qualiteConfig";
+import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./qualiteConfig";
 import {
     getIndicateurQualiteByApplication,
+    GetIndicateurQualiteByApplicationPeriode,
     getIndicateurQualiteByModule
 } from "todos-api/client.gen";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
-import type {
-    GetIndicateurQualiteByApplicationPeriode
-} from "todos-api/client.gen";
+import { useTendanceContext } from "store/tendance-context";
 
-type Props = {
-    periode?: GetIndicateurQualiteByApplicationPeriode;
-};
-
-const QualiteIndicateurTable = ({ periode }: Props) => {
+const QualiteIndicateurTable = () => {
+    const { stateTendance } = useTendanceContext();
     const columns = columnsTable();
 
     const fetchData = async () => {
         try {
             const [apps, modules] = await Promise.all([
-                getIndicateurQualiteByApplication({ periode }),
-                getIndicateurQualiteByModule({ periode })
+                getIndicateurQualiteByApplication({
+                    periode: stateTendance.periode as GetIndicateurQualiteByApplicationPeriode
+                }),
+                getIndicateurQualiteByModule({
+                    periode: stateTendance.periode as GetIndicateurQualiteByApplicationPeriode
+                })
             ]);
 
             const formattedApps = apps.map(app => formatIndicateur(app));
@@ -42,7 +37,7 @@ const QualiteIndicateurTable = ({ periode }: Props) => {
             title="Table Indicateur Qualité"
             fetchData={fetchData}
             columns={columns}
-            queryKey={["QualiteIndicator", periode ?? "MOIS"]}
+            queryKey={["QualiteIndicator"]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}

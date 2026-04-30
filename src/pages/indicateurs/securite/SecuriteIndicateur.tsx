@@ -38,7 +38,7 @@ const SecuriteIndicateurTable = () => {
             title="Table Indicateur Sécurité"
             fetchData={fetchData}
             columns={columns}
-            queryKey="SecuriteIndicator"
+            queryKey={["SecuriteIndicator"]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}

@@ -4,7 +4,6 @@ import { TREND_CONFIG } from "constantes/trend.constants";
 import type { JSX } from "react";
 import { Box } from "@mui/material";
 
-
 function shouldDisplayIcon(value?: string | null): boolean {
     return value !== undefined && value !== null && value !== "" && value !== "NR" && value !== "SO";
 }

@@ -24,8 +24,8 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         domaine: "domaine-test",
         domaineFonc: "domaineFonc-test",
         lettreCouvertureTestUnitaire: "A",
-        lettreFiabilite:"B",
-        lettreDetteTechnique:"C",
+        lettreFiabilite: "B",
+        lettreDetteTechnique: "C",
         pourcentageCouvertureTestUnitaire: "0",
         tendanceDetteTechnique: "up",
         tendanceFiabilite: "up",
@@ -130,7 +130,6 @@ describe("FiabiliteCell", () => {
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
     });
 
-    
     it("affiche l'icône stable", () => {
         render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "flat" })} />);
         expect(document.querySelector("svg")).toBeInTheDocument();

@@ -7,12 +7,14 @@ import { Box } from "@mui/material";
 import type { Pagination } from "models/table-model";
 import type { AllIndicators } from "models/indicateurs";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
+import { useTendanceContext } from "store/tendance-context";
+import { TendancePeriodeForm } from "./TendanceForm";
 
 interface GenericIndicatorTableProps {
     title: string;
     fetchData: () => Promise<AllIndicators[] | undefined>;
     columns: any[];
-    queryKey: [string, ...unknown[]]
+    queryKey: string[];
     hasModules?: boolean;
     rowId?: (row: any) => string;
     subRow?: (row: any) => any[] | undefined;
@@ -34,9 +36,11 @@ export const GenericIndicatorTable = ({
     customFilters
 }: GenericIndicatorTableProps) => {
     const { state, dispatch } = useFilterContext();
+    const { stateTendance, dispatchTendance } = useTendanceContext();
 
+    const queryKeyWithPeriode = [...queryKey, stateTendance.periode];
     const { data, isLoading, modulesByApp, filteredData, refetch } = useQueryIndicators({
-        queryKey: [queryKey],
+        queryKey: queryKeyWithPeriode,
         fetchData,
         hasModules
     });
@@ -67,10 +71,24 @@ export const GenericIndicatorTable = ({
                 customFilters ? (
                     <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
                         <Filters data={data} state={state} dispatch={dispatch} />
+                        <TendancePeriodeForm
+                            periode={stateTendance.periode}
+                            handleChange={event =>
+                                dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
+                            }
+                        />
                         {customFilters}
                     </Box>
                 ) : (
-                    <Filters data={data} state={state} dispatch={dispatch} />
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
+                        <Filters data={data} state={state} dispatch={dispatch} />
+                        <TendancePeriodeForm
+                            periode={stateTendance.periode}
+                            handleChange={event =>
+                                dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
+                            }
+                        />
+                    </Box>
                 )
             }
             data={processedData}

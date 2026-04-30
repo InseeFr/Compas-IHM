@@ -26,7 +26,7 @@ export const StrategieCloudTable = () => {
             title="Table Indicateur Stratégie Cloud"
             fetchData={fetchData}
             columns={columns}
-            queryKey="StrategieCloudIndicator"
+            queryKey={["StrategieCloudIndicator"]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={onExport}
