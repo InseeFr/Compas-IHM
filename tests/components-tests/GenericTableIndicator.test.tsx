@@ -150,7 +150,7 @@ describe("GenericIndicatorTable", () => {
         it("appelle useQueryIndicators avec la bonne queryKey", () => {
             render(<GenericIndicatorTable {...defaultProps} queryKey={["myKey"]} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
-                expect.objectContaining({ queryKey: ["myKey"] })
+                expect.objectContaining({ queryKey: ["myKey","MOIS"] })
             );
         });
 
