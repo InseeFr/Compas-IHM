@@ -90,7 +90,7 @@ const defaultProps = {
     title: "Test Table",
     fetchData: vi.fn(),
     columns: [],
-    queryKey: "testKey",
+    queryKey: ["testKey"],
     paginationConfig: defaultPagination
 };
 
@@ -148,7 +148,7 @@ describe("GenericIndicatorTable", () => {
 
     describe("Appel à useQueryIndicators", () => {
         it("appelle useQueryIndicators avec la bonne queryKey", () => {
-            render(<GenericIndicatorTable {...defaultProps} queryKey="myKey" />);
+            render(<GenericIndicatorTable {...defaultProps} queryKey={["myKey"]} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
                 expect.objectContaining({ queryKey: ["myKey"] })
             );
