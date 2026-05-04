@@ -73,9 +73,9 @@ describe("Filters", () => {
     it("devrait afficher les trois filtres", () => {
         render(<Filters state={defaultState} dispatch={mockDispatch} data={mockData} />);
 
-        expect(screen.getByText("Service dev.")).toBeInTheDocument();
-        expect(screen.getByText("Domaine dev.")).toBeInTheDocument();
-        expect(screen.getByText("Domaine Fonct.")).toBeInTheDocument();
+        expect(screen.getByText("Service developpement")).toBeInTheDocument();
+        expect(screen.getByText("Domaine developpement")).toBeInTheDocument();
+        expect(screen.getByText("Domaine Fonctionnel")).toBeInTheDocument();
     });
 
     it("devrait dispatcher SET_SERVICE_DEV lors du changement", async () => {
@@ -83,7 +83,7 @@ describe("Filters", () => {
 
         render(<Filters state={defaultState} dispatch={mockDispatch} data={mockData} />);
 
-        const select = screen.getByTestId("select-Service dev.");
+        const select = screen.getByTestId("select-Service developpement");
         await user.selectOptions(select, "SNDI1");
 
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -97,7 +97,7 @@ describe("Filters", () => {
 
         render(<Filters state={defaultState} dispatch={mockDispatch} data={mockData} />);
 
-        const select = screen.getByTestId("select-Domaine dev.");
+        const select = screen.getByTestId("select-Domaine developpement");
         await user.selectOptions(select, "Domaine1");
 
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -111,7 +111,7 @@ describe("Filters", () => {
 
         render(<Filters state={defaultState} dispatch={mockDispatch} data={mockData} />);
 
-        const select = screen.getByTestId("select-Domaine Fonct.");
+        const select = screen.getByTestId("select-Domaine Fonctionnel");
         await user.selectOptions(select, "DomaineFonc1");
 
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -137,7 +137,7 @@ describe("Filters", () => {
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
             const serviceFilter = lastCall[0].filters[0];
 
-            expect(serviceFilter.dataFilter).toHaveLength(3); // 3 items avec Domaine1
+            expect(serviceFilter.dataFilter).toHaveLength(3); 
         });
 
         it("devrait filtrer par domaineFonc quand il est défini", async () => {
