@@ -16,7 +16,7 @@ interface SelectedFiltersLayoutProps<T> {
 
 export function SelectedFiltersLayout<T>(props: Readonly<SelectedFiltersLayoutProps<T>>): JSX.Element {
     return (
-        <>
+        <div className="filters-left-container">
             {props.filters.map((filter, index) => {
                 const labelId: string = `filter-label-${index}`;
                 const selectId: string = `filter-select-${index}`;
@@ -44,6 +44,6 @@ export function SelectedFiltersLayout<T>(props: Readonly<SelectedFiltersLayoutPr
                     </FormControl>
                 );
             })}
-        </>
+        </div>
     );
 }

@@ -187,7 +187,7 @@ describe("QualiteIndicateurTable", () => {
 
         expect(useQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["QualiteIndicator","MOIS"],
+                queryKey: ["QualiteIndicator", "MOIS"],
                 hasModules: true
             })
         );

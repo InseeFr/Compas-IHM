@@ -2,11 +2,9 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { TendanceProvider, useTendanceContext } from "../../src/store/tendance-context";
 
-
 const wrapper = ({ children }: { children: React.ReactNode }) => (
     <TendanceProvider>{children}</TendanceProvider>
 );
-
 
 describe("TendanceContext", () => {
     describe("état initial", () => {

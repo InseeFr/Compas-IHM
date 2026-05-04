@@ -9,6 +9,7 @@ import type { AllIndicators } from "models/indicateurs";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { useTendanceContext } from "store/tendance-context";
 import { TendancePeriodeForm } from "./TendanceForm";
+import { Fragment } from "react/jsx-runtime";
 
 interface GenericIndicatorTableProps {
     title: string;
@@ -69,25 +70,14 @@ export const GenericIndicatorTable = ({
             titleTable={title}
             filters={
                 customFilters ? (
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
                         <Filters data={data} state={state} dispatch={dispatch} />
-                        <TendancePeriodeForm
-                            periode={stateTendance.periode}
-                            handleChange={event =>
-                                dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
-                            }
-                        />
+
                         {customFilters}
                     </Box>
                 ) : (
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
                         <Filters data={data} state={state} dispatch={dispatch} />
-                        <TendancePeriodeForm
-                            periode={stateTendance.periode}
-                            handleChange={event =>
-                                dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
-                            }
-                        />
                     </Box>
                 )
             }
@@ -98,9 +88,17 @@ export const GenericIndicatorTable = ({
             paginationConfig={paginationConfig}
             rowId={rowId || defaultRowId}
             subRow={hasModules ? subRow || defaultSubRow : undefined}
-            renderTopCustom={({ table }) =>
-                onExport && <ButtonCsvExport table={table} onExport={onExport} />
-            }
+            renderTopCustom={({ table }) => (
+                <Fragment>
+                    <TendancePeriodeForm
+                        periode={stateTendance.periode}
+                        handleChange={event =>
+                            dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
+                        }
+                    />
+                    {onExport && <ButtonCsvExport table={table} onExport={onExport} />}
+                </Fragment>
+            )}
         />
     );
 };

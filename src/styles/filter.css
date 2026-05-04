@@ -1,11 +1,21 @@
 
 
 
-.filter-item {
-  flex: 1 1 220px !important;  
-  min-width: 180px !important; 
-  max-width: 260px !important; 
+.filters-left-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap; 
+  width: 100%;
 }
+
+.filter-item {
+  flex: 1 1 160px !important;  
+  min-width: 200px !important; 
+  max-width: 220px !important; 
+}
+
 .filter-item .MuiOutlinedInput-root {
   border-radius: 12px;
   background-color: inherit;
