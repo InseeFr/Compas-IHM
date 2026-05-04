@@ -144,7 +144,8 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                     {
                         titre: "Sécurité",
                         valeur: appDetails.lettreNiveauCve ?? "NR",
-                        texte: narrative.security
+                        texte: `${narrative.security}`,
+                        texte2: `Homologation : ${narrative.homologation}`
                     },
                     {
                         titre: "Green IT",
@@ -188,6 +189,8 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                                 </Typography>
                                 <Typography variant="body2" mt={0.5}>
                                     {item.texte}
+                                    <br />
+                                    {item.texte2}
                                 </Typography>
                             </Box>
                         ))}

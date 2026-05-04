@@ -309,6 +309,11 @@ export interface IndicateurApplicationSynthese {
     gaspillage?: string;
     consoNormalized?: string;
     impactNormalized?: string;
+    sensitivity?: string;
+    statutHomologation?: string;
+    homologationBeginDate?: string;
+    homologationEndDate?: string;
+    homologationSI?: string;
 }
 
 export interface StrategieCloudIndicateur {

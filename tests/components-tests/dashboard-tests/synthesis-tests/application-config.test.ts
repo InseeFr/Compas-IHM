@@ -12,7 +12,8 @@ vi.mock("todos-api/client.gen", () => ({
     getApplications: vi.fn(),
     listerModulesA11y: vi.fn(),
     getIndicateurSecuriteByApplication: vi.fn(),
-    getMaturiteCloud: vi.fn()
+    getMaturiteCloud: vi.fn(),
+    getHomologation: vi.fn()
 }));
 
 import {
@@ -26,7 +27,8 @@ import {
     getApplications,
     listerModulesA11y,
     getIndicateurSecuriteByApplication,
-    getMaturiteCloud
+    getMaturiteCloud,
+    getHomologation
 } from "todos-api/client.gen";
 import {
     fetchApplicationSynthesis,
@@ -48,6 +50,21 @@ function JsPDFMock(this: any) {
         }
     };
 }
+
+vi.mock("todos-api/client.gen", () => ({
+  getApplications1: vi.fn(),
+  getModules1: vi.fn(),
+  getApplications2: vi.fn(),
+  getModules2: vi.fn(),
+  getApplications: vi.fn(),
+  listerApplicationsMeteo: vi.fn(),
+  listerModulesA11y: vi.fn(),
+  getIndicateurQualiteByApplication: vi.fn(),
+  getIndicateurQualiteByModule: vi.fn(),
+  getIndicateurSecuriteByApplication: vi.fn(),
+  getMaturiteCloud: vi.fn(),
+  getHomologation: vi.fn(),
+}));
 
 vi.mock("jspdf", () => ({
     __esModule: true,
@@ -125,6 +142,7 @@ describe("application-synthesis-config", () => {
             (listerModulesA11y as any).mockResolvedValue([]);
             (getIndicateurSecuriteByApplication as any).mockResolvedValue([]);
             (getMaturiteCloud as any).mockResolvedValue([]);
+            (getHomologation as any).mockResolvedValue([]);
 
             const result = await fetchApplicationSynthesis();
 

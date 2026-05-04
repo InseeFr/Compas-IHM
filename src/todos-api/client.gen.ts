@@ -83,19 +83,13 @@ export interface IndicateurQualiteView {
     domaineFonctionnel?: string;
     nbLigneCode?: string;
     nbLigneCodeNonTeste?: string;
+    pourcentageCouvertureTestUniaire?: string;
     detteTechnique?: string;
-    pourcentageCouvertureTestUnitaire?: string;
     fiabilite?: string;
-    detteTechniquePast?: string;
-    pourcentageCouvertureTestUnitairePast?: string;
-    fiabilitePast?: string;
     lettreDetteTechnique?: string;
     lettreFiabilite?: string;
-    lettreCouvertureTestUnitaire?: string;
+    lettreCouvertureTestUniaire?: string;
     lettreGlobalQualite?: string;
-    evolutionCouvertureTestUnitaire?: number;
-    evolutionDetteTechnique?: number;
-    evolutionFiabilite?: number;
     lettreGlobale?: string;
 }
 
@@ -164,6 +158,12 @@ export interface IndicateurApplicationGreenITView {
     gaspillageScore?: string;
     lettreGreen?: string;
     dateMaj?: string;
+}
+
+export interface HomologationDoublonsGristDto {
+    nomApplication?: string;
+    nombreOccurrences?: number;
+    listeSI?: string[];
 }
 
 export interface HomologationDto {
@@ -358,36 +358,6 @@ export type ImportApplicationTipsBody = {
 };
 
 export type ImportApplicationTips200 = { [key: string]: unknown };
-
-export type GetIndicateurQualiteByModuleParams = {
-    periode?: GetIndicateurQualiteByModulePeriode;
-};
-
-export type GetIndicateurQualiteByModulePeriode =
-    (typeof GetIndicateurQualiteByModulePeriode)[keyof typeof GetIndicateurQualiteByModulePeriode];
-
-export const GetIndicateurQualiteByModulePeriode = {
-    VEILLE: "VEILLE",
-    MOIS: "MOIS",
-    TRIMESTRE: "TRIMESTRE",
-    SEMESTRE: "SEMESTRE",
-    ANNEE: "ANNEE"
-} as const;
-
-export type GetIndicateurQualiteByApplicationParams = {
-    periode?: GetIndicateurQualiteByApplicationPeriode;
-};
-
-export type GetIndicateurQualiteByApplicationPeriode =
-    (typeof GetIndicateurQualiteByApplicationPeriode)[keyof typeof GetIndicateurQualiteByApplicationPeriode];
-
-export const GetIndicateurQualiteByApplicationPeriode = {
-    VEILLE: "VEILLE",
-    MOIS: "MOIS",
-    TRIMESTRE: "TRIMESTRE",
-    SEMESTRE: "SEMESTRE",
-    ANNEE: "ANNEE"
-} as const;
 
 export type GetHistoryParams = {
     /**
@@ -617,20 +587,15 @@ export const getCveCriticalMonthly = (
 };
 
 export const getIndicateurQualiteByModule = (
-    params?: GetIndicateurQualiteByModuleParams,
     options?: SecondParameter<typeof fetch<IndicateurQualiteView[]>>
 ) => {
-    return fetch<IndicateurQualiteView[]>({ url: `/qualite/modules`, method: "GET", params }, options);
+    return fetch<IndicateurQualiteView[]>({ url: `/qualite/modules`, method: "GET" }, options);
 };
 
 export const getIndicateurQualiteByApplication = (
-    params?: GetIndicateurQualiteByApplicationParams,
     options?: SecondParameter<typeof fetch<IndicateurQualiteView[]>>
 ) => {
-    return fetch<IndicateurQualiteView[]>(
-        { url: `/qualite/applications`, method: "GET", params },
-        options
-    );
+    return fetch<IndicateurQualiteView[]>({ url: `/qualite/applications`, method: "GET" }, options);
 };
 
 /**
@@ -716,6 +681,17 @@ export const getApplicationsAbsentesOscar = (options?: SecondParameter<typeof fe
         },
         options
     );
+};
+
+export const getDoublonsGrist = (options?: SecondParameter<typeof fetch<Blob>>) => {
+    return fetch<Blob>(
+        { url: `/homologations/doublons-grist`, method: "GET", responseType: "blob" },
+        options
+    );
+};
+
+export const getApplicationGrist = (options?: SecondParameter<typeof fetch<string>>) => {
+    return fetch<string>({ url: `/homologations/applications-grist`, method: "GET" }, options);
 };
 
 export const getHomologation = (options?: SecondParameter<typeof fetch<HomologationDto[]>>) => {
@@ -900,6 +876,8 @@ export type GetNombreVirtualMachineResult = NonNullable<
 export type GetApplicationsAbsentesOscarResult = NonNullable<
     Awaited<ReturnType<typeof getApplicationsAbsentesOscar>>
 >;
+export type GetDoublonsGristResult = NonNullable<Awaited<ReturnType<typeof getDoublonsGrist>>>;
+export type GetApplicationGristResult = NonNullable<Awaited<ReturnType<typeof getApplicationGrist>>>;
 export type GetHomologationResult = NonNullable<Awaited<ReturnType<typeof getHomologation>>>;
 export type GetModules1Result = NonNullable<Awaited<ReturnType<typeof getModules1>>>;
 export type GetKeySonarParApplicationResult = NonNullable<

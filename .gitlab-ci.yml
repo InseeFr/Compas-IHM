@@ -10,6 +10,7 @@ include:
     file:
       - '/utils.yaml'
 
+
 stages:
   - check-source-branch
   - security-app
@@ -19,6 +20,7 @@ stages:
   - tag
   - docker
   - release-gitops
+
 
 release-gitops-dev1:
   stage: release-gitops
@@ -66,6 +68,20 @@ release-gitops-dev3:
   rules:
     - when: manual
 
+release-gitops-dev4:
+  stage: release-gitops
+  extends: .template:gitops-updater-v2
+  variables:
+    REPO: "https://gitlab.insee.fr/dsi/Compas/CompasGitops.git"
+    BRANCH: "master"
+    PATH_TO_VALUE: "apps/compas-ui-dev4/values.yaml"
+    KEY_TO_CHANGE: "ui-compas.image.tag"
+    NEW_VALUE: "$CI_COMMIT_SHA"
+    USERNAME: "${GITOPS_USERNAME}"
+    PASSWORD_VAR: "${GITOPS_TOKEN}"
+    AUTOMERGE: "true"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "affichage-homologations"'
 
 release-gitops-prod:
   stage: release-gitops
