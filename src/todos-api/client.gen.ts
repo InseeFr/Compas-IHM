@@ -160,6 +160,17 @@ export interface IndicateurApplicationGreenITView {
     dateMaj?: string;
 }
 
+export interface HomologationDto {
+    applicationId?: number;
+    nomApp?: string;
+    sensitivity?: string;
+    statutHomologation?: string;
+    homologationSI?: string;
+    homologationBeginDate?: string;
+    homologationEndDate?: string;
+    homologationRemarks?: string;
+}
+
 export interface Module {
     id?: number;
     nomTechnique?: string;
@@ -655,6 +666,22 @@ export const getNombreVirtualMachine = (
     );
 };
 
+export const getHomologation = (options?: SecondParameter<typeof fetch<HomologationDto[]>>) => {
+    return fetch<HomologationDto[]>(
+        { url: `/homologations/application-homologation`, method: "GET" },
+        options
+    );
+};
+
+export const getHomologationAbsentes = (
+    options?: SecondParameter<typeof fetch<string[]>>
+) => {
+    return fetch<string[]>(
+        { url: `/homologations/homologation/applications-absentes`, method: "GET" },
+        options
+    );
+};
+
 /**
  * @summary liste des modules d'oscar sans feign
  */
@@ -827,6 +854,7 @@ export type GetApplicationsResult = NonNullable<Awaited<ReturnType<typeof getApp
 export type GetNombreVirtualMachineResult = NonNullable<
     Awaited<ReturnType<typeof getNombreVirtualMachine>>
 >;
+export type GetHomologationResult = NonNullable<Awaited<ReturnType<typeof getHomologation>>>;
 export type GetModules1Result = NonNullable<Awaited<ReturnType<typeof getModules1>>>;
 export type GetKeySonarParApplicationResult = NonNullable<
     Awaited<ReturnType<typeof getKeySonarParApplication>>

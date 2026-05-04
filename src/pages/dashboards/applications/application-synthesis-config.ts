@@ -11,6 +11,8 @@ import {
     getModules2,
     listerApplicationsMeteo,
     listerModulesA11y,
+    getHomologation,
+    type HomologationDto,
     type Application,
     type IndicateurApplicationGreenITView,
     type IndicateurApplicationMaturiteCloud,
@@ -24,6 +26,22 @@ import {
 import type { ModuleData } from "./preview/application-preview-config";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+export const normalize = (value: undefined | number | string): string =>
+    String(value ?? "")
+        .trim()
+        .toLowerCase();
+
+type ParamApplicationSynthese = {
+  app: Application;
+  qualiteApp: IndicateurQualiteView[];
+  devopsApp: IndicateurDevopsView[];
+  meteo: Meteo[];
+  greenIt: IndicateurApplicationGreenITView[];
+  securityApp: IndicateurSecuriteView[];
+  maturite: IndicateurApplicationMaturiteCloud[];
+  homologation: HomologationDto[];
+};
 
 export async function fetchApplicationSynthesis() {
     try {
@@ -39,7 +57,8 @@ export async function fetchApplicationSynthesis() {
             a11y,
             securityApp,
             securityMod,
-            maturite
+            maturite,
+            homologation
         ] = await Promise.all([
             getApplications1(),
             getModules1(),
@@ -52,11 +71,12 @@ export async function fetchApplicationSynthesis() {
             listerModulesA11y(),
             getIndicateurSecuriteByApplication(),
             getIndicateurQualiteByModule(),
-            getMaturiteCloud()
+            getMaturiteCloud(),
+            getHomologation()
         ]);
 
         const formattedApplications: IndicateurApplicationSynthese[] = apps.map(app =>
-            buildFormattedApp(app, qualiteApp, devopsApp, meteo, greenIt, securityApp, maturite)
+            buildFormattedApp({app, qualiteApp, devopsApp, meteo, greenIt, securityApp, maturite, homologation})
         );
         const formattedMod: IndicateurApplicationSynthese[] = modules.map(mod =>
             buildFormattedMod(mod, qualiteMod, devopsMod, meteo, securityMod, a11y)
@@ -67,6 +87,14 @@ export async function fetchApplicationSynthesis() {
         return [];
     }
 }
+
+const findHomologationByName = <T extends { nomApp?: string }>(
+    list: T[],
+    app: Application
+): T | undefined => {
+    return list.find(h => h.nomApp === app.appName);
+};
+
 
 const NR: string = "NR";
 
@@ -92,21 +120,23 @@ const getAttribute = (entity?: string): string => {
     return entity ?? NR;
 };
 
-const buildFormattedApp = (
-    app: Application,
-    qualiteApp: IndicateurQualiteView[],
-    devopsApp: IndicateurDevopsView[],
-    meteo: Meteo[],
-    greenIt: IndicateurApplicationGreenITView[],
-    securityApp: IndicateurSecuriteView[],
-    maturite: IndicateurApplicationMaturiteCloud[]
-): IndicateurApplicationSynthese => {
-    const getMeteo = findByIdApp(meteo, app);
-    const quality = findByIdApp(qualiteApp, app);
-    const noteDistanceApp = findByIdApp(devopsApp, app);
-    const greenApp = findByIdApp(greenIt, app);
-    const securiteApp = findByIdApp(securityApp, app);
-    const maturiteCloudApp = findByIdApp(maturite, app);
+const buildFormattedApp = ({
+    app,
+  meteo,
+  qualiteApp,
+  devopsApp,
+  greenIt,
+  securityApp,
+  maturite,
+  homologation
+}: ParamApplicationSynthese): IndicateurApplicationSynthese => {
+  const getMeteo = findByIdApp(meteo, app);
+  const quality = findByIdApp(qualiteApp, app);
+  const noteDistanceApp = findByIdApp(devopsApp, app);
+  const greenApp = findByIdApp(greenIt, app);
+  const securiteApp = findByIdApp(securityApp, app);
+  const maturiteCloudApp = findByIdApp(maturite, app);
+  const homologationApp = findHomologationByName(homologation, app);
 
     const appData: IndicateurApplicationSynthese = {
         applicationId: app.idApplication ?? -1,
@@ -138,7 +168,12 @@ const buildFormattedApp = (
         lettreQualiteGenerale: getAttribute(quality?.lettreGlobalQualite),
         detteTechnique: getAttribute(quality?.detteTechnique).replace(/\.00$/, ""),
         maturite: getAttribute(maturiteCloudApp?.maturite),
-        robustesse: getAttribute(maturiteCloudApp?.robustesse)
+        robustesse: getAttribute(maturiteCloudApp?.robustesse),
+        statutHomologation: homologationApp?.statutHomologation,
+        homologationBeginDate: homologationApp?.homologationBeginDate ?? undefined,
+        homologationEndDate: homologationApp?.homologationEndDate ?? undefined,
+        sensitivity: homologationApp?.sensitivity,
+        homologationSI: homologationApp?.homologationSI
     };
     return appData;
 };
@@ -229,11 +264,6 @@ export const handleGenerateReport = async (appName: string): Promise<void> => {
     pdf = pdfConfig(pdf, canvas);
     pdf.save(`rapport-${appName}.pdf`);
 };
-
-export const normalize = (value: undefined | number | string): string =>
-    String(value ?? "")
-        .trim()
-        .toLowerCase();
 
 const parseNumericValue = (value: string | undefined | null): number | undefined => {
     if (value == null) return undefined;
