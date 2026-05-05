@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
-import { filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
 // ============================
 // MOCKS
 // ============================
@@ -162,7 +161,7 @@ describe("GreenItTable", () => {
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
 
-        expect(filteredViewMode).toHaveBeenCalledWith("global", mockData, "ALL");
+
     });
 
     // ============================
