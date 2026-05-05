@@ -52,18 +52,18 @@ function JsPDFMock(this: any) {
 }
 
 vi.mock("todos-api/client.gen", () => ({
-  getApplications1: vi.fn(),
-  getModules1: vi.fn(),
-  getApplications2: vi.fn(),
-  getModules2: vi.fn(),
-  getApplications: vi.fn(),
-  listerApplicationsMeteo: vi.fn(),
-  listerModulesA11y: vi.fn(),
-  getIndicateurQualiteByApplication: vi.fn(),
-  getIndicateurQualiteByModule: vi.fn(),
-  getIndicateurSecuriteByApplication: vi.fn(),
-  getMaturiteCloud: vi.fn(),
-  getHomologation: vi.fn(),
+    getApplications1: vi.fn(),
+    getModules1: vi.fn(),
+    getApplications2: vi.fn(),
+    getModules2: vi.fn(),
+    getApplications: vi.fn(),
+    listerApplicationsMeteo: vi.fn(),
+    listerModulesA11y: vi.fn(),
+    getIndicateurQualiteByApplication: vi.fn(),
+    getIndicateurQualiteByModule: vi.fn(),
+    getIndicateurSecuriteByApplication: vi.fn(),
+    getMaturiteCloud: vi.fn(),
+    getHomologation: vi.fn()
 }));
 
 vi.mock("jspdf", () => ({

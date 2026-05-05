@@ -30,6 +30,7 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         tendanceDetteTechnique: "up",
         tendanceFiabilite: "up",
         tendanceTestUnitaire: "up",
+        pourcentageCouvertureTestUnitairePast: "0",
 
         ...overrides
     };

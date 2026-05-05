@@ -6,17 +6,11 @@ import { Box } from "@mui/material";
 
 function shouldDisplayIcon(note?: string | null, extraValue?: string | null): boolean {
     const isNoteValid =
-    note !== undefined &&
-    note !== null &&
-    note !== "" &&
-    note !== "NR" &&
-    note !== "SO";
+        note !== undefined && note !== null && note !== "" && note !== "NR" && note !== "SO";
 
-  const hasExtraValue = extraValue !== undefined && extraValue !== null;
+    const hasExtraValue = extraValue !== undefined && extraValue !== null;
 
-  return isNoteValid && hasExtraValue;
-
-    
+    return isNoteValid && hasExtraValue;
 }
 
 export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
@@ -27,7 +21,10 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
         : "Dette technique : " + Math.round(minutes / 420) + " jours";
     const tendance = row.original.tendanceTestUnitaire;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
-    const showIcon = shouldDisplayIcon(row.original.lettreDetteTechnique,row.original.pourcentageCouvertureTestUnitairePast);
+    const showIcon = shouldDisplayIcon(
+        row.original.lettreDetteTechnique,
+        row.original.pourcentageCouvertureTestUnitairePast
+    );
 
     return (
         <Box display="flex" alignItems="center" gap={1}>
@@ -41,7 +38,7 @@ export function FiabiliteCell({ row }: Readonly<{ row: { original: QualiteIndica
     const fiabilite = row.original.lettreFiabilite ?? "NR";
     const tendance = row.original.tendanceFiabilite;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
-    const showIcon = shouldDisplayIcon(fiabilite,row.original.pourcentageCouvertureTestUnitairePast);
+    const showIcon = shouldDisplayIcon(fiabilite, row.original.pourcentageCouvertureTestUnitairePast);
     return (
         <Box display="flex" alignItems="center" gap={1}>
             <ToolTipLayout title={fiabilite} content={fiabilite} />
@@ -55,12 +52,15 @@ export function CouvertureTestUnitCell({
 }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const tendance = row.original.tendanceTestUnitaire;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
-    const showIcon = shouldDisplayIcon(row.original.lettreCouvertureTestUnitaire,row.original.pourcentageCouvertureTestUnitairePast);
+    const showIcon = shouldDisplayIcon(
+        row.original.lettreCouvertureTestUnitaire,
+        row.original.pourcentageCouvertureTestUnitairePast
+    );
     return (
         <Box display="flex" alignItems="center" gap={1}>
             <ToolTipLayout
-                title={`Couvertures : ${row.original.pourcentageCouvertureTestUnitaire ?? "NR" } : ${row.original.pourcentageCouvertureTestUnitairePast ?? "NR" }`}
-                content={row.original.lettreCouvertureTestUnitaire ?? "NR" }
+                title={`Couvertures : ${row.original.pourcentageCouvertureTestUnitaire ?? "NR"} : ${row.original.pourcentageCouvertureTestUnitairePast ?? "NR"}`}
+                content={row.original.lettreCouvertureTestUnitaire ?? "NR"}
             />
             {showIcon && <Icon sx={{ color }} />}
         </Box>
