@@ -8,7 +8,7 @@ function shouldDisplayIcon(note?: string | null, extraValue?: string | null): bo
     const isNoteValid =
         note !== undefined && note !== null && note !== "" && note !== "NR" && note !== "SO";
 
-  const hasExtraValue = extraValue !== undefined && extraValue !== null && extraValue !== "NR";
+    const hasExtraValue = extraValue !== undefined && extraValue !== null && extraValue !== "NR";
 
     return isNoteValid && hasExtraValue;
 }
@@ -16,7 +16,7 @@ function shouldDisplayIcon(note?: string | null, extraValue?: string | null): bo
 export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const rawMinutes = row.original.detteTechnique ?? "NR";
     const rawMinutesPast = row.original.detteTechniquePast ?? "NR";
-    console.log(row)
+    console.log(row);
     const minutes = Number.parseFloat(rawMinutes);
     const minutesPast = Number.parseFloat(rawMinutesPast);
     const tooltipText = Number.isNaN(minutes)
@@ -24,8 +24,8 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
         : "Dette technique : " + (minutes / 420).toFixed(1) + " jours";
     const tooltipTextPast = Number.isNaN(minutesPast)
         ? "Dette technique : NR"
-        : "(" + (minutesPast / 420).toFixed(1) + " jours)";   
-    const tooltipCombined = `${tooltipText} : ${tooltipTextPast}`;     
+        : "(" + (minutesPast / 420).toFixed(1) + " jours)";
+    const tooltipCombined = `${tooltipText} : ${tooltipTextPast}`;
 
     const tendance = row.original.tendanceTestUnitaire;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
@@ -62,8 +62,11 @@ export function CouvertureTestUnitCell({
 }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const tendance = row.original.tendanceTestUnitaire;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
-    const showIcon = shouldDisplayIcon(row.original.lettreCouvertureTestUnitaire,row.original.pourcentageCouvertureTestUnitairePast);
-    console.log(row.original.applicationName, ' ', row.original.pourcentageCouvertureTestUnitairePast)
+    const showIcon = shouldDisplayIcon(
+        row.original.lettreCouvertureTestUnitaire,
+        row.original.pourcentageCouvertureTestUnitairePast
+    );
+    console.log(row.original.applicationName, " ", row.original.pourcentageCouvertureTestUnitairePast);
     return (
         <Box display="flex" alignItems="center" gap={1}>
             <ToolTipLayout
