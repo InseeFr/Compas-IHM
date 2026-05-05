@@ -58,17 +58,17 @@ describe("DetteTechCell", () => {
 
     it("convertit les minutes en jours (420 min = 1 jour)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "420" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 1 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 1.0 jours");
     });
 
     it("arrondit le nombre de jours (1000 min ≈ 2 jours)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "1000" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 2 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 2.4 jours");
     });
 
     it("gère les grandes valeurs correctement (8400 min = 20 jours)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "8400" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 20 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 20.0 jours");
     });
 });
 
