@@ -32,7 +32,8 @@ const mockApp = {
     detteTechnique: "123.00",
     tendanceDetteTechnique: "flat",
     tendanceFiabilite: "flat",
-    tendanceTestUnitaire: "flat"
+    tendanceTestUnitaire: "flat",
+    pourcentageCouvertureTestUnitairePast: "NR"
 };
 
 const mockModule = {
@@ -49,7 +50,8 @@ const mockModule = {
     detteTechnique: "456.00",
     tendanceDetteTechnique: "flat",
     tendanceFiabilite: "flat",
-    tendanceTestUnitaire: "flat"
+    tendanceTestUnitaire: "flat",
+    pourcentageCouvertureTestUnitairePast: "NR"
 };
 
 describe("formatIndicateur", () => {
@@ -69,7 +71,8 @@ describe("formatIndicateur", () => {
             detteTechnique: "123",
             tendanceDetteTechnique: "flat",
             tendanceFiabilite: "flat",
-            tendanceTestUnitaire: "flat"
+            tendanceTestUnitaire: "flat",
+            pourcentageCouvertureTestUnitairePast: "NR"
         });
     });
 
@@ -85,6 +88,7 @@ describe("formatIndicateur", () => {
             lettreFiabilite: "Y",
             lettreDetteTechnique: "Z",
             pourcentageCouvertureTestUnitaire: "75%",
+            pourcentageCouvertureTestUnitairePast: "NR",
             parentApplication: "App1",
             isModule: true,
             lettreQualiteGenerale: undefined,

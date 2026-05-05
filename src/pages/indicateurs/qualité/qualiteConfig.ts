@@ -106,10 +106,11 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
         pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
-        pourcentageCouvertureTestUnitairePast: item.pourcentageCouvertureTestUnitairePast ?? defaultValue,
+        pourcentageCouvertureTestUnitairePast:
+            item.pourcentageCouvertureTestUnitairePast ?? defaultValue,
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
         detteTechnique: formatDetteTechnique(),
-        detteTechniquePast:formatDetteTechnique(),
+        detteTechniquePast:formatDetteTechniquePast(),
         tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire),
         tendanceDetteTechnique: getTrend(item.evolutionDetteTechnique),
         tendanceFiabilite: getTrend(item.evolutionFiabilite),

@@ -33,14 +33,14 @@ export const normalize = (value: undefined | number | string): string =>
         .toLowerCase();
 
 type ParamApplicationSynthese = {
-  app: Application;
-  qualiteApp: IndicateurQualiteView[];
-  devopsApp: IndicateurDevopsView[];
-  meteo: Meteo[];
-  greenIt: IndicateurApplicationGreenITView[];
-  securityApp: IndicateurSecuriteView[];
-  maturite: IndicateurApplicationMaturiteCloud[];
-  homologation: HomologationDto[];
+    app: Application;
+    qualiteApp: IndicateurQualiteView[];
+    devopsApp: IndicateurDevopsView[];
+    meteo: Meteo[];
+    greenIt: IndicateurApplicationGreenITView[];
+    securityApp: IndicateurSecuriteView[];
+    maturite: IndicateurApplicationMaturiteCloud[];
+    homologation: HomologationDto[];
 };
 
 export async function fetchApplicationSynthesis() {
@@ -76,7 +76,16 @@ export async function fetchApplicationSynthesis() {
         ]);
 
         const formattedApplications: IndicateurApplicationSynthese[] = apps.map(app =>
-            buildFormattedApp({app, qualiteApp, devopsApp, meteo, greenIt, securityApp, maturite, homologation})
+            buildFormattedApp({
+                app,
+                qualiteApp,
+                devopsApp,
+                meteo,
+                greenIt,
+                securityApp,
+                maturite,
+                homologation
+            })
         );
         const formattedMod: IndicateurApplicationSynthese[] = modules.map(mod =>
             buildFormattedMod(mod, qualiteMod, devopsMod, meteo, securityMod, a11y)
@@ -94,7 +103,6 @@ const findHomologationByName = <T extends { nomApp?: string }>(
 ): T | undefined => {
     return list.find(h => h.nomApp === app.appName);
 };
-
 
 const NR: string = "NR";
 
@@ -122,21 +130,21 @@ const getAttribute = (entity?: string): string => {
 
 const buildFormattedApp = ({
     app,
-  meteo,
-  qualiteApp,
-  devopsApp,
-  greenIt,
-  securityApp,
-  maturite,
-  homologation
+    meteo,
+    qualiteApp,
+    devopsApp,
+    greenIt,
+    securityApp,
+    maturite,
+    homologation
 }: ParamApplicationSynthese): IndicateurApplicationSynthese => {
-  const getMeteo = findByIdApp(meteo, app);
-  const quality = findByIdApp(qualiteApp, app);
-  const noteDistanceApp = findByIdApp(devopsApp, app);
-  const greenApp = findByIdApp(greenIt, app);
-  const securiteApp = findByIdApp(securityApp, app);
-  const maturiteCloudApp = findByIdApp(maturite, app);
-  const homologationApp = findHomologationByName(homologation, app);
+    const getMeteo = findByIdApp(meteo, app);
+    const quality = findByIdApp(qualiteApp, app);
+    const noteDistanceApp = findByIdApp(devopsApp, app);
+    const greenApp = findByIdApp(greenIt, app);
+    const securiteApp = findByIdApp(securityApp, app);
+    const maturiteCloudApp = findByIdApp(maturite, app);
+    const homologationApp = findHomologationByName(homologation, app);
 
     const appData: IndicateurApplicationSynthese = {
         applicationId: app.idApplication ?? -1,

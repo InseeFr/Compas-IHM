@@ -137,7 +137,7 @@ describe("Filters", () => {
             const lastCall = SelectedFiltersLayout.mock.calls.at(-1)!;
             const serviceFilter = lastCall[0].filters[0];
 
-            expect(serviceFilter.dataFilter).toHaveLength(3); 
+            expect(serviceFilter.dataFilter).toHaveLength(3);
         });
 
         it("devrait filtrer par domaineFonc quand il est défini", async () => {
