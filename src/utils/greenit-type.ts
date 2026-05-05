@@ -6,7 +6,6 @@ import { BASE_COLONNE } from "constantes/constantes";
 
 export type InfraType = "ALL" | "KUB" | "VM";
 
-
 const VM_KEYS = {
     GLOBAL: [
         "_nbVmSort",
@@ -16,7 +15,6 @@ const VM_KEYS = {
         "_ramMaxiSort",
         "_cpuMaxiSort"
     ],
-
     PROD: [
         "_nbVmProdSort",
         "_cpuUsedProdSort",
@@ -25,9 +23,8 @@ const VM_KEYS = {
         "_ramMaxiProdSort",
         "_cpuMaxiProdSort"
     ],
-
     HORSPROD: [
-    "_nbVmHorsProdSort",
+        "_nbVmHorsProdSort",
         "_cpuHorsProdSort",
         "_ramHorsProdSort",
         "_diskHorsProdSort",
@@ -35,7 +32,6 @@ const VM_KEYS = {
         "_cpuMaxiHorsProdSort"
     ]
 };
-
 
 const KUB_KEYS = {
     GLOBAL: [
@@ -46,7 +42,6 @@ const KUB_KEYS = {
         "_pvcUsedSort",
         "_nbPodMaxiSort"
     ],
-
     PROD: [
         "_cpuUsedProdSort",
         "_ramUsedProdSort",
@@ -55,7 +50,6 @@ const KUB_KEYS = {
         "_pvcUsedProdSort",
         "_nbPodMaxiProdSort"
     ],
-
     HORSPROD: [
         "_cpuUsedHorsProdSort",
         "_ramUsedHorsProdSort",
@@ -66,65 +60,38 @@ const KUB_KEYS = {
     ]
 };
 
-const ALL_KEYS = {
-    GLOBAL:   [...VM_KEYS.GLOBAL,   ...VM_KEYS.PROD,   ...KUB_KEYS.GLOBAL,   ...KUB_KEYS.PROD],
-    PROD:     [...VM_KEYS.PROD,                         ...KUB_KEYS.PROD],
-    HORSPROD: [...VM_KEYS.HORSPROD,                     ...KUB_KEYS.HORSPROD]
+const getKeysForInfraAndMode = (infraType: InfraType, viewMode: ViewMode): string[] => {
+    const keyMap: Record<InfraType, Record<ViewMode, string[]>> = {
+        ALL: {
+            global: [...VM_KEYS.GLOBAL, ...VM_KEYS.PROD, ...KUB_KEYS.GLOBAL, ...KUB_KEYS.PROD],
+            prod: [...VM_KEYS.PROD, ...KUB_KEYS.PROD],
+            horsprod: [...VM_KEYS.HORSPROD, ...KUB_KEYS.HORSPROD]
+        },
+        VM: {
+            global: [...VM_KEYS.GLOBAL, ...VM_KEYS.PROD],
+            prod: VM_KEYS.PROD,
+            horsprod: VM_KEYS.HORSPROD
+        },
+        KUB: {
+            global: [...KUB_KEYS.GLOBAL, ...KUB_KEYS.PROD],
+            prod: KUB_KEYS.PROD,
+            horsprod: KUB_KEYS.HORSPROD
+        }
+    };
+    
+    return keyMap[infraType][viewMode];
 };
 
 export function buildInfraColumns(
     viewMode: ViewMode,
     infraType: InfraType
 ): MRT_ColumnDef<GreenITIndicateur>[] {
-
     const baseColumns = BASE_COLONNE<GreenITIndicateur>();
     const allInfraColumns = columnsGreenIt().filter(
         col => !baseColumns.some(base => base.accessorKey === col.accessorKey)
     );
 
-    let allowedKeys: string[] = [];
-
-    if (infraType === "ALL") {
-        if (viewMode === "global") {
-            allowedKeys = ALL_KEYS.GLOBAL;
-        }
-        if (viewMode === "prod") {
-            allowedKeys = ALL_KEYS.PROD;
-        }
-        if (viewMode === "horsprod") {
-            allowedKeys = ALL_KEYS.HORSPROD;
-        }
-    }
-
-    if (infraType === "VM") {
-
-        if (viewMode === "global") {
-            allowedKeys = [...VM_KEYS.GLOBAL, ...VM_KEYS.PROD];
-        }
-
-        if (viewMode === "prod") {
-            allowedKeys = VM_KEYS.PROD;
-        }
-
-        if (viewMode === "horsprod") {
-            allowedKeys = VM_KEYS.HORSPROD;
-        }
-    }
-
-    if (infraType === "KUB") {
-
-        if (viewMode === "global") {
-            allowedKeys = [...KUB_KEYS.GLOBAL, ...KUB_KEYS.PROD];
-        }
-
-        if (viewMode === "prod") {
-            allowedKeys = KUB_KEYS.PROD;
-        }
-
-        if (viewMode === "horsprod") {
-            allowedKeys = KUB_KEYS.HORSPROD;
-        }
-    }
+    const allowedKeys = getKeysForInfraAndMode(infraType, viewMode);
 
     return [
         ...baseColumns,
