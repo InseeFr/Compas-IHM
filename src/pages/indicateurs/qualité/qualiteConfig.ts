@@ -86,6 +86,9 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
     const formatDetteTechnique = () => {
         return item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : defaultValue;
     };
+    const formatDetteTechniquePast = () => {
+        return item.detteTechniquePast ? item.detteTechniquePast.replace(/\.00$/, "") : defaultValue;
+    };
     const getModuleSpecificFields = () => {
         if (!isModule) return {};
         return {
@@ -106,6 +109,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         pourcentageCouvertureTestUnitairePast: item.pourcentageCouvertureTestUnitairePast ?? defaultValue,
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
         detteTechnique: formatDetteTechnique(),
+        detteTechniquePast:formatDetteTechnique(),
         tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire),
         tendanceDetteTechnique: getTrend(item.evolutionDetteTechnique),
         tendanceFiabilite: getTrend(item.evolutionFiabilite),

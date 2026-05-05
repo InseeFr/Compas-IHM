@@ -48,6 +48,7 @@ export interface QualiteIndicateur {
     domaineFonc: string;
     lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
+    lettreFiabilitePast?: string;
     lettreDetteTechnique?: string;
     pourcentageCouvertureTestUnitaire: string;
     pourcentageCouvertureTestUnitairePast: string;
@@ -55,6 +56,7 @@ export interface QualiteIndicateur {
     isModule?: boolean;
     parentApplication?: string;
     detteTechnique?: string;
+    detteTechniquePast?: string;
     lettreQualiteGenerale?: string;
     tendanceTestUnitaire: Trend;
     tendanceFiabilite: Trend;

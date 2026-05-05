@@ -12,7 +12,7 @@ function shouldDisplayIcon(note?: string | null, extraValue?: string | null): bo
     note !== "NR" &&
     note !== "SO";
 
-  const hasExtraValue = extraValue !== undefined && extraValue !== null;
+  const hasExtraValue = extraValue !== undefined && extraValue !== null && extraValue !== "NR";
 
   return isNoteValid && hasExtraValue;
 
@@ -21,6 +21,7 @@ function shouldDisplayIcon(note?: string | null, extraValue?: string | null): bo
 
 export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const rawMinutes = row.original.detteTechnique ?? "NR";
+    const rawMinutesPast= row.original.dette
     const minutes = Number.parseFloat(rawMinutes);
     const tooltipText = Number.isNaN(minutes)
         ? "Dette technique : NR"
@@ -56,6 +57,7 @@ export function CouvertureTestUnitCell({
     const tendance = row.original.tendanceTestUnitaire;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
     const showIcon = shouldDisplayIcon(row.original.lettreCouvertureTestUnitaire,row.original.pourcentageCouvertureTestUnitairePast);
+    console.log(row.original.applicationName, ' ', row.original.pourcentageCouvertureTestUnitairePast)
     return (
         <Box display="flex" alignItems="center" gap={1}>
             <ToolTipLayout
