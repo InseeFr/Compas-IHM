@@ -23,7 +23,7 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
         ? "Dette technique : NR"
         : "Dette technique : " + (minutes / 420).toFixed(1) + " jours";
     const tooltipTextPast = Number.isNaN(minutesPast)
-        ? "Dette technique : NR"
+        ? "(NR)"
         : "(" + (minutesPast / 420).toFixed(1) + " jours)";
     const tooltipCombined = `${tooltipText} : ${tooltipTextPast}`;
 
@@ -45,7 +45,7 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
 export function FiabiliteCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const fiabilite = row.original.lettreFiabilite ?? "NR";
     const fiabilitePast = row.original.lettreFiabilitePast ?? "NR";
-    const tooltipCombined = `${fiabilite} : ${fiabilitePast}`;  
+    const tooltipCombined = `${fiabilite} ( ${fiabilitePast})`;  
     const tendance = row.original.tendanceFiabilite;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
     const showIcon = shouldDisplayIcon(fiabilite, row.original.pourcentageCouvertureTestUnitairePast);
