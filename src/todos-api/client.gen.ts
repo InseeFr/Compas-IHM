@@ -13,11 +13,16 @@ export interface DemandeCreationMeteo {
 }
 
 export interface DemandeCreationStrategieCloud {
-    idsModule?: number[];
-    avancement?: number;
+    /** @minItems 1 */
+    idsModule: number[];
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    avancement: number;
     commentaire?: string;
-    envCibleProd?: number;
-    date?: string;
+    envCibleProd: number;
+    date: string;
 }
 
 export interface InfosSaisiesA11yToSaveDTO {
@@ -153,6 +158,17 @@ export interface IndicateurApplicationGreenITView {
     gaspillageScore?: string;
     lettreGreen?: string;
     dateMaj?: string;
+}
+
+export interface HomologationDto {
+    applicationId?: number;
+    nomApp?: string;
+    sensitivity?: string;
+    statutHomologation?: string;
+    homologationSI?: string;
+    homologationBeginDate?: string;
+    homologationEndDate?: string;
+    homologationRemarks?: string;
 }
 
 export interface Module {
@@ -650,6 +666,22 @@ export const getNombreVirtualMachine = (
     );
 };
 
+export const getHomologation = (options?: SecondParameter<typeof fetch<HomologationDto[]>>) => {
+    return fetch<HomologationDto[]>(
+        { url: `/homologations/application-homologation`, method: "GET" },
+        options
+    );
+};
+
+export const getHomologationAbsentes = (
+    options?: SecondParameter<typeof fetch<string[]>>
+) => {
+    return fetch<string[]>(
+        { url: `/homologations/homologation/applications-absentes`, method: "GET" },
+        options
+    );
+};
+
 /**
  * @summary liste des modules d'oscar sans feign
  */
@@ -744,10 +776,19 @@ export const getIndicatorsMarkdowns = (
 };
 
 /**
- * @summary Lister tous les modules et informations accessibilité
+ * @summary Lister tous les modules et informations accessibilité pour les IHM
  */
 export const listerModulesA11y = (options?: SecondParameter<typeof fetch<IndicateursModuleA11Y[]>>) => {
     return fetch<IndicateursModuleA11Y[]>({ url: `/a11y/modules`, method: "GET" }, options);
+};
+
+/**
+ * @summary Lister tous les modules et informations accessibilité
+ */
+export const listerModulesALL11y = (
+    options?: SecondParameter<typeof fetch<IndicateursModuleA11Y[]>>
+) => {
+    return fetch<IndicateursModuleA11Y[]>({ url: `/a11y/modules-all`, method: "GET" }, options);
 };
 
 /**
@@ -813,6 +854,7 @@ export type GetApplicationsResult = NonNullable<Awaited<ReturnType<typeof getApp
 export type GetNombreVirtualMachineResult = NonNullable<
     Awaited<ReturnType<typeof getNombreVirtualMachine>>
 >;
+export type GetHomologationResult = NonNullable<Awaited<ReturnType<typeof getHomologation>>>;
 export type GetModules1Result = NonNullable<Awaited<ReturnType<typeof getModules1>>>;
 export type GetKeySonarParApplicationResult = NonNullable<
     Awaited<ReturnType<typeof getKeySonarParApplication>>
@@ -832,4 +874,5 @@ export type GetIndicatorsMarkdownsResult = NonNullable<
     Awaited<ReturnType<typeof getIndicatorsMarkdowns>>
 >;
 export type ListerModulesA11yResult = NonNullable<Awaited<ReturnType<typeof listerModulesA11y>>>;
+export type ListerModulesALL11yResult = NonNullable<Awaited<ReturnType<typeof listerModulesALL11y>>>;
 export type ListerApplicationA11yResult = NonNullable<Awaited<ReturnType<typeof listerApplicationA11y>>>;

@@ -10,15 +10,14 @@ const projectDirPath = process.cwd();
 
 (async () => {
     const todosApiUrl = (() => {
-        const line = fs
-            .readFileSync(pathJoin(projectDirPath, ".env"))
+        const line = fs.readFileSync(pathJoin(projectDirPath, ".env"))
             .toString("utf-8")
             .split("\n")
             .find(line => line.startsWith("VITE_TODOS_API_URL="));
 
         assert(line !== undefined);
 
-        return line.split("=")[1].replace(/"/g, "");
+        return line.split("=")[1].replaceAll('"', "");
     })();
 
     console.log(`todosApiUrl: ${todosApiUrl}`);

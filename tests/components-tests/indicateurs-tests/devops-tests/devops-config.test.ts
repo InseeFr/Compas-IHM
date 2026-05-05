@@ -157,26 +157,26 @@ describe("Colonnes", () => {
         return colonnes;
     });
 
-     it("doit générer un aria-label Contributeur", () => {
-         const colContributeur = colonnes.find(c => c.accessorKey === "lettreContributorCount")!;
-         const props =
-             typeof colContributeur.muiTableBodyCellProps === "function"
-                 ? colContributeur.muiTableBodyCellProps({
-                       cell: {
-                           getValue: () => "A"
-                       } as unknown as MRT_Cell<DevopsIndicateur, unknown>,
-                       column: {} as any,
-                       row: {
-                           original: {
-                               applicationName: "App1"
-                           }
-                       } as MRT_Row<DevopsIndicateur>,
-                       table: {} as any
-                   })
-                 : colContributeur.muiTableBodyCellProps;
+    it("doit générer un aria-label Contributeur", () => {
+        const colContributeur = colonnes.find(c => c.accessorKey === "lettreContributorCount")!;
+        const props =
+            typeof colContributeur.muiTableBodyCellProps === "function"
+                ? colContributeur.muiTableBodyCellProps({
+                      cell: {
+                          getValue: () => "A"
+                      } as unknown as MRT_Cell<DevopsIndicateur, unknown>,
+                      column: {} as any,
+                      row: {
+                          original: {
+                              applicationName: "App1"
+                          }
+                      } as MRT_Row<DevopsIndicateur>,
+                      table: {} as any
+                  })
+                : colContributeur.muiTableBodyCellProps;
 
-         expect(props!["aria-label"]).toBe(generateAriaLabelCell("Note Contributeur", "App1", "A"));
-     });
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Note Contributeur", "App1", "A"));
+    });
     it("doit générer un aria-label Deployment", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "lettreDeploymentCount")!;
         const props =
