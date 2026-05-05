@@ -27,7 +27,7 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
         : "(" + (minutesPast / 420).toFixed(1) + " jours)";
     const tooltipCombined = `${tooltipText} : ${tooltipTextPast}`;
 
-    const tendance = row.original.tendanceTestUnitaire;
+    const tendance = row.original.tendanceDetteTechnique;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
     const showIcon = shouldDisplayIcon(
         row.original.lettreDetteTechnique,
