@@ -44,12 +44,14 @@ export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndica
 
 export function FiabiliteCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const fiabilite = row.original.lettreFiabilite ?? "NR";
+    const fiabilitePast = row.original.lettreFiabilitePast ?? "NR";
+    const tooltipCombined = `${fiabilite} : ${fiabilitePast}`;  
     const tendance = row.original.tendanceFiabilite;
     const { icon: Icon, color } = TREND_CONFIG[tendance];
     const showIcon = shouldDisplayIcon(fiabilite, row.original.pourcentageCouvertureTestUnitairePast);
     return (
         <Box display="flex" alignItems="center" gap={1}>
-            <ToolTipLayout title={fiabilite} content={fiabilite} />
+            <ToolTipLayout title={tooltipCombined}  content={fiabilite} />
             {showIcon && <Icon sx={{ color }} />}
         </Box>
     );

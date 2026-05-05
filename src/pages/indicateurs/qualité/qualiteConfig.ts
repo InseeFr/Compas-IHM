@@ -104,6 +104,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         domaineFonc: item.domaineFonctionnel ?? defaultValue,
         lettreCouvertureTestUnitaire: item.lettreCouvertureTestUnitaire ?? defaultValue,
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
+        lettreFiabilitePast: item.fiabilitePast ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
         pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
         pourcentageCouvertureTestUnitairePast:
