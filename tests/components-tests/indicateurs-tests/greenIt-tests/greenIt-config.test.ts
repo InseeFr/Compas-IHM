@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { handleExportCsv } from "utils/exportCsv";
 import type { GreenITIndicateur } from "models/indicateurs";
 import type { MRT_Cell, MRT_Row, MRT_TableInstance } from "material-react-table";
-import { formatIndicateur, onExport, columnsGreenIt } from "pages/indicateurs/greenIT/greenItConfig";
+import { formatIndicateur, onExport, columnsGreenIt, filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mock handleExportCsv -----
@@ -254,5 +254,123 @@ describe("Colonnes Accessibilité", () => {
                 : colContributeur.muiTableBodyCellProps;
 
         expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre de VM", "App1", "12"));
+    });
+});
+
+describe("GreenIT - filteredViewMode", () => {
+    const mockData: GreenITIndicateur[] = [
+        {
+            applicationName: "App1",
+            sndi: "S1",
+            domaine: "D1",
+            domaineFonc: "DF1",
+            consoGlobal: "1000",
+            consoProd: "900",
+            cpuAllocatedGlobal: "2000",
+            cpuAllocatedProd: "1800",
+            ramAllocatedGlobal: "3000",
+            ramAllocatedProd: "2800",
+            diskAllocatedGlobal: "4000",
+            diskAllocatedProd: "3800",
+            nbVMGlobal: "10",
+            nbVMProd: "8",
+            cpuUsed: "1000",
+            cpuUsedProd: "900",
+            ramUsed: "2000",
+            ramUsedProd: "1900",
+            diskUsed: "3000",
+            diskUsedProd: "2900",
+            s3Used: "500",
+            s3UsedProd: "450",
+            pvcUsed: "600",
+            pvcUsedProd: "550",
+            nbPodMaxi: "20",
+            nbPodMaxiProd: "18",
+            ramMaxi: "NR",
+            cpuMaxi: "NR",
+            ramMaxiProd: "NR",
+            cpuMaxiProd: "NR",
+            lettreGreen: "A",
+            gaspillage: "B",
+            consoNormalized: "C",
+            impactNormalized: "D",
+            isModule: false
+        }
+    ];
+
+    it("retourne les données globales en mode global", () => {
+        const result = filteredViewMode("global", mockData);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]._consoSort).toBe(1000);
+        expect(result[0]._nbVmSort).toBe(10);
+    });
+
+    it("retourne les données prod en mode prod", () => {
+        const result = filteredViewMode("prod", mockData);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]._consoSort).toBe(900);
+        expect(result[0]._nbVmSort).toBe(8);
+    });
+
+    it("retourne la différence en mode horsprod", () => {
+        const result = filteredViewMode("horsprod", mockData);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]._consoSort).toBe(100); // 1000 - 900
+        expect(result[0]._nbVmSort).toBe(2);    // 10 - 8
+    });
+
+    it("formate correctement cpuUsed en heures", () => {
+        const result = filteredViewMode("global", mockData);
+
+        // cpuUsed: 1000 / 3600 ≈ 0.28 heures
+        expect(result[0].cpuUsed).not.toBe("NR");
+    });
+});
+
+describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
+    const mockApps = [
+        { appName: "App1", sndi: "S1", domaineSndi: "D1" }
+    ];
+
+    const mockGreenItData = [
+        {
+            applicationName: "App1",
+            cpuUsed: "1000",
+            ramUsed: "2000",
+            diskUsed: "3000",
+            s3Used: "500",
+            pvcUsed: "600",
+            nbPodMaxi: "20",
+            cpuUsedProd: "900",
+            ramUsedProd: "1900",
+            diskUsedProd: "2900",
+            s3UsedProd: "450",
+            pvcUsedProd: "550",
+            nbPodMaxiProd: "18",
+            ramMaxi: "4000",
+            cpuMaxi: "5000",
+            ramMaxiProd: "3800",
+            cpuMaxiProd: "4800"
+        }
+    ];
+
+    it("formate correctement les nouveaux champs Kube et VM", () => {
+        const result = formatIndicateur(mockApps, mockGreenItData);
+
+        expect(result[0]).toEqual(
+            expect.objectContaining({
+                cpuUsed: "1000",
+                ramUsed: "2000",
+                diskUsed: "3000",
+                s3Used: "500",
+                pvcUsed: "600",
+                nbPodMaxi: "20",
+                ramMaxi: "4000",
+                cpuMaxi: "5000"
+            })
+        );
     });
 });
