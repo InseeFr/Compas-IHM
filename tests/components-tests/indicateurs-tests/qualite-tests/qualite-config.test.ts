@@ -33,6 +33,7 @@ const mockApp = {
     tendanceDetteTechnique: "flat",
     tendanceFiabilite: "flat",
     tendanceTestUnitaire: "flat",
+    detteTechniquePast: "NR",
     pourcentageCouvertureTestUnitairePast: "NR"
 };
 
@@ -51,6 +52,7 @@ const mockModule = {
     tendanceDetteTechnique: "flat",
     tendanceFiabilite: "flat",
     tendanceTestUnitaire: "flat",
+    detteTechniquePast: "NR",
     pourcentageCouvertureTestUnitairePast: "NR"
 };
 
@@ -72,7 +74,8 @@ describe("formatIndicateur", () => {
             tendanceDetteTechnique: "flat",
             tendanceFiabilite: "flat",
             tendanceTestUnitaire: "flat",
-            pourcentageCouvertureTestUnitairePast: "NR"
+            pourcentageCouvertureTestUnitairePast: "NR",
+            detteTechniquePast: "NR"
         });
     });
 
@@ -95,7 +98,8 @@ describe("formatIndicateur", () => {
             detteTechnique: "456",
             tendanceDetteTechnique: "flat",
             tendanceFiabilite: "flat",
-            tendanceTestUnitaire: "flat"
+            tendanceTestUnitaire: "flat",
+            detteTechniquePast: "NR"
         });
     });
 });
