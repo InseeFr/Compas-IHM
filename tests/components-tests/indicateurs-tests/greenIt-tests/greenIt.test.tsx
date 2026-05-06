@@ -50,7 +50,7 @@ vi.mock("components/TablePageLayout", () => ({
         <div>
             <h1>{titleTable}</h1>
 
-            {isLoading && <div role="progressbar">Loading...</div>}
+            {isLoading && <progress data-testid="progress">Loading...</progress>}
 
             <div data-testid="layout-filters">{filters}</div>
 
