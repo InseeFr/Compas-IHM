@@ -172,7 +172,7 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Consommation en Watt", "App1", "100"));
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("consommation électrique VM (Wh)", "App1", "100"));
     });
     it("doit générer un aria-label Cpu", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_cpuSort")!;
@@ -192,7 +192,7 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Cpu alloué en Ghz", "App1", "1000"));
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("CPU réservée VM (Ghz)", "App1", "1000"));
     });
     it("doit générer un aria-label Ram", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_ramSort")!;
@@ -212,7 +212,7 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Ram allouée en Go", "App1", "50"));
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("RAM réservée VM (Go)", "App1", "50"));
     });
     it("doit générer un aria-label Disque", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_diskSort")!;
@@ -232,7 +232,7 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Disque alloué en Go", "App1", "50"));
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("stockage réservé VM (Go)", "App1", "50"));
     });
 
     it("doit générer un aria-label Nombre VM", () => {
