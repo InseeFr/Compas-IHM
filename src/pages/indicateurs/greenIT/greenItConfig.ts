@@ -287,39 +287,7 @@ export const paginationConfig: Pagination = {
 export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
     const colonnes: MRT_ColumnDef<GreenITIndicateur>[] = [
         {
-            header: GREENIT_HEADERS.CONSO_WH,
-            accessorKey: "_consoSort",
-            Cell: ({ row }: MRT_RowData) => row.original._conso,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "Consommation en Watt", cell: cell, row: row })
-        },
-        {
-            header: GREENIT_HEADERS.CPU_ALLOUE_GHZ,
-            accessorKey: "_cpuSort",
-            Cell: ({ row }: MRT_RowData) => row.original._cpu,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "Cpu alloué en Ghz", cell: cell, row: row })
-        },
-        {
-            header: GREENIT_HEADERS.RAM_ALLOUEE_GO,
-            accessorKey: "_ramSort",
-            Cell: ({ row }: MRT_RowData) => row.original._ram,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "Ram allouée en Go", cell: cell, row: row })
-        },
-        {
-            header: GREENIT_HEADERS.DISQUE_ALLOUE_GO,
-            accessorKey: "_diskSort",
-            Cell: ({ row }: MRT_RowData) => row.original._disk,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "Disque alloué en Go", cell: cell, row: row })
-        },
-        {
-            header: GREENIT_HEADERS.NOMBRE_VM,
+            header: GREENIT_HEADERS.NOMBRE_VM,  //ok
             accessorKey: "_nbVmSort",
             Cell: ({ row }: MRT_RowData) => row.original._nbVm,
             sortingFn: sortHelper,
@@ -327,36 +295,28 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Nombre de VM", cell: cell, row: row })
         },
         {
-             header: "CPU utilisée Kube (heure)",
-            accessorKey: "_cpuUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._cpuUsed,
+            header: "Nombre (maxi) de POD",  //ok
+            accessorKey: "_nbPodMaxiSort",
+            Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "CPU utilisée Kube (heure)", cell: cell, row: row })
+                muiAriaCell({ title: "Nombre (maxi) de POD", cell: cell, row: row })
         },
         {
-            header: "RAM utilisée Kube (Go)",
-            accessorKey: "_ramUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._ramUsed,
+            header: GREENIT_HEADERS.DISQUE_ALLOUE_GO,  //ok
+            accessorKey: "_diskSort",
+            Cell: ({ row }: MRT_RowData) => row.original._disk,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "RAM utilisée Kube (Go)", cell: cell, row: row })
+                muiAriaCell({ title: "stockage réservé VM (Go)", cell: cell, row: row })
         },
         {
-            header: "Stockage utilisé VM (Go)",
+            header: "Stockage utilisé VM (Go)",  //ok
             accessorKey: "_diskUsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._diskUsed,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Stockage utilisé VM (Go)", cell: cell, row: row })
-        },
-        {
-            header: "Stockage utilisé S3 (Go)",
-            accessorKey: "_s3UsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._s3Used,
-            sortingFn: sortHelper,
-            muiTableBodyCellProps: ({ cell, row }) =>
-                muiAriaCell({ title: "Stockage utilisé S3 (Go)", cell: cell, row: row })
         },
         {
             header: "Stockage utilisé Kube (Go)",
@@ -367,15 +327,53 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Stockage utilisé Kube (Go)", cell: cell, row: row })
         },
         {
-            header: "Nombre (maxi) de POD",
-            accessorKey: "_nbPodMaxiSort",
-            Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
+            header: "Stockage utilisé S3 (Go)",
+            accessorKey: "_s3UsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._s3Used,
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
-                 muiAriaCell({ title: "Nombre (maxi) de POD", cell: cell, row: row })
+                muiAriaCell({ title: "Stockage utilisé S3 (Go)", cell: cell, row: row })
         },
-        
-
+        {
+            header: "CPU réservée VM (Ghz)",
+            accessorKey: "_cpuSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpu,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU réservée VM (Ghz)", cell: cell, row: row })
+        },
+        {
+            header: "CPU utilisée Kube (heure)",
+            accessorKey: "_cpuUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._cpuUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "CPU utilisée Kube (heure)", cell: cell, row: row })
+        },
+        {
+            header: GREENIT_HEADERS.RAM_ALLOUEE_GO,
+            accessorKey: "_ramSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ram,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM réservée VM (Go)", cell: cell, row: row })
+        },
+        {
+            header: "RAM utilisée Kube (Go)",
+            accessorKey: "_ramUsedSort",
+            Cell: ({ row }: MRT_RowData) => row.original._ramUsed,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "RAM utilisée Kube (Go)", cell: cell, row: row })
+        },
+        {
+            header: GREENIT_HEADERS.CONSO_WH,
+            accessorKey: "_consoSort",
+            Cell: ({ row }: MRT_RowData) => row.original._conso,
+            sortingFn: sortHelper,
+            muiTableBodyCellProps: ({ cell, row }) =>
+                muiAriaCell({ title: "consommation électrique VM (Wh)", cell: cell, row: row })
+        }
     ];
     return [...BASE_COLONNE<GreenITIndicateur>(), ...colonnes];
 };

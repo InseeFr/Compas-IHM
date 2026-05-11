@@ -75,10 +75,10 @@ export const DEVOPS_HEADERS = {
 // ============================================================================
 export const GREENIT_HEADERS = {
     ...BASE_HEADERS,
-    CONSO_WH: "Conso (Wh)",
-    CPU_ALLOUE_GHZ: "CPU alloué (GHz)",
-    RAM_ALLOUEE_GO: "RAM allouée (Go)",
-    DISQUE_ALLOUE_GO: "Disque alloué (Go)",
+    CONSO_WH: "Consommation électrique VM (Wh)",
+    CPU_ALLOUE_GHZ: "CPU réservée VM (Ghz)",
+    RAM_ALLOUEE_GO: "RAM réservée VM (Go)",
+    DISQUE_ALLOUE_GO: "Stockage réservé VM (Go)",
     NOMBRE_VM: "Nombre de VM",
     NIVEAU_GREENIT: "Niveau GreenIT",
     CONSO_GREENIT_BRUTE: "Conso GreenIT (Wh)",
@@ -91,7 +91,7 @@ export const GREENIT_HEADERS = {
     CPU_MAXI: "CPU maxi (GHz)",
     RAM_ALLOUEE: "RAM allouée (Go)",
     RAM_MAXI: "RAM maxi (Go)",
-    DISQUE_ALLOUE: "Disque alloué (Go)",
+    DISQUE_ALLOUE: "Stockage réservé VM (Go)",
     DISQUE_UTILISE: "Disque utilisé (Go)",
     // Colonnes prod
     NB_VM_PROD: "Nb VM (prod)",
