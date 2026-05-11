@@ -196,7 +196,7 @@ export const filteredViewMode = (
             _pvcUsed: formatOrNR(pvcUsed),
             _nbPodMaxi: formatOrNRWithUnit(nbPodMaxi),
 
-             _consoSort: conso,
+            _consoSort: conso,
             _cpuSort: cpu == null ? null : cpu / 1000,
             _ramSort: ram,
             _diskSort: disk,
