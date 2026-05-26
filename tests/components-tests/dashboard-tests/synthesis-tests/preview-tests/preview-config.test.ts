@@ -130,109 +130,111 @@ describe("generateNarrative", () => {
         expect(narrative.cloudMaturity).toContain("plan de modernisation");
     });
 
-describe("generateHomologationNarrative", () => {
-
-    it("retourne non homologuée si statut est 'non'", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "non",
-            homologationSI: undefined,
+    describe("generateHomologationNarrative", () => {
+        it("retourne non homologuée si statut est 'non'", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "non",
+                homologationSI: undefined
+            });
+            expect(narrative.homologation).toBe("L'application n'a pas été homologuée.");
         });
-        expect(narrative.homologation).toBe("L'application n'a pas été homologuée.");
-    });
 
-    it("retourne non homologuée si statut est undefined", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: undefined,
-            homologationSI: undefined,
+        it("retourne non homologuée si statut est undefined", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: undefined,
+                homologationSI: undefined
+            });
+            expect(narrative.homologation).toBe("L'application n'a pas été homologuée.");
         });
-        expect(narrative.homologation).toBe("L'application n'a pas été homologuée.");
-    });
 
-    it("retourne non homologuée avec SI partiellement homologué et sensibilité 3", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "non",
-            homologationSI: "partielle",
-            sensitivity: "3",
+        it("retourne non homologuée avec SI partiellement homologué et sensibilité 3", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "non",
+                homologationSI: "partielle",
+                sensitivity: "3"
+            });
+            expect(narrative.homologation).toContain(
+                "n'a pas été homologuée mais son système d'information a été homologué partiellement"
+            );
+            expect(narrative.homologation).toContain("SI important");
         });
-        expect(narrative.homologation).toContain("n'a pas été homologuée mais son système d'information a été homologué partiellement");
-        expect(narrative.homologation).toContain("SI important");
-    });
 
-    it("retourne non homologuée avec SI partiellement homologué et sensibilité non déterminée", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "non",
-            homologationSI: "partielle",
-            sensitivity: "(nd)",
+        it("retourne non homologuée avec SI partiellement homologué et sensibilité non déterminée", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "non",
+                homologationSI: "partielle",
+                sensitivity: "(nd)"
+            });
+            expect(narrative.homologation).toContain(
+                "n'a pas été homologuée mais son système d'information a été homologué partiellement"
+            );
+            expect(narrative.homologation).toContain("sensibilité du SI n'est pas déterminée");
         });
-        expect(narrative.homologation).toContain("n'a pas été homologuée mais son système d'information a été homologué partiellement");
-        expect(narrative.homologation).toContain("sensibilité du SI n'est pas déterminée");
-    });
 
-    it("retourne homologuée avec SI complètement homologué et sensibilité 3", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "homologuée",
-            homologationBeginDate: "20/06/2050",
-            homologationEndDate: "20/06/2055",
-            homologationSI: "complète",
-            sensitivity: "3",
+        it("retourne homologuée avec SI complètement homologué et sensibilité 3", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "homologuée",
+                homologationBeginDate: "20/06/2050",
+                homologationEndDate: "20/06/2055",
+                homologationSI: "complète",
+                sensitivity: "3"
+            });
+            expect(narrative.homologation).toContain("a été homologuée le 20/06/2050");
+            expect(narrative.homologation).toContain("valable jusqu'au 20/06/2055");
+            expect(narrative.homologation).toContain("homologué complètement");
+            expect(narrative.homologation).toContain("SI important");
         });
-        expect(narrative.homologation).toContain("a été homologuée le 20/06/2050");
-        expect(narrative.homologation).toContain("valable jusqu'au 20/06/2055");
-        expect(narrative.homologation).toContain("homologué complètement");
-        expect(narrative.homologation).toContain("SI important");
-    });
 
-    it("retourne sensibilité non déterminée si sensitivity est '(nd)' en cas complète", () => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "homologuée",
-            homologationBeginDate: "20/06/2050",
-            homologationEndDate: "20/06/2055",
-            homologationSI: "complète",
-            sensitivity: "(nd)",
+        it("retourne sensibilité non déterminée si sensitivity est '(nd)' en cas complète", () => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "homologuée",
+                homologationBeginDate: "20/06/2050",
+                homologationEndDate: "20/06/2055",
+                homologationSI: "complète",
+                sensitivity: "(nd)"
+            });
+            expect(narrative.homologation).toContain("homologué complètement");
+            expect(narrative.homologation).toContain("sensibilité du SI n'est pas déterminée");
         });
-        expect(narrative.homologation).toContain("homologué complètement");
-        expect(narrative.homologation).toContain("sensibilité du SI n'est pas déterminée");
-    });
 
-    it.each([
-        ["1", "SI peu ou pas sensible"],
-        ["2", "SI Moyennement sensible"],
-        ["3", "SI important"],
-        ["4", "SI sensible"],
-    ])("sensibilité %s retourne '%s' (cas homologuée + complète)", (sensitivity, expected) => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "homologuée",
-            homologationBeginDate: "20/06/2050",
-            homologationEndDate: "20/06/2055",
-            homologationSI: "complète",
-            sensitivity,
+        it.each([
+            ["1", "SI peu ou pas sensible"],
+            ["2", "SI Moyennement sensible"],
+            ["3", "SI important"],
+            ["4", "SI sensible"]
+        ])("sensibilité %s retourne '%s' (cas homologuée + complète)", (sensitivity, expected) => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "homologuée",
+                homologationBeginDate: "20/06/2050",
+                homologationEndDate: "20/06/2055",
+                homologationSI: "complète",
+                sensitivity
+            });
+            expect(narrative.homologation).toContain(expected);
         });
-        expect(narrative.homologation).toContain(expected);
-    });
 
-    it.each([
-        ["1", "SI peu ou pas sensible"],
-        ["2", "SI Moyennement sensible"],
-        ["3", "SI important"],
-        ["4", "SI sensible"],
-    ])("sensibilité %s retourne '%s' (cas homologuée + partielle)", (sensitivity, expected) => {
-        const narrative = generateNarrative({
-            ...baseApp,
-            statutHomologation: "homologuée",
-            homologationBeginDate: "20/06/2050",
-            homologationEndDate: "20/06/2055",
-            homologationSI: "partielle",
-            sensitivity,
+        it.each([
+            ["1", "SI peu ou pas sensible"],
+            ["2", "SI Moyennement sensible"],
+            ["3", "SI important"],
+            ["4", "SI sensible"]
+        ])("sensibilité %s retourne '%s' (cas homologuée + partielle)", (sensitivity, expected) => {
+            const narrative = generateNarrative({
+                ...baseApp,
+                statutHomologation: "homologuée",
+                homologationBeginDate: "20/06/2050",
+                homologationEndDate: "20/06/2055",
+                homologationSI: "partielle",
+                sensitivity
+            });
+            expect(narrative.homologation).toContain(expected);
         });
-        expect(narrative.homologation).toContain(expected);
     });
-});
-
 });

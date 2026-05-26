@@ -5,12 +5,26 @@ import type { Application, Module, IndicateurSecuriteView } from "todos-api/clie
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import type { SecuriteIndicateur } from "models/indicateurs";
-import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
 import { SECURITE_HEADERS, BASE_HEADERS, GLOBAL_HEADERS } from "constantes/constantes-headers";
+
+const getValueSecurityCSV = (row: MRT_Row<SecuriteIndicateur>) => {
+    return [
+        `"${row.original.lettreGlobaleSecurite ?? "NR"}"`,
+            `"${row.original.lettreNiveauCve ?? "NR"}"`,
+            `"${row.original.nbCveCritical ?? "NR"}"`,
+            `"${row.original.nbCveHigh ?? "NR"}"`,
+            `"${row.original.nbCveMedium ?? "NR"}"`,
+            `"${row.original.nbCveLow ?? "NR"}"`,
+            `"${row.original.nbVmNonMaj ?? "NR"}"`,
+            `"${row.original.delaiVmNonMiseAjour ?? "NR"}"`
+    ];
+}
 
 export const OnExport = (table: MRT_TableInstance<SecuriteIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM,
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM_MODULE,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL,
@@ -28,18 +42,8 @@ export const OnExport = (table: MRT_TableInstance<SecuriteIndicateur>) => {
 
     const csvData: string[] = filteredRows.map(row => {
         return [
-            `"${row.original.applicationName}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original.domaine}"`,
-            `"${row.original.domaineFonc}"`,
-            `"${row.original.lettreGlobaleSecurite ?? "NR"}"`,
-            `"${row.original.lettreNiveauCve ?? "NR"}"`,
-            `"${row.original.nbCveCritical ?? "NR"}"`,
-            `"${row.original.nbCveHigh ?? "NR"}"`,
-            `"${row.original.nbCveMedium ?? "NR"}"`,
-            `"${row.original.nbCveLow ?? "NR"}"`,
-            `"${row.original.nbVmNonMaj ?? "NR"}"`,
-            `"${row.original.delaiVmNonMiseAjour ?? "NR"}"`
+            ...getBaseValueCSV(row),
+            ...getValueSecurityCSV(row)
         ].join(",");
     });
 

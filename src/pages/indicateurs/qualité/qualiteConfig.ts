@@ -5,12 +5,20 @@ import type { IndicateurQualiteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import type { QualiteIndicateur } from "models/indicateurs";
-import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
+const getValueQualiteCSV = (row: MRT_Row<QualiteIndicateur>): string[] => {
+    return [`"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
+    `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
+    `"${row.original.lettreFiabilite ?? "NR"}"`,
+    `"${row.original.lettreDetteTechnique ?? "NR"}"`,
+    `"${row.original.detteTechnique ?? "NR"}"`
+];}
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM,
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM_MODULE,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL,
@@ -25,18 +33,10 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
 
     const csvData: string[] = filteredRows.map(row => {
         return [
-            `"${row.original.applicationName}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original.domaine}"`,
-            `"${row.original.domaineFonc}"`,
-            `"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
-            `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
-            `"${row.original.lettreFiabilite ?? "NR"}"`,
-            `"${row.original.lettreDetteTechnique ?? "NR"}"`,
-            `"${row.original.detteTechnique ?? "NR"}"`
+            ...getBaseValueCSV(row),
+            ...getValueQualiteCSV(row)
         ].join(",");
     });
-
     handleExportCsv("qualité", table, csvData, headers);
 };
 

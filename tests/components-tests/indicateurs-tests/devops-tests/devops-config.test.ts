@@ -16,6 +16,13 @@ vi.mock("utils/exportCsv", () => ({
         };
         return flatten(rows);
     }),
+    getBaseValueCSV:vi.fn(row => [
+        `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
+        `"${row.original.isModule ? row.original.applicationName : ""}"`,
+        `"${row.original.sndi}"`,
+        `"${row.original.domaine}"`,
+        `"${row.original.domaineFonc}"`
+    ]),
     getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
