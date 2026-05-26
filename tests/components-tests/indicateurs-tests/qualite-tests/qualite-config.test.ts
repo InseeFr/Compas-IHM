@@ -16,6 +16,13 @@ vi.mock("utils/exportCsv", () => ({
         };
         return flatten(rows);
     }),
+    getBaseValueCSV:vi.fn(row => [
+        `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
+        `"${row.original.isModule ? row.original.applicationName : ""}"`,
+        `"${row.original.sndi}"`,
+        `"${row.original.domaine}"`,
+        `"${row.original.domaineFonc}"`
+    ]),
     getName: vi.fn(row => `"${row.original.applicationName}"`)
 }));
 
@@ -183,8 +190,8 @@ describe("OnExport", () => {
         expect(entetes).toBeDefined();
 
         expect(csvData).toEqual([
-            `"App1","S1","D1","NR","A","50%","B","C","123"`,
-            `"Mod1","S1","D1","NR","X","75%","Y","Z","456"`
+            `"App1","","S1","D1","NR","A","50%","B","C","123"`,
+            `"App1","Mod1","S1","D1","NR","X","75%","Y","Z","456"`
         ]);
     });
 });
