@@ -10,7 +10,8 @@ const projectDirPath = process.cwd();
 
 (async () => {
     const todosApiUrl = (() => {
-        const line = fs.readFileSync(pathJoin(projectDirPath, ".env"))
+        const line = fs
+            .readFileSync(pathJoin(projectDirPath, ".env"))
             .toString("utf-8")
             .split("\n")
             .find(line => line.startsWith("VITE_TODOS_API_URL="));

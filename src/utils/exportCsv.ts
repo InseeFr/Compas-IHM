@@ -2,6 +2,16 @@ import type { MRT_Row, MRT_RowData, MRT_TableInstance } from "material-react-tab
 import type { ViewMode } from "../constantes/constantes";
 import type { GlobalIndicator } from "models/indicateurs";
 
+export const getBaseValueCSV = <U extends MRT_RowData>  (row: MRT_Row<U>): string[] => {
+    return [
+        `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
+        `"${row.original.isModule ? row.original.applicationName : ""}"`,
+        `"${row.original.sndi}"`,
+        `"${row.original.domaine}"`,
+        `"${row.original.domaineFonc}"`
+    ];
+}
+
 export function handleExportCsv<U extends MRT_RowData>(
     indicator: string,
     table: MRT_TableInstance<U>,
