@@ -1,16 +1,27 @@
 import type { MRT_TableInstance, MRT_Row, MRT_ColumnDef } from "material-react-table";
 import type { DevopsIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
 import { ContributorCell, DeploymentCell, DistanceCell } from "./DevopsCell";
 import type { IndicateurDevopsView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import { DEVOPS_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
+const getValueDevopsCSV = (row: MRT_Row<DevopsIndicateur>): string[] => {
+    return [
+            `"${row.original.lettreContributorCount ?? "NR"}"`,
+            `"${row.original.lettreDeploymentCount ?? "NR"}"`,
+            `"${row.original.lettreDistanceCount ?? "NR"}"`,
+            `"${row.original.lettreGlobalDevops ?? "NR"}"`,
+            `"${row.original.distanceCount ?? "NR"}"`
+    ];
+}
+
 export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM,
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM_MODULE,
         BASE_HEADERS.SERVICE_DEV,
         BASE_HEADERS.DOMAINE_DEV,
         BASE_HEADERS.DOMAINE_FONCTIONNEL,
@@ -25,15 +36,8 @@ export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
 
     const csvData: string[] = filteredRows.map(row => {
         return [
-            `"${row.original.applicationName}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original.domaine}"`,
-            `"${row.original.domaineFonc}"`,
-            `"${row.original.lettreContributorCount ?? "NR"}"`,
-            `"${row.original.lettreDeploymentCount ?? "NR"}"`,
-            `"${row.original.lettreDistanceCount ?? "NR"}"`,
-            `"${row.original.lettreGlobalDevops ?? "NR"}"`,
-            `"${row.original.distanceCount ?? "NR"}"`
+           ...getBaseValueCSV(row),
+           ...getValueDevopsCSV(row) 
         ].join(",");
     });
 

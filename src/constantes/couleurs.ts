@@ -32,7 +32,6 @@ export const METEO_COLORS: Record<string, string> = {
 
 export const ORDERED_METEO = ["4", "3", "2", "1", "NR"] as const;
 
-
 export const DETTE_COLORS: Record<string, string> = {
     "0-5": "#388e3c",
     "6-15": "#66bb6a",
@@ -44,7 +43,6 @@ export const DETTE_COLORS: Record<string, string> = {
 
 export const ORDERED_DETTE = ["0-5", "6-15", "16-30", "31-90", ">90", "NR"] as const;
 
-
 export const MEP_COLORS: Record<string, string> = {
     "0-30": "#388e3c",
     "31-60": "#8bc34a",
@@ -55,7 +53,6 @@ export const MEP_COLORS: Record<string, string> = {
 };
 
 export const ORDERED_MEP = ["0-30", "31-60", "61-90", "91-180", ">180", "NR"] as const;
-
 
 export const CVE_COLORS = {
     critical: "#d32f2f",

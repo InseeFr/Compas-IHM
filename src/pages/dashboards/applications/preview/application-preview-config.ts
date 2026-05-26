@@ -75,14 +75,13 @@ const generateHomologationNarrative = (
     statut: string | undefined,
     beginDate: string | undefined,
     endDate: string | undefined,
-    homologationSI: string | undefined,
+    homologationSI: string | undefined
 ): string => {
-
     const sensitivityMap: Record<string, string> = {
         "1": "SI peu ou pas sensible",
         "2": "SI Moyennement sensible",
         "3": "SI important",
-        "4": "SI sensible",
+        "4": "SI sensible"
     };
 
     const sensitivityTexte =
@@ -93,7 +92,7 @@ const generateHomologationNarrative = (
     if (statut === "homologuée" && homologationSI === "complète") {
         return `L'application a été homologuée le ${beginDate} (valable jusqu'au ${endDate}). Le système d'information de cette application a été homologué complètement et ${sensitivityTexte}`;
     }
-    
+
     if (statut === "homologuée" && homologationSI === "partielle") {
         return `L'application a été homologuée le ${beginDate} (valable jusqu'au ${endDate}). Le système d'information de cette application a été homologué partiellement et ${sensitivityTexte}`;
     }
@@ -104,7 +103,6 @@ const generateHomologationNarrative = (
 
     return "L'application n'a pas été homologuée.";
 };
-
 
 const generateGreenITNarrative = (lettreGreen: string | undefined): string => {
     const grade = normalizeGrade(lettreGreen);
@@ -175,7 +173,13 @@ export function generateNarrative(app: IndicateurApplicationSynthese): Narrative
         debt: generateDebtNarrative(app.detteTechnique),
         tests: generateTestCoverageNarrative(app.pourcentageCouvertureTestUniaire),
         security: generateSecurityNarrative(app.lettreNiveauCve),
-        homologation: generateHomologationNarrative(app.sensitivity, app.statutHomologation, app.homologationBeginDate, app.homologationEndDate, app.homologationSI),
+        homologation: generateHomologationNarrative(
+            app.sensitivity,
+            app.statutHomologation,
+            app.homologationBeginDate,
+            app.homologationEndDate,
+            app.homologationSI
+        ),
         green: generateGreenITNarrative(app.lettreGreen),
         cloud: generateDeploymentFrequencyNarrative(app.distanceNote),
         quality: generateQualityNarrative(app.lettreQualiteGenerale),

@@ -673,9 +673,7 @@ export const getHomologation = (options?: SecondParameter<typeof fetch<Homologat
     );
 };
 
-export const getHomologationAbsentes = (
-    options?: SecondParameter<typeof fetch<string[]>>
-) => {
+export const getHomologationAbsentes = (options?: SecondParameter<typeof fetch<string[]>>) => {
     return fetch<string[]>(
         { url: `/homologations/homologation/applications-absentes`, method: "GET" },
         options
