@@ -11,15 +11,10 @@
         "build": "tsc && vite build",
         "lint": "eslint ./src",
         "preview": "vite preview",
-        "_format": "prettier '**/*.{ts,tsx,json,md}'",
-        "format": "npm run _format -- --write",
-        "format:check": "npm run _format -- --list-different",
+        "format": "prettier \"**/*.{ts,tsx,json,md}\" --write",
+        "format:check": "prettier \"**/*.{ts,tsx,json,md}\" --list-different",
         "test": "vitest run --coverage",
-        "test-dev": "vitest"
-    },
-    "engines": {
-        "node": "v20.20.0",
-        "npm": "10.8.2"
+        "test-dev": "vitest --watch"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
@@ -68,10 +63,5 @@
         "typescript-eslint": "^8.46.4",
         "vite": "8.0.14",
         "vitest": "^4.1.3"
-    },
-    "overrides": {
-        "minimatch": "^10.2.5",
-        "flatted": "3.4.2",
-        "picomatch": "4.0.4"
     }
 }
