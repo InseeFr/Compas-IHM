@@ -1,6 +1,6 @@
 # Compose
 .env-compose
-
+.env
 # Logs
 logs
 *.log

@@ -11,15 +11,15 @@ import { SECURITE_HEADERS, BASE_HEADERS, GLOBAL_HEADERS } from "constantes/const
 const getValueSecurityCSV = (row: MRT_Row<SecuriteIndicateur>) => {
     return [
         `"${row.original.lettreGlobaleSecurite ?? "NR"}"`,
-            `"${row.original.lettreNiveauCve ?? "NR"}"`,
-            `"${row.original.nbCveCritical ?? "NR"}"`,
-            `"${row.original.nbCveHigh ?? "NR"}"`,
-            `"${row.original.nbCveMedium ?? "NR"}"`,
-            `"${row.original.nbCveLow ?? "NR"}"`,
-            `"${row.original.nbVmNonMaj ?? "NR"}"`,
-            `"${row.original.delaiVmNonMiseAjour ?? "NR"}"`
+        `"${row.original.lettreNiveauCve ?? "NR"}"`,
+        `"${row.original.nbCveCritical ?? "NR"}"`,
+        `"${row.original.nbCveHigh ?? "NR"}"`,
+        `"${row.original.nbCveMedium ?? "NR"}"`,
+        `"${row.original.nbCveLow ?? "NR"}"`,
+        `"${row.original.nbVmNonMaj ?? "NR"}"`,
+        `"${row.original.delaiVmNonMiseAjour ?? "NR"}"`
     ];
-}
+};
 
 export const OnExport = (table: MRT_TableInstance<SecuriteIndicateur>) => {
     const headers = [
@@ -41,10 +41,7 @@ export const OnExport = (table: MRT_TableInstance<SecuriteIndicateur>) => {
     const filteredRows: MRT_Row<SecuriteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
 
     const csvData: string[] = filteredRows.map(row => {
-        return [
-            ...getBaseValueCSV(row),
-            ...getValueSecurityCSV(row)
-        ].join(",");
+        return [...getBaseValueCSV(row), ...getValueSecurityCSV(row)].join(",");
     });
 
     handleExportCsv("sécurité", table, csvData, headers);

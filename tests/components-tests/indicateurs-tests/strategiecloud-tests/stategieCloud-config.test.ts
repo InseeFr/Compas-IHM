@@ -13,13 +13,13 @@ vi.mock("utils/exportCsv", () => ({
     flattenRows: (rows: unknown[]) => rows,
     handleExportCsv: vi.fn(),
     escapeCsvValue: (v: string) => v,
-    getBaseValueCSV:vi.fn(row => [
-            `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
-            `"${row.original.isModule ? row.original.applicationName : ""}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original.domaine}"`,
-            `"${row.original.domaineFonc}"`
-        ]),
+    getBaseValueCSV: vi.fn(row => [
+        `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
+        `"${row.original.isModule ? row.original.applicationName : ""}"`,
+        `"${row.original.sndi}"`,
+        `"${row.original.domaine}"`,
+        `"${row.original.domaineFonc}"`
+    ])
 }));
 
 vi.mock("pages/indicateurs/strategiecloud/strategieCloudCell", () => ({

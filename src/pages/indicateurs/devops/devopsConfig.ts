@@ -10,13 +10,13 @@ import { DEVOPS_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 const getValueDevopsCSV = (row: MRT_Row<DevopsIndicateur>): string[] => {
     return [
-            `"${row.original.lettreContributorCount ?? "NR"}"`,
-            `"${row.original.lettreDeploymentCount ?? "NR"}"`,
-            `"${row.original.lettreDistanceCount ?? "NR"}"`,
-            `"${row.original.lettreGlobalDevops ?? "NR"}"`,
-            `"${row.original.distanceCount ?? "NR"}"`
+        `"${row.original.lettreContributorCount ?? "NR"}"`,
+        `"${row.original.lettreDeploymentCount ?? "NR"}"`,
+        `"${row.original.lettreDistanceCount ?? "NR"}"`,
+        `"${row.original.lettreGlobalDevops ?? "NR"}"`,
+        `"${row.original.distanceCount ?? "NR"}"`
     ];
-}
+};
 
 export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
     const headers = [
@@ -35,10 +35,7 @@ export const onExport = (table: MRT_TableInstance<DevopsIndicateur>) => {
     const filteredRows: MRT_Row<DevopsIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
 
     const csvData: string[] = filteredRows.map(row => {
-        return [
-           ...getBaseValueCSV(row),
-           ...getValueDevopsCSV(row) 
-        ].join(",");
+        return [...getBaseValueCSV(row), ...getValueDevopsCSV(row)].join(",");
     });
 
     handleExportCsv("devops", table, csvData, headers);

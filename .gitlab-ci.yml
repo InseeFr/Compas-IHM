@@ -1,7 +1,7 @@
 include:
   - component: $CI_SERVER_FQDN/sndi-lille/ressources-communes/components/meta-component-js-kube/ci-js-kube@2.0.0-rc
     inputs:
-      package_manager: "npm" 
+      package_manager: "pnpm" 
       sonar_project_key: "dsi_compas_compas-ui-v2_3395f55b-6671-4c39-9a53-6585284c1b56"
       sonar_token: "${SONAR_TOKEN}"
       auto_tags_with_semver: false
@@ -68,20 +68,6 @@ release-gitops-dev3:
   rules:
     - when: manual
 
-release-gitops-dev4:
-  stage: release-gitops
-  extends: .template:gitops-updater-v2
-  variables:
-    REPO: "https://gitlab.insee.fr/dsi/Compas/CompasGitops.git"
-    BRANCH: "master"
-    PATH_TO_VALUE: "apps/compas-ui-dev4/values.yaml"
-    KEY_TO_CHANGE: "ui-compas.image.tag"
-    NEW_VALUE: "$CI_COMMIT_SHA"
-    USERNAME: "${GITOPS_USERNAME}"
-    PASSWORD_VAR: "${GITOPS_TOKEN}"
-    AUTOMERGE: "true"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "affichage-homologations"'
 
 release-gitops-prod:
   stage: release-gitops
