@@ -15,13 +15,10 @@ const QualiteIndicateurTable = () => {
     const fetchData = async () => {
         try {
             const params = {
-                origine: stateTendance.dateOrigine
-                    ? new Date(stateTendance.dateOrigine).toISOString()
-                    : undefined,
+                origine: stateTendance.dateOrigine,
 
                 passee: stateTendance.datePassee
-                    ? new Date(stateTendance.datePassee).toISOString()
-                    : undefined
+                    
             };
 
             const [apps, modules] = await Promise.all([
