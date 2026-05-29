@@ -1,9 +1,10 @@
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./qualiteConfig";
+
 import {
-    getIndicateurQualiteByApplication,
-    GetIndicateurQualiteByApplicationPeriode,
-    getIndicateurQualiteByModule
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate
 } from "todos-api/client.gen";
+
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 import { useTendanceContext } from "store/tendance-context";
 
@@ -13,13 +14,19 @@ const QualiteIndicateurTable = () => {
 
     const fetchData = async () => {
         try {
+            const params = {
+                origine: stateTendance.dateOrigine
+                    ? new Date(stateTendance.dateOrigine).toISOString()
+                    : undefined,
+
+                passee: stateTendance.datePassee
+                    ? new Date(stateTendance.datePassee).toISOString()
+                    : undefined
+            };
+
             const [apps, modules] = await Promise.all([
-                getIndicateurQualiteByApplication({
-                    periode: stateTendance.periode as GetIndicateurQualiteByApplicationPeriode
-                }),
-                getIndicateurQualiteByModule({
-                    periode: stateTendance.periode as GetIndicateurQualiteByApplicationPeriode
-                })
+                getIndicateurQualiteByApplicationByDate(params),
+                getIndicateurQualiteByModuleByDate(params)
             ]);
 
             const formattedApps = apps.map(app => formatIndicateur(app));
@@ -27,7 +34,7 @@ const QualiteIndicateurTable = () => {
 
             return [...formattedApps, ...formattedModules];
         } catch (error) {
-            console.log("Erreur lors de la récupération des données qualité: ", error);
+            console.log("Erreur lors de la récupération des données qualité :", error);
             return [];
         }
     };

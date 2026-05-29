@@ -1,7 +1,7 @@
 import type { MRT_TableInstance, MRT_Row, MRT_ColumnDef } from "material-react-table";
 import type { StrategieCloudIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { flattenRows, handleExportCsv, escapeCsvValue } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
 import {
     TauxCloudCell,
     EnvActuelCell,
@@ -16,10 +16,25 @@ import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import { STRATEGIE_CLOUD_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
+const getValueStrategieCloudCSV = (row: MRT_Row<StrategieCloudIndicateur>) => {
+    return [
+        `"${row.original.tauxCloud ?? "NR"}"`,
+        `"${row.original.envActuelProd ?? "NR"}"`,
+        `"${row.original.envCibleProd ?? "NR"}"`,
+        `"${row.original.ecartCible ?? "NR"}"`,
+        `"${row.original.stratCloud ?? "NR"}"`,
+        `"${row.original.commentaire ?? "NR"}"`,
+        `"${row.original.maturiteCloud ?? "NR"}"`
+    ];
+};
+
 export const onExport = (table: MRT_TableInstance<StrategieCloudIndicateur>) => {
     const headers = [
-        BASE_HEADERS.NOM,
+        BASE_HEADERS.NOM_APPLICATION,
+        BASE_HEADERS.NOM_MODULE,
         BASE_HEADERS.SERVICE_DEV,
+        BASE_HEADERS.DOMAINE_DEV,
+        BASE_HEADERS.DOMAINE_FONCTIONNEL,
         STRATEGIE_CLOUD_HEADERS.TAUX_CLOUD_PRODUCTION,
         STRATEGIE_CLOUD_HEADERS.ENV_ACTUEL_PRODUCTION,
         STRATEGIE_CLOUD_HEADERS.ENV_CIBLE_PRODUCTION,
@@ -34,17 +49,7 @@ export const onExport = (table: MRT_TableInstance<StrategieCloudIndicateur>) => 
     );
 
     const csvData: string[] = filteredRows.map(row => {
-        return [
-            `"${row.original.applicationName}"`,
-            `"${row.original.sndi}"`,
-            `"${row.original.tauxCloud ?? "NR"}"`,
-            `"${row.original.envActuelProd ?? "NR"}"`,
-            `"${row.original.envCibleProd ?? "NR"}"`,
-            `"${row.original.ecartCible ?? "NR"}"`,
-            `"${row.original.stratCloud ?? "NR"}"`,
-            `"${row.original.commentaire ?? "NR"}"`,
-            `"${row.original.maturiteCloud ?? "NR"}"`
-        ].join(",");
+        return [...getBaseValueCSV(row), ...getValueStrategieCloudCSV(row)].join(",");
     });
 
     handleExportCsv("strategie-cloud", table, csvData, headers);

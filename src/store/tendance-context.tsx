@@ -1,20 +1,52 @@
 import { createContext, useContext, useMemo, useReducer, type ReactNode } from "react";
+import { format } from "date-fns";
 
 export interface TendanceState {
-    periode: string;
+    dateOrigine: string;
+    datePassee: string;
 }
 
-export type ActionTendance = { type: "SET_TENDANCE"; payload: string };
+export type ActionTendance =
+    | { type: "SET_DATE_ORIGINE"; payload: string }
+    | { type: "SET_DATE_PASSEE"; payload: string }
+    | { type: "SET_PERIODE_INIT"; payload: { dateOrigine: string; datePassee: string } };
+
+const now = format(new Date(), "dd/MM/yyyy");
+
+const previousMonth = format(
+  new Date(new Date().setMonth(new Date().getMonth() - 1)),
+  "dd/MM/yyyy"
+);
 
 const initialState: TendanceState = {
-    periode: "MOIS"
+    dateOrigine: now,
+    datePassee: previousMonth
 };
 
 function filterReducer(state: TendanceState, action: ActionTendance): TendanceState {
-    if (action.type === "SET_TENDANCE") {
-        return { ...state, periode: action.payload };
+    switch (action.type) {
+        case "SET_DATE_ORIGINE":
+            return {
+                ...state,
+                dateOrigine: action.payload
+            };
+
+        case "SET_DATE_PASSEE":
+            return {
+                ...state,
+                datePassee: action.payload
+            };
+
+        case "SET_PERIODE_INIT":
+            return {
+                ...state,
+                dateOrigine: action.payload.dateOrigine,
+                datePassee: action.payload.datePassee
+            };
+
+        default:
+            return state;
     }
-    return state;
 }
 
 const TendanceContext = createContext<{

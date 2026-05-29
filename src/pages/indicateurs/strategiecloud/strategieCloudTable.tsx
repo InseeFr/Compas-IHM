@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { getIndicateur } from "../../../todos-api/client.gen";
 import {
     columnsTable,
@@ -9,7 +8,7 @@ import {
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 
 export const StrategieCloudTable = () => {
-    const columns = useMemo(() => columnsTable(), []);
+    const columns = columnsTable();
 
     const fetchData = async () => {
         try {

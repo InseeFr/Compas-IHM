@@ -12,7 +12,14 @@ import type { IndicateurMaturiteView } from "todos-api/client.gen";
 vi.mock("utils/exportCsv", () => ({
     flattenRows: (rows: unknown[]) => rows,
     handleExportCsv: vi.fn(),
-    escapeCsvValue: (v: string) => v
+    escapeCsvValue: (v: string) => v,
+    getBaseValueCSV: vi.fn(row => [
+        `"${row.original.isModule ? (row.original.parentApplication ?? "") : row.original.applicationName}"`,
+        `"${row.original.isModule ? row.original.applicationName : ""}"`,
+        `"${row.original.sndi}"`,
+        `"${row.original.domaine}"`,
+        `"${row.original.domaineFonc}"`
+    ])
 }));
 
 vi.mock("pages/indicateurs/strategiecloud/strategieCloudCell", () => ({
@@ -37,7 +44,11 @@ vi.mock("constantes/constantes", () => ({
 }));
 
 vi.mock("constantes/constantes-headers", () => ({
-    BASE_HEADERS: { NOM: "Nom", SERVICE_DEV: "Service Dev" },
+    BASE_HEADERS: {
+        NOM_APPLICATION: "Nom Application",
+        NOM_MODULE: "Nom Module",
+        SERVICE_DEV: "Service Dev"
+    },
     STRATEGIE_CLOUD_HEADERS: {
         TAUX_CLOUD_PRODUCTION: "Taux Cloud Production",
         ENV_ACTUEL_PRODUCTION: "Env Actuel Production",
@@ -255,7 +266,7 @@ describe("onExport", () => {
         const table = makeTable([]);
         onExport(table);
         const headers: string[] = handleExportCsvMock.mock.calls[0][3];
-        expect(headers).toContain("Nom");
+        expect(headers).toContain("Nom Application");
         expect(headers).toContain("Taux Cloud Production");
         expect(headers).toContain("Maturité Cloud");
     });

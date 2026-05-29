@@ -1,73 +1,59 @@
-import {
-    Box,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-    type SelectChangeEvent
-} from "@mui/material";
+import { Box, FormControl, Typography } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import type { JSX } from "react";
-import AccessTimeIcon from "@mui/icons-material/CalendarMonth";
 
 export interface TendancePeriodeFormProps {
-    periode: string;
-    handleChange: (event: SelectChangeEvent<string>) => void;
+    dateOrigine: Date | null;
+    datePassee: Date | null;
+    handleChange: (field: "dateOrigine" | "datePassee", value: Date | null) => void;
 }
 
 export function TendancePeriodeForm({
-    periode,
+    dateOrigine,
+    datePassee,
     handleChange
 }: Readonly<TendancePeriodeFormProps>): JSX.Element {
-    const PERIODE_TENDANCE: string[] = ["VEILLE", "MOIS", "ANNEE", "TRIMESTRE", "SEMESTRE"];
-
     return (
         <FormControl
             size="medium"
             sx={{
-                minWidth: 160,
+                minWidth: 300,
                 bgcolor: "background.paper",
                 borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    transition: "all 0.2s",
-                    "&:hover": {
-                        boxShadow: 1
-                    },
-                    "&.Mui-focused": {
-                        boxShadow: 2
-                    }
-                }
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2
             }}
         >
-            <InputLabel
-                id="label-tendance"
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.5
+            {/* Label remplacé */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mr: 1 }}>
+                <CalendarMonthIcon fontSize="small" />
+                <Typography variant="body2" fontWeight={500}>
+                    Période
+                </Typography>
+            </Box>
+
+            {/* Date début */}
+            <DatePicker
+                label="Date début"
+                value={dateOrigine}
+                onChange={(newValue) => handleChange("dateOrigine", newValue)}
+                slotProps={{
+                    textField: { size: "small" }
                 }}
-            >
-                <AccessTimeIcon fontSize="small" />
-                Période
-            </InputLabel>
-            <Select
-                labelId="label-tendance"
-                id="id-tendance"
-                value={periode}
-                label={"Période"}
-                onChange={handleChange}
-            >
-                {PERIODE_TENDANCE.map(period => (
-                    <MenuItem key={period} value={period}>
-                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                            <Typography variant="body1" fontWeight={500}>
-                                {period}
-                            </Typography>
-                        </Box>
-                    </MenuItem>
-                ))}
-            </Select>
+            />
+
+            {/* Date fin */}
+            <DatePicker
+                label="Date fin"
+                value={datePassee}
+                onChange={(newValue) => handleChange("datePassee", newValue)}
+                slotProps={{
+                    textField: { size: "small" }
+                }}
+            />
         </FormControl>
     );
 }
