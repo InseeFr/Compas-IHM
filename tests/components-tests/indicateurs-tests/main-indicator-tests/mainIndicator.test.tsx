@@ -89,8 +89,8 @@ describe("MainIndicator", () => {
         // Mock all API calls
         vi.mocked(clientGen.getApplications1).mockResolvedValue([]);
         vi.mocked(clientGen.getModules1).mockResolvedValue([]);
-        vi.mocked(clientGen.getIndicateurQualiteByApplication).mockResolvedValue([]);
-        vi.mocked(clientGen.getIndicateurQualiteByModule).mockResolvedValue([]);
+        vi.mocked(clientGen.getIndicateurQualiteByApplicationByDate).mockResolvedValue([]);
+        vi.mocked(clientGen.getIndicateurQualiteByModuleByDate).mockResolvedValue([]);
         vi.mocked(clientGen.getApplications2).mockResolvedValue([]);
         vi.mocked(clientGen.getModules2).mockResolvedValue([]);
         vi.mocked(clientGen.listerApplicationsMeteo).mockResolvedValue([]);
@@ -300,8 +300,8 @@ describe("MainIndicator", () => {
         await waitFor(() => {
             expect(clientGen.getApplications1).toHaveBeenCalled();
             expect(clientGen.getModules1).toHaveBeenCalled();
-            expect(clientGen.getIndicateurQualiteByApplication).toHaveBeenCalled();
-            expect(clientGen.getIndicateurQualiteByModule).toHaveBeenCalled();
+            expect(clientGen.getIndicateurQualiteByApplicationByDate).toHaveBeenCalled();
+            expect(clientGen.getIndicateurQualiteByModuleByDate).toHaveBeenCalled();
             expect(clientGen.getApplications2).toHaveBeenCalled();
             expect(clientGen.getModules2).toHaveBeenCalled();
             expect(clientGen.listerApplicationsMeteo).toHaveBeenCalled();

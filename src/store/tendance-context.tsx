@@ -13,10 +13,7 @@ export type ActionTendance =
 
 const now = format(new Date(), "dd/MM/yyyy");
 
-const previousMonth = format(
-  new Date(new Date().setMonth(new Date().getMonth() - 1)),
-  "dd/MM/yyyy"
-);
+const previousMonth = format(new Date(new Date().setMonth(new Date().getMonth() - 1)), "dd/MM/yyyy");
 
 const initialState: TendanceState = {
     dateFin: now,

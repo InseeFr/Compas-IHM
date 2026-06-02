@@ -1,7 +1,7 @@
 import { useFilterContext } from "store/filterContext";
 import {
-    getIndicateurQualiteByApplication,
-    getIndicateurQualiteByModule,
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate,
     getApplications2,
     getModules2,
     listerApplicationsMeteo,
@@ -44,8 +44,8 @@ export const MainIndicator = () => {
         ] = await Promise.all([
             getApplications1(),
             getModules1(),
-            getIndicateurQualiteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurQualiteByApplicationByDate(),
+            getIndicateurQualiteByModuleByDate(),
             getApplications2(),
             getModules2(),
             listerApplicationsMeteo(),

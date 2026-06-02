@@ -45,6 +45,19 @@ vi.mock("todos-api/client.gen", () => ({
     getIndicateur: (...args: unknown[]) => mockGetIndicateur(...args)
 }));
 
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
+
 vi.mock("pages/indicateurs/strategiecloud/strategieCloud-config", () => ({
     columnsTable: () => [],
     formatIndicateur: (item: { appName?: string }) => ({
@@ -179,6 +192,7 @@ describe("StrategieCloudTable – état isLoading", () => {
 describe("fetchData dans StrategieCloudTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+
         mockTablePageLayout.mockImplementation((props: MockTablePageLayoutProps) => (
             <div>
                 <h1>{props.titleTable}</h1>
@@ -287,7 +301,7 @@ describe("fetchData dans StrategieCloudTable", () => {
 
         expect(mockUseQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["StrategieCloudIndicator", "MOIS"],
+                queryKey: ["StrategieCloudIndicator", "02/06/2026", "01/05/2026"],
                 hasModules: true
             })
         );

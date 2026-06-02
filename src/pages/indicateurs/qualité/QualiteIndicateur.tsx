@@ -18,7 +18,6 @@ const QualiteIndicateurTable = () => {
                 origine: stateTendance.dateFin,
 
                 passee: stateTendance.dateDebut
-                    
             };
 
             const [apps, modules] = await Promise.all([

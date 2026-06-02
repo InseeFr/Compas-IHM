@@ -34,7 +34,7 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
 
     const filteredRows: MRT_Row<QualiteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
 
-  const csvData: string[] = filteredRows.map(row => {
+    const csvData: string[] = filteredRows.map(row => {
         return [...getBaseValueCSV(row), ...getValueQualiteCSV(row)].join(",");
     });
 

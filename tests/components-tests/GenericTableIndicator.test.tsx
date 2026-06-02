@@ -5,7 +5,18 @@ import type { Pagination } from "models/table-model";
 import { GenericIndicatorTable } from "components/indicators/GenericIndicatorTable";
 
 // --- Mocks ---
-
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
 vi.mock("@tanstack/react-router", () => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Link: ({ to, children, ...rest }: any) => (
@@ -150,7 +161,7 @@ describe("GenericIndicatorTable", () => {
         it("appelle useQueryIndicators avec la bonne queryKey", () => {
             render(<GenericIndicatorTable {...defaultProps} queryKey={["myKey"]} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
-                expect.objectContaining({ queryKey: ["myKey", "MOIS"] })
+                expect.objectContaining({ queryKey: ["myKey", "02/06/2026", "01/05/2026"] })
             );
         });
 

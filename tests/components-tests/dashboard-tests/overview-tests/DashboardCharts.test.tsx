@@ -5,7 +5,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 // Mock des modules API et utilitaires
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
-    getIndicateurQualiteByApplication: vi.fn(),
+    getIndicateurQualiteByApplicationByDate: vi.fn(),
     getApplications2: vi.fn(),
     listerApplicationsMeteo: vi.fn(),
     getApplications: vi.fn(),
@@ -173,7 +173,7 @@ describe("DashboardCharts", () => {
         vi.clearAllMocks();
 
         vi.mocked(clientGen.getApplications1).mockResolvedValue([]);
-        vi.mocked(clientGen.getIndicateurQualiteByApplication).mockResolvedValue([]);
+        vi.mocked(clientGen.getIndicateurQualiteByApplicationByDate).mockResolvedValue([]);
         vi.mocked(clientGen.getApplications2).mockResolvedValue([]);
         vi.mocked(clientGen.listerApplicationsMeteo).mockResolvedValue([]);
         vi.mocked(clientGen.getApplications).mockResolvedValue([]);
@@ -210,7 +210,7 @@ describe("DashboardCharts", () => {
             renderWithProviders(<DashboardCharts />);
             await waitFor(() => {
                 expect(clientGen.getApplications1).toHaveBeenCalledTimes(1);
-                expect(clientGen.getIndicateurQualiteByApplication).toHaveBeenCalledTimes(1);
+                expect(clientGen.getIndicateurQualiteByApplicationByDate).toHaveBeenCalledTimes(1);
                 expect(clientGen.getApplications2).toHaveBeenCalledTimes(1);
                 expect(clientGen.listerApplicationsMeteo).toHaveBeenCalledTimes(1);
                 expect(clientGen.getApplications).toHaveBeenCalledTimes(1);

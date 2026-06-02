@@ -22,6 +22,19 @@ vi.mock("@tanstack/react-router", async () => {
         )
     };
 });
+
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
 vi.mock("utils/exportCsv", () => ({
     handleExportCsv: vi.fn(),
     escapeCsvValue: vi.fn((value: string) => `"${value.replaceAll('"', '""')}"`),

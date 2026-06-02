@@ -3,8 +3,8 @@ import {
     getApplications,
     getApplications1,
     getApplications2,
-    getIndicateurQualiteByApplication,
-    getIndicateurQualiteByModule,
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate,
     getIndicateurSecuriteByApplication,
     getMaturiteCloud,
     getModules1,
@@ -21,7 +21,8 @@ import {
     type IndicateurSecuriteView,
     type IndicateursModuleA11Y,
     type Meteo,
-    type Module
+    type Module,
+    getIndicateurSecuriteByModule
 } from "todos-api/client.gen";
 import type { ModuleData } from "./preview/application-preview-config";
 import jsPDF from "jspdf";
@@ -62,15 +63,15 @@ export async function fetchApplicationSynthesis() {
         ] = await Promise.all([
             getApplications1(),
             getModules1(),
-            getIndicateurQualiteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurQualiteByApplicationByDate(),
+            getIndicateurQualiteByModuleByDate(),
             getApplications2(),
             getModules2(),
             listerApplicationsMeteo(),
             getApplications(),
             listerModulesA11y(),
             getIndicateurSecuriteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurSecuriteByModule(),
             getMaturiteCloud(),
             getHomologation()
         ]);

@@ -131,7 +131,7 @@ describe("A11yForm", () => {
 
         vi.mocked(client.getModules1).mockResolvedValue(mockModules);
 
-        vi.mocked(client.majInfosSaisiesA11Y).mockResolvedValue(new Blob());
+        vi.mocked(client.majInfosSaisiesA11Y).mockResolvedValue(1);
     });
 
     // ── 1. Rendu initial ──────────────────────────────────────────────────────

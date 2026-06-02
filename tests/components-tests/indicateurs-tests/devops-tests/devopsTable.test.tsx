@@ -12,6 +12,19 @@ vi.mock("todos-api/client.gen", () => ({
     getModules2: vi.fn()
 }));
 
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
+
 vi.mock("components/ButtonCsvExport", () => ({
     default: ({ onExport }: any) => <button onClick={() => onExport("mockTable")}>Export CSV</button>
 }));
@@ -224,7 +237,7 @@ describe("DevopsIndicateurTable", () => {
 
         expect(useQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["DevopsIndicator", "MOIS"],
+                queryKey: ["DevopsIndicator", "02/06/2026", "01/05/2026"],
                 hasModules: true
             })
         );

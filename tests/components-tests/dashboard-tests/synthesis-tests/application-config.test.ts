@@ -1,26 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("todos-api/client.gen", () => ({
-    getApplications1: vi.fn(),
-    getModules1: vi.fn(),
-    getIndicateurQualiteByApplication: vi.fn(),
-    getIndicateurQualiteByModule: vi.fn(),
-    getApplications2: vi.fn(),
-    getModules2: vi.fn(),
-    listerApplicationsMeteo: vi.fn(),
-    getApplications: vi.fn(),
-    listerModulesA11y: vi.fn(),
-    getIndicateurSecuriteByApplication: vi.fn(),
-    getMaturiteCloud: vi.fn(),
-    getHomologation: vi.fn()
-}));
-
 import {
     getApplications1,
     getModules1,
-    getIndicateurQualiteByApplication,
-    getIndicateurQualiteByModule,
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate,
     getApplications2,
     getModules2,
     listerApplicationsMeteo,
@@ -28,7 +13,8 @@ import {
     listerModulesA11y,
     getIndicateurSecuriteByApplication,
     getMaturiteCloud,
-    getHomologation
+    getHomologation,
+    getIndicateurSecuriteByModule
 } from "todos-api/client.gen";
 import {
     fetchApplicationSynthesis,
@@ -59,9 +45,10 @@ vi.mock("todos-api/client.gen", () => ({
     getApplications: vi.fn(),
     listerApplicationsMeteo: vi.fn(),
     listerModulesA11y: vi.fn(),
-    getIndicateurQualiteByApplication: vi.fn(),
-    getIndicateurQualiteByModule: vi.fn(),
+    getIndicateurQualiteByApplicationByDate: vi.fn(),
+    getIndicateurQualiteByModuleByDate: vi.fn(),
     getIndicateurSecuriteByApplication: vi.fn(),
+    getIndicateurSecuriteByModule: vi.fn(),
     getMaturiteCloud: vi.fn(),
     getHomologation: vi.fn()
 }));
@@ -133,11 +120,12 @@ describe("application-synthesis-config", () => {
             (getApplications1 as any).mockResolvedValue([{ idApplication: 1, appName: "App 1" }]);
             (getModules1 as any).mockResolvedValue([{ id: 10, modName: "Module 1", appName: "App 1" }]);
 
-            (getIndicateurQualiteByApplication as any).mockResolvedValue([]);
-            (getIndicateurQualiteByModule as any).mockResolvedValue([]);
+            (getIndicateurQualiteByApplicationByDate as any).mockResolvedValue([]);
+            (getIndicateurQualiteByModuleByDate as any).mockResolvedValue([]);
             (getApplications2 as any).mockResolvedValue([]);
             (getModules2 as any).mockResolvedValue([]);
             (listerApplicationsMeteo as any).mockResolvedValue([]);
+            (getIndicateurSecuriteByModule as any).mockResolvedValue([]);
             (getApplications as any).mockResolvedValue([]);
             (listerModulesA11y as any).mockResolvedValue([]);
             (getIndicateurSecuriteByApplication as any).mockResolvedValue([]);

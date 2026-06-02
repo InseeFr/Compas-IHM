@@ -34,7 +34,7 @@ import {
 import type { GlobalIndicator } from "models/indicateurs";
 import { useFilterContext } from "store/filterContext";
 import {
-    getIndicateurQualiteByApplication,
+    getIndicateurQualiteByApplicationByDate,
     getApplications2,
     listerApplicationsMeteo,
     getApplications,
@@ -69,7 +69,7 @@ const DashboardCharts = () => {
                     maturiteCloudApps
                 ] = await Promise.all([
                     getApplications1(),
-                    getIndicateurQualiteByApplication(),
+                    getIndicateurQualiteByApplicationByDate(),
                     getApplications2(),
                     listerApplicationsMeteo(),
                     getApplications(),

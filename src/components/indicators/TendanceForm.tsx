@@ -40,7 +40,7 @@ export function TendancePeriodeForm({
             <DatePicker
                 label="Date début"
                 value={dateDebut ? parse(dateDebut, "dd/MM/yyyy", new Date()) : null}
-                onChange={(newValue) => handleChange("dateDebut", newValue)}
+                onChange={newValue => handleChange("dateDebut", newValue)}
                 slotProps={{
                     textField: { size: "small" }
                 }}
@@ -50,7 +50,7 @@ export function TendancePeriodeForm({
             <DatePicker
                 label="Date fin"
                 value={dateFin ? parse(dateFin, "dd/MM/yyyy", new Date()) : null}
-                onChange={(newValue) => handleChange("dateFin", newValue)}
+                onChange={newValue => handleChange("dateFin", newValue)}
                 slotProps={{
                     textField: { size: "small" }
                 }}

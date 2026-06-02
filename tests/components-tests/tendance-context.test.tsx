@@ -8,10 +8,16 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe("TendanceContext", () => {
     describe("état initial", () => {
-        it('doit avoir "MOIS" comme période par défaut', () => {
+        it("doit avoir une date de fin définie", () => {
             const { result } = renderHook(() => useTendanceContext(), { wrapper });
 
-            expect(result.current.stateTendance.periode).toBe("MOIS");
+            expect(result.current.stateTendance.dateFin).toBeDefined();
+        });
+
+        it("doit avoir une date de début définie", () => {
+            const { result } = renderHook(() => useTendanceContext(), { wrapper });
+
+            expect(result.current.stateTendance.dateDebut).toBeDefined();
         });
 
         it("doit exposer dispatchTendance comme une fonction", () => {
@@ -21,56 +27,46 @@ describe("TendanceContext", () => {
         });
     });
 
-    describe("action SET_TENDANCE", () => {
-        it('doit mettre à jour la période à "ANNEE"', () => {
+    describe("action SET_DATE_FIN", () => {
+        it("doit mettre à jour la date de fin", () => {
             const { result } = renderHook(() => useTendanceContext(), { wrapper });
+            const nouvelleDateFin = "31/12/2023";
 
             act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "ANNEE" });
+                result.current.dispatchTendance({ type: "SET_DATE_FIN", payload: nouvelleDateFin });
             });
 
-            expect(result.current.stateTendance.periode).toBe("ANNEE");
+            expect(result.current.stateTendance.dateFin).toBe(nouvelleDateFin);
         });
+    });
 
-        it('doit mettre à jour la période à "SEMAINE"', () => {
+    describe("action SET_DATE_DEBUT", () => {
+        it("doit mettre à jour la date de début", () => {
             const { result } = renderHook(() => useTendanceContext(), { wrapper });
+            const nouvelleDateDebut = "01/01/2023";
 
             act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "SEMAINE" });
+                result.current.dispatchTendance({ type: "SET_DATE_DEBUT", payload: nouvelleDateDebut });
             });
 
-            expect(result.current.stateTendance.periode).toBe("SEMAINE");
+            expect(result.current.stateTendance.dateDebut).toBe(nouvelleDateDebut);
         });
+    });
 
-        it("doit permettre plusieurs mises à jour successives", () => {
+    describe("action SET_PERIODE_INIT", () => {
+        it("doit mettre à jour à la fois la date de début et la date de fin", () => {
             const { result } = renderHook(() => useTendanceContext(), { wrapper });
+            const nouvellePeriode = {
+                dateFin: "31/12/2023",
+                dateDebut: "01/01/2023"
+            };
 
             act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "ANNEE" });
-            });
-            expect(result.current.stateTendance.periode).toBe("ANNEE");
-
-            act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "SEMAINE" });
-            });
-            expect(result.current.stateTendance.periode).toBe("SEMAINE");
-
-            act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "MOIS" });
-            });
-            expect(result.current.stateTendance.periode).toBe("MOIS");
-        });
-
-        it("ne doit pas muter les autres propriétés de l'état", () => {
-            const { result } = renderHook(() => useTendanceContext(), { wrapper });
-            const stateAvant = result.current.stateTendance;
-
-            act(() => {
-                result.current.dispatchTendance({ type: "SET_TENDANCE", payload: "ANNEE" });
+                result.current.dispatchTendance({ type: "SET_PERIODE_INIT", payload: nouvellePeriode });
             });
 
-            expect(stateAvant.periode).toBe("MOIS");
-            expect(result.current.stateTendance.periode).toBe("ANNEE");
+            expect(result.current.stateTendance.dateFin).toBe(nouvellePeriode.dateFin);
+            expect(result.current.stateTendance.dateDebut).toBe(nouvellePeriode.dateDebut);
         });
     });
 
@@ -78,7 +74,8 @@ describe("TendanceContext", () => {
         it("doit retourner les valeurs par défaut du contexte si utilisé sans Provider", () => {
             const { result } = renderHook(() => useTendanceContext());
 
-            expect(result.current.stateTendance.periode).toBe("MOIS");
+            expect(result.current.stateTendance.dateFin).toBeDefined();
+            expect(result.current.stateTendance.dateDebut).toBeDefined();
             expect(typeof result.current.dispatchTendance).toBe("function");
         });
     });

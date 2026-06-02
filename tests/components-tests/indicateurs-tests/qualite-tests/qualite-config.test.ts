@@ -340,7 +340,7 @@ describe("OnExport — cas limites", () => {
         };
         OnExport(mockTable);
         const csvData = (handleExportCsv as any).mock.calls.at(-1)[2];
-        expect(csvData[0]).toBe(`"AppVide","NR","NR","NR","NR","NR","NR","NR","NR"`);
+        expect(csvData[0]).toBe(`"AppVide","","NR","NR","NR","NR","NR","NR","NR","NR"`);
     });
 
     it("doit aplatir les subRows et les inclure dans le CSV", () => {
