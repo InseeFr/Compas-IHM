@@ -2,16 +2,17 @@ import { Box, FormControl, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import type { JSX } from "react";
+import { parse } from "date-fns";
 
 export interface TendancePeriodeFormProps {
-    dateOrigine: Date | null;
-    datePassee: Date | null;
-    handleChange: (field: "dateOrigine" | "datePassee", value: Date | null) => void;
+    dateFin: string;
+    dateDebut: string;
+    handleChange: (field: "dateFin" | "dateDebut", value: Date | null) => void;
 }
 
 export function TendancePeriodeForm({
-    dateOrigine,
-    datePassee,
+    dateFin,
+    dateDebut,
     handleChange
 }: Readonly<TendancePeriodeFormProps>): JSX.Element {
     return (
@@ -38,8 +39,8 @@ export function TendancePeriodeForm({
             {/* Date début */}
             <DatePicker
                 label="Date début"
-                value={dateOrigine}
-                onChange={(newValue) => handleChange("dateOrigine", newValue)}
+                value={dateDebut ? parse(dateDebut, "dd/MM/yyyy", new Date()) : null}
+                onChange={(newValue) => handleChange("dateDebut", newValue)}
                 slotProps={{
                     textField: { size: "small" }
                 }}
@@ -48,8 +49,8 @@ export function TendancePeriodeForm({
             {/* Date fin */}
             <DatePicker
                 label="Date fin"
-                value={datePassee}
-                onChange={(newValue) => handleChange("datePassee", newValue)}
+                value={dateFin ? parse(dateFin, "dd/MM/yyyy", new Date()) : null}
+                onChange={(newValue) => handleChange("dateFin", newValue)}
                 slotProps={{
                     textField: { size: "small" }
                 }}

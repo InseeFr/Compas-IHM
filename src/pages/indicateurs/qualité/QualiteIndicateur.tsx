@@ -15,9 +15,9 @@ const QualiteIndicateurTable = () => {
     const fetchData = async () => {
         try {
             const params = {
-                origine: stateTendance.dateOrigine,
+                origine: stateTendance.dateFin,
 
-                passee: stateTendance.datePassee
+                passee: stateTendance.dateDebut
                     
             };
 

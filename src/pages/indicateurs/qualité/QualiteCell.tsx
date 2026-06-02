@@ -16,7 +16,6 @@ function shouldDisplayIcon(note?: string | null, extraValue?: string | null): bo
 export function DetteTechCell({ row }: Readonly<{ row: { original: QualiteIndicateur } }>): JSX.Element {
     const rawMinutes = row.original.detteTechnique ?? "NR";
     const rawMinutesPast = row.original.detteTechniquePast ?? "NR";
-    console.log(row);
     const minutes = Number.parseFloat(rawMinutes);
     const minutesPast = Number.parseFloat(rawMinutesPast);
     const tooltipText = Number.isNaN(minutes)
@@ -66,7 +65,6 @@ export function CouvertureTestUnitCell({
         row.original.lettreCouvertureTestUnitaire,
         row.original.pourcentageCouvertureTestUnitairePast
     );
-    console.log(row.original.applicationName, " ", row.original.pourcentageCouvertureTestUnitairePast);
     return (
         <Box display="flex" alignItems="center" gap={1}>
             <ToolTipLayout

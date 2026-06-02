@@ -2,14 +2,14 @@ import { createContext, useContext, useMemo, useReducer, type ReactNode } from "
 import { format } from "date-fns";
 
 export interface TendanceState {
-    dateOrigine: string;
-    datePassee: string;
+    dateFin: string;
+    dateDebut: string;
 }
 
 export type ActionTendance =
-    | { type: "SET_DATE_ORIGINE"; payload: string }
-    | { type: "SET_DATE_PASSEE"; payload: string }
-    | { type: "SET_PERIODE_INIT"; payload: { dateOrigine: string; datePassee: string } };
+    | { type: "SET_DATE_FIN"; payload: string }
+    | { type: "SET_DATE_DEBUT"; payload: string }
+    | { type: "SET_PERIODE_INIT"; payload: { dateFin: string; dateDebut: string } };
 
 const now = format(new Date(), "dd/MM/yyyy");
 
@@ -19,29 +19,29 @@ const previousMonth = format(
 );
 
 const initialState: TendanceState = {
-    dateOrigine: now,
-    datePassee: previousMonth
+    dateFin: now,
+    dateDebut: previousMonth
 };
 
 function filterReducer(state: TendanceState, action: ActionTendance): TendanceState {
     switch (action.type) {
-        case "SET_DATE_ORIGINE":
+        case "SET_DATE_FIN":
             return {
                 ...state,
-                dateOrigine: action.payload
+                dateFin: action.payload
             };
 
-        case "SET_DATE_PASSEE":
+        case "SET_DATE_DEBUT":
             return {
                 ...state,
-                datePassee: action.payload
+                dateDebut: action.payload
             };
 
         case "SET_PERIODE_INIT":
             return {
                 ...state,
-                dateOrigine: action.payload.dateOrigine,
-                datePassee: action.payload.datePassee
+                dateFin: action.payload.dateFin,
+                dateDebut: action.payload.dateDebut
             };
 
         default:

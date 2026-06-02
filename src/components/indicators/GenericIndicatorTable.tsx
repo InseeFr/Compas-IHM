@@ -10,6 +10,7 @@ import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { useTendanceContext } from "store/tendance-context";
 import { TendancePeriodeForm } from "./TendanceForm";
 import { Fragment } from "react/jsx-runtime";
+import { format } from "date-fns";
 
 interface GenericIndicatorTableProps {
     title: string;
@@ -39,7 +40,7 @@ export const GenericIndicatorTable = ({
     const { state, dispatch } = useFilterContext();
     const { stateTendance, dispatchTendance } = useTendanceContext();
 
-    const queryKeyWithPeriode = [...queryKey, stateTendance.periode];
+    const queryKeyWithPeriode = [...queryKey, stateTendance.dateFin, stateTendance.dateDebut];
     const { data, isLoading, modulesByApp, filteredData, refetch } = useQueryIndicators({
         queryKey: queryKeyWithPeriode,
         fetchData,
@@ -91,10 +92,16 @@ export const GenericIndicatorTable = ({
             renderTopCustom={({ table }) => (
                 <Fragment>
                     <TendancePeriodeForm
-                        periode={stateTendance.periode}
-                        handleChange={event =>
-                            dispatchTendance({ type: "SET_TENDANCE", payload: event.target.value })
-                        }
+                        dateFin={stateTendance.dateFin}
+                        dateDebut={stateTendance.dateDebut}
+                        handleChange={(field, value) => {
+                            const formatted = value ? format(value, "dd/MM/yyyy") : "";
+                            if (field === "dateFin") {
+                                dispatchTendance({ type: "SET_DATE_FIN", payload: formatted });
+                            } else {
+                                dispatchTendance({ type: "SET_DATE_DEBUT", payload: formatted });
+                            }
+                        }}
                     />
                     {onExport && <ButtonCsvExport table={table} onExport={onExport} />}
                 </Fragment>
