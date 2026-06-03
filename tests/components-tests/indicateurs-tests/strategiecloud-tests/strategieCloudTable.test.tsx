@@ -301,7 +301,7 @@ describe("fetchData dans StrategieCloudTable", () => {
 
         expect(mockUseQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["StrategieCloudIndicator", "02/06/2026", "01/05/2026"],
+                queryKey: ["StrategieCloudIndicator"],
                 hasModules: true
             })
         );

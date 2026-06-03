@@ -40,9 +40,9 @@ export const GenericIndicatorTable = ({
     const { state, dispatch } = useFilterContext();
     const { stateTendance, dispatchTendance } = useTendanceContext();
 
-    const queryKeyWithPeriode = [...queryKey, stateTendance.dateFin, stateTendance.dateDebut];
+    const queryKeyProps = [...queryKey];
     const { data, isLoading, modulesByApp, filteredData, refetch } = useQueryIndicators({
-        queryKey: queryKeyWithPeriode,
+        queryKey: queryKeyProps,
         fetchData,
         hasModules
     });
