@@ -26,7 +26,7 @@ const getValueStrategieCloudCSV = (row: MRT_Row<StrategieCloudIndicateur>) => {
         `"${row.original.commentaire ?? "NR"}"`,
         `"${row.original.maturiteCloud ?? "NR"}"`
     ];
-}
+};
 
 export const onExport = (table: MRT_TableInstance<StrategieCloudIndicateur>) => {
     const headers = [
@@ -49,11 +49,7 @@ export const onExport = (table: MRT_TableInstance<StrategieCloudIndicateur>) => 
     );
 
     const csvData: string[] = filteredRows.map(row => {
-
-        return [
-            ...getBaseValueCSV(row),
-            ...getValueStrategieCloudCSV(row)
-        ].join(",");
+        return [...getBaseValueCSV(row), ...getValueStrategieCloudCSV(row)].join(",");
     });
 
     handleExportCsv("strategie-cloud", table, csvData, headers);

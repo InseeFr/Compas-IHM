@@ -27,9 +27,6 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 // ─── Mock useQueryForm ────────────────────────────────────────────────────────
-// getApplications1 est appelé à l'intérieur de useQueryForm ; comme ce hook
-// est entièrement mocké, getApplications1 ne sera jamais déclenché directement
-// dans les tests. On ne doit donc pas asserter sur son nombre d'appels.
 
 const { mockUseQueryForm } = vi.hoisted(() => ({
     mockUseQueryForm: vi.fn()
@@ -41,11 +38,12 @@ vi.mock("hooks/useQueryForm", () => ({
 
 // ─── Mocks layouts ────────────────────────────────────────────────────────────
 
-vi.mock("components/formsPageLayout/MainPageLayout", () => ({
-    MainFormPageLayout: ({ title, formulaires, onSubmit, reset }: any) => (
+vi.mock("components/formsPageLayout/BaseFormLayout", () => ({
+    BaseFormLayout: ({ title, formulaires, onSubmit, reset, snackbar }: any) => (
         <form onSubmit={onSubmit}>
             <h1>{title}</h1>
             {formulaires}
+            {snackbar?.open && <div data-testid="snackbar">{snackbar.message}</div>}
             <button type="button" onClick={reset}>
                 Annuler
             </button>
@@ -62,7 +60,6 @@ vi.mock("components/formsPageLayout/SnackBarPageLayout", () => ({
 vi.mock("components/formsPageLayout/FormPageLayout", () => ({
     FormPageLayout: ({ title, render, name, required }: any) => {
         const value = name === "idsApplication" ? (mockFormData.idsApplication ?? []) : 4;
-
         const hasError = required && Array.isArray(value) && value.length === 0;
 
         return (
@@ -73,6 +70,19 @@ vi.mock("components/formsPageLayout/FormPageLayout", () => ({
             </div>
         );
     }
+}));
+
+// ─── Mock CommentaryLayout ────────────────────────────────────────────────────
+// CommentaryLayout utilise désormais control (Controller) et non plus register.
+// On le mocke directement pour éviter toute dépendance à react-hook-form interne.
+
+vi.mock("components/formsPageLayout/CommentaryPageLayout", () => ({
+    default: ({ isRequired, commentaryMessage }: any) => (
+        <div>
+            <textarea data-testid="commentary-textarea" aria-required={isRequired} />
+            {isRequired && <span>{commentaryMessage}</span>}
+        </div>
+    )
 }));
 
 // ─── Mocks cellules ───────────────────────────────────────────────────────────
@@ -92,7 +102,6 @@ vi.mock("react-hook-form", async () => {
         useWatch: () => 4,
         useForm: () => ({
             control: {},
-            register: () => ({}),
             reset: mockReset,
             formState: {
                 errors:
@@ -129,8 +138,6 @@ describe("MeteoForm", () => {
     beforeEach(() => {
         vi.clearAllMocks();
 
-        // useQueryForm est mocké → getApplications1 n'est jamais appelé
-        // directement, on retourne simplement des données vides.
         mockUseQueryForm.mockReturnValue({
             data: [],
             filteredData: []
@@ -140,9 +147,6 @@ describe("MeteoForm", () => {
     });
 
     // ── 1. Rendu initial ──────────────────────────────────────────────────────
-    // ⚠️  Correction : getApplications1 est encapsulé dans useQueryForm (mocké),
-    //    il n'est donc JAMAIS appelé directement. On vérifie uniquement que les
-    //    sections du formulaire sont bien rendues.
 
     it("affiche les sections du formulaire au montage", async () => {
         mockedGetApplications1.mockResolvedValueOnce([
@@ -155,9 +159,6 @@ describe("MeteoForm", () => {
         expect(await screen.findByText("Saisir une météo")).toBeInTheDocument();
         expect(await screen.findByText("Choisir les applications")).toBeInTheDocument();
         expect(await screen.findByText("Météo ressentie")).toBeInTheDocument();
-
-        // On NE vérifie PAS getApplications1 : il n'est pas appelé directement
-        // car useQueryForm est mocké et absorbe cet appel en interne.
     });
 
     // ── 2. Soumission réussie ─────────────────────────────────────────────────
@@ -204,7 +205,6 @@ describe("MeteoForm", () => {
         fireEvent.click(screen.getByRole("button", { name: "Saisir" }));
 
         expect(await screen.findByText("Veuillez renseigner ce champ")).toBeInTheDocument();
-
         expect(mockedCreerMeteo).not.toHaveBeenCalled();
     });
 

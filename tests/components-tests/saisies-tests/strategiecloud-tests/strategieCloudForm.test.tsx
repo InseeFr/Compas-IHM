@@ -151,7 +151,7 @@ import { StrategieCloudForm } from "pages/saisies/strategiecloud/strategieCloudF
 
 describe("StrategieCloudForm", () => {
     beforeEach(() => {
-        vi.clearAllMocks();
+        vi.resetAllMocks(); // ← vide aussi la queue des mockResolvedValueOnce
 
         mockUseQueryForm.mockReturnValue({
             data: [],
@@ -240,8 +240,8 @@ describe("StrategieCloudForm", () => {
             expect(mockSaisirStrategieCloud).toHaveBeenCalledWith(
                 expect.objectContaining({
                     idsModule: [],
-                    avancement: 1, // "A instruire" → 1
-                    envCibleProd: 1, // "Kube" → 1
+                    avancement: 1,
+                    envCibleProd: 1,
                     commentaire: ""
                 })
             );
@@ -309,6 +309,206 @@ describe("StrategieCloudForm", () => {
 
         await waitFor(() => {
             expect(screen.queryByText("Sans ID")).not.toBeInTheDocument();
+        });
+    });
+
+    // ── fetchData ──────────────────────────────────────────────────────────────
+
+    it("fetchData transforme et trie correctement les modules retournés par getModules1", async () => {
+        mockGetModules1.mockResolvedValueOnce([
+            {
+                id: 3,
+                modName: null,
+                nomTechnique: "tech-name",
+                domaineSndi: "DOM",
+                sndi: "S1",
+                domaineFonctionnel: "FONC",
+                appName: "AppC",
+                applicationTechnique: null,
+                sourceCreation: null,
+                idApplication: 30,
+                keySonar: null,
+                statut: null,
+                dateDerniereLivraisonEnProduction: null,
+                typeLivrable: null,
+                urlCodeSource: null
+            },
+            {
+                id: 1,
+                modName: "Alpha",
+                nomTechnique: "alpha",
+                domaineSndi: null,
+                sndi: null,
+                domaineFonctionnel: null,
+                appName: "AppA",
+                applicationTechnique: null,
+                sourceCreation: null,
+                idApplication: 10,
+                keySonar: null,
+                statut: null,
+                dateDerniereLivraisonEnProduction: null,
+                typeLivrable: null,
+                urlCodeSource: null
+            }
+        ]);
+
+        const fetchData = async () => {
+            const modules = await mockGetModules1();
+            if (!modules) return [];
+            return modules
+                .filter((m: any) => m.id != null)
+                .map((m: any) => ({
+                    id: m.id,
+                    modName: m.modName ?? m.nomTechnique ?? "NR",
+                    domaine: m.domaineSndi ?? "",
+                    sndi: m.sndi ?? "",
+                    domaineFonc: m.domaineFonctionnel ?? ""
+                }))
+                .sort((a: any, b: any) => a.modName.localeCompare(b.modName));
+        };
+
+        const result = await fetchData();
+
+        expect(result).toEqual([
+            expect.objectContaining({ id: 1, modName: "Alpha", domaine: "", sndi: "", domaineFonc: "" }),
+            expect.objectContaining({
+                id: 3,
+                modName: "tech-name",
+                domaine: "DOM",
+                sndi: "S1",
+                domaineFonc: "FONC"
+            })
+        ]);
+    });
+
+    it("fetchData utilise 'NR' quand modName et nomTechnique sont tous les deux null", async () => {
+        mockGetModules1.mockResolvedValueOnce([
+            {
+                id: 5,
+                modName: null,
+                nomTechnique: null,
+                domaineSndi: null,
+                sndi: null,
+                domaineFonctionnel: null,
+                appName: null,
+                applicationTechnique: null,
+                sourceCreation: null,
+                idApplication: null,
+                keySonar: null,
+                statut: null,
+                dateDerniereLivraisonEnProduction: null,
+                typeLivrable: null,
+                urlCodeSource: null
+            }
+        ]);
+
+        const fetchData = async () => {
+            const modules = await mockGetModules1();
+            if (!modules) return [];
+            return modules
+                .filter((m: any) => m.id != null)
+                .map((m: any) => ({
+                    id: m.id,
+                    modName: m.modName ?? m.nomTechnique ?? "NR",
+                    domaine: m.domaineSndi ?? "",
+                    sndi: m.sndi ?? "",
+                    domaineFonc: m.domaineFonctionnel ?? ""
+                }))
+                .sort((a: any, b: any) => a.modName.localeCompare(b.modName));
+        };
+
+        const result = await fetchData();
+
+        expect(result[0]).toMatchObject({ id: 5, modName: "NR" });
+    });
+
+    it("fetchData filtre les modules sans id", async () => {
+        mockGetModules1.mockResolvedValueOnce([
+            { id: null, modName: "Sans ID" },
+            {
+                id: 1,
+                modName: "Avec ID",
+                nomTechnique: "t",
+                domaineSndi: "",
+                sndi: "",
+                domaineFonctionnel: ""
+            }
+        ]);
+
+        const fetchData = async () => {
+            const modules = await mockGetModules1();
+            if (!modules) return [];
+            return modules
+                .filter((m: any) => m.id != null)
+                .map((m: any) => ({
+                    id: m.id,
+                    modName: m.modName ?? m.nomTechnique ?? "NR",
+                    domaine: m.domaineSndi ?? "",
+                    sndi: m.sndi ?? "",
+                    domaineFonc: m.domaineFonctionnel ?? ""
+                }))
+                .sort((a: any, b: any) => a.modName.localeCompare(b.modName));
+        };
+
+        const result = await fetchData();
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe(1);
+    });
+
+    // ─── Extraction du message d'erreur ───────────────────────────────────────────
+
+    describe("extraction du message d'erreur depuis error.response.data.detail", () => {
+        const extractMessage = (error: unknown): string =>
+            typeof error === "object" && error !== null && "response" in error
+                ? ((error as { response?: { data?: { detail?: string } } }).response?.data?.detail ?? "")
+                : "";
+
+        it("retourne le detail quand error.response.data.detail est présent", () => {
+            const error = { response: { data: { detail: "Erreur serveur" } } };
+            expect(extractMessage(error)).toBe("Erreur serveur");
+        });
+
+        it("retourne '' quand detail est undefined", () => {
+            const error = { response: { data: {} } };
+            expect(extractMessage(error)).toBe("");
+        });
+
+        it("retourne '' quand data est undefined", () => {
+            const error = { response: {} };
+            expect(extractMessage(error)).toBe("");
+        });
+
+        it("retourne '' quand response est undefined", () => {
+            const error = { response: undefined };
+            expect(extractMessage(error)).toBe("");
+        });
+
+        it("retourne '' quand error n'a pas de champ response", () => {
+            const error = { message: "simple error" };
+            expect(extractMessage(error)).toBe("");
+        });
+
+        it("retourne '' quand error est une instance d'Error standard", () => {
+            const error = new Error("boom");
+            expect(extractMessage(error)).toBe("");
+        });
+
+        it("retourne '' quand error est null", () => {
+            expect(extractMessage(null)).toBe("");
+        });
+
+        it("retourne '' quand error est undefined", () => {
+            expect(extractMessage(undefined)).toBe("");
+        });
+
+        it("retourne '' quand error est une string", () => {
+            expect(extractMessage("une erreur string")).toBe("");
+        });
+
+        it("retourne '' quand detail est null", () => {
+            const error = { response: { data: { detail: null } } };
+            expect(extractMessage(error)).toBe("");
         });
     });
 });

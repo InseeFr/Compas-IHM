@@ -9,12 +9,14 @@ import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "u
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 
 const getValueQualiteCSV = (row: MRT_Row<QualiteIndicateur>): string[] => {
-    return [`"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
-    `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
-    `"${row.original.lettreFiabilite ?? "NR"}"`,
-    `"${row.original.lettreDetteTechnique ?? "NR"}"`,
-    `"${row.original.detteTechnique ?? "NR"}"`
-];}
+    return [
+        `"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
+        `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
+        `"${row.original.lettreFiabilite ?? "NR"}"`,
+        `"${row.original.lettreDetteTechnique ?? "NR"}"`,
+        `"${row.original.detteTechnique ?? "NR"}"`
+    ];
+};
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const headers = [
         BASE_HEADERS.NOM_APPLICATION,
@@ -32,10 +34,7 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const filteredRows: MRT_Row<QualiteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);
 
     const csvData: string[] = filteredRows.map(row => {
-        return [
-            ...getBaseValueCSV(row),
-            ...getValueQualiteCSV(row)
-        ].join(",");
+        return [...getBaseValueCSV(row), ...getValueQualiteCSV(row)].join(",");
     });
     handleExportCsv("qualité", table, csvData, headers);
 };
