@@ -9,7 +9,7 @@ interface FooterProps {
     darkmode: boolean;
 }
 
-export default function Footer({ accessibility }: Readonly<FooterProps>) {
+export default function Footer({ darkmode, accessibility }: Readonly<FooterProps>) {
     const [tags, setTags] = useState<TagsView>({});
     useEffect(() => {
         async function Tags(): Promise<void> {
@@ -19,12 +19,12 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
         Tags();
     }, []);
 
-    const getAccessibilityConfig = () => {
+    const getAccessibilityConfig = (isDarkMode: boolean) => {
         switch (accessibility) {
             case "Non-conforme":
                 return {
                     label: "Non conforme",
-                    color: "#d32f2f",
+                    color: isDarkMode ? "#ff8a80" : "#d32f2f",
                     icon: (
                         <svg
                             viewBox="0 0 24 24"
@@ -41,7 +41,7 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
             case "partiel":
                 return {
                     label: "Partiellement conforme",
-                    color: "#f57c00",
+                    color: isDarkMode ? "#ffb74d" : "#f57c00",
                     icon: (
                         <svg
                             viewBox="0 0 24 24"
@@ -58,7 +58,7 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
             case "conforme":
                 return {
                     label: "Totalement conforme",
-                    color: "#388e3c",
+                    color: isDarkMode ? "#81c784" : "#388e3c",
                     icon: (
                         <svg
                             viewBox="0 0 24 24"
@@ -75,13 +75,13 @@ export default function Footer({ accessibility }: Readonly<FooterProps>) {
         }
     };
 
-    const config = getAccessibilityConfig();
+    const config = getAccessibilityConfig(darkmode);
 
     return (
-        <footer id="pied-de-page">
+        <footer id="pied-de-page" className={darkmode ? "dark-mode" : "light-mode"}>
             <Box className="footer-box">
                 <output className="footer-box-access" aria-live="polite">
-                    <Typography variant="body2" className="footer-typo">
+                    <Typography variant="body2" className="footer-typo-label">
                         Accessibilité :
                     </Typography>
                     <Box
