@@ -3,7 +3,8 @@ import {
     type MRT_ColumnDef,
     type MRT_Row,
     type MRT_RowData,
-    type MRT_TableInstance
+    type MRT_TableInstance,
+    type MRT_VisibilityState
 } from "material-react-table";
 import { MRT_Localization_FR } from "material-react-table/locales/fr";
 import { type JSX, type ReactNode } from "react";
@@ -26,6 +27,9 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     subRow?: (originalRow: T, index: number) => T[] | undefined;
     renderTopCustom: (props: { table: MRT_TableInstance<T> }) => React.ReactNode;
     filters: ReactNode;
+    enableHiding?: boolean;
+    columnVisibility?: Record<string, boolean>;
+    onColumnVisibilityChange?: (updater: MRT_VisibilityState | ((old: MRT_VisibilityState) => MRT_VisibilityState)) => void;
 }
 
 export default function TablePageLayout<T extends MRT_RowData>(
@@ -43,15 +47,18 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableExpanding={true}
                 enableColumnFilters={true}
                 enableColumnActions={false}
-                enableHiding={false}
+                enableHiding={props.enableHiding ?? false}
+                onColumnVisibilityChange={props.onColumnVisibilityChange}
                 enableGlobalFilter={true}
                 enableDensityToggle={false}
                 state={{
-                    isLoading: props.isLoading
+                    isLoading: props.isLoading,
+                    columnVisibility: props.columnVisibility ?? {}
                 }}
                 initialState={{
                     pagination: props.paginationConfig.pagination,
-                    showGlobalFilter: true
+                    showGlobalFilter: true,
+                    columnVisibility: props.columnVisibility ?? {}
                 }}
                 getRowId={props.rowId}
                 getSubRows={props.subRow}

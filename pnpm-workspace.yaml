@@ -1,3 +1,7 @@
 allowBuilds:
   core-js: false
+<<<<<<< HEAD
   esbuild: true
+=======
+  esbuild: false
+>>>>>>> tableau-filtrer-green-it
