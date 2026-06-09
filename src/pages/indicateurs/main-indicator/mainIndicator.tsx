@@ -18,9 +18,9 @@ import { formattedApps, formattedModules } from "./formatted-mod-and-app";
 import TablePageLayout from "components/TablePageLayout";
 import { columnsGlobal, paginationConfig } from "./main-config";
 import ButtonCsvExport from "components/ButtonCsvExport";
-import { Filters } from "pages/Filters";
 import { onExport } from "./csvexport";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 export const MainIndicator = () => {
     const { state, dispatch } = useFilterContext();
@@ -88,7 +88,7 @@ export const MainIndicator = () => {
     return (
         <TablePageLayout
             titleTable={"Table Indicateur Général"}
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
+            filters={<FilterSidebar data={data} state={state} dispatch={dispatch} />}
             columns={columns}
             isLoading={isLoading}
             data={filteredData.filter(item => (item.isModule ? null : item))}

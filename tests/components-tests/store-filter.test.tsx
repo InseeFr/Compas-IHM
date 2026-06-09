@@ -7,8 +7,7 @@ import { applyDevFilters } from "utils/filters-functions";
 const emptyState: FilterState = {
     serviceDev: "",
     domaineDev: "",
-    domaineFonc: "",
-    appName: ""
+    domaineFonc: ""
 };
 
 const item = {
@@ -83,8 +82,7 @@ describe("applyDevFilters", () => {
         const state: FilterState = {
             serviceDev: "SNDI-01",
             domaineDev: "domaine-A",
-            domaineFonc: "fonc-X",
-            appName: ""
+            domaineFonc: "fonc-X"
         };
         expect(applyDevFilters(item, state)).toBe(true);
     });

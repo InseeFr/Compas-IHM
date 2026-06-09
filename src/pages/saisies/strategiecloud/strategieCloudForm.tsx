@@ -12,7 +12,7 @@ import {
     RenderEnvCibleSelection
 } from "./strategieCloudFormCell";
 import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
+import { Filters } from "components/filtersLayout/FiltersForms";
 import type { ModsIndicateur } from "models/indicateurs";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";

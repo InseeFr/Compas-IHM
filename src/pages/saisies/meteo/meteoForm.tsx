@@ -3,7 +3,7 @@ import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 import { creerMeteo, getApplications1, type DemandeCreationMeteo } from "todos-api/client.gen";
 import { RenderAppSelections, RenderMeteoSelection } from "./meteoCell";
 import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
+import { Filters } from "components/filtersLayout/FiltersForms";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";
 import type { AppsIndicateur } from "models/indicateurs";
