@@ -11,10 +11,10 @@ import {
 } from "./meteo-config";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
-import { Filters } from "pages/Filters";
 import { applyDevFilters } from "utils/filters-functions";
 import { MeteoFormMonths } from "./meteoCell";
 import { useQuery } from "@tanstack/react-query";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 export const MeteoTable = () => {
     const { state, dispatch } = useFilterContext();
@@ -55,7 +55,7 @@ export const MeteoTable = () => {
             reactKey={months.join("|")}
             fetch={refetch}
             titleTable="Table Indicateur Météo"
-            filters={<Filters data={data} state={state} dispatch={dispatch} />}
+            filters={<FilterSidebar data={data} state={state} dispatch={dispatch} />}
             columns={columns}
             data={filteredData}
             isLoading={isLoading}

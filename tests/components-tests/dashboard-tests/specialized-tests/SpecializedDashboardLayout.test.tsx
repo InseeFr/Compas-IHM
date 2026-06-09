@@ -25,7 +25,7 @@ vi.mock("components/Ariane", () => ({
     )
 }));
 
-vi.mock("pages/Filters", () => ({
+vi.mock("components/filtersLayout/FiltersForms", () => ({
     Filters: ({ data }: { data: GlobalIndicator[] }) => (
         <div data-testid="filters">Filters ({data.length})</div>
     )
@@ -35,7 +35,7 @@ const mockDispatch = vi.fn();
 
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn(() => ({
-        state: { search: "", filters: [] },
+        state: { serviceDev: "", domaineDev: "", domaineFonc: "" },
         dispatch: mockDispatch
     }))
 }));
@@ -55,7 +55,7 @@ const defaultProps = {
     data: mockData
 };
 
-function renderLayout(props = {}) {
+function renderLayout(props: Partial<typeof defaultProps> = {}) {
     return render(<SpecializedDashboardLayout {...defaultProps} {...props} />);
 }
 
@@ -67,12 +67,12 @@ describe("SpecializedDashboardLayout", () => {
     });
 
     describe("Rendu de base", () => {
-        it("affiche le titre", () => {
+        it("affiche le titre en h1", () => {
             renderLayout();
             expect(screen.getByRole("heading", { level: 1, name: "Mon Dashboard" })).toBeInTheDocument();
         });
 
-        it("affiche le sous-titre", () => {
+        it("affiche le sous-titre en h2", () => {
             renderLayout();
             expect(
                 screen.getByRole("heading", { level: 2, name: "Sous-titre du dashboard" })
@@ -84,22 +84,26 @@ describe("SpecializedDashboardLayout", () => {
             expect(screen.getByTestId("icon")).toBeInTheDocument();
         });
 
-        it("affiche les enfants (children)", () => {
+        it("affiche les enfants", () => {
             renderLayout();
             expect(screen.getByTestId("children-content")).toBeInTheDocument();
         });
     });
 
-    describe("Composant Ariane", () => {
-        it("affiche le fil d'Ariane avec 'Dashboard' et le titre", () => {
+    describe("Fil d'Ariane", () => {
+        it("affiche le fil d'Ariane", () => {
+            renderLayout();
+            expect(screen.getByTestId("ariane")).toBeInTheDocument();
+        });
+
+        it("contient 'Vue d'ensemble' et le titre", () => {
             renderLayout();
             const ariane = screen.getByTestId("ariane");
-            expect(ariane).toBeInTheDocument();
-            expect(ariane).toHaveTextContent("Dashboard");
+            expect(ariane).toHaveTextContent("Vue d'ensemble");
             expect(ariane).toHaveTextContent("Mon Dashboard");
         });
 
-        it("passe le bon titre dynamique au fil d'Ariane", () => {
+        it("met à jour le titre dynamiquement", () => {
             renderLayout({ title: "Qualité" });
             expect(screen.getByTestId("ariane")).toHaveTextContent("Qualité");
         });
@@ -122,7 +126,7 @@ describe("SpecializedDashboardLayout", () => {
         });
     });
 
-    describe("Thème clair / sombre", () => {
+    describe("Thème", () => {
         it("applique le dégradé light en mode clair", () => {
             const { container } = renderLayout();
             const rootBox = container.firstChild as HTMLElement;
@@ -146,24 +150,32 @@ describe("SpecializedDashboardLayout", () => {
     });
 
     describe("Accessibilité", () => {
-        it("le titre est un h1", () => {
+        it("le titre principal est un h1", () => {
             renderLayout();
-            const h1 = screen.getByRole("heading", { level: 1 });
-            expect(h1).toHaveTextContent("Mon Dashboard");
+            expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Mon Dashboard");
         });
 
         it("le sous-titre est un h2", () => {
             renderLayout();
-            const h2 = screen.getByRole("heading", { level: 2 });
-            expect(h2).toHaveTextContent("Sous-titre du dashboard");
+            expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+                "Sous-titre du dashboard"
+            );
         });
     });
 
     describe("Intégration filterContext", () => {
-        it("utilise useFilterContext pour obtenir state et dispatch", async () => {
+        it("appelle useFilterContext une fois", async () => {
             const { useFilterContext } = await import("store/filterContext");
             renderLayout();
             expect(useFilterContext).toHaveBeenCalledTimes(1);
+        });
+
+        it("passe le dispatch du context au composant Filters", async () => {
+            const { useFilterContext } = await import("store/filterContext");
+            renderLayout();
+            expect(useFilterContext).toHaveReturnedWith(
+                expect.objectContaining({ dispatch: mockDispatch })
+            );
         });
     });
 });

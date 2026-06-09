@@ -201,7 +201,7 @@ describe("StrategieCloudForm", () => {
     it("affiche le composant filtres", async () => {
         render(<StrategieCloudForm />);
         await waitFor(() => {
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("filtres-container")).toBeInTheDocument();
         });
     });
 

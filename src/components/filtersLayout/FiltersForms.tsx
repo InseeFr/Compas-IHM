@@ -1,5 +1,5 @@
 import type { AllIndicators } from "models/indicateurs";
-import { SelectedFiltersLayout } from "components/SelectedFiltersLayout";
+import { SelectedFiltersLayout } from "components/filtersLayout/SelectedFiltersLayout";
 import type { Action, FilterState } from "store/filterContext";
 
 interface FiltersProps {

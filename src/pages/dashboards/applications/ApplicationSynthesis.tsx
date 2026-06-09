@@ -8,10 +8,10 @@ import {
     transformModuleData
 } from "./application-synthesis-config";
 import { applyDevFilters } from "utils/filters-functions";
-import { Filters } from "pages/Filters";
 import DashboardPageLayout from "components/dashboardsPagesLayout/dashboardPageLayout";
 import { TextField } from "@mui/material";
 import ApplicationReportPreview, { ButtonGenerateReport } from "./preview/ApplicationContent";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 export const ApplicationSynthesis = () => {
     const [apps, setApps] = useState<IndicateurApplicationSynthese[]>([]);
@@ -53,7 +53,7 @@ export const ApplicationSynthesis = () => {
         <DashboardPageLayout
             title={"Synthèse   d'une   application"}
             dashboardData={filteredData}
-            filters={<Filters state={state} dispatch={dispatch} data={apps} />}
+            filters={<FilterSidebar data={apps} state={state} dispatch={dispatch} />}
             loading={loading}
             setter={setSelectedApp}
             getter={selectedApp}

@@ -1,5 +1,5 @@
 import type { ViewMode } from "constantes/constantes";
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import { useFilterContext } from "store/filterContext";
 
 import {
@@ -12,10 +12,11 @@ import {
 
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
-import { ToggleButton, ToggleButtonGroup, Box } from "@mui/material";
-import { Filters } from "pages/Filters";
+import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { GreenItDate } from "components/GreenItDate";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
+import { GreenItToggleButton } from "./GreenItCell";
 
 const VM_COLUMNS = {
     _nbVmSort: true,
@@ -68,7 +69,7 @@ export const GreenItTable = () => {
             titleTable="Table Indicateur GreenIT"
             filters={
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                    <Filters data={data} state={state} dispatch={dispatch} />
+                    <FilterSidebar data={data} state={state} dispatch={dispatch} />
                     <GreenItDate />
                 </Box>
             }
@@ -80,19 +81,8 @@ export const GreenItTable = () => {
                 row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
             }
             renderTopCustom={({ table }) => (
-                <Fragment>
-                    <ToggleButtonGroup
-                        value={viewMode}
-                        exclusive
-                        onChange={(_, val) => val && setViewMode(val)}
-                        size="small"
-                        color="secondary"
-                    >
-                        <ToggleButton value="global">Global</ToggleButton>
-                        <ToggleButton value="prod">Prod</ToggleButton>
-                        <ToggleButton value="horsprod">Hors-prod</ToggleButton>
-                    </ToggleButtonGroup>
-                    <ToggleButtonGroup
+                <>
+                <ToggleButtonGroup
                         value={infraMode}
                         exclusive
                         onChange={(_, val) => {
@@ -115,8 +105,7 @@ export const GreenItTable = () => {
                         <ToggleButton value="vm">VM</ToggleButton>
                         <ToggleButton value="kube">Kube</ToggleButton>
                     </ToggleButtonGroup>
-                    <ButtonCsvExport table={table} onExport={onExport} />
-                </Fragment>
+                <GreenItToggleButton viewMode={viewMode} setViewMode={setViewMode} /><ButtonCsvExport table={table} onExport={onExport} /></>
             )}
             fetch={refetch}
             enableHiding={true}

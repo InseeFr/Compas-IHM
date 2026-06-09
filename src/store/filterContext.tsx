@@ -3,21 +3,18 @@ import { createContext, useReducer, type ReactNode, useContext, useMemo } from "
 export interface FilterState {
     serviceDev: string;
     domaineDev: string;
-    appName: string;
     domaineFonc: string;
 }
 
 export type Action =
     | { type: "SET_SERVICE_DEV"; payload: string }
     | { type: "SET_DOMAINE_DEV"; payload: string }
-    | { type: "SET_APP_NAME"; payload: string }
     | { type: "SET_DOMAINE_FONC"; payload: string }
     | { type: "RESET_FILTERS" };
 
 const initialState: FilterState = {
     serviceDev: "",
     domaineDev: "",
-    appName: "",
     domaineFonc: ""
 };
 
@@ -27,8 +24,6 @@ function filterReducer(state: FilterState, action: Action): FilterState {
             return { ...state, serviceDev: action.payload };
         case "SET_DOMAINE_DEV":
             return { ...state, domaineDev: action.payload };
-        case "SET_APP_NAME":
-            return { ...state, appName: action.payload };
         case "SET_DOMAINE_FONC":
             return { ...state, domaineFonc: action.payload };
         case "RESET_FILTERS":

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
 import TablePageLayout from "components/TablePageLayout";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { Box } from "@mui/material";
 import type { Pagination } from "models/table-model";
 import type { AllIndicators } from "models/indicateurs";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 interface GenericIndicatorTableProps {
     title: string;
@@ -55,7 +55,6 @@ export const GenericIndicatorTable = ({
         return modulesByApp[row.applicationName];
     };
 
-    // Logique par défaut pour filtrer les modules si hasModules est true
     const processedData = hasModules
         ? (filteredData as any[]).filter(item => (item?.isModule ? null : item))
         : filteredData;
@@ -66,11 +65,11 @@ export const GenericIndicatorTable = ({
             filters={
                 customFilters ? (
                     <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                        <Filters data={data} state={state} dispatch={dispatch} />
+                        <FilterSidebar data={data} state={state} dispatch={dispatch} />
                         {customFilters}
                     </Box>
                 ) : (
-                    <Filters data={data} state={state} dispatch={dispatch} />
+                    <FilterSidebar data={data} state={state} dispatch={dispatch} />
                 )
             }
             data={processedData}

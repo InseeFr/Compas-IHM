@@ -1,7 +1,7 @@
 import { Box, useTheme, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import Ariane from "components/Ariane";
-import { Filters } from "pages/Filters";
+import { Filters } from "components/filtersLayout/FiltersForms";
 import type { GlobalIndicator } from "models/indicateurs";
 import { useFilterContext } from "store/filterContext";
 

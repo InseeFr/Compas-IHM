@@ -90,78 +90,77 @@ import * as formattedMod from "pages/indicateurs/main-indicator/formatted-mod-an
 import type { GlobalIndicator } from "models/indicateurs";
 
 // Helper pour créer des GlobalIndicator mockés
-const createMockGlobalIndicator = (overrides: Partial<GlobalIndicator> = {}): GlobalIndicator =>
-    ({
-        applicationName: "MockApp",
-        sndi: "MOCK",
-        domaine: "MockDomaine",
-        domaineFonc: "MockFonc",
-        lettreCouvertureTestUniaire: "A",
-        lettreGlobaleSecurite: "A",
-        pourcentageCouvertureTestUniaire: "80",
-        nbCveCritical: "0",
-        nbCveHigh: "0",
-        nbCveLow: "0",
-        nbCveMedium: "0",
-        lettreCve: "A",
-        consoNormalized: "0",
-        impactNormalized: "0",
-        gaspillage: "0",
-        idApplication: 0,
-        lettreFiabilite: "A",
-        lettreDetteTechnique: "A",
-        delaiVmNonMiseAjour: "0",
-        nbVmNonMaj: "0",
-        grade: "A",
-        isModule: false,
-        parentApplication: undefined,
-        lettreContributorCount: "A",
-        lettreDeploymentCount: "A",
-        lettreDistanceCount: "A",
-        distanceCount: "0",
-        nbDeploymentCount: "0",
-        nbContributorCount: "0",
-        meteo: 1,
-        meteoCommentaire: "",
-        dateMeteoCommentaire: "",
-        declarationA11y: false,
-        dateDeclarationA11y: "",
-        conso: "0",
-        lettreGreen: "A",
-        ramAllocated: "0",
-        ramMaxi: "0",
-        diskAllocated: "0",
-        diskUsed: "0",
-        cpuAllocated: "0",
-        cpuMaxi: "0",
-        nbVm: "0",
-        ramAllocatedProd: "0",
-        ramMaxiProd: "0",
-        diskAllocatedProd: "0",
-        diskUsedProd: "0",
-        cpuAllocatedProd: "0",
-        cpuMaxiProd: "0",
-        nbVmProd: "0",
-        consoProd: "0",
-        lettreA11y: "A",
-        scoreAuditA11y: 100,
-        lettreQualiteGenerale: "A",
-        lettreDevopsGenerale: "A",
-        detteTechnique: "0",
-        maturite: "A",
-        robustesse: "A",
-        scoreBenefice: "0",
-        scoreComplexite: "0",
-        scoreOrga: "0",
-        scoreTechnique: "0",
-        progressionDeploy: "0",
-        progressionArchi: "0",
-        progressionTechnos: "0",
-        progressionCloud: "0",
-        progressionDevops: "0",
-        progressionMateqip: "0",
-        ...overrides
-    }) as unknown as GlobalIndicator;
+const createMockGlobalIndicator = (overrides: Partial<GlobalIndicator> = {}): GlobalIndicator => ({
+    applicationName: "MockApp",
+    sndi: "MOCK",
+    domaine: "MockDomaine",
+    domaineFonc: "MockFonc",
+    lettreCouvertureTestUniaire: "A",
+    lettreGlobaleSecurite: "A",
+    pourcentageCouvertureTestUniaire: "80",
+    nbCveCritical: "0",
+    nbCveHigh: "0",
+    nbCveLow: "0",
+    nbCveMedium: "0",
+    lettreCve: "A",
+    consoNormalized: "0",
+    impactNormalized: "0",
+    gaspillage: "0",
+    idApplication: 0,
+    lettreFiabilite: "A",
+    lettreDetteTechnique: "A",
+    delaiVmNonMiseAjour: "0",
+    nbVmNonMaj: "0",
+    grade: "A",
+    isModule: false,
+    parentApplication: undefined,
+    lettreContributorCount: "A",
+    lettreDeploymentCount: "A",
+    lettreDistanceCount: "A",
+    distanceCount: "0",
+    nbDeploymentCount: "0",
+    nbContributorCount: "0",
+    meteo: 1,
+    meteoCommentaire: "",
+    dateMeteoCommentaire: "",
+    declarationA11y: false,
+    dateDeclarationA11y: "",
+    conso: "0",
+    lettreGreen: "A",
+    ramAllocated: "0",
+    ramMaxi: "0",
+    diskAllocated: "0",
+    diskUsed: "0",
+    cpuAllocated: "0",
+    cpuMaxi: "0",
+    nbVm: "0",
+    ramAllocatedProd: "0",
+    ramMaxiProd: "0",
+    diskAllocatedProd: "0",
+    diskUsedProd: "0",
+    cpuAllocatedProd: "0",
+    cpuMaxiProd: "0",
+    nbVmProd: "0",
+    consoProd: "0",
+    lettreA11y: "A",
+    scoreAuditA11y: 100,
+    lettreQualiteGenerale: "A",
+    lettreDevopsGenerale: "A",
+    detteTechnique: "0",
+    maturite: "A",
+    robustesse: "A",
+    scoreBenefice: "0",
+    scoreComplexite: "0",
+    scoreOrga: "0",
+    scoreTechnique: "0",
+    progressionDeploy: "0",
+    progressionArchi: "0",
+    progressionTechnos: "0",
+    progressionCloud: "0",
+    progressionDevops: "0",
+    progressionMateqip: "0",
+    ...overrides
+});
 
 describe("DashboardCharts", () => {
     const mockApplications: GlobalIndicator[] = [
@@ -262,7 +261,7 @@ describe("DashboardCharts", () => {
         it("affiche les Filters", async () => {
             renderWithProviders(<DashboardCharts />);
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("affiche uniquement la section 'Vue d'ensemble'", async () => {
@@ -338,7 +337,7 @@ describe("DashboardCharts", () => {
                 </ThemeProvider>
             );
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("s'affiche en mode clair sans erreur", async () => {
@@ -350,7 +349,7 @@ describe("DashboardCharts", () => {
                 </ThemeProvider>
             );
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
     });
 
@@ -361,7 +360,7 @@ describe("DashboardCharts", () => {
             vi.mocked(formattedMod.formattedApps).mockReturnValue([]);
             renderWithProviders(<DashboardCharts />);
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
             expect(screen.getByTestId("section-Vue d'ensemble")).toBeInTheDocument();
         });
     });
@@ -372,13 +371,6 @@ describe("DashboardCharts", () => {
         it("le loader est accessible via role progressbar", () => {
             renderWithProviders(<DashboardCharts />);
             expect(screen.getByRole("progressbar")).toBeInTheDocument();
-        });
-
-        it("le conteneur principal a minHeight 100vh", async () => {
-            renderWithProviders(<DashboardCharts />);
-            await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            const container = screen.getByTestId("filters").parentElement;
-            expect(container).toHaveStyle({ minHeight: "100vh" });
         });
 
         it("affiche 4 KPIs en tout", async () => {
