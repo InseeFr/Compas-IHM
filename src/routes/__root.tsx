@@ -42,7 +42,7 @@ function RootComponent() {
             />
             <AccesRapide darkMode={darkMode} />
             <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            <main id="contenu">
+            <main id="contenu" role="main">
                 <Outlet />
             </main>
             <Footer darkmode={darkMode} accessibility={"Non-conforme"} />

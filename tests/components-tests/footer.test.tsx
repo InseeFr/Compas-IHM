@@ -8,6 +8,24 @@ import { getTags } from "todos-api/client.gen";
 vi.mock("todos-api/client.gen", () => ({
     getTags: vi.fn()
 }));
+// Mock des Link
+vi.mock("@tanstack/react-router", () => ({
+    Link: ({
+        to,
+        children,
+        className,
+        style
+    }: {
+        to: string;
+        children: React.ReactNode;
+        className?: string;
+        style?: React.CSSProperties;
+    }) => (
+        <a href={to} className={className} style={style}>
+            {children}
+        </a>
+    )
+}));
 
 const mockGetTags = vi.mocked(getTags);
 

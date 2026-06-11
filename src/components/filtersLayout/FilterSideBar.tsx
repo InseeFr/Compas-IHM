@@ -83,7 +83,8 @@ export const FilterSidebar = ({
                 onClick={openSidebar}
             >
                 <TuneIcon sx={{ fontSize: 16 }} aria-hidden="true" />
-                Filtres
+                {/* Demander si je laisse  */}
+                Filtres des colonnes du tableau
                 {totalActive > 0 && (
                     <span
                         className="filter-trigger__badge"

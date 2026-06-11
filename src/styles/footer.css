@@ -1,17 +1,19 @@
 .footer-box {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 26px;
-    gap: 8px;
+    padding: 16px clamp(16px, 3vw, 32px);
+    gap: clamp(12px, 2vw, 24px);
+    flex-wrap: wrap;
     position: relative;
 }
 
 .footer-box-access {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(6px, 1vw, 12px);
+    flex-wrap: wrap;
 }
 
 .footer-box-access-icon {
@@ -21,6 +23,7 @@
     padding: 4px 12px;
     border-radius: 16px;
     color: var(--main-color);
+    border: 1px solid currentColor;
 }
 
 .footer-typo {
@@ -31,18 +34,19 @@
 .footer-typo-label {
     color: inherit;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .footer-tags {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 12px;
+    flex-direction: row;
+    gap: clamp(6px, 1vw, 12px);
+    padding: 6px 12px;
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    position: absolute;
-    left: 26px;
+    position: static;
+    margin: 0;
 }
 
 .footer-tag-row {
@@ -63,13 +67,12 @@
 .footer-tag-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    background-color: rgba(0, 0, 0, 0.07);
+    white-space: nowrap;
 }
 
 .footer-tag-badge--api {
@@ -95,7 +98,8 @@
 }
 
 #pied-de-page.dark-mode .footer-tag-label {
-    color: aliceblue;
+    color: #e8eaf6;
+    opacity: 0.85;
 }
 
 #pied-de-page.dark-mode .footer-tag-badge--api {
@@ -106,4 +110,42 @@
 #pied-de-page.dark-mode .footer-tag-badge--ihm {
     color: #ce93d8;
     background-color: rgba(206, 147, 216, 0.15);
+}
+
+.plan-de-site {
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: #9c27b0;
+    border: 1px solid rgba(156, 39, 176, 0.25);
+    background: rgba(156, 39, 176, 0.06);
+}
+
+#pied-de-page.dark-mode .plan-de-site {
+    color: #ce93d8;
+    border-color: rgba(206, 147, 216, 0.3);
+    background: rgba(206, 147, 216, 0.08);
+}
+
+/* Responsive */
+
+@media (max-width: 1279px) {
+    .footer-box {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 1023px) {
+    .footer-box {
+        padding: 14px 20px;
+    }
+    .footer-tags {
+        flex-direction: column;
+        gap: 4px;
+    }
 }

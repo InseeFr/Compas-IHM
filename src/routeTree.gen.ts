@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanDuSiteRouteImport } from './routes/plan-du-site'
 import { Route as PageNameRouteImport } from './routes/$pageName'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SaisieStrategiecloudRouteImport } from './routes/saisie/strategiecloud'
@@ -32,6 +33,11 @@ import { Route as DashboardGreenitRouteImport } from './routes/dashboard/greenit
 import { Route as DashboardDevopsRouteImport } from './routes/dashboard/devops'
 import { Route as DashboardAccessibiliteRouteImport } from './routes/dashboard/accessibilite'
 
+const PlanDuSiteRoute = PlanDuSiteRouteImport.update({
+  id: '/plan-du-site',
+  path: '/plan-du-site',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PageNameRoute = PageNameRouteImport.update({
   id: '/$pageName',
   path: '/$pageName',
@@ -150,6 +156,7 @@ const DashboardAccessibiliteRoute = DashboardAccessibiliteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/plan-du-site': typeof PlanDuSiteRoute
   '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
   '/dashboard/devops': typeof DashboardDevopsRoute
   '/dashboard/greenit': typeof DashboardGreenitRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/plan-du-site': typeof PlanDuSiteRoute
   '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
   '/dashboard/devops': typeof DashboardDevopsRoute
   '/dashboard/greenit': typeof DashboardGreenitRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$pageName': typeof PageNameRoute
+  '/plan-du-site': typeof PlanDuSiteRoute
   '/dashboard/accessibilite': typeof DashboardAccessibiliteRoute
   '/dashboard/devops': typeof DashboardDevopsRoute
   '/dashboard/greenit': typeof DashboardGreenitRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$pageName'
+    | '/plan-du-site'
     | '/dashboard/accessibilite'
     | '/dashboard/devops'
     | '/dashboard/greenit'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$pageName'
+    | '/plan-du-site'
     | '/dashboard/accessibilite'
     | '/dashboard/devops'
     | '/dashboard/greenit'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$pageName'
+    | '/plan-du-site'
     | '/dashboard/accessibilite'
     | '/dashboard/devops'
     | '/dashboard/greenit'
@@ -298,6 +310,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PageNameRoute: typeof PageNameRoute
+  PlanDuSiteRoute: typeof PlanDuSiteRoute
   DashboardAccessibiliteRoute: typeof DashboardAccessibiliteRoute
   DashboardDevopsRoute: typeof DashboardDevopsRoute
   DashboardGreenitRoute: typeof DashboardGreenitRoute
@@ -322,6 +335,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/plan-du-site': {
+      id: '/plan-du-site'
+      path: '/plan-du-site'
+      fullPath: '/plan-du-site'
+      preLoaderRoute: typeof PlanDuSiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$pageName': {
       id: '/$pageName'
       path: '/$pageName'
@@ -482,6 +502,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PageNameRoute: PageNameRoute,
+  PlanDuSiteRoute: PlanDuSiteRoute,
   DashboardAccessibiliteRoute: DashboardAccessibiliteRoute,
   DashboardDevopsRoute: DashboardDevopsRoute,
   DashboardGreenitRoute: DashboardGreenitRoute,
