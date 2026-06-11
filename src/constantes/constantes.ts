@@ -52,8 +52,11 @@ export const BASE_COLONNE = <T extends MRT_RowData>(isModule?: boolean): MRT_Col
         : {
               accessorKey: "applicationName",
               header: BASE_HEADERS.NOM,
-              muiTableBodyCellProps: ({ cell, row }) =>
-                  muiAriaCell({ title: "Application", cell: cell, row: row })
+              muiTableBodyCellProps: ({ cell, row }) => ({
+                  component: "th",
+                  scope: "row",
+                  ...muiAriaCell({ title: "Application", cell: cell, row: row })
+              })
           },
     {
         accessorKey: "sndi",

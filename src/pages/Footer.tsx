@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import type { ACCESSIBILITE } from "constantes/constantes";
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import "styles/footer.css";
 import { getTags, type TagsView } from "todos-api/client.gen";
+import MapIcon from "@mui/icons-material/AccountTree";
 
 interface FooterProps {
     accessibility: ACCESSIBILITE;
@@ -78,7 +80,7 @@ export default function Footer({ darkmode, accessibility }: Readonly<FooterProps
     const config = getAccessibilityConfig(darkmode);
 
     return (
-        <footer id="pied-de-page" className={darkmode ? "dark-mode" : "light-mode"}>
+        <footer id="pied-de-page" className={darkmode ? "dark-mode" : "light-mode"} role="contentinfo">
             <Box className="footer-box">
                 <output className="footer-box-access" aria-live="polite">
                     <Typography variant="body2" className="footer-typo-label">
@@ -108,6 +110,26 @@ export default function Footer({ darkmode, accessibility }: Readonly<FooterProps
                         </Box>
                     </Box>
                 </output>
+                <Box
+                    sx={{
+                        width: "1px",
+                        height: "28px",
+                        backgroundColor: darkmode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)",
+                        flexShrink: 0
+                    }}
+                />
+                <nav aria-label="Navigation secondaire">
+                    <ul
+                        style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", gap: "6px" }}
+                    >
+                        <li>
+                            <Link to="/plan-du-site" className="plan-de-site">
+                                <MapIcon style={{ fontSize: "16px" }} aria-hidden={true} />
+                                Plan du site
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
             </Box>
         </footer>
     );

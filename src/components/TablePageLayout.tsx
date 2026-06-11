@@ -53,6 +53,9 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 onColumnVisibilityChange={props.onColumnVisibilityChange}
                 enableGlobalFilter={true}
                 enableDensityToggle={false}
+                muiTableProps={{
+                    "aria-label": props.titleTable
+                }}
                 state={{
                     isLoading: props.isLoading,
                     columnVisibility: props.columnVisibility ?? {}
@@ -96,12 +99,7 @@ export default function TablePageLayout<T extends MRT_RowData>(
                     "mrt-row-expand": {
                         muiTableHeadCellProps: {
                             scope: "col"
-                        },
-                        muiTableBodyCellProps: ({ row }) => ({
-                            component: "th",
-                            scope: "row",
-                            id: `expand-${row.id}`
-                        })
+                        }
                     }
                 }}
                 muiExpandButtonProps={({ row }) => ({
