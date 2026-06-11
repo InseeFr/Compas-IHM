@@ -13,6 +13,6 @@ export const TREND_CONFIG = {
     },
     flat: {
         icon: ArrowForwardIcon,
-        color: "text.secondary"
+        color: "#c7c7c7"
     }
 } as const;
