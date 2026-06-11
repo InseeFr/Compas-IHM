@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import type { ViewMode } from "constantes/constantes"
+import type { ViewMode } from "constantes/constantes";
 import type { JSX } from "react";
 
 interface IGreenItToggleProps {
@@ -8,7 +8,7 @@ interface IGreenItToggleProps {
 }
 
 export const GreenItToggleButton = ({ viewMode, setViewMode }: IGreenItToggleProps): JSX.Element => {
-    return(
+    return (
         <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -20,5 +20,5 @@ export const GreenItToggleButton = ({ viewMode, setViewMode }: IGreenItTogglePro
             <ToggleButton value="prod">Prod</ToggleButton>
             <ToggleButton value="horsprod">Hors-prod</ToggleButton>
         </ToggleButtonGroup>
-    )
-}
+    );
+};

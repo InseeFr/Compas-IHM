@@ -7,14 +7,7 @@ import { BASE_COLONNE } from "constantes/constantes";
 export type InfraType = "ALL" | "KUB" | "VM";
 
 const VM_KEYS = {
-    GLOBAL: [
-        "_nbVmSort",
-        "_cpuSort",
-        "_ramSort",
-        "_diskSort",
-        "_ramMaxiSort",
-        "_cpuMaxiSort"
-    ],
+    GLOBAL: ["_nbVmSort", "_cpuSort", "_ramSort", "_diskSort", "_ramMaxiSort", "_cpuMaxiSort"],
     PROD: [
         "_nbVmProdSort",
         "_cpuUsedProdSort",
@@ -78,7 +71,7 @@ const getKeysForInfraAndMode = (infraType: InfraType, viewMode: ViewMode): strin
             horsprod: KUB_KEYS.HORSPROD
         }
     };
-    
+
     return keyMap[infraType][viewMode];
 };
 
@@ -95,8 +88,6 @@ export function buildInfraColumns(
 
     return [
         ...baseColumns,
-        ...allInfraColumns.filter(col =>
-            allowedKeys.includes(col.accessorKey as string)
-        )
+        ...allInfraColumns.filter(col => allowedKeys.includes(col.accessorKey as string))
     ];
 }

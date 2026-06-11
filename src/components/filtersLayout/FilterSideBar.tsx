@@ -15,7 +15,12 @@ interface FilterSidebarProps {
     data: AllIndicators[];
 }
 
-export const FilterSidebar = ({ state, dispatch, data, customFilters }: Readonly<FilterSidebarProps>) => {
+export const FilterSidebar = ({
+    state,
+    dispatch,
+    data,
+    customFilters
+}: Readonly<FilterSidebarProps>) => {
     const {
         open,
         setOpen,
