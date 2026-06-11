@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
     return (
-        <header data-testid="header">
+        <header data-testid="header" role="banner">
             <AppBar className={`header-container ${darkMode ? "dark-mode" : "light-mode"}`}>
                 <Toolbar className="header-toolbar" id="navigation">
                     <Box className="left-section">
@@ -38,7 +38,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                     <IconButton
                         onClick={toggleDarkMode}
                         color="inherit"
-                        aria-label="toggle dark mode"
+                        aria-label="Bouton mode sombre"
                         className="toggle-button"
                         data-testid="toggle-darkmode"
                     >

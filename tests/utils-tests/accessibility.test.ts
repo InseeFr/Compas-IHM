@@ -4,7 +4,9 @@ import { generateAriaLabelCell, muiAriaCell } from "utils/accessibility-function
 
 describe("Generation d'aria label pour les lignes des tableaux", () => {
     it("générer Module", () => {
-        expect(generateAriaLabelCell("N'importe", "Mod1", "Mod1", true)).toEqual("Module: Mod1");
+        expect(generateAriaLabelCell("N'importe", "Mod1", "Mod1", true)).toEqual(
+            "Module: Mod1 Application: Mod1"
+        );
     });
     it("générer App", () => {
         expect(generateAriaLabelCell("N'importe", "App1", "App1", false)).toEqual("Application: App1");
