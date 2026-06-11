@@ -8,9 +8,6 @@ import type { AllIndicators } from "models/indicateurs";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 import { useTendanceContext } from "store/tendance-context";
-import { TendancePeriodeForm } from "./TendanceForm";
-import { Fragment } from "react/jsx-runtime";
-import { format } from "date-fns";
 
 interface GenericIndicatorTableProps {
     title: string;
@@ -71,11 +68,23 @@ export const GenericIndicatorTable = ({
             filters={
                 customFilters ? (
                     <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                        <FilterSidebar data={data} state={state} dispatch={dispatch} />
+                        <FilterSidebar
+                            data={data}
+                            state={state}
+                            dispatch={dispatch}
+                            stateTendance={stateTendance}
+                            dispatchTendance={dispatchTendance}
+                        />
                         {customFilters}
                     </Box>
                 ) : (
-                    <FilterSidebar data={data} state={state} dispatch={dispatch} />
+                    <FilterSidebar
+                        data={data}
+                        state={state}
+                        dispatch={dispatch}
+                        stateTendance={stateTendance}
+                        dispatchTendance={dispatchTendance}
+                    />
                 )
             }
             data={processedData}
@@ -85,23 +94,9 @@ export const GenericIndicatorTable = ({
             paginationConfig={paginationConfig}
             rowId={rowId || defaultRowId}
             subRow={hasModules ? subRow || defaultSubRow : undefined}
-            renderTopCustom={({ table }) => (
-                <Fragment>
-                    <TendancePeriodeForm
-                        dateFin={stateTendance.dateFin}
-                        dateDebut={stateTendance.dateDebut}
-                        handleChange={(field, value) => {
-                            const formatted = value ? format(value, "dd/MM/yyyy") : "";
-                            if (field === "dateFin") {
-                                dispatchTendance({ type: "SET_DATE_FIN", payload: formatted });
-                            } else {
-                                dispatchTendance({ type: "SET_DATE_DEBUT", payload: formatted });
-                            }
-                        }}
-                    />
-                    {onExport && <ButtonCsvExport table={table} onExport={onExport} />}
-                </Fragment>
-            )}
+            renderTopCustom={({ table }) =>
+                onExport && <ButtonCsvExport table={table} onExport={onExport} />
+            }
         />
     );
 };

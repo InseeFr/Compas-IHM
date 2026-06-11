@@ -8,8 +8,7 @@ export interface TendanceState {
 
 export type ActionTendance =
     | { type: "SET_DATE_FIN"; payload: string }
-    | { type: "SET_DATE_DEBUT"; payload: string }
-    | { type: "SET_PERIODE_INIT"; payload: { dateFin: string; dateDebut: string } };
+    | { type: "SET_DATE_DEBUT"; payload: string };
 
 const now = format(new Date(), "dd/MM/yyyy");
 
@@ -32,13 +31,6 @@ function filterReducer(state: TendanceState, action: ActionTendance): TendanceSt
             return {
                 ...state,
                 dateDebut: action.payload
-            };
-
-        case "SET_PERIODE_INIT":
-            return {
-                ...state,
-                dateFin: action.payload.dateFin,
-                dateDebut: action.payload.dateDebut
             };
 
         default:

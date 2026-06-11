@@ -4,8 +4,31 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { useFilterContext } from "store/filterContext";
 import { getApplications1, getHistory } from "todos-api/client.gen";
 import { MeteoTable } from "pages/indicateurs/meteo/meteoTable";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { fr } from "date-fns/locale";
 
 // Mock des dépendances
+
+const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+            {ui}
+        </LocalizationProvider>
+    );
+};
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
 vi.mock("store/filterContext");
 vi.mock("@tanstack/react-router", async () => {
     return {
@@ -114,7 +137,7 @@ describe("MeteoTable", () => {
     });
 
     it("devrait charger et afficher les données", async () => {
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalledTimes(1);
@@ -128,7 +151,7 @@ describe("MeteoTable", () => {
             { idApplication: undefined, date: "2024-02-20" }
         ]);
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -141,7 +164,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -154,7 +177,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -170,7 +193,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -187,7 +210,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -199,7 +222,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -210,7 +233,7 @@ describe("MeteoTable", () => {
         vi.mocked(getHistory).mockResolvedValue([]);
         vi.mocked(getApplications1).mockResolvedValue([]);
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -228,7 +251,7 @@ describe("MeteoTable", () => {
             })
         );
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -236,7 +259,7 @@ describe("MeteoTable", () => {
     });
 
     it("devrait mettre à jour nbMois lors du changement dans MeteoFormMonths", async () => {
-        const { container } = render(<MeteoTable />);
+        const { container } = renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();
@@ -261,7 +284,7 @@ describe("MeteoTable", () => {
             dispatch: mockDispatch
         });
 
-        render(<MeteoTable />);
+        renderWithProviders(<MeteoTable />);
 
         await waitFor(() => {
             expect(getHistory).toHaveBeenCalled();

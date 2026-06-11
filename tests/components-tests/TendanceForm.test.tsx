@@ -3,7 +3,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { fr } from "date-fns/locale";
-import { TendancePeriodeForm, type TendancePeriodeFormProps } from "components/indicators/TendanceForm";
+import {
+    TendancePeriodeForm,
+    type TendancePeriodeFormProps
+} from "components/filtersLayout/TendanceForm";
 
 function renderWithProviders(props: TendancePeriodeFormProps) {
     return render(
@@ -34,16 +37,6 @@ describe("TendancePeriodeForm", () => {
     // ─── Rendering ────────────────────────────────────────────────────────────
 
     describe("Rendering", () => {
-        it("renders the 'Période' label", () => {
-            renderWithProviders(defaultProps);
-            expect(screen.getByText("Période")).toBeInTheDocument();
-        });
-
-        it("renders the CalendarMonth icon", () => {
-            const { container } = renderWithProviders(defaultProps);
-            expect(container.querySelector("[data-testid='CalendarMonthIcon']")).toBeInTheDocument();
-        });
-
         it("renders the 'Date début' label", () => {
             renderWithProviders(defaultProps);
             expect(screen.getByText("Date début", { selector: "label" })).toBeInTheDocument();

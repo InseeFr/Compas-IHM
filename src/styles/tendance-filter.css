@@ -1,0 +1,57 @@
+.periode-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.periode-form__pickers {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.periode-form__picker {
+    flex: none;
+    width: 100%;
+    min-width: unset;
+    max-width: 100%;
+    background-color: var(--mui-palette-background-default);
+    border: 1px solid var(--mui-palette-divider);
+    border-radius: 8px;
+    padding: 6px 10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.periode-form__picker:has(.Mui-focused) {
+    border-color: var(--mui-palette-primary-main);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mui-palette-primary-main) 15%, transparent);
+}
+
+.periode-form__picker .MuiInputLabel-root {
+    position: static !important;
+    transform: none !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    color: var(--mui-palette-text-secondary) !important;
+    text-transform: none;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+    pointer-events: none;
+}
+
+.periode-form__picker .MuiInputLabel-root.Mui-focused {
+    color: var(--mui-palette-primary-main) !important;
+}
+
+.periode-form__picker .MuiOutlinedInput-root {
+    background-color: transparent;
+    font-size: 0.9rem;
+}
+
+.periode-form__picker .MuiOutlinedInput-notchedOutline {
+    border: none !important;
+}
+
+.periode-form__picker .MuiOutlinedInput-notchedOutline legend {
+    display: none;
+}

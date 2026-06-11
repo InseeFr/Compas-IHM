@@ -17,6 +17,7 @@ import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { GreenItDate } from "components/GreenItDate";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 import { GreenItToggleButton } from "./GreenItCell";
+import { useTendanceContext } from "store/tendance-context";
 
 const VM_COLUMNS = {
     _nbVmSort: true,
@@ -37,6 +38,8 @@ const KUBE_COLUMNS = {
 
 export const GreenItTable = () => {
     const { state, dispatch } = useFilterContext();
+    const { stateTendance, dispatchTendance } = useTendanceContext();
+
     const [viewMode, setViewMode] = useState<ViewMode>("global");
     const columns = columnsGreenIt();
     const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
@@ -67,7 +70,13 @@ export const GreenItTable = () => {
             titleTable="Table Indicateur GreenIT"
             filters={
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                    <FilterSidebar data={data} state={state} dispatch={dispatch} />
+                    <FilterSidebar
+                        data={data}
+                        state={state}
+                        dispatch={dispatch}
+                        stateTendance={stateTendance}
+                        dispatchTendance={dispatchTendance}
+                    />
                     <GreenItDate />
                 </Box>
             }

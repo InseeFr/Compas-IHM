@@ -63,10 +63,6 @@ vi.mock("pages/indicateurs/qualité/qualiteConfig", () => ({
     paginationConfig: {}
 }));
 
-vi.mock("pages/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
-}));
-
 vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
@@ -199,7 +195,7 @@ describe("QualiteIndicateurTable", () => {
 
         expect(useQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["QualiteIndicator"],
+                queryKey: ["QualiteIndicator", "01/05/2026", "02/06/2026"],
                 hasModules: true
             })
         );

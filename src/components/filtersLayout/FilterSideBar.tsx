@@ -7,17 +7,24 @@ import { SelectedFiltersLayout } from "components/filtersLayout/SelectedFiltersL
 import type { Action, FilterState } from "store/filterContext";
 import { useFilters } from "hooks/useFilters";
 import "styles/filter-sidebar.css";
+import { TendancePeriodeForm } from "./TendanceForm";
+import type { ActionTendance, TendanceState } from "store/tendance-context";
+import { format } from "date-fns";
 
 interface FilterSidebarProps {
     customFilters?: ReactNode;
     state: FilterState;
     dispatch: React.Dispatch<Action>;
+    stateTendance?: TendanceState;
+    dispatchTendance?: React.Dispatch<ActionTendance>;
     data: AllIndicators[];
 }
 
 export const FilterSidebar = ({
     state,
     dispatch,
+    stateTendance,
+    dispatchTendance,
     data,
     customFilters
 }: Readonly<FilterSidebarProps>) => {
@@ -25,13 +32,14 @@ export const FilterSidebar = ({
         open,
         setOpen,
         setTempFilters,
+        handleReset,
         openSidebar,
         tempFilters,
         totalActive,
         filteredForService,
         filteredForDomaine,
         filteredForDomaineFonc
-    } = useFilters({ state, data });
+    } = useFilters({ state, stateTendance, data });
 
     const triggerRef = useRef<HTMLButtonElement>(null);
     const headingId: string = "filter-sidebar-heading";
@@ -41,14 +49,14 @@ export const FilterSidebar = ({
         triggerRef.current?.focus();
     };
 
-    const handleReset = (): void => {
-        setTempFilters({ serviceDev: "", domaineDev: "", domaineFonc: "" });
-    };
-
     const handleApply = (): void => {
         dispatch({ type: "SET_SERVICE_DEV", payload: tempFilters.serviceDev });
         dispatch({ type: "SET_DOMAINE_DEV", payload: tempFilters.domaineDev });
         dispatch({ type: "SET_DOMAINE_FONC", payload: tempFilters.domaineFonc });
+        if (dispatchTendance) {
+            dispatchTendance({ type: "SET_DATE_DEBUT", payload: tempFilters.dateDebut ?? "" });
+            dispatchTendance({ type: "SET_DATE_FIN", payload: tempFilters.dateFin ?? "" });
+        }
         handleClose();
     };
 
@@ -142,6 +150,25 @@ export const FilterSidebar = ({
                             }
                         ]}
                     />
+                    {stateTendance && dispatchTendance && (
+                        <>
+                            <Typography component="h2" className="filter-drawer__title">
+                                Période
+                            </Typography>
+                            <TendancePeriodeForm
+                                dateFin={tempFilters?.dateFin ?? ""}
+                                dateDebut={tempFilters?.dateDebut ?? ""}
+                                handleChange={(field, value) => {
+                                    const formatted = value ? format(value, "dd/MM/yyyy") : "";
+                                    if (field === "dateFin") {
+                                        setTempFilters(prev => ({ ...prev, dateFin: formatted }));
+                                    } else {
+                                        setTempFilters(prev => ({ ...prev, dateDebut: formatted }));
+                                    }
+                                }}
+                            />
+                        </>
+                    )}
                     {customFilters}
                 </div>
 

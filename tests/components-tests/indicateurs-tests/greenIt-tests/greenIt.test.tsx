@@ -3,6 +3,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { fr } from "date-fns/locale";
 // ============================
 // MOCKS
 // ============================
@@ -18,6 +21,19 @@ vi.mock("store/filterContext", () => ({
     })
 }));
 
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
+
 vi.mock("components/GreenItDate", () => ({
     GreenItDate: () => <div data-testid="greenit-date" />
 }));
@@ -28,10 +44,6 @@ vi.mock("components/ButtonCsvExport", () => ({
             Export CSV
         </button>
     )
-}));
-
-vi.mock("pages/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
 }));
 
 vi.mock("pages/indicateurs/greenIT/greenItConfig", async importOriginal => {
@@ -64,6 +76,14 @@ vi.mock("components/TablePageLayout", () => ({
         </div>
     )
 }));
+
+const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+            {ui}
+        </LocalizationProvider>
+    );
+};
 
 // ============================
 // DATA MOCK
@@ -102,7 +122,7 @@ describe("GreenItTable", () => {
             isLoading: true
         } as any);
 
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         expect(screen.getByRole("progressbar")).toBeInTheDocument();
     });
@@ -112,7 +132,7 @@ describe("GreenItTable", () => {
     // ============================
 
     it("render correctement le titre et les composants principaux", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         expect(
             screen.getByRole("heading", {
@@ -130,7 +150,7 @@ describe("GreenItTable", () => {
     // ============================
 
     it("déclenche le bouton CSV", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         const button = screen.getByTestId("button-export-csv");
         fireEvent.click(button);
@@ -143,7 +163,7 @@ describe("GreenItTable", () => {
     // ============================
 
     it("change le mode de vue via ToggleButtonGroup", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
@@ -156,7 +176,7 @@ describe("GreenItTable", () => {
     // ============================
 
     it("appelle filteredViewMode avec le bon mode", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
@@ -181,7 +201,7 @@ describe("GreenItTable", () => {
             isLoading: false
         } as any);
 
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
 
         expect(screen.getByText("ChildApp")).toBeInTheDocument();
     });

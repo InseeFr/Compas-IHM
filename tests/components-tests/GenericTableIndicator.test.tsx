@@ -3,6 +3,17 @@ import { render, screen } from "@testing-library/react";
 import type { AllIndicators } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
 import { GenericIndicatorTable } from "components/indicators/GenericIndicatorTable";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { fr } from "date-fns/locale";
+
+const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+            {ui}
+        </LocalizationProvider>
+    );
+};
 
 // --- Mocks ---
 vi.mock("store/tendance-context", () => ({
@@ -121,27 +132,27 @@ describe("GenericIndicatorTable", () => {
 
     describe("Rendu général", () => {
         it("affiche le titre", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("table-title")).toHaveTextContent("Test Table");
         });
 
         it("affiche le composant TablePageLayout", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("table-layout")).toBeInTheDocument();
         });
 
         it("affiche les filtres", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("affiche le nombre de lignes correct", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("table-data")).toHaveTextContent("2 rows");
         });
 
         it("n'affiche pas le loader quand isLoading est false", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.queryByTestId("table-loading")).not.toBeInTheDocument();
         });
 
@@ -152,14 +163,14 @@ describe("GenericIndicatorTable", () => {
                 filteredData: [],
                 modulesByApp: {}
             });
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("table-loading")).toBeInTheDocument();
         });
     });
 
     describe("Appel à useQueryIndicators", () => {
         it("appelle useQueryIndicators avec la bonne queryKey", () => {
-            render(<GenericIndicatorTable {...defaultProps} queryKey={["myKey"]} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} queryKey={["myKey"]} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
                 expect.objectContaining({ queryKey: ["myKey"] })
             );
@@ -167,19 +178,19 @@ describe("GenericIndicatorTable", () => {
 
         it("appelle useQueryIndicators avec fetchData", () => {
             const fetchData = vi.fn();
-            render(<GenericIndicatorTable {...defaultProps} fetchData={fetchData} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} fetchData={fetchData} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(expect.objectContaining({ fetchData }));
         });
 
         it("appelle useQueryIndicators avec hasModules=false par défaut", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
                 expect.objectContaining({ hasModules: false })
             );
         });
 
         it("appelle useQueryIndicators avec hasModules=true si fourni", () => {
-            render(<GenericIndicatorTable {...defaultProps} hasModules={true} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} hasModules={true} />);
             expect(mockUseQueryIndicators).toHaveBeenCalledWith(
                 expect.objectContaining({ hasModules: true })
             );
@@ -198,38 +209,38 @@ describe("GenericIndicatorTable", () => {
                 filteredData: dataWithModules,
                 modulesByApp: {}
             });
-            render(<GenericIndicatorTable {...defaultProps} hasModules={true} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} hasModules={true} />);
             // seul App X passe le filtre (isModule=false)
             expect(screen.getByTestId("table-data")).toHaveTextContent("1 rows");
         });
 
         it("ne filtre pas les modules quand hasModules=false", () => {
-            render(<GenericIndicatorTable {...defaultProps} hasModules={false} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} hasModules={false} />);
             expect(screen.getByTestId("table-data")).toHaveTextContent("2 rows");
         });
     });
 
     describe("Export CSV", () => {
         it("n'affiche pas le bouton CSV si onExport n'est pas fourni", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.queryByTestId("csv-export")).not.toBeInTheDocument();
         });
 
         it("affiche le bouton CSV si onExport est fourni", () => {
-            render(<GenericIndicatorTable {...defaultProps} onExport={vi.fn()} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} onExport={vi.fn()} />);
             expect(screen.getByTestId("csv-export")).toBeInTheDocument();
         });
     });
 
     describe("Filtres custom", () => {
         it("affiche uniquement Filters si customFilters n'est pas fourni", () => {
-            render(<GenericIndicatorTable {...defaultProps} />);
+            renderWithProviders(<GenericIndicatorTable {...defaultProps} />);
             expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
             expect(screen.queryByTestId("custom-filter")).not.toBeInTheDocument();
         });
 
         it("affiche Filters et customFilters si customFilters est fourni", () => {
-            render(
+            renderWithProviders(
                 <GenericIndicatorTable
                     {...defaultProps}
                     customFilters={<div data-testid="custom-filter">Custom</div>}

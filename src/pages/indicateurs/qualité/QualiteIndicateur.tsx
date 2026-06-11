@@ -40,7 +40,7 @@ const QualiteIndicateurTable = () => {
             title="Table Indicateur Qualité"
             fetchData={fetchData}
             columns={columns}
-            queryKey={["QualiteIndicator"]}
+            queryKey={["QualiteIndicator", stateTendance.dateDebut, stateTendance.dateFin]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}

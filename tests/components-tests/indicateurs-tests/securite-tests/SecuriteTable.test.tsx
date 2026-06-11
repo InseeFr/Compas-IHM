@@ -8,7 +8,17 @@ import * as groupModuleUtils from "utils/group-module-by-apps";
 import type { MRT_Row } from "material-react-table";
 import type { SecuriteIndicateur } from "models/indicateurs";
 import { formatApplicationsData, formatModulesData } from "pages/indicateurs/securite/securiteConfig";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { fr } from "date-fns/locale";
 
+const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+            {ui}
+        </LocalizationProvider>
+    );
+};
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
 }));
@@ -182,7 +192,7 @@ describe("SecuriteIndicateurTable", () => {
         vi.mocked(clientApi.getIndicateurSecuriteByApplication).mockResolvedValueOnce([]);
         vi.mocked(clientApi.getIndicateurSecuriteByModule).mockResolvedValueOnce([]);
 
-        render(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         await screen.findByRole("heading", {
             name: /table indicateur sécurité/i
@@ -211,7 +221,7 @@ describe("SecuriteIndicateurTable", () => {
     });
 
     it("associe correctement les modules à leur application", async () => {
-        render(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         await screen.findByRole("heading", { name: /table indicateur sécurité/i });
 
@@ -219,15 +229,15 @@ describe("SecuriteIndicateurTable", () => {
     });
 
     it("n'affiche pas les modules comme lignes principales", async () => {
-        render(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         await screen.findByRole("heading", { name: /table indicateur sécurité/i });
 
         expect(screen.queryByText("Mod1")).not.toBeInTheDocument();
     });
 
-    it("renders table with fetched data", async () => {
-        render(<SecuriteIndicateurTable />);
+    it("renderWithProviderss table with fetched data", async () => {
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         const heading = await screen.findByRole("heading", {
             name: /table indicateur sécurité/i
@@ -241,7 +251,7 @@ describe("SecuriteIndicateurTable", () => {
     });
 
     it("appuie bien sur le bouton export", async () => {
-        render(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         await screen.findByRole("heading", { name: /table indicateur sécurité/i });
         await screen.findByText("Nom");
@@ -340,7 +350,7 @@ describe("SecuriteIndicateurTable", () => {
             } as any;
         });
 
-        render(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
         await waitFor(() => {
             expect(clientApi.getApplications1).toHaveBeenCalled();

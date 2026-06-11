@@ -53,23 +53,6 @@ describe("TendanceContext", () => {
         });
     });
 
-    describe("action SET_PERIODE_INIT", () => {
-        it("doit mettre à jour à la fois la date de début et la date de fin", () => {
-            const { result } = renderHook(() => useTendanceContext(), { wrapper });
-            const nouvellePeriode = {
-                dateFin: "31/12/2023",
-                dateDebut: "01/01/2023"
-            };
-
-            act(() => {
-                result.current.dispatchTendance({ type: "SET_PERIODE_INIT", payload: nouvellePeriode });
-            });
-
-            expect(result.current.stateTendance.dateFin).toBe(nouvellePeriode.dateFin);
-            expect(result.current.stateTendance.dateDebut).toBe(nouvellePeriode.dateDebut);
-        });
-    });
-
     describe("useTendanceContext hors Provider", () => {
         it("doit retourner les valeurs par défaut du contexte si utilisé sans Provider", () => {
             const { result } = renderHook(() => useTendanceContext());
