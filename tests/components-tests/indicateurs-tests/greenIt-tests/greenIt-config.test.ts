@@ -3,7 +3,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { handleExportCsv } from "utils/exportCsv";
 import type { GreenITIndicateur } from "models/indicateurs";
 import type { MRT_Cell, MRT_Row, MRT_TableInstance } from "material-react-table";
-import { formatIndicateur, onExport, columnsGreenIt, filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
+import {
+    formatIndicateur,
+    onExport,
+    columnsGreenIt,
+    filteredViewMode
+} from "pages/indicateurs/greenIT/greenItConfig";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
 
 // ----- Mock handleExportCsv -----
@@ -172,7 +177,9 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("consommation électrique VM (Wh)", "App1", "100"));
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("consommation électrique VM (Wh)", "App1", "100")
+        );
     });
     it("doit générer un aria-label Cpu", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_cpuSort")!;
@@ -192,7 +199,9 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("CPU réservée VM (Ghz)", "App1", "1000"));
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("CPU réservée VM (Ghz)", "App1", "1000")
+        );
     });
     it("doit générer un aria-label Ram", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_ramSort")!;
@@ -232,7 +241,9 @@ describe("Colonnes Accessibilité", () => {
                   })
                 : colContributeur.muiTableBodyCellProps;
 
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("stockage réservé VM (Go)", "App1", "50"));
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("stockage réservé VM (Go)", "App1", "50")
+        );
     });
 
     it("doit générer un aria-label Nombre VM", () => {
@@ -318,8 +329,8 @@ describe("GreenIT - filteredViewMode", () => {
         const result = filteredViewMode("horsprod", mockData);
 
         expect(result).toHaveLength(1);
-        expect(result[0]._consoSort).toBe(100); 
-        expect(result[0]._nbVmSort).toBe(2);    
+        expect(result[0]._consoSort).toBe(100);
+        expect(result[0]._nbVmSort).toBe(2);
     });
 
     it("formate correctement cpuUsed en heures", () => {
@@ -330,9 +341,7 @@ describe("GreenIT - filteredViewMode", () => {
 });
 
 describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
-    const mockApps = [
-        { appName: "App1", sndi: "S1", domaineSndi: "D1" }
-    ];
+    const mockApps = [{ appName: "App1", sndi: "S1", domaineSndi: "D1" }];
 
     const mockGreenItData = [
         {
@@ -379,98 +388,127 @@ describe("Colonnes Accessibilité", () => {
     it("doit générer un aria-label CPU Max", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_cpuMaxiSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "5000" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "5000" } as unknown as MRT_Cell<
+                          GreenITIndicateur,
+                          unknown
+                      >,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
         expect(props!["aria-label"]).toBe(generateAriaLabelCell("CPU maxi (GHz)", "App1", "5000"));
     });
 
     it("doit générer un aria-label CPU Utilisé Kube", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_cpuUsedSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "1000" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("CPU utilisée Kube (heure)", "App1", "1000"));
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "1000" } as unknown as MRT_Cell<
+                          GreenITIndicateur,
+                          unknown
+                      >,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("CPU utilisée Kube (heure)", "App1", "1000")
+        );
     });
 
     it("doit générer un aria-label RAM Utilisée Kube", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_ramUsedSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "2000" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("RAM utilisée Kube (Go)", "App1", "2000"));
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "2000" } as unknown as MRT_Cell<
+                          GreenITIndicateur,
+                          unknown
+                      >,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("RAM utilisée Kube (Go)", "App1", "2000")
+        );
     });
 
     it("doit générer un aria-label Disque Utilisé", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_diskUsedSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "3000" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Stockage utilisé VM (Go)", "App1", "3000"));
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "3000" } as unknown as MRT_Cell<
+                          GreenITIndicateur,
+                          unknown
+                      >,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage utilisé VM (Go)", "App1", "3000")
+        );
     });
 
     it("doit générer un aria-label S3 Utilisé", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_s3UsedSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "500" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Stockage utilisé S3 (Go)", "App1", "500"));
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "500" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage utilisé S3 (Go)", "App1", "500")
+        );
     });
 
     it("doit générer un aria-label PVC Utilisé", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_pvcUsedSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "600" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Stockage utilisé Kube (Go)", "App1", "600"));
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "600" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage utilisé Kube (Go)", "App1", "600")
+        );
     });
 
     it("doit générer un aria-label Nombre de POD", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_nbPodMaxiSort")!;
         if (!colonne) return;
-        const props = typeof colonne.muiTableBodyCellProps === "function"
-            ? colonne.muiTableBodyCellProps({
-                cell: { getValue: () => "20" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                column: {} as never,
-                row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                table: {} as never
-            })
-            : colonne.muiTableBodyCellProps;
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "20" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
         expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre (maxi) de POD", "App1", "20"));
     });
 });

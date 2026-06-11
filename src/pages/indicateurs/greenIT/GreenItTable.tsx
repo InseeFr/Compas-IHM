@@ -7,7 +7,7 @@ import {
     fetchData,
     onExport,
     paginationConfig,
-    filteredViewMode  
+    filteredViewMode
 } from "./greenItConfig";
 
 import TablePageLayout from "components/TablePageLayout";
@@ -24,7 +24,7 @@ const VM_COLUMNS = {
     _diskUsedSort: true,
     _cpuSort: true,
     _ramSort: true,
-    _consoSort: true,
+    _consoSort: true
 };
 
 const KUBE_COLUMNS = {
@@ -32,33 +32,31 @@ const KUBE_COLUMNS = {
     _pvcUsedSort: true,
     _s3UsedSort: true,
     _cpuUsedSort: true,
-    _ramUsedSort: true,
+    _ramUsedSort: true
 };
-
 
 export const GreenItTable = () => {
     const { state, dispatch } = useFilterContext();
-    const [viewMode, setViewMode]       = useState<ViewMode>("global");
+    const [viewMode, setViewMode] = useState<ViewMode>("global");
     const columns = columnsGreenIt();
     const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
-    // Kube
-    _nbPodMaxiSort: true,
-    _pvcUsedSort: true,
-    _s3UsedSort: true,
-    _cpuUsedSort: true,
-    _ramUsedSort: true,
-    // VM
-    _nbVmSort: false,
-    _diskSort: false,
-    _diskUsedSort: false,
-    _cpuSort: false,
-    _ramSort: false,
-    _consoSort: false,
-});
+        // Kube
+        _nbPodMaxiSort: true,
+        _pvcUsedSort: true,
+        _s3UsedSort: true,
+        _cpuUsedSort: true,
+        _ramUsedSort: true,
+        // VM
+        _nbVmSort: false,
+        _diskSort: false,
+        _diskUsedSort: false,
+        _cpuSort: false,
+        _ramSort: false,
+        _consoSort: false
+    });
     const [infraMode, setInfraMode] = useState<"kube" | "vm" | null>("kube");
 
-
-     const { data, isLoading, filteredData, refetch } = useQueryIndicators({
+    const { data, isLoading, filteredData, refetch } = useQueryIndicators({
         queryKey: ["GreenItIndicator"],
         fetchData,
         hasModules: false
@@ -82,20 +80,22 @@ export const GreenItTable = () => {
             }
             renderTopCustom={({ table }) => (
                 <>
-                <ToggleButtonGroup
+                    <ToggleButtonGroup
                         value={infraMode}
                         exclusive
                         onChange={(_, val) => {
-                            setInfraMode(val)
+                            setInfraMode(val);
                             if (val === "vm") {
                                 setColumnVisibility({
-                                    ...Object.fromEntries(Object.keys(KUBE_COLUMNS).map(k => [k, false])),
-                                    ...Object.fromEntries(Object.keys(VM_COLUMNS).map(k => [k, true])),
+                                    ...Object.fromEntries(
+                                        Object.keys(KUBE_COLUMNS).map(k => [k, false])
+                                    ),
+                                    ...Object.fromEntries(Object.keys(VM_COLUMNS).map(k => [k, true]))
                                 });
                             } else if (val === "kube") {
                                 setColumnVisibility({
                                     ...Object.fromEntries(Object.keys(VM_COLUMNS).map(k => [k, false])),
-                                    ...Object.fromEntries(Object.keys(KUBE_COLUMNS).map(k => [k, true])),
+                                    ...Object.fromEntries(Object.keys(KUBE_COLUMNS).map(k => [k, true]))
                                 });
                             }
                         }}
@@ -105,7 +105,9 @@ export const GreenItTable = () => {
                         <ToggleButton value="vm">VM</ToggleButton>
                         <ToggleButton value="kube">Kube</ToggleButton>
                     </ToggleButtonGroup>
-                <GreenItToggleButton viewMode={viewMode} setViewMode={setViewMode} /><ButtonCsvExport table={table} onExport={onExport} /></>
+                    <GreenItToggleButton viewMode={viewMode} setViewMode={setViewMode} />
+                    <ButtonCsvExport table={table} onExport={onExport} />
+                </>
             )}
             fetch={refetch}
             enableHiding={true}

@@ -20,7 +20,19 @@ stages:
   - tag
   - docker
   - release-gitops
+  - mirroring
 
+
+mirror_ihm_to_github:
+  stage: mirroring
+  image: gitlab-registry.insee.fr:443/kubernetes/images/build/alpine:latest
+  script: 
+    - git remote add github https://${GITHUB_MIRROR_USERNAME}:${GITHUB_TOKEN_MIRRORING}@github.com/InseeFr/Compas-IHM.git
+    - git push github main:main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    
 
 release-gitops-dev1:
   stage: release-gitops

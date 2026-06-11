@@ -29,7 +29,9 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     filters: ReactNode;
     enableHiding?: boolean;
     columnVisibility?: Record<string, boolean>;
-    onColumnVisibilityChange?: (updater: MRT_VisibilityState | ((old: MRT_VisibilityState) => MRT_VisibilityState)) => void;
+    onColumnVisibilityChange?: (
+        updater: MRT_VisibilityState | ((old: MRT_VisibilityState) => MRT_VisibilityState)
+    ) => void;
 }
 
 export default function TablePageLayout<T extends MRT_RowData>(

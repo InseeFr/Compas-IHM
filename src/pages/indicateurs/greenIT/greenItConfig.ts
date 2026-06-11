@@ -69,13 +69,13 @@ const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
 };
 
 const formatOrNR = (value: number | null | undefined) =>
-  value == null ? "NR" : formatNumberWithSpaces(value);
+    value == null ? "NR" : formatNumberWithSpaces(value);
 
 const formatOrNRWithUnit = (value: number | null | undefined) =>
-  value == null ? "NR" : formatNumberWithSpaces(value, true);
+    value == null ? "NR" : formatNumberWithSpaces(value, true);
 
 const formatCpu = (value: number | null | undefined) =>
-  value == null ? "NR" : formatNumberWithSpaces(value / 1000, true);
+    value == null ? "NR" : formatNumberWithSpaces(value / 1000, true);
 
 /* =========================================================EXPORT CSV========================================================= */
 
@@ -209,7 +209,7 @@ export const filteredViewMode = (
             _diskUsedSort: diskUsed,
             _s3UsedSort: s3Used,
             _pvcUsedSort: pvcUsed,
-            _nbPodMaxiSort: nbPodMaxi,
+            _nbPodMaxiSort: nbPodMaxi
         };
     });
 };
@@ -250,8 +250,8 @@ export function formatIndicateur(
             consoNormalized: getValue(greenITApp, "consoScore"),
             impactNormalized: getValue(greenITApp, "impactScore"),
 
-            nbPodMaxi : getValue(greenITApp, "nbPodMaxi"),
-            nbPodMaxiProd : getValue(greenITApp,"nbPodMaxiProd"),
+            nbPodMaxi: getValue(greenITApp, "nbPodMaxi"),
+            nbPodMaxiProd: getValue(greenITApp, "nbPodMaxiProd"),
 
             diskUsed: getValue(greenITApp, "diskUsed"),
             pvcUsed: getValue(greenITApp, "pvcUsed"),
@@ -287,7 +287,7 @@ export const paginationConfig: Pagination = {
 export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
     const colonnes: MRT_ColumnDef<GreenITIndicateur>[] = [
         {
-            header: GREENIT_HEADERS.NOMBRE_VM,  //ok
+            header: GREENIT_HEADERS.NOMBRE_VM, //ok
             accessorKey: "_nbVmSort",
             Cell: ({ row }: MRT_RowData) => row.original._nbVm,
             sortingFn: sortHelper,
@@ -295,7 +295,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Nombre de VM", cell: cell, row: row })
         },
         {
-            header: "Nombre (maxi) de POD",  //ok
+            header: "Nombre (maxi) de POD", //ok
             accessorKey: "_nbPodMaxiSort",
             Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
             sortingFn: sortHelper,
@@ -303,7 +303,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "Nombre (maxi) de POD", cell: cell, row: row })
         },
         {
-            header: GREENIT_HEADERS.DISQUE_ALLOUE_GO,  //ok
+            header: GREENIT_HEADERS.DISQUE_ALLOUE_GO, //ok
             accessorKey: "_diskSort",
             Cell: ({ row }: MRT_RowData) => row.original._disk,
             sortingFn: sortHelper,
@@ -311,7 +311,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
                 muiAriaCell({ title: "stockage réservé VM (Go)", cell: cell, row: row })
         },
         {
-            header: "Stockage utilisé VM (Go)",  //ok
+            header: "Stockage utilisé VM (Go)", //ok
             accessorKey: "_diskUsedSort",
             Cell: ({ row }: MRT_RowData) => row.original._diskUsed,
             sortingFn: sortHelper,

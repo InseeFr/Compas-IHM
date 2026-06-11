@@ -32,7 +32,13 @@ vi.mock("pages/Filters", () => ({
 }));
 
 vi.mock("components/TablePageLayout", () => ({
-    default: ({ titleTable, filters, data, isLoading, renderTopCustom }: {
+    default: ({
+        titleTable,
+        filters,
+        data,
+        isLoading,
+        renderTopCustom
+    }: {
         titleTable: string;
         filters: React.ReactNode;
         data: GreenITIndicateur[];
@@ -44,7 +50,7 @@ vi.mock("components/TablePageLayout", () => ({
             {isLoading && <progress data-testid="progress">Loading...</progress>}
             <div data-testid="layout-filters">{filters}</div>
             <div data-testid="table-data">
-                {data?.map((row) => (
+                {data?.map(row => (
                     <div key={row.applicationName}>{row.applicationName}</div>
                 ))}
             </div>

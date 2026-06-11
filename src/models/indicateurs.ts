@@ -92,7 +92,7 @@ export interface GreenITIndicateur {
     _ramSort?: number | null;
     _diskSort?: number | null;
     _nbVmSort?: number | null;
-        
+
     ramMaxi?: string;
     cpuMaxi?: string;
     cpuUsed?: string;

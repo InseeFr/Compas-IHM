@@ -160,8 +160,6 @@ describe("GreenItTable", () => {
 
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
-
-
     });
 
     // ============================
