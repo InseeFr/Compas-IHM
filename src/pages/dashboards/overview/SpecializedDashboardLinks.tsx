@@ -9,17 +9,21 @@ import {
 } from "@mui/icons-material";
 import { ChartCard } from "./ChartCard";
 
+interface ColorToken {
+    text: string;
+    iconBackground: string;
+}
+
 interface DashboardLinkProps {
     title: string;
     description: string;
     icon: React.ReactNode;
     to: string;
-    color?: string;
+    colorToken: ColorToken;
 }
 
-const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLinkProps) => {
+const DashboardLinkCard = ({ title, description, icon, to, colorToken }: DashboardLinkProps) => {
     const theme = useTheme();
-    const isDark = theme.palette.mode === "dark";
 
     return (
         <Card
@@ -28,7 +32,11 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                 height: "100%",
                 position: "relative",
                 overflow: "hidden",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: theme.shadows[6]
+                },
                 "&::before": {
                     content: '""',
                     position: "absolute",
@@ -36,12 +44,9 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                     left: 0,
                     right: 0,
                     height: "4px",
-                    background: `linear-gradient(90deg, ${color ?? theme.palette.primary.main}, ${color ?? theme.palette.primary.dark})`,
-                    transition: "transform 0.3s ease"
+                    backgroundColor: colorToken.text
                 },
-                background: isDark
-                    ? `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`
-                    : `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
+                background: theme.palette.background.paper,
                 borderRadius: "12px"
             }}
             component={Link}
@@ -52,9 +57,7 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                 sx={{
                     height: "100%",
                     display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    zIndex: 1
+                    flexDirection: "column"
                 }}
             >
                 <Box
@@ -73,10 +76,9 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            background: `linear-gradient(135deg, ${color}22, ${color}44)`,
-                            color: color ?? theme.palette.primary.main,
-                            boxShadow: `0 4px 12px ${color}33`,
-                            transition: "transform 0.3s ease",
+                            backgroundColor: colorToken.iconBackground,
+                            color: colorToken.text,
+                            transition: "transform 0.2s ease",
                             "&:hover": {
                                 transform: "scale(1.05)"
                             }
@@ -85,19 +87,20 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                         {icon}
                     </Box>
                     <Box
+                        aria-hidden="true"
                         sx={{
                             width: 32,
                             height: 32,
                             borderRadius: "50%",
-                            background: color ? `${color}22` : theme.palette.primary.main + "22",
+                            backgroundColor: colorToken.iconBackground,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            color: color ?? theme.palette.primary.main,
-                            opacity: 0.8
+                            color: colorToken.text,
+                            fontSize: "18px"
                         }}
                     >
-                        <span style={{ fontSize: "18px" }}>→</span>
+                        →
                     </Box>
                 </Box>
                 <Typography
@@ -119,16 +122,14 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                     sx={{
                         mt: "auto",
                         pt: 2,
-                        borderTop: `1px solid ${theme.palette.divider}`,
-                        background: `linear-gradient(to right, ${color}11, transparent)`,
-                        borderRadius: "0 0 12px 12px"
+                        borderTop: `1px solid ${theme.palette.divider}`
                     }}
                 >
                     <Typography
                         variant="caption"
                         sx={{
                             fontWeight: 600,
-                            color: color ?? theme.palette.primary.main,
+                            color: colorToken.text,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "space-between"
@@ -136,17 +137,20 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
                     >
                         Explorer les détails
                         <Box
+                            aria-hidden="true"
                             sx={{
                                 width: 20,
                                 height: 20,
                                 borderRadius: "50%",
-                                background: color ? `${color}33` : theme.palette.primary.main + "33",
+                                backgroundColor: colorToken.iconBackground,
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "center"
+                                justifyContent: "center",
+                                color: colorToken.text,
+                                fontSize: "12px"
                             }}
                         >
-                            <span style={{ fontSize: "12px" }}>→</span>
+                            →
                         </Box>
                     </Typography>
                 </Box>
@@ -157,6 +161,7 @@ const DashboardLinkCard = ({ title, description, icon, to, color }: DashboardLin
 
 export const SpecializedDashboardLinks = () => {
     const theme = useTheme();
+    const isDarkMode = theme.palette.mode === "dark";
 
     const links = [
         {
@@ -164,46 +169,51 @@ export const SpecializedDashboardLinks = () => {
             description: "Analyse détaillée des indicateurs qualité",
             icon: <CheckCircleOutlineOutlined fontSize="large" />,
             to: "/dashboard/qualite",
-            color: theme.palette.success.main
+            colorToken: isDarkMode
+                ? { text: "#e1bee7", iconBackground: "#3a1a4a" }
+                : { text: "#5c1085", iconBackground: "#f3e5f5" }
         },
         {
             title: "Sécurité",
             description: "Suivi des vulnérabilités CVE, analyses et tendances",
             icon: <SecurityOutlined fontSize="large" />,
             to: "/dashboard/securite",
-            color: theme.palette.error.main
+            colorToken: isDarkMode
+                ? { text: "#ffcdd2", iconBackground: "#4e1c1c" }
+                : { text: "#b71c1c", iconBackground: "#ffebee" }
         },
         {
             title: "Météo",
             description: "Indicateurs météo et ressentis des applications",
             icon: <CloudQueueOutlined fontSize="large" />,
             to: "/dashboard/meteo",
-            color: theme.palette.info.main
+            colorToken: isDarkMode
+                ? { text: "#ffe0b2", iconBackground: "#4e2000" }
+                : { text: "#bf360c", iconBackground: "#fbe9e7" }
         },
         {
             title: "Green IT",
             description: "Indicateurs écologiques et consommation énergétique",
             icon: <Co2Outlined fontSize="large" />,
             to: "/dashboard/greenit",
-            color: theme.palette.success.dark
+            colorToken: isDarkMode
+                ? { text: "#c8e6c9", iconBackground: "#1a3a1a" }
+                : { text: "#1b5e20", iconBackground: "#e8f5e9" }
         },
         {
             title: "Accessibilité",
             description: "Conformité et indicateurs d'accessibilité",
             icon: <AccessibilityOutlined fontSize="large" />,
             to: "/dashboard/accessibilite",
-            color: theme.palette.info.dark
+            colorToken: isDarkMode
+                ? { text: "#bbdefb", iconBackground: "#0d2a5e" }
+                : { text: "#0d47a1", iconBackground: "#e3f2fd" }
         }
     ];
 
     return (
         <ChartCard>
-            <Box
-                sx={{
-                    p: { xs: 3, md: 5 },
-                    borderRadius: "16px"
-                }}
-            >
+            <Box sx={{ p: { xs: 3, md: 5 }, borderRadius: "16px" }}>
                 <Typography
                     variant="h4"
                     component="h2"
@@ -221,7 +231,7 @@ export const SpecializedDashboardLinks = () => {
                             left: 0,
                             right: 0,
                             height: "3px",
-                            background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                            backgroundColor: theme.palette.primary.main,
                             borderRadius: "3px"
                         }
                     }}
@@ -231,13 +241,8 @@ export const SpecializedDashboardLinks = () => {
                 <Typography
                     variant="body1"
                     color="text.secondary"
-                    sx={{
-                        textAlign: "center",
-                        mb: 5,
-                        maxWidth: "600px",
-                        mx: "auto"
-                    }}
-                ></Typography>
+                    sx={{ textAlign: "center", mb: 5, maxWidth: "600px", mx: "auto" }}
+                />
                 <Grid container spacing={4}>
                     {links.map((link, index) => (
                         <Grid key={`${link.title}-${index}`} size={{ xs: 12, sm: 6, md: 4 }}>

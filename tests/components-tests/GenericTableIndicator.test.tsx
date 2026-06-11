@@ -41,8 +41,8 @@ vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: (...args: unknown[]) => mockUseQueryIndicators(...args)
 }));
 
-vi.mock("pages/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
+vi.mock("components/filtersLayout/FilterSidebar", () => ({
+    FilterSidebar: () => <div data-testid="filters" />
 }));
 
 vi.mock("components/TablePageLayout", () => ({
@@ -132,7 +132,7 @@ describe("GenericIndicatorTable", () => {
 
         it("affiche les filtres", () => {
             render(<GenericIndicatorTable {...defaultProps} />);
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("affiche le nombre de lignes correct", () => {
@@ -224,7 +224,7 @@ describe("GenericIndicatorTable", () => {
     describe("Filtres custom", () => {
         it("affiche uniquement Filters si customFilters n'est pas fourni", () => {
             render(<GenericIndicatorTable {...defaultProps} />);
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
             expect(screen.queryByTestId("custom-filter")).not.toBeInTheDocument();
         });
 
@@ -235,7 +235,7 @@ describe("GenericIndicatorTable", () => {
                     customFilters={<div data-testid="custom-filter">Custom</div>}
                 />
             );
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
             expect(screen.getByTestId("custom-filter")).toBeInTheDocument();
         });
     });

@@ -2,7 +2,6 @@ import type { IndicateurApplicationMaturite } from "models/indicateurs";
 import { Fragment, useEffect, useState } from "react";
 import { useFilterContext } from "store/filterContext";
 import { bottom3ByPriority, computeConseil, fetchMaturiteData, fetchTipsData } from "./maturite-config";
-import { Filters } from "pages/Filters";
 import DashboardPageLayout from "components/dashboardsPagesLayout/dashboardPageLayout";
 import { applyDevFilters } from "utils/filters-functions";
 import { TextField } from "@mui/material";
@@ -14,6 +13,7 @@ import {
     TechAndOrga
 } from "./MaturiteContent";
 import type { ApplicationTip } from "todos-api/client.gen";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 export default function MaturiteCloud() {
     const [maturiteData, setMaturiteData] = useState<IndicateurApplicationMaturite[]>([]);
@@ -62,7 +62,7 @@ export default function MaturiteCloud() {
             <DashboardPageLayout
                 title={"Synthèse Maturité Cloud"}
                 dashboardData={filteredData}
-                filters={<Filters state={state} dispatch={dispatch} data={maturiteData} />}
+                filters={<FilterSidebar state={state} dispatch={dispatch} data={maturiteData} />}
                 loading={loading}
                 setter={setSelectedApp}
                 getter={selectedApp}

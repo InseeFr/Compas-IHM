@@ -32,7 +32,8 @@ vi.mock("@mui/material", async importOriginal => {
                 background: { paper: "#fff", default: "#f5f5f5" },
                 divider: "#e0e0e0",
                 text: { secondary: "#666" }
-            }
+            },
+            shadows: Array(25).fill("none")
         }))
     };
 });
@@ -160,7 +161,8 @@ describe("SpecializedDashboardLinks", () => {
                     background: { paper: "#1d1d1d", default: "#121212" },
                     divider: "#333",
                     text: { secondary: "#aaa" }
-                }
+                },
+                shadows: Array(25).fill("none")
             } as ReturnType<typeof useTheme>);
 
             render(<SpecializedDashboardLinks />);

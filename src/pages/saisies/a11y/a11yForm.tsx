@@ -12,7 +12,7 @@ import {
 import { DEFAULT_TYPE_AUDIT, fetchModules, TYPES_AUDIT, type A11yFormValues } from "./a11yFormValues";
 import type { ModsIndicateur } from "models/indicateurs";
 import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
+import { Filters } from "components/filtersLayout/FiltersForms";
 import { useQueryForm } from "hooks/useQueryForm";
 import { useSnackbar } from "hooks/useSnackbar";
 import { BaseFormLayout } from "components/formsPageLayout/BaseFormLayout";

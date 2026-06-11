@@ -12,7 +12,7 @@ import {
     RenderEnvCibleSelection
 } from "./strategieCloudFormCell";
 import { useFilterContext } from "store/filterContext";
-import { Filters } from "pages/Filters";
+import { Filters } from "components/filtersLayout/FiltersForms";
 import type { ModsIndicateur } from "models/indicateurs";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";
@@ -49,6 +49,7 @@ const defaultValues: FormDemandeCreationStrategieCloud = {
 export function StrategieCloudForm() {
     const { state, dispatch } = useFilterContext();
     const { snackbar, showSuccess, showError, close } = useSnackbar();
+
     const fetchData = async (): Promise<ModsIndicateur[]> => {
         const items = await getModules1();
         return (items ?? [])
@@ -81,7 +82,6 @@ export function StrategieCloudForm() {
     const {
         control,
         handleSubmit,
-        register,
         reset,
         formState: { errors }
     } = useForm<FormDemandeCreationStrategieCloud>({ defaultValues });
@@ -102,10 +102,13 @@ export function StrategieCloudForm() {
             await saisirStrategieCloud(apiData);
             showSuccess("Mise à jour de la stratégie cloud réussie.");
             reset(defaultValues);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
+        } catch (error) {
             console.error("Erreur Mise à jour de la stratégie cloud:", error);
-            const message = error.response?.data?.detail || "";
+            const message =
+                typeof error === "object" && error !== null && "response" in error
+                    ? ((error as { response?: { data?: { detail?: string } } }).response?.data?.detail ??
+                      "")
+                    : "";
             showError(
                 `Une erreur est survenue lors de la mise à jour de la stratégie cloud. ${message}`
             );
@@ -143,10 +146,10 @@ export function StrategieCloudForm() {
                         render={field => RenderEnvCibleSelection(field)}
                     />
                     <CommentaryLayout
-                        register={register}
+                        control={control}
                         isRequired={isCommentaryRequired}
                         errors={errors}
-                        commentaryMessage="Le commentaire est obligatoire pour cet état d’avancement."
+                        commentaryMessage="Le commentaire est obligatoire pour cet état d'avancement."
                     />
                 </>
             }

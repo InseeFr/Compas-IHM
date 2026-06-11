@@ -182,8 +182,7 @@ describe("MeteoTable", () => {
             state: {
                 serviceDev: "SNDI1",
                 domaineDev: "Domaine1",
-                domaineFonc: "DomaineFonc1",
-                appName: ""
+                domaineFonc: "DomaineFonc1"
             },
             dispatch: mockDispatch
         });
@@ -196,7 +195,7 @@ describe("MeteoTable", () => {
     });
     it("devrait filtrer par appName", async () => {
         vi.mocked(useFilterContext).mockReturnValue({
-            state: { ...mockState, appName: "App1" },
+            state: { ...mockState },
             dispatch: mockDispatch
         });
 
@@ -257,8 +256,7 @@ describe("MeteoTable", () => {
             state: {
                 serviceDev: "SNDI1",
                 domaineDev: "Domaine1",
-                domaineFonc: "DomaineFonc1",
-                appName: "App1"
+                domaineFonc: "DomaineFonc1"
             },
             dispatch: mockDispatch
         });

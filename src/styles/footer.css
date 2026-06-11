@@ -8,21 +8,27 @@
     position: relative;
 }
 
-.footer-box-access  {
+.footer-box-access {
     display: flex;
     align-items: center;
-    gap: 8px; 
+    gap: 8px;
 }
-.footer-box-access-icon  {
+
+.footer-box-access-icon {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 4px 12px;
     border-radius: 16px;
-    color: var(--main-color);  
+    color: var(--main-color);
 }
 
 .footer-typo {
+    color: inherit;
+    font-weight: 500;
+}
+
+.footer-typo-label {
     color: inherit;
     font-weight: 500;
 }
@@ -35,7 +41,7 @@
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    position:absolute;
+    position: absolute;
     left: 26px;
 }
 
@@ -43,6 +49,15 @@
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.footer-tag-label {
+    color: black;
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .footer-tag-badge {
@@ -58,7 +73,7 @@
 }
 
 .footer-tag-badge--api {
-    color: #1565c0;
+    color: #115097;
     background-color: rgba(21, 101, 192, 0.1);
 }
 
@@ -67,16 +82,28 @@
     background-color: rgba(106, 27, 154, 0.1);
 }
 
-.footer-tag-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    opacity: 0.6;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
 .footer-tag-date {
     font-size: 0.7rem;
     opacity: 0.5;
     font-style: italic;
+}
+
+/* Dark mode */
+#pied-de-page.dark-mode .footer-tags {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+#pied-de-page.dark-mode .footer-tag-label {
+    color: aliceblue;
+}
+
+#pied-de-page.dark-mode .footer-tag-badge--api {
+    color: #90caf9;
+    background-color: rgba(144, 202, 249, 0.15);
+}
+
+#pied-de-page.dark-mode .footer-tag-badge--ihm {
+    color: #ce93d8;
+    background-color: rgba(206, 147, 216, 0.15);
 }

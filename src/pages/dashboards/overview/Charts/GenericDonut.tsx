@@ -24,6 +24,7 @@ export function GenericDonut({ data, title, dataTransformer }: Readonly<GenericD
     const isDark = theme.palette.mode === "dark";
 
     const chartData = dataTransformer(data).filter(d => d.value > 0);
+    const chartDetails = chartData?.map(d => `${d.name} : ${d.value}`).join(", ") || "Aucune donnée";
 
     return (
         <Box>
@@ -39,6 +40,12 @@ export function GenericDonut({ data, title, dataTransformer }: Readonly<GenericD
             <figure>
                 <ReactECharts
                     option={{
+                        aria: {
+                            enabled: true,
+                            label: {
+                                description: `${title} : ${chartDetails}`
+                            }
+                        },
                         backgroundColor: "transparent",
                         tooltip: {
                             trigger: "item",

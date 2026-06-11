@@ -16,11 +16,25 @@ stages:
   - security-app
   - build-app-and-test
   - quality
+  - mirroring
   - calculate-version-and-release
   - tag
   - docker
   - release-gitops
 
+
+mirror_ihm_to_github:
+  stage: mirroring
+  image: gitlab-registry.insee.fr:443/kubernetes/images/build/alpine:latest
+  variables:
+    GIT_DEPTH: 0
+  script: 
+    - git remote add github_compas_ihm https://${GITHUB_MIRROR_USERNAME}:${GITHUB_TOKEN_MIRRORING}@github.com/InseeFr/Compas-IHM.git
+    - git push --force github_compas_ihm HEAD:main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    
 
 release-gitops-dev1:
   stage: release-gitops
@@ -77,7 +91,7 @@ release-gitops-prod:
     BRANCH: "main"
     PATH_TO_VALUE: "apps/compas-ui/values.yaml"
     KEY_TO_CHANGE: "ui-compas.image.tag"
-    NEW_VALUE: "${NEXT_TAG}"
+    NEW_VALUE: "$CI_COMMIT_TAG"
     USERNAME: "${GITOPS_USERNAME_PROD}"
     PASSWORD_VAR: "${GITOP_TOKEN_PROD_TAG}"
     AUTOMERGE: "true"

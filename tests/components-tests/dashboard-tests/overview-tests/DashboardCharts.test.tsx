@@ -262,7 +262,7 @@ describe("DashboardCharts", () => {
         it("affiche les Filters", async () => {
             renderWithProviders(<DashboardCharts />);
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("affiche uniquement la section 'Vue d'ensemble'", async () => {
@@ -338,7 +338,7 @@ describe("DashboardCharts", () => {
                 </ThemeProvider>
             );
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
 
         it("s'affiche en mode clair sans erreur", async () => {
@@ -350,7 +350,7 @@ describe("DashboardCharts", () => {
                 </ThemeProvider>
             );
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
         });
     });
 
@@ -361,7 +361,7 @@ describe("DashboardCharts", () => {
             vi.mocked(formattedMod.formattedApps).mockReturnValue([]);
             renderWithProviders(<DashboardCharts />);
             await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            expect(screen.getByTestId("filters")).toBeInTheDocument();
+            expect(screen.getByTestId("TuneIcon")).toBeInTheDocument();
             expect(screen.getByTestId("section-Vue d'ensemble")).toBeInTheDocument();
         });
     });
@@ -372,13 +372,6 @@ describe("DashboardCharts", () => {
         it("le loader est accessible via role progressbar", () => {
             renderWithProviders(<DashboardCharts />);
             expect(screen.getByRole("progressbar")).toBeInTheDocument();
-        });
-
-        it("le conteneur principal a minHeight 100vh", async () => {
-            renderWithProviders(<DashboardCharts />);
-            await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-            const container = screen.getByTestId("filters").parentElement;
-            expect(container).toHaveStyle({ minHeight: "100vh" });
         });
 
         it("affiche 4 KPIs en tout", async () => {

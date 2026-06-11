@@ -16,16 +16,16 @@ interface SelectedFiltersLayoutProps<T> {
 
 export function SelectedFiltersLayout<T>(props: Readonly<SelectedFiltersLayoutProps<T>>): JSX.Element {
     return (
-        <div className="filters-left-container">
+        <div className="filters-container">
             {props.filters.map((filter, index) => {
-                const labelId: string = `filter-label-${index}`;
-                const selectId: string = `filter-select-${index}`;
+                const labelId = `filter-label-${index}`;
+                const selectId = `filter-select-${index}`;
                 const values = Array.from(
                     new Set(filter.dataFilter.map(item => filter.getValue(item)).filter(Boolean))
                 ).sort((a, b) => a.localeCompare(b));
 
                 return (
-                    <FormControl className="filter-item" key={filter.title}>
+                    <FormControl key={filter.title} className="filter-item">
                         <InputLabel id={labelId}>{filter.title}</InputLabel>
                         <Select
                             id={selectId}
@@ -33,8 +33,9 @@ export function SelectedFiltersLayout<T>(props: Readonly<SelectedFiltersLayoutPr
                             value={filter.selectedOne}
                             onChange={filter.onChange}
                             label={filter.title}
+                            size="small"
                         >
-                            <MenuItem>Tous</MenuItem>
+                            <MenuItem value="">Tous</MenuItem>
                             {values.map(value => (
                                 <MenuItem key={value} value={value}>
                                     {value}

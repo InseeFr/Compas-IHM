@@ -73,7 +73,6 @@ describe("MainIndicator", () => {
     const mockState: FilterState = {
         serviceDev: "",
         domaineDev: "",
-        appName: "",
         domaineFonc: ""
     };
 

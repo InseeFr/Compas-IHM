@@ -25,7 +25,7 @@
         "@tanstack/react-query": "^5.90.19",
         "@tanstack/react-router": "^1.142.8",
         "@tanstack/router-vite-plugin": "^1.166.27",
-        "axios": "1.16.1",
+        "axios": "1.17.0",
         "date-fns": "^4.3.0",
         "dayjs": "^1.11.21",
         "echarts": "^6.0.0",
@@ -42,7 +42,7 @@
         "vite-envs": "^4.6.2"
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.1",
+        "@eslint/js": "^10.0.0",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.1",
         "@testing-library/user-event": "^14.6.1",
@@ -52,7 +52,7 @@
         "@vitejs/plugin-react": "^5.1.4",
         "@vitest/coverage-v8": "^4.0.16",
         "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "9.39.2",
+        "eslint": "10.4.1",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-refresh": "^0.5.0",

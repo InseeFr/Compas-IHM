@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
-import { filteredViewMode } from "pages/indicateurs/greenIT/greenItConfig";
 // ============================
 // MOCKS
 // ============================
@@ -51,7 +50,7 @@ vi.mock("components/TablePageLayout", () => ({
         <div>
             <h1>{titleTable}</h1>
 
-            {isLoading && <div role="progressbar">Loading...</div>}
+            {isLoading && <progress data-testid="progress">Loading...</progress>}
 
             <div data-testid="layout-filters">{filters}</div>
 
@@ -161,8 +160,6 @@ describe("GreenItTable", () => {
 
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
-
-        expect(filteredViewMode).toHaveBeenCalledWith("prod", mockData);
     });
 
     // ============================

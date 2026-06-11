@@ -9,7 +9,6 @@ import {
 } from "@mui/icons-material";
 
 // Components
-import { Filters } from "pages/Filters";
 import { KpiTile } from "./KpiTile";
 import { ChartCard } from "./ChartCard";
 import { GenericDonut } from "./Charts/GenericDonut";
@@ -46,6 +45,7 @@ import {
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import { applyDevFilters } from "utils/filters-functions";
 import Ariane from "components/Ariane";
+import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 
 const DashboardCharts = () => {
     const theme = useTheme();
@@ -130,7 +130,7 @@ const DashboardCharts = () => {
             }}
         >
             <Ariane items={[{ nav: "Vue d'ensemble", link: "" }]} />
-            <Filters data={globalInd} state={state} dispatch={dispatch} />
+            <FilterSidebar data={globalInd} state={state} dispatch={dispatch} />
 
             {/* ========== SECTION 1: VUE D'ENSEMBLE ========== */}
             <Box mb={6}>
