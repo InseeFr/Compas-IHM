@@ -26,6 +26,8 @@ stages:
 mirror_ihm_to_github:
   stage: mirroring
   image: gitlab-registry.insee.fr:443/kubernetes/images/build/alpine:latest
+  variables:
+    GIT_DEPTH: 0
   script: 
     - git remote add github_compas_ihm https://${GITHUB_MIRROR_USERNAME}:${GITHUB_TOKEN_MIRRORING}@github.com/InseeFr/Compas-IHM.git
     - git push --force github_compas_ihm HEAD:main
