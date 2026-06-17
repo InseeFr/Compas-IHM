@@ -25,59 +25,83 @@ export default function MenuNavBarLayout({ props, darkMode }: Readonly<IMenuLayo
         setActiveIndex(null);
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number): void => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleClick(event as unknown as React.MouseEvent<HTMLButtonElement>, index);
+        }
+    };
+
     return (
-        <>
-            {props.items.map((item, index) => (
-                <React.Fragment key={item.title}>
-                    {item.subItem ? (
-                        <Box className={`${darkMode ? "dark-mode" : "light-mode"}`}>
+        <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0, display: "flex" }}>
+            {props.items.map((item, index) => {
+                const isExpanded = open && activeIndex === index;
+                const subMenuId = `submenu-${index}`;
+                const buttonId = `navbar-button-${index}-${item.title.replace(/\s+/g, "-")}`;
+
+                return (
+                    <Box
+                        component="li"
+                        key={item.title}
+                        className={`${darkMode ? "dark-mode" : "light-mode"}`}
+                    >
+                        {item.subItem ? (
+                            <>
+                                <Button
+                                    id={buttonId}
+                                    className="navbar-button"
+                                    data-role="button"
+                                    data-testid={buttonId}
+                                    aria-controls={subMenuId}
+                                    aria-expanded={isExpanded ? "true" : "false"}
+                                    aria-label={item.title}
+                                    onClick={e => handleClick(e, index)}
+                                    onKeyDown={e => handleKeyDown(e, index)}
+                                >
+                                    <Typography noWrap className="navbar-title">
+                                        {item.title}
+                                    </Typography>
+                                </Button>
+                                <Menu
+                                    id={subMenuId}
+                                    anchorEl={anchorEl}
+                                    open={isExpanded}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        "aria-labelledby": buttonId,
+                                        component: "ul"
+                                    }}
+                                >
+                                    {item.subItem.map((sub, subIndex) => (
+                                        <MenuItem
+                                            className="navbar-menu-item"
+                                            data-testid={`navbar-menu-${index}-${subIndex}-${sub.label}`}
+                                            key={sub.label}
+                                            onClick={handleClose}
+                                            component={Link}
+                                            to={sub.to}
+                                        >
+                                            {sub.label}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </>
+                        ) : (
                             <Button
                                 className="navbar-button"
+                                component={Link}
+                                to={item.to}
                                 data-role="button"
-                                data-testid={`navbar-button-${index}-${item.title}`}
-                                aria-controls={open && activeIndex === index ? "basic-menu" : undefined}
-                                aria-expanded={open && activeIndex === index ? "true" : undefined}
                                 aria-label={item.title}
-                                onClick={e => handleClick(e, index)}
                             >
                                 <Typography noWrap className="navbar-title">
                                     {item.title}
                                 </Typography>
                             </Button>
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={open && activeIndex === index}
-                                onClose={handleClose}
-                            >
-                                {item.subItem.map((sub, subIndex) => (
-                                    <MenuItem
-                                        className="navbar-menu-item"
-                                        data-testid={`navbar-menu-${index}-${subIndex}-${sub.label}`}
-                                        key={sub.label}
-                                        onClick={handleClose}
-                                        component={Link}
-                                        to={sub.to}
-                                    >
-                                        {sub.label}
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
-                    ) : (
-                        <Button
-                            className="navbar-button"
-                            component={Link}
-                            to={item.to}
-                            data-role="button"
-                            aria-label={item.title}
-                        >
-                            <Typography noWrap className="navbar-title">
-                                {item.title}
-                            </Typography>
-                        </Button>
-                    )}
-                </React.Fragment>
-            ))}
-        </>
+                        )}
+                    </Box>
+                );
+            })}
+        </Box>
     );
 }

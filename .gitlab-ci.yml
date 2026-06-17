@@ -9,31 +9,27 @@ include:
     ref: main
     file:
       - '/utils.yaml'
-
+  - component: $CI_SERVER_FQDN/outils-transverses/services-transverses/mirroring-component/mirroring-pipeline@0.0.2
+    inputs:
+      project_id_gitlab: ${CI_PROJECT_ID}
+      personnal_token_gitlab: ${GITHUB_MR_TOKEN}
+      project_github_name: "Compas-IHM"
+      username_personnal_github: ${GITHUB_MIRROR_USERNAME}
+      personnal_token_github: ${GITHUB_TOKEN_MIRRORING}
+      chemin_gitlab_project: "dsi/compas/compas-ui-v2"
 
 stages:
   - check-source-branch
   - security-app
   - build-app-and-test
   - quality
-  - mirroring
+  - 🪞mirroir mon beau mirroir
   - calculate-version-and-release
   - tag
   - docker
   - release-gitops
 
 
-mirror_ihm_to_github:
-  stage: mirroring
-  image: gitlab-registry.insee.fr:443/kubernetes/images/build/alpine:latest
-  variables:
-    GIT_DEPTH: 0
-  script: 
-    - git remote add github_compas_ihm https://${GITHUB_MIRROR_USERNAME}:${GITHUB_TOKEN_MIRRORING}@github.com/InseeFr/Compas-IHM.git
-    - git push --force github_compas_ihm HEAD:main
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
     
 
 release-gitops-dev1:

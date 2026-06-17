@@ -22,14 +22,18 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
             <AppBar className={`header-container ${darkMode ? "dark-mode" : "light-mode"}`}>
                 <Toolbar className="header-toolbar" id="navigation">
                     <Box className="left-section">
-                        <Link to="/" className="logo-container">
-                            <img
-                                src={darkMode ? LogoInseeDark : LogoInseeLight}
-                                alt="Logo INSEE"
-                                className="logo-insee"
-                                data-testid="header-logo"
-                            />
-                            <Typography className="title-compas" data-testid="header-title">
+                        <img
+                            src={darkMode ? LogoInseeDark : LogoInseeLight}
+                            alt="INSEE Mesurer pour comprendre"
+                            className="logo-insee"
+                            data-testid="header-logo"
+                        />
+                        <Link to="/" className="logo-container" aria-label="Retour à l'accueil COMPAS">
+                            <Typography
+                                className="title-compas"
+                                data-testid="header-title"
+                                component="span"
+                            >
                                 COMPAS
                             </Typography>
                         </Link>
@@ -39,6 +43,7 @@ export function Header({ darkMode, toggleDarkMode }: Readonly<HeaderProps>) {
                         onClick={toggleDarkMode}
                         color="inherit"
                         aria-label="Bouton mode sombre"
+                        title="Bouton mode sombre"
                         className="toggle-button"
                         data-testid="toggle-darkmode"
                     >
