@@ -23,7 +23,7 @@ export const A11yIndicateurTable = () => {
             title="Table Indicateur Accessibilité"
             fetchData={fetchData}
             columns={columns}
-            queryKey="A11YIndicator" // gitleaks:allow
+            queryKey={["A11YIndicator"]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}

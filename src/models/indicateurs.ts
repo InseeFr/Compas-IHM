@@ -1,3 +1,5 @@
+import type { Trend } from "constantes/trend.utils";
+
 export interface IndicateurApplicationMaturite {
     applicationId?: number;
     sndi: string;
@@ -44,15 +46,21 @@ export interface QualiteIndicateur {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
+    lettreFiabilitePast?: string;
     lettreDetteTechnique?: string;
     pourcentageCouvertureTestUnitaire: string;
+    pourcentageCouvertureTestUnitairePast: string;
     grade?: string;
     isModule?: boolean;
     parentApplication?: string;
     detteTechnique?: string;
+    detteTechniquePast?: string;
     lettreQualiteGenerale?: string;
+    tendanceTestUnitaire: Trend;
+    tendanceFiabilite: Trend;
+    tendanceDetteTechnique: Trend;
 }
 
 export interface GreenITIndicateur {
@@ -221,7 +229,7 @@ export interface GlobalIndicator {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
     lettreGlobaleSecurite: string;
@@ -301,7 +309,7 @@ export interface IndicateurApplicationSynthese {
     sndi: string;
     domaine: string;
     domaineFonc: string;
-    lettreCouvertureTestUniaire: string;
+    lettreCouvertureTestUnitaire: string;
     lettreFiabilite?: string;
     lettreDetteTechnique?: string;
     lettreNiveauCve: string;

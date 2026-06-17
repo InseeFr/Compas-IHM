@@ -11,6 +11,18 @@ import { useQueryIndicators } from "hooks/useQueryIndicators";
 vi.mock("store/filterContext", () => ({
     useFilterContext: vi.fn()
 }));
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
 
 vi.mock("@tanstack/react-router", () => ({
     Link: ({ to, children, ...rest }: any) => (
@@ -21,8 +33,8 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 vi.mock("todos-api/client.gen", () => ({
-    getIndicateurQualiteByApplication: vi.fn(),
-    getIndicateurQualiteByModule: vi.fn()
+    getIndicateurQualiteByApplicationByDate: vi.fn(),
+    getIndicateurQualiteByModuleByDate: vi.fn()
 }));
 
 vi.mock("utils/group-module-by-apps", () => ({
@@ -51,10 +63,6 @@ vi.mock("pages/indicateurs/qualité/qualiteConfig", () => ({
     paginationConfig: {}
 }));
 
-vi.mock("pages/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
-}));
-
 vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
@@ -74,8 +82,8 @@ describe("QualiteIndicateurTable", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         (useFilterContext as any).mockReturnValue({ state: stateMock, dispatch: dispatchMock });
-        (clientApi.getIndicateurQualiteByApplication as any).mockResolvedValue(mockApps);
-        (clientApi.getIndicateurQualiteByModule as any).mockResolvedValue(mockModules);
+        (clientApi.getIndicateurQualiteByApplicationByDate as any).mockResolvedValue(mockApps);
+        (clientApi.getIndicateurQualiteByModuleByDate as any).mockResolvedValue(mockModules);
         vi.spyOn(groupModuleUtils, "groupModulesByApp").mockImplementation(data => ({
             App1: data.filter(d => d.isModule)
         }));
@@ -145,8 +153,8 @@ describe("QualiteIndicateurTable", () => {
 
         const result = await capturedFetchData!();
 
-        expect(clientApi.getIndicateurQualiteByApplication).toHaveBeenCalledOnce();
-        expect(clientApi.getIndicateurQualiteByModule).toHaveBeenCalledOnce();
+        expect(clientApi.getIndicateurQualiteByApplicationByDate).toHaveBeenCalledOnce();
+        expect(clientApi.getIndicateurQualiteByModuleByDate).toHaveBeenCalledOnce();
         expect(qualiteConfig.formatIndicateur).toHaveBeenCalledTimes(
             mockApps.length + mockModules.length
         );
@@ -160,7 +168,7 @@ describe("QualiteIndicateurTable", () => {
         const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
         const fetchError = new Error("Network error");
 
-        (clientApi.getIndicateurQualiteByApplication as any).mockRejectedValue(fetchError);
+        (clientApi.getIndicateurQualiteByApplicationByDate as any).mockRejectedValue(fetchError);
 
         let capturedFetchData: (() => Promise<any>) | undefined;
 
@@ -175,7 +183,7 @@ describe("QualiteIndicateurTable", () => {
 
         expect(result).toEqual([]);
         expect(consoleSpy).toHaveBeenCalledWith(
-            "Erreur lors de la récupération des données qualité: ",
+            "Erreur lors de la récupération des données qualité :",
             fetchError
         );
 
@@ -187,7 +195,7 @@ describe("QualiteIndicateurTable", () => {
 
         expect(useQueryIndicators).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["QualiteIndicator"],
+                queryKey: ["QualiteIndicator", "01/05/2026", "02/06/2026"],
                 hasModules: true
             })
         );

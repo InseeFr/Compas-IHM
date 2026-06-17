@@ -1,7 +1,7 @@
 import { useFilterContext } from "store/filterContext";
 import {
-    getIndicateurQualiteByApplication,
-    getIndicateurQualiteByModule,
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate,
     getApplications2,
     getModules2,
     listerApplicationsMeteo,
@@ -21,9 +21,12 @@ import ButtonCsvExport from "components/ButtonCsvExport";
 import { onExport } from "./csvexport";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
+import { useTendanceContext } from "store/tendance-context";
 
 export const MainIndicator = () => {
     const { state, dispatch } = useFilterContext();
+    const { stateTendance, dispatchTendance } = useTendanceContext();
+
     const columns = columnsGlobal();
 
     const fetchData = async () => {
@@ -44,8 +47,8 @@ export const MainIndicator = () => {
         ] = await Promise.all([
             getApplications1(),
             getModules1(),
-            getIndicateurQualiteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurQualiteByApplicationByDate(),
+            getIndicateurQualiteByModuleByDate(),
             getApplications2(),
             getModules2(),
             listerApplicationsMeteo(),
@@ -88,7 +91,15 @@ export const MainIndicator = () => {
     return (
         <TablePageLayout
             titleTable={"Table Indicateur Général"}
-            filters={<FilterSidebar data={data} state={state} dispatch={dispatch} />}
+            filters={
+                <FilterSidebar
+                    data={data}
+                    state={state}
+                    dispatch={dispatch}
+                    stateTendance={stateTendance}
+                    dispatchTendance={dispatchTendance}
+                />
+            }
             columns={columns}
             isLoading={isLoading}
             data={filteredData.filter(item => (item.isModule ? null : item))}

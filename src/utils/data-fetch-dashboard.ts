@@ -1,7 +1,7 @@
 import { formattedApps } from "pages/indicateurs/main-indicator/formatted-mod-and-app";
 import {
     getApplications1,
-    getIndicateurQualiteByApplication,
+    getIndicateurQualiteByApplicationByDate,
     getApplications2,
     listerApplicationsMeteo,
     getApplications,
@@ -23,7 +23,7 @@ export const fetchData = async () => {
             maturiteCloudApps
         ] = await Promise.all([
             getApplications1(),
-            getIndicateurQualiteByApplication(),
+            getIndicateurQualiteByApplicationByDate(),
             getApplications2(),
             listerApplicationsMeteo(),
             getApplications(),

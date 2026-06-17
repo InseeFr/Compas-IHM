@@ -1,16 +1,17 @@
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { Pagination } from "models/table-model";
-import { CouvertureTestUnitCell, DetteTechCell } from "./QualiteCell";
+import { CouvertureTestUnitCell, DetteTechCell, FiabiliteCell } from "./QualiteCell";
 import type { IndicateurQualiteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import type { QualiteIndicateur } from "models/indicateurs";
 import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
+import { getTrend } from "../../../constantes/trend.utils";
 
 const getValueQualiteCSV = (row: MRT_Row<QualiteIndicateur>): string[] => {
     return [
-        `"${row.original.lettreCouvertureTestUniaire ?? "NR"}"`,
+        `"${row.original.lettreCouvertureTestUnitaire ?? "NR"}"`,
         `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
         `"${row.original.lettreFiabilite ?? "NR"}"`,
         `"${row.original.lettreDetteTechnique ?? "NR"}"`,
@@ -36,6 +37,7 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
     const csvData: string[] = filteredRows.map(row => {
         return [...getBaseValueCSV(row), ...getValueQualiteCSV(row)].join(",");
     });
+
     handleExportCsv("qualité", table, csvData, headers);
 };
 
@@ -49,7 +51,7 @@ export const paginationConfig: Pagination = {
 export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
     const colonnes: MRT_ColumnDef<QualiteIndicateur>[] = [
         {
-            accessorKey: "lettreCouvertureTestUniaire",
+            accessorKey: "lettreCouvertureTestUnitaire",
             header: QUALITE_HEADERS.COUVERTURE_TEST,
             Cell: CouvertureTestUnitCell,
             muiTableBodyCellProps: ({ cell, row }) =>
@@ -58,6 +60,7 @@ export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
         {
             accessorKey: "lettreFiabilite",
             header: QUALITE_HEADERS.FIABILITE,
+            Cell: FiabiliteCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Fiabilité", cell: cell, row: row })
         },
@@ -83,6 +86,9 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
     const formatDetteTechnique = () => {
         return item.detteTechnique ? item.detteTechnique.replace(/\.00$/, "") : defaultValue;
     };
+    const formatDetteTechniquePast = () => {
+        return item.detteTechniquePast ? item.detteTechniquePast.replace(/\.00$/, "") : defaultValue;
+    };
     const getModuleSpecificFields = () => {
         if (!isModule) return {};
         return {
@@ -96,12 +102,19 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         sndi: item.sndi ?? defaultValue,
         domaine: item.domaineSndi ?? defaultValue,
         domaineFonc: item.domaineFonctionnel ?? defaultValue,
-        lettreCouvertureTestUniaire: item.lettreCouvertureTestUniaire ?? defaultValue,
+        lettreCouvertureTestUnitaire: item.lettreCouvertureTestUnitaire ?? defaultValue,
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
+        lettreFiabilitePast: item.fiabilitePast ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
-        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUniaire ?? defaultValue,
+        pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
+        pourcentageCouvertureTestUnitairePast:
+            item.pourcentageCouvertureTestUnitairePast ?? defaultValue,
         lettreQualiteGenerale: isModule ? undefined : (item.lettreGlobalQualite ?? defaultValue),
         detteTechnique: formatDetteTechnique(),
+        detteTechniquePast: formatDetteTechniquePast(),
+        tendanceTestUnitaire: getTrend(item.evolutionCouvertureTestUnitaire),
+        tendanceDetteTechnique: getTrend(item.evolutionDetteTechnique),
+        tendanceFiabilite: getTrend(item.evolutionFiabilite),
         ...getModuleSpecificFields()
     };
 }

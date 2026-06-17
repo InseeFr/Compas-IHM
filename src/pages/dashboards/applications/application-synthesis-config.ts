@@ -3,8 +3,8 @@ import {
     getApplications,
     getApplications1,
     getApplications2,
-    getIndicateurQualiteByApplication,
-    getIndicateurQualiteByModule,
+    getIndicateurQualiteByApplicationByDate,
+    getIndicateurQualiteByModuleByDate,
     getIndicateurSecuriteByApplication,
     getMaturiteCloud,
     getModules1,
@@ -21,7 +21,8 @@ import {
     type IndicateurSecuriteView,
     type IndicateursModuleA11Y,
     type Meteo,
-    type Module
+    type Module,
+    getIndicateurSecuriteByModule
 } from "todos-api/client.gen";
 import type { ModuleData } from "./preview/application-preview-config";
 import jsPDF from "jspdf";
@@ -62,15 +63,15 @@ export async function fetchApplicationSynthesis() {
         ] = await Promise.all([
             getApplications1(),
             getModules1(),
-            getIndicateurQualiteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurQualiteByApplicationByDate(),
+            getIndicateurQualiteByModuleByDate(),
             getApplications2(),
             getModules2(),
             listerApplicationsMeteo(),
             getApplications(),
             listerModulesA11y(),
             getIndicateurSecuriteByApplication(),
-            getIndicateurQualiteByModule(),
+            getIndicateurSecuriteByModule(),
             getMaturiteCloud(),
             getHomologation()
         ]);
@@ -152,11 +153,11 @@ const buildFormattedApp = ({
         sndi: getAttribute(app.sndi),
         domaine: getAttribute(app.domaineSndi),
         domaineFonc: getAttribute(app.domaineFonctionnel),
-        lettreCouvertureTestUniaire: getAttribute(quality?.lettreCouvertureTestUniaire),
+        lettreCouvertureTestUnitaire: getAttribute(quality?.lettreCouvertureTestUnitaire),
         lettreFiabilite: getAttribute(quality?.lettreFiabilite),
         lettreDetteTechnique: getAttribute(quality?.lettreDetteTechnique),
         lettreNiveauCve: getAttribute(securiteApp?.lettreGlobaleSecurite),
-        pourcentageCouvertureTestUniaire: getAttribute(quality?.pourcentageCouvertureTestUniaire),
+        pourcentageCouvertureTestUniaire: getAttribute(quality?.pourcentageCouvertureTestUnitaire),
         nbCveCritical: getAttribute(securiteApp?.nbCveCritical),
         nbCveHigh: getAttribute(securiteApp?.nbCveHigh),
         nbCveLow: getAttribute(securiteApp?.nbCveLow),
@@ -208,11 +209,11 @@ const buildFormattedMod = (
         sndi: getAttribute(module.sndi),
         domaine: getAttribute(module.domaineSndi),
         domaineFonc: getAttribute(module.domaineFonctionnel),
-        lettreCouvertureTestUniaire: getAttribute(qualite?.lettreCouvertureTestUniaire),
+        lettreCouvertureTestUnitaire: getAttribute(qualite?.lettreCouvertureTestUnitaire),
         lettreFiabilite: getAttribute(qualite?.lettreFiabilite),
         lettreDetteTechnique: getAttribute(qualite?.lettreDetteTechnique),
         lettreNiveauCve: getAttribute(securiteMod?.lettreGlobaleSecurite),
-        pourcentageCouvertureTestUniaire: getAttribute(qualite?.pourcentageCouvertureTestUniaire),
+        pourcentageCouvertureTestUniaire: getAttribute(qualite?.pourcentageCouvertureTestUnitaire),
         nbCveCritical: getAttribute(securiteMod?.nbCveCritical),
         nbCveHigh: getAttribute(securiteMod?.nbCveHigh),
         nbCveLow: getAttribute(securiteMod?.nbCveLow),

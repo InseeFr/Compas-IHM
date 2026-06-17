@@ -24,7 +24,7 @@ export const DevopsIndicateurTable = () => {
             title="Table Indicateur DEVOPS"
             fetchData={fetchData}
             columns={columns}
-            queryKey="DevopsIndicator"
+            queryKey={["DevopsIndicator"]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={onExport}

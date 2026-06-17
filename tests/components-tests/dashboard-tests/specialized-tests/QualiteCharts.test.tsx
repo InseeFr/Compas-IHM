@@ -59,7 +59,7 @@ function makeApp(overrides: Partial<GlobalIndicator> = {}): GlobalIndicator {
         pourcentageCouvertureTestUniaire: "75",
         detteTechnique: "210",
         nbLigneCode: "10000",
-        lettreCouvertureTestUniaire: "B",
+        lettreCouvertureTestUnitaire: "B",
         lettreFiabilite: "A",
         lettreDetteTechnique: "C",
         lettreQualiteGenerale: "B",
@@ -119,9 +119,9 @@ describe("QualiteCoverageChart", () => {
             expect(barData[4].value).toBe(1);
         });
 
-        it("place les apps avec lettreCouvertureTestUniaire=X dans le niveau X (index 0)", () => {
+        it("place les apps avec lettreCouvertureTestUnitaire=X dans le niveau X (index 0)", () => {
             const appX = makeApp({
-                lettreCouvertureTestUniaire: "X",
+                lettreCouvertureTestUnitaire: "X",
                 pourcentageCouvertureTestUniaire: "0"
             });
             render(<QualiteCoverageChart data={[appX]} />);
@@ -132,7 +132,7 @@ describe("QualiteCoverageChart", () => {
 
         it("exclut les apps X des plages de pourcentage", () => {
             const appX = makeApp({
-                lettreCouvertureTestUniaire: "X",
+                lettreCouvertureTestUnitaire: "X",
                 pourcentageCouvertureTestUniaire: "0"
             });
             render(<QualiteCoverageChart data={[appX]} />);
@@ -461,7 +461,7 @@ describe("QualiteRadarChart", () => {
         });
 
         it("comptabilise les apps avec lettre X dans la série Note X", () => {
-            const appX = makeApp({ lettreCouvertureTestUniaire: "X" });
+            const appX = makeApp({ lettreCouvertureTestUnitaire: "X" });
             render(<QualiteRadarChart data={[appX]} />);
             const option = JSON.parse(screen.getByTestId("echarts").dataset.option!);
             const serieX = option.series.find((s: { name: string }) => s.name === "Note X");
@@ -470,7 +470,7 @@ describe("QualiteRadarChart", () => {
 
         it("utilise NR comme fallback si lettre absente", () => {
             const appNoLettre = makeApp({
-                lettreCouvertureTestUniaire: undefined as unknown as string,
+                lettreCouvertureTestUnitaire: undefined as unknown as string,
                 lettreFiabilite: undefined as unknown as string,
                 lettreDetteTechnique: undefined as unknown as string,
                 lettreQualiteGenerale: undefined as unknown as string

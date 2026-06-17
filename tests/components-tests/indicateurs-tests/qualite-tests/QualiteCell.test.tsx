@@ -1,6 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import type { QualiteIndicateur } from "models/indicateurs";
-import { CouvertureTestUnitCell, DetteTechCell } from "pages/indicateurs/qualité/QualiteCell";
+import {
+    CouvertureTestUnitCell,
+    DetteTechCell,
+    FiabiliteCell
+} from "pages/indicateurs/qualité/QualiteCell";
 import type { ReactNode } from "react";
 import { describe, it, expect, vi } from "vitest";
 
@@ -19,8 +23,15 @@ function makeRow(overrides: Partial<QualiteIndicateur> = {}): { original: Qualit
         sndi: "sndi-test",
         domaine: "domaine-test",
         domaineFonc: "domaineFonc-test",
-        lettreCouvertureTestUniaire: "A",
+        lettreCouvertureTestUnitaire: "A",
+        lettreFiabilite: "B",
+        lettreDetteTechnique: "C",
         pourcentageCouvertureTestUnitaire: "0",
+        tendanceDetteTechnique: "up",
+        tendanceFiabilite: "up",
+        tendanceTestUnitaire: "up",
+        pourcentageCouvertureTestUnitairePast: "0",
+
         ...overrides
     };
     return { original: base };
@@ -47,17 +58,17 @@ describe("DetteTechCell", () => {
 
     it("convertit les minutes en jours (420 min = 1 jour)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "420" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 1 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 1.0 jours");
     });
 
     it("arrondit le nombre de jours (1000 min ≈ 2 jours)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "1000" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 2 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 2.4 jours");
     });
 
     it("gère les grandes valeurs correctement (8400 min = 20 jours)", () => {
         render(<DetteTechCell row={makeRow({ detteTechnique: "8400" })} />);
-        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 20 jours");
+        expect(screen.getByTestId("tooltip-title")).toHaveTextContent("Dette technique : 20.0 jours");
     });
 });
 
@@ -81,7 +92,47 @@ describe("CouvertureTestUnitCell", () => {
     });
 
     it("affiche la lettre de couverture dans le content", () => {
-        render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUniaire: "B" })} />);
+        render(<CouvertureTestUnitCell row={makeRow({ lettreCouvertureTestUnitaire: "B" })} />);
         expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
+    });
+
+    it("affiche l'icône de tendance haussière", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "up" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône de tendance baissière", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "down" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+
+    it("affiche l'icône stable", () => {
+        render(<CouvertureTestUnitCell row={makeRow({ tendanceFiabilite: "flat" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
+    });
+});
+
+// ─────────────────────────────────────────────
+// FiabiliteCell
+// ─────────────────────────────────────────────
+describe("FiabiliteCell", () => {
+    it("s'affiche sans erreur", () => {
+        render(<FiabiliteCell row={makeRow()} />);
+        expect(screen.getByTestId("tooltip")).toBeInTheDocument();
+    });
+
+    it("affiche la lettre A dans le title", () => {
+        render(<FiabiliteCell row={makeRow({ lettreFiabilite: "A" })} />);
+        expect(screen.getByTestId("tooltip-title").textContent).toMatch(/A/);
+    });
+
+    it("affiche la lettre  dans le content", () => {
+        render(<FiabiliteCell row={makeRow({ lettreFiabilite: "B" })} />);
+        expect(screen.getByTestId("tooltip-content").textContent).toMatch(/B/);
+    });
+
+    it("affiche l'icône stable", () => {
+        render(<FiabiliteCell row={makeRow({ tendanceFiabilite: "flat" })} />);
+        expect(document.querySelector("svg")).toBeInTheDocument();
     });
 });

@@ -7,12 +7,13 @@ import type { Pagination } from "models/table-model";
 import type { AllIndicators } from "models/indicateurs";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
+import { useTendanceContext } from "store/tendance-context";
 
 interface GenericIndicatorTableProps {
     title: string;
     fetchData: () => Promise<AllIndicators[] | undefined>;
     columns: any[];
-    queryKey: string;
+    queryKey: string[];
     hasModules?: boolean;
     rowId?: (row: any) => string;
     subRow?: (row: any) => any[] | undefined;
@@ -34,9 +35,11 @@ export const GenericIndicatorTable = ({
     customFilters
 }: GenericIndicatorTableProps) => {
     const { state, dispatch } = useFilterContext();
+    const { stateTendance, dispatchTendance } = useTendanceContext();
 
+    const queryKeyProps = [...queryKey];
     const { data, isLoading, modulesByApp, filteredData, refetch } = useQueryIndicators({
-        queryKey: [queryKey],
+        queryKey: queryKeyProps,
         fetchData,
         hasModules
     });
@@ -65,11 +68,23 @@ export const GenericIndicatorTable = ({
             filters={
                 customFilters ? (
                     <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                        <FilterSidebar data={data} state={state} dispatch={dispatch} />
+                        <FilterSidebar
+                            data={data}
+                            state={state}
+                            dispatch={dispatch}
+                            stateTendance={stateTendance}
+                            dispatchTendance={dispatchTendance}
+                        />
                         {customFilters}
                     </Box>
                 ) : (
-                    <FilterSidebar data={data} state={state} dispatch={dispatch} />
+                    <FilterSidebar
+                        data={data}
+                        state={state}
+                        dispatch={dispatch}
+                        stateTendance={stateTendance}
+                        dispatchTendance={dispatchTendance}
+                    />
                 )
             }
             data={processedData}

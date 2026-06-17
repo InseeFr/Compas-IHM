@@ -33,7 +33,7 @@ export const Filters = (props: Readonly<FiltersProps>) => {
         <SelectedFiltersLayout
             filters={[
                 {
-                    title: "Service dev.",
+                    title: "Service developpement",
                     selectedOne: state.serviceDev,
                     onChange: e =>
                         dispatch({
@@ -44,7 +44,7 @@ export const Filters = (props: Readonly<FiltersProps>) => {
                     getValue: item => item.sndi
                 },
                 {
-                    title: "Domaine dev.",
+                    title: "Domaine developpement",
                     selectedOne: state.domaineDev,
                     onChange: e =>
                         dispatch({
@@ -55,7 +55,7 @@ export const Filters = (props: Readonly<FiltersProps>) => {
                     getValue: item => item.domaine
                 },
                 {
-                    title: "Domaine Fonct.",
+                    title: "Domaine Fonctionnel",
                     selectedOne: state.domaineFonc,
                     onChange: e =>
                         dispatch({

@@ -3,9 +3,24 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import type { GreenITIndicateur } from "models/indicateurs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { fr } from "date-fns/locale";
 
 vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
+}));
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
 }));
 
 vi.mock("store/filterContext", () => ({
@@ -59,6 +74,14 @@ vi.mock("components/TablePageLayout", () => ({
     )
 }));
 
+const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+            {ui}
+        </LocalizationProvider>
+    );
+};
+
 const mockData: GreenITIndicateur[] = [
     {
         applicationName: "App1",
@@ -111,17 +134,17 @@ describe("GreenItTable", () => {
     });
 
     it("affiche le titre correctement", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
         expect(screen.getByRole("heading", { name: /table indicateur greenit/i })).toBeInTheDocument();
     });
 
     it("affiche les données", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
         expect(screen.getByText("App1")).toBeInTheDocument();
     });
 
     it("change le mode de vue via ToggleButtonGroup", () => {
-        render(<GreenItTable />);
+        renderWithProviders(<GreenItTable />);
         const prodButton = screen.getByText("Prod");
         fireEvent.click(prodButton);
         expect(prodButton).toHaveAttribute("aria-pressed", "true");

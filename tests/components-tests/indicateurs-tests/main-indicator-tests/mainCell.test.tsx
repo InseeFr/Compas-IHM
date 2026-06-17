@@ -41,7 +41,7 @@ vi.mock("@mui/icons-material/Error", () => ({
 describe("QualityCell", () => {
     const createRow = (overrides: Partial<GlobalIndicator> = {}): { original: GlobalIndicator } => ({
         original: {
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             pourcentageCouvertureTestUniaire: "85",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
@@ -114,7 +114,7 @@ describe("QualityCell", () => {
         render(
             <QualityCell
                 row={createRow({
-                    lettreCouvertureTestUniaire: "NR",
+                    lettreCouvertureTestUnitaire: "NR",
                     pourcentageCouvertureTestUniaire: "NR",
                     lettreFiabilite: "NR",
                     lettreDetteTechnique: "NR",

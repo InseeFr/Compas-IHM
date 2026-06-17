@@ -15,9 +15,11 @@ import { applyDevFilters } from "utils/filters-functions";
 import { MeteoFormMonths } from "./meteoCell";
 import { useQuery } from "@tanstack/react-query";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
+import { useTendanceContext } from "store/tendance-context";
 
 export const MeteoTable = () => {
     const { state, dispatch } = useFilterContext();
+    const { stateTendance, dispatchTendance } = useTendanceContext();
     const [nbMois, setNbMois] = useState<number>(6);
 
     const fetchData = async () => {
@@ -55,7 +57,15 @@ export const MeteoTable = () => {
             reactKey={months.join("|")}
             fetch={refetch}
             titleTable="Table Indicateur Météo"
-            filters={<FilterSidebar data={data} state={state} dispatch={dispatch} />}
+            filters={
+                <FilterSidebar
+                    data={data}
+                    state={state}
+                    dispatch={dispatch}
+                    stateTendance={stateTendance}
+                    dispatchTendance={dispatchTendance}
+                />
+            }
             columns={columns}
             data={filteredData}
             isLoading={isLoading}

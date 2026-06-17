@@ -24,11 +24,11 @@ describe("formattedApps", () => {
 
         const mockQualite: IndicateurQualiteView = {
             applicationId: 1,
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
             lettreGlobalQualite: "B",
-            pourcentageCouvertureTestUniaire: "85",
+            pourcentageCouvertureTestUnitaire: "85",
             detteTechnique: "10.00"
         };
 
@@ -127,7 +127,7 @@ describe("formattedApps", () => {
             sndi: "SNDI-001",
             domaine: "Domaine Test",
             domaineFonc: "Fonctionnel Test",
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             lettreFiabilite: "B",
             meteo: 3,
             lettreGreen: "B",
@@ -159,7 +159,7 @@ describe("formattedApps", () => {
             applicationName: "Empty App",
             sndi: "NR",
             domaine: "NR",
-            lettreCouvertureTestUniaire: "NR",
+            lettreCouvertureTestUnitaire: "NR",
             conso: "NR",
             meteo: -1,
             lettreGlobaleSecurite: "NR"
@@ -229,11 +229,11 @@ describe("formattedModules", () => {
 
         const mockQualite: IndicateurQualiteView = {
             moduleId: 1,
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             lettreFiabilite: "B",
             lettreDetteTechnique: "C",
             lettreGlobalQualite: "B",
-            pourcentageCouvertureTestUniaire: "90",
+            pourcentageCouvertureTestUnitaire: "90",
             detteTechnique: "5.00"
         };
 
@@ -291,7 +291,7 @@ describe("formattedModules", () => {
             domaineFonc: "Fonctionnel Module",
             isModule: true,
             parentApplication: "Parent App",
-            lettreCouvertureTestUniaire: "A",
+            lettreCouvertureTestUnitaire: "A",
             meteo: -1,
             lettreGlobaleSecurite: "A",
             lettreA11y: "NR"

@@ -12,7 +12,7 @@ export const QualityCell = ({ row }: Readonly<{ row: { original: GlobalIndicator
 
     return (
         <ToolTipLayout
-            title={`Couverture de test: ${row.original.lettreCouvertureTestUniaire} (
+            title={`Couverture de test: ${row.original.lettreCouvertureTestUnitaire} (
                     ${row.original.pourcentageCouvertureTestUniaire}) 
                     Fiabilité: ${row.original.lettreFiabilite} 
                     Dette technique: ${row.original.lettreDetteTechnique} (${detteTechniqueJours} 

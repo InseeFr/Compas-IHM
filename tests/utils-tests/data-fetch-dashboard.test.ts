@@ -4,7 +4,7 @@ import type { GlobalIndicator } from "models/indicateurs";
 
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
-    getIndicateurQualiteByApplication: vi.fn(),
+    getIndicateurQualiteByApplicationByDate: vi.fn(),
     getApplications2: vi.fn(),
     listerApplicationsMeteo: vi.fn(),
     getApplications: vi.fn(),
@@ -29,7 +29,7 @@ describe("fetchData", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         vi.mocked(api.getApplications1).mockResolvedValue(mockApps);
-        vi.mocked(api.getIndicateurQualiteByApplication).mockResolvedValue([]);
+        vi.mocked(api.getIndicateurQualiteByApplicationByDate).mockResolvedValue([]);
         vi.mocked(api.getApplications2).mockResolvedValue([]);
         vi.mocked(api.listerApplicationsMeteo).mockResolvedValue([]);
         vi.mocked(api.getApplications).mockResolvedValue([]);
@@ -43,7 +43,7 @@ describe("fetchData", () => {
         await fetchData();
 
         expect(api.getApplications1).toHaveBeenCalledTimes(1);
-        expect(api.getIndicateurQualiteByApplication).toHaveBeenCalledTimes(1);
+        expect(api.getIndicateurQualiteByApplicationByDate).toHaveBeenCalledTimes(1);
         expect(api.getApplications2).toHaveBeenCalledTimes(1);
         expect(api.listerApplicationsMeteo).toHaveBeenCalledTimes(1);
         expect(api.getApplications).toHaveBeenCalledTimes(1);

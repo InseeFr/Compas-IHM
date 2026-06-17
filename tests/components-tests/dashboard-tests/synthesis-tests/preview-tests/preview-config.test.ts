@@ -8,7 +8,7 @@ const baseApp: IndicateurApplicationSynthese = {
     sndi: "",
     domaine: "",
     domaineFonc: "",
-    lettreCouvertureTestUniaire: "",
+    lettreCouvertureTestUnitaire: "",
     lettreNiveauCve: "",
     pourcentageCouvertureTestUniaire: "",
     nbCveCritical: "",

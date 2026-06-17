@@ -22,7 +22,7 @@ export function useQueryIndicators<T extends FilterableItem>({
         refetch,
         isFetching
     } = useQuery({
-        queryKey: [queryKey.join(",")],
+        queryKey: queryKey,
         queryFn: fetchData
     });
 

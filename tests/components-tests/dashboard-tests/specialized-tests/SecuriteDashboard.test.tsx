@@ -15,9 +15,22 @@ vi.mock("@tanstack/react-router", () => ({
     useSearch: vi.fn(() => ({}))
 }));
 
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: () => ({
+        stateTendance: {
+            dateDebut: "01/05/2026",
+            dateFin: "02/06/2026"
+        },
+        dispatchTendance: vi.fn()
+    })
+}));
+vi.mock("components/indicators/TendanceForm", () => ({
+    TendancePeriodeForm: () => <div data-testid="tendance-form" />
+}));
+
 vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
-    getIndicateurQualiteByApplication: vi.fn(),
+    getIndicateurQualiteByApplicationByDate: vi.fn(),
     getApplications2: vi.fn(),
     listerApplicationsMeteo: vi.fn(),
     getApplications: vi.fn(),
@@ -88,7 +101,7 @@ const mockFormattedApps: GlobalIndicator[] = [
         sndi: "",
         domaine: "",
         domaineFonc: "",
-        lettreCouvertureTestUniaire: "",
+        lettreCouvertureTestUnitaire: "",
         lettreGlobaleSecurite: "",
         pourcentageCouvertureTestUniaire: "",
         nbCveHigh: "",
@@ -102,7 +115,7 @@ const mockFormattedApps: GlobalIndicator[] = [
 
 const setupApiMocks = () => {
     vi.mocked(api.getApplications1).mockResolvedValue(mockApps);
-    vi.mocked(api.getIndicateurQualiteByApplication).mockResolvedValue([]);
+    vi.mocked(api.getIndicateurQualiteByApplicationByDate).mockResolvedValue([]);
     vi.mocked(api.getApplications2).mockResolvedValue([]);
     vi.mocked(api.listerApplicationsMeteo).mockResolvedValue([]);
     vi.mocked(api.getApplications).mockResolvedValue([]);
@@ -206,7 +219,7 @@ describe("SecuriteDashboard", () => {
             await capturedFetchData!();
 
             expect(api.getApplications1).toHaveBeenCalledTimes(1);
-            expect(api.getIndicateurQualiteByApplication).toHaveBeenCalledTimes(1);
+            expect(api.getIndicateurQualiteByApplicationByDate).toHaveBeenCalledTimes(1);
             expect(api.getApplications2).toHaveBeenCalledTimes(1);
             expect(api.listerApplicationsMeteo).toHaveBeenCalledTimes(1);
             expect(api.getApplications).toHaveBeenCalledTimes(1);

@@ -71,7 +71,7 @@ export const formatMainCsvRow = (item: MRT_Row<GlobalIndicator>): string => {
         sanitize(original.lettreDevopsGenerale),
         sanitize(original.lettreGreen),
         sanitize(original.meteo),
-        original.lettreCouvertureTestUniaire,
+        original.lettreCouvertureTestUnitaire,
         original.pourcentageCouvertureTestUniaire,
         sanitize(original.lettreDetteTechnique),
         sanitize(computeDetteTechniqueJours(original.detteTechnique)),
