@@ -81,9 +81,14 @@
     transition: all 0.2s ease;
     border-radius: 8px;
 }
-/* focus dark theme */
-.toggle-button.Mui-focusVisible {
-    background-color: rgba(0, 84, 179, 0.61);
+ .toggle-button.Mui-focusVisible {
+    background-color: transparent;
+    outline: 2px solid #9c27b0;
+    outline-offset: 3px;
+}
+
+.dark-mode .toggle-button.Mui-focusVisible {
+    outline-color: #ce93d8;
 }
 
 .toggle-button:hover {
@@ -106,50 +111,27 @@
 .dark-mode .toggle-icon {
     color: #e0e0e0;
 }
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .header-toolbar {
         padding: 0.5rem 1rem;
         min-height: 60px;
+        flex-wrap: wrap;
+        row-gap: 0.25rem;
     }
-
-    .left-section {
-        gap: 1rem;
-    }
-
-    .title-compas {
-        font-size: 1.5rem;
-    }
-
-    .logo-insee {
-        height: 35px;
-    }
-
-    .logo-container {
-        gap: 1rem;
-    }
+    .left-section { gap: 1rem; flex-wrap: wrap; }
+    .logo-insee   { height: 35px; }
+    .logo-container { gap: 1rem; }
 }
 
-@media (max-width: 480px) {
-    .title-compas {
-        font-size: 1.25rem;
-    }
-
-    .logo-insee {
-        height: 30px;
-    }
-
-    .logo-container {
-        gap: 0.75rem;
-    }
-
-    .left-section {
-        gap: 0.75rem;
-    }
-
+@media (max-width: 660px) {
     .header-toolbar {
         padding: 0.5rem 0.75rem;
+        min-height: auto;
     }
+    .left-section { gap: 0.75rem; }
+    .logo-insee   { height: 30px; }
+    .logo-container { gap: 0.75rem; }
+    .title-compas { font-size: 1.25rem; }
 }
 
 @keyframes fadeInDown {

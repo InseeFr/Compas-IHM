@@ -83,7 +83,11 @@ export default function Footer({ darkmode, accessibility }: Readonly<FooterProps
         <footer id="pied-de-page" className={darkmode ? "dark-mode" : "light-mode"} role="contentinfo">
             <Box className="footer-box">
                 <output className="footer-box-access" aria-live="polite">
-                    <Typography variant="body2" className="footer-typo-label">
+                    <Typography
+                        variant="body2"
+                        component="span"
+                        className="footer-typo-label"
+                    >
                         Accessibilité :
                     </Typography>
                     <Box
@@ -91,18 +95,22 @@ export default function Footer({ darkmode, accessibility }: Readonly<FooterProps
                         style={{ "--main-color": config.color } as React.CSSProperties}
                     >
                         {config.icon}
-                        <Typography variant="body2" className="footer-typo">
+                        <Typography variant="body2" component="span" className="footer-typo">
                             {config.label}
                         </Typography>
                     </Box>
-                    <Box className="footer-tags">
-                        <Box className="footer-tag-row">
+                    <Box
+                        component="ul"
+                        className="footer-tags"
+                        sx={{ listStyle: "none", padding: 0, margin: 0 }}
+                    >
+                        <Box component="li" className="footer-tag-row">
                             <span className="footer-tag-label">API</span>
                             <span className="footer-tag-badge footer-tag-badge--api">
                                 {tags.apiTagView?.tag || "Non défini"}
                             </span>
                         </Box>
-                        <Box className="footer-tag-row">
+                        <Box component="li" className="footer-tag-row">
                             <span className="footer-tag-label">IHM</span>
                             <span className="footer-tag-badge footer-tag-badge--ihm">
                                 {tags.ihmTagView?.tag || "Non défini"}
