@@ -9,20 +9,29 @@ import {
     getApplications1,
     getIndicateurSecuriteByApplication,
     getIndicateurSecuriteByModule,
-    getModules1
+    getModules1,
+    type GetIndicateurSecuriteByApplicationParams
 } from "todos-api/client.gen";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
+import { useTendanceContext } from "store/tendance-context";
 
 const SecuriteIndicateurTable = () => {
+    const { stateTendance } = useTendanceContext();
+
     const columns = columnsTable();
 
     const fetchData = async () => {
         try {
+            const params: GetIndicateurSecuriteByApplicationParams = {
+                dateReference: stateTendance.dateFin,
+
+                datePassee: stateTendance.dateDebut
+            };
             const [apps, modules, securiteApps, securiteModules] = await Promise.all([
                 getApplications1(),
                 getModules1(),
-                getIndicateurSecuriteByApplication(),
-                getIndicateurSecuriteByModule()
+                getIndicateurSecuriteByApplication(params),
+                getIndicateurSecuriteByModule(params)
             ]);
             const formattedApps = formatApplicationsData(apps, securiteApps);
             const formattedModules = formatModulesData(modules, securiteModules);
@@ -38,7 +47,7 @@ const SecuriteIndicateurTable = () => {
             title="Table Indicateur Sécurité"
             fetchData={fetchData}
             columns={columns}
-            queryKey={["SecuriteIndicator"]}
+            queryKey={["SecuriteIndicator", stateTendance.dateDebut, stateTendance.dateFin]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}

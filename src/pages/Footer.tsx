@@ -83,11 +83,7 @@ export default function Footer({ darkmode, accessibility }: Readonly<FooterProps
         <footer id="pied-de-page" className={darkmode ? "dark-mode" : "light-mode"} role="contentinfo">
             <Box className="footer-box">
                 <output className="footer-box-access" aria-live="polite">
-                    <Typography
-                        variant="body2"
-                        component="span"
-                        className="footer-typo-label"
-                    >
+                    <Typography variant="body2" component="span" className="footer-typo-label">
                         Accessibilité :
                     </Typography>
                     <Box

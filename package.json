@@ -6,7 +6,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "generate-todos-api-client": "tsx orval/generate-todos-api-client.ts",
+        "generate-todos-api-client": "node --experimental-transform-types orval/generate-todos-api-client.ts",
         "dev": "vite --host",
         "build": "tsc && vite build",
         "lint": "eslint ./src",

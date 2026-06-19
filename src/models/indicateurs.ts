@@ -139,9 +139,15 @@ export interface SecuriteIndicateur {
     nbCveHigh?: string;
     nbCveMedium?: string;
     nbCveLow?: string;
+    nbCveCriticalPast?: string;
+    nbCveHighPast?: string;
+    nbCveMediumPast?: string;
+    nbCveLowPast?: string;
     nbVmNonMaj?: string;
+    vmCountPast?: string;
     lettreCve?: string;
     delaiVmNonMiseAjour?: string;
+    delaiVmNonMiseAJourPast?: string;
     lettreMajVm?: string;
     lettreGlobaleSecurite?: string;
     lettreGlobale?: string;

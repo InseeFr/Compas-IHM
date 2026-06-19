@@ -1,6 +1,6 @@
 import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-table";
 import type { Pagination } from "models/table-model";
-import { CveCell, MajVmCell } from "./SecuriteCell";
+import { CveCell, DelaiVMCell, MajVmCell } from "./SecuriteCell";
 import type { Application, Module, IndicateurSecuriteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
@@ -72,6 +72,7 @@ export const columnsTable = (): MRT_ColumnDef<SecuriteIndicateur>[] => {
         {
             accessorKey: "delaiVmNonMiseAjour",
             header: SECURITE_HEADERS.MAX_DELAI_MAJ_VM,
+            Cell: DelaiVMCell,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Délai des maj VM", cell: cell, row: row })
         }
@@ -82,19 +83,26 @@ export const columnsTable = (): MRT_ColumnDef<SecuriteIndicateur>[] => {
 function formatSecuriteIndicateurBase(
     securiteItem?: IndicateurSecuriteView
 ): Partial<SecuriteIndicateur> {
-    const defaultValue = "NR";
+    const value = <T>(v: T | null | undefined) => v ?? "NR";
+
     return {
-        nbCveCritical: securiteItem?.nbCveCritical ?? defaultValue,
-        nbCveHigh: securiteItem?.nbCveHigh ?? defaultValue,
-        nbCveLow: securiteItem?.nbCveLow ?? defaultValue,
-        nbCveMedium: securiteItem?.nbCveMedium ?? defaultValue,
-        lettreCve: securiteItem?.lettreCve ?? defaultValue,
-        lettreNiveauCve: securiteItem?.lettreCve ?? defaultValue,
-        nbVmNonMaj: securiteItem?.nbVmNonMaj ?? defaultValue,
-        lettreMajVm: securiteItem?.lettreMajVm ?? defaultValue,
-        delaiVmNonMiseAjour: securiteItem?.delaiVmNonMiseAjour ?? defaultValue,
-        lettreGlobaleSecurite: securiteItem?.lettreGlobaleSecurite ?? defaultValue,
-        lettreGlobale: securiteItem?.lettreGlobale ?? defaultValue
+        nbCveCritical: value(securiteItem?.nbCveCritical),
+        nbCveHigh: value(securiteItem?.nbCveHigh),
+        nbCveLow: value(securiteItem?.nbCveLow),
+        nbCveMedium: value(securiteItem?.nbCveMedium),
+        lettreCve: value(securiteItem?.lettreCve),
+        lettreNiveauCve: value(securiteItem?.lettreCve),
+        nbVmNonMaj: value(securiteItem?.nbVmNonMaj),
+        lettreMajVm: value(securiteItem?.lettreMajVm),
+        delaiVmNonMiseAjour: value(securiteItem?.delaiVmNonMiseAjour),
+        delaiVmNonMiseAJourPast: value(securiteItem?.delaiVmNonMiseAJourPast),
+        lettreGlobaleSecurite: value(securiteItem?.lettreGlobaleSecurite),
+        lettreGlobale: value(securiteItem?.lettreGlobale),
+        nbCveCriticalPast: value(securiteItem?.nbCveCriticalPast),
+        nbCveHighPast: value(securiteItem?.nbCveHighPast),
+        nbCveMediumPast: value(securiteItem?.nbCveMediumPast),
+        nbCveLowPast: value(securiteItem?.nbCveLowPast),
+        vmCountPast: value(securiteItem?.vmCountPast)
     };
 }
 

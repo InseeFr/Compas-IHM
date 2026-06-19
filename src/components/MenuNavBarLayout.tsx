@@ -33,7 +33,10 @@ export default function MenuNavBarLayout({ props, darkMode }: Readonly<IMenuLayo
     };
 
     return (
-        <Box component="ul" sx={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap" }}>
+        <Box
+            component="ul"
+            sx={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap" }}
+        >
             {props.items.map((item, index) => {
                 const isExpanded = open && activeIndex === index;
                 const subMenuId = `submenu-${index}`;
@@ -59,8 +62,7 @@ export default function MenuNavBarLayout({ props, darkMode }: Readonly<IMenuLayo
                                     onClick={e => handleClick(e, index)}
                                     onKeyDown={e => handleKeyDown(e, index)}
                                 >
-                                    <Typography noWrap component="span"
-                                        className="navbar-title">
+                                    <Typography noWrap component="span" className="navbar-title">
                                         {item.title}
                                     </Typography>
                                 </Button>
