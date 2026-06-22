@@ -183,7 +183,7 @@ describe("DevopsIndicateurTable", () => {
             mockApps.length + mockModules.length
         );
         // Les modules sont formatés avec isModule = true
-        expect(devopsConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], true);
+        expect(devopsConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], "module");
         // Le résultat est la concaténation apps + modules formatés
         expect(result).toHaveLength(mockApps.length + mockModules.length);
     });

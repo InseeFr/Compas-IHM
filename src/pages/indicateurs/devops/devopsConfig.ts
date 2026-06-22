@@ -75,15 +75,17 @@ export const columnsTable = (): MRT_ColumnDef<DevopsIndicateur>[] => {
     return [...BASE_COLONNE<DevopsIndicateur>(), ...colonnes];
 };
 
-function resolveApplicationName(item: IndicateurDevopsView, isModule: boolean): string {
-    return isModule
-        ? (item.moduleName ?? "NR")
-        : (item.applicationName ?? "NR");
-}
+type IndicateurMode = "application" | "module";
 
-export function formatIndicateur(item: IndicateurDevopsView, isModule = false): DevopsIndicateur {
+function resolveApplicationName(item: IndicateurDevopsView, mode: IndicateurMode): string {
+    return mode === "module" ? (item.moduleName ?? "NR") : (item.applicationName ?? "NR");
+}
+export function formatIndicateur(
+    item: IndicateurDevopsView,
+    mode: IndicateurMode = "application"
+): DevopsIndicateur {
     const baseProperties = {
-        applicationName: resolveApplicationName(item, isModule),
+        applicationName: resolveApplicationName(item, mode),
         sndi: item.sndi ?? "NR",
         domaine: item.domaineSndi ?? "NR",
         domaineFonc: item.domaineFonctionnel ?? "NR",
@@ -104,7 +106,7 @@ export function formatIndicateur(item: IndicateurDevopsView, isModule = false): 
 
     return {
         ...baseProperties,
-        ...(isModule && {
+        ...(mode === "module" && {
             parentApplication: item.applicationName ?? "NR",
             isModule: true
         })

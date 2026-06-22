@@ -63,7 +63,7 @@ describe("formatIndicateur", () => {
                 moduleName: "Mod1",
                 sndi: "S1"
             } as unknown as DevopsIndicateur,
-            true
+            "module"
         );
         expect(result).toEqual(
             expect.objectContaining({

@@ -22,7 +22,7 @@ export const DevopsIndicateurTable = () => {
             const [apps, modules] = await Promise.all([getApplications2(params), getModules2(params)]);
 
             const formattedApplications = apps.map(app => formatIndicateur(app));
-            const formattedModules = modules.map(module => formatIndicateur(module, true));
+            const formattedModules = modules.map(module => formatIndicateur(module, "module"));
 
             return [...formattedApplications, ...formattedModules];
         } catch (error) {
