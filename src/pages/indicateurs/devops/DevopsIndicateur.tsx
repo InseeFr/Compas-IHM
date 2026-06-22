@@ -1,13 +1,21 @@
-import { getApplications2, getModules2 } from "../../../todos-api/client.gen";
+import { getApplications2, getModules2, type GetApplications2Params } from "../../../todos-api/client.gen";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
+import { useTendanceContext } from "store/tendance-context";
 
 export const DevopsIndicateurTable = () => {
+    const { stateTendance } = useTendanceContext();
+    
     const columns = columnsTable();
 
     const fetchData = async () => {
         try {
-            const [apps, modules] = await Promise.all([getApplications2(), getModules2()]);
+            const params: GetApplications2Params = {
+                dateReference: stateTendance.dateFin,
+
+                datePassee: stateTendance.dateDebut
+            };
+            const [apps, modules] = await Promise.all([getApplications2(params), getModules2(params)]);
 
             const formattedApplications = apps.map(app => formatIndicateur(app));
             const formattedModules = modules.map(module => formatIndicateur(module, true));
@@ -24,7 +32,7 @@ export const DevopsIndicateurTable = () => {
             title="Table Indicateur DEVOPS"
             fetchData={fetchData}
             columns={columns}
-            queryKey={["DevopsIndicator"]}
+            queryKey={["DevopsIndicator", stateTendance.dateDebut, stateTendance.dateFin]}
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={onExport}

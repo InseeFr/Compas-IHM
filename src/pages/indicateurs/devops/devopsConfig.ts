@@ -88,6 +88,12 @@ export function formatIndicateur(item: IndicateurDevopsView, isModule = false): 
         nbDeploymentCount: item.nbDeploymentCount ?? "NR",
         distanceCount: item.distanceCount ?? "NR",
         lettreGlobalDevops: item.lettreGlobalDevops ?? "NR",
+        pastNbContributorCount: item.pastNbContributorCount ?? "NR",
+        pastNbDeploymentCount: item.pastNbDeploymentCount ?? "NR",
+        pastDistanceCount: item.pastDistanceCount ?? "NR",
+        diffNbContributorCount: item.diffNbContributorCount,
+        diffNbDeploymentCount: item.diffNbDeploymentCount,
+        diffDistanceCount: item.diffDistanceCount,
         ...(isModule
             ? {
                   parentApplication: item.applicationName ?? "NR",

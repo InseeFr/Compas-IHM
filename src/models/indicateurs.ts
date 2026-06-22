@@ -35,6 +35,12 @@ export interface DevopsIndicateur {
     distanceCount: string;
     nbDeploymentCount: string;
     nbContributorCount: string;
+    pastNbContributorCount?: string;
+    pastNbDeploymentCount?: string;
+    pastDistanceCount?: string;
+    diffNbContributorCount?: number;
+    diffNbDeploymentCount?: number;
+    diffDistanceCount?: number;
     grade?: string;
     isModule?: boolean;
     parentApplication?: string;
