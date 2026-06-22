@@ -19,10 +19,7 @@ function getTooltip(
     return prefix ? `${prefix} ${nb} ${label}` : `${nb} ${label}`;
 }
 
-function isUpDownOrStableDevopsBase(
-    diff?: number,
-    lettre?: string
-): Trend | undefined {
+function isUpDownOrStableDevopsBase(diff?: number, lettre?: string): Trend | undefined {
     if (lettre === "NR" || lettre === "SO") {
         return undefined;
     }
@@ -38,10 +35,7 @@ function isUpDownOrStableDevopsBase(
     return diff > 0 ? "up" : "down";
 }
 
-function isUpDownOrStableDistance(
-    diff?: number,
-    lettre?: string
-): Trend | undefined {
+function isUpDownOrStableDistance(diff?: number, lettre?: string): Trend | undefined {
     if (lettre === "NR" || lettre === "SO") {
         return undefined;
     }
@@ -57,9 +51,7 @@ function isUpDownOrStableDistance(
     return diff > 0 ? "down" : "up";
 }
 
-export function ContributorCell({
-    row
-}: Readonly<{ row: { original: DevopsIndicateur } }>) {
+export function ContributorCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
     const {
         lettreContributorCount,
         nbContributorCount,
@@ -71,8 +63,7 @@ export function ContributorCell({
     const isSO = lettreContributorCount === "SO";
 
     const hasDuplicateFlag =
-        typeof lettreContributorCount === "string" &&
-        /^[A-E]\sd$/i.test(lettreContributorCount);
+        typeof lettreContributorCount === "string" && /^[A-E]\sd$/i.test(lettreContributorCount);
 
     const nb = Number(nbContributorCount) || 0;
 
@@ -89,15 +80,10 @@ export function ContributorCell({
         baseTooltip = `${nb} ${personneLabel}`;
     }
 
-    const tendance = isUpDownOrStableDevopsBase(
-        diffNbContributorCount,
-        lettreContributorCount
-    );
+    const tendance = isUpDownOrStableDevopsBase(diffNbContributorCount, lettreContributorCount);
 
     const { icon: Icon, color } =
-        tendance === undefined
-            ? { icon: () => null, color: "transparent" }
-            : TREND_CONFIG[tendance];
+        tendance === undefined ? { icon: () => null, color: "transparent" } : TREND_CONFIG[tendance];
 
     const tooltip =
         !isNR && !isSO && hasDuplicateFlag
@@ -116,15 +102,9 @@ export function ContributorCell({
     );
 }
 
-export function DeploymentCell({
-    row
-}: Readonly<{ row: { original: DevopsIndicateur } }>) {
-    const {
-        lettreDeploymentCount,
-        nbDeploymentCount,
-        pastNbDeploymentCount,
-        diffNbDeploymentCount
-    } = row.original;
+export function DeploymentCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
+    const { lettreDeploymentCount, nbDeploymentCount, pastNbDeploymentCount, diffNbDeploymentCount } =
+        row.original;
 
     const tooltip = getTooltip(
         lettreDeploymentCount,
@@ -133,15 +113,10 @@ export function DeploymentCell({
         "mises en production"
     );
 
-    const tendance = isUpDownOrStableDevopsBase(
-        diffNbDeploymentCount,
-        lettreDeploymentCount
-    );
+    const tendance = isUpDownOrStableDevopsBase(diffNbDeploymentCount, lettreDeploymentCount);
 
     const { icon: Icon, color } =
-        tendance === undefined
-            ? { icon: () => null, color: "transparent" }
-            : TREND_CONFIG[tendance];
+        tendance === undefined ? { icon: () => null, color: "transparent" } : TREND_CONFIG[tendance];
 
     return (
         <ToolTipLayout
@@ -155,33 +130,15 @@ export function DeploymentCell({
     );
 }
 
-export function DistanceCell({
-    row
-}: Readonly<{ row: { original: DevopsIndicateur } }>) {
-    const {
-        lettreDistanceCount,
-        distanceCount,
-        pastDistanceCount,
-        diffDistanceCount
-    } = row.original;
+export function DistanceCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
+    const { lettreDistanceCount, distanceCount, pastDistanceCount, diffDistanceCount } = row.original;
 
-    const tooltip = getTooltip(
-        lettreDistanceCount,
-        distanceCount,
-        "jour",
-        "jours",
-        "Il y a"
-    );
+    const tooltip = getTooltip(lettreDistanceCount, distanceCount, "jour", "jours", "Il y a");
 
-    const tendance = isUpDownOrStableDistance(
-        diffDistanceCount,
-        lettreDistanceCount
-    );
+    const tendance = isUpDownOrStableDistance(diffDistanceCount, lettreDistanceCount);
 
     const { icon: Icon, color } =
-        tendance === undefined
-            ? { icon: () => null, color: "transparent" }
-            : TREND_CONFIG[tendance];
+        tendance === undefined ? { icon: () => null, color: "transparent" } : TREND_CONFIG[tendance];
 
     return (
         <ToolTipLayout

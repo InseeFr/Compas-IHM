@@ -76,7 +76,7 @@ export const columnsTable = (): MRT_ColumnDef<DevopsIndicateur>[] => {
 };
 
 export function formatIndicateur(item: IndicateurDevopsView, isModule = false): DevopsIndicateur {
-    return {
+    const baseProperties = {
         applicationName: isModule ? (item.moduleName ?? "NR") : (item.applicationName ?? "NR"),
         sndi: item.sndi ?? "NR",
         domaine: item.domaineSndi ?? "NR",
@@ -93,12 +93,14 @@ export function formatIndicateur(item: IndicateurDevopsView, isModule = false): 
         pastDistanceCount: item.pastDistanceCount ?? "NR",
         diffNbContributorCount: item.diffNbContributorCount,
         diffNbDeploymentCount: item.diffNbDeploymentCount,
-        diffDistanceCount: item.diffDistanceCount,
-        ...(isModule
-            ? {
-                  parentApplication: item.applicationName ?? "NR",
-                  isModule: true
-              }
-            : {})
+        diffDistanceCount: item.diffDistanceCount
+    };
+
+    return {
+        ...baseProperties,
+        ...(isModule && {
+            parentApplication: item.applicationName ?? "NR",
+            isModule: true
+        })
     };
 }

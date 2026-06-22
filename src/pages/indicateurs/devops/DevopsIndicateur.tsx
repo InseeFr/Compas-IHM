@@ -1,11 +1,15 @@
-import { getApplications2, getModules2, type GetApplications2Params } from "../../../todos-api/client.gen";
+import {
+    getApplications2,
+    getModules2,
+    type GetApplications2Params
+} from "../../../todos-api/client.gen";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 import { useTendanceContext } from "store/tendance-context";
 
 export const DevopsIndicateurTable = () => {
     const { stateTendance } = useTendanceContext();
-    
+
     const columns = columnsTable();
 
     const fetchData = async () => {
