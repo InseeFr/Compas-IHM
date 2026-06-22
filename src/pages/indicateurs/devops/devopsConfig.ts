@@ -75,9 +75,15 @@ export const columnsTable = (): MRT_ColumnDef<DevopsIndicateur>[] => {
     return [...BASE_COLONNE<DevopsIndicateur>(), ...colonnes];
 };
 
+function resolveApplicationName(item: IndicateurDevopsView, isModule: boolean): string {
+    return isModule
+        ? (item.moduleName ?? "NR")
+        : (item.applicationName ?? "NR");
+}
+
 export function formatIndicateur(item: IndicateurDevopsView, isModule = false): DevopsIndicateur {
     const baseProperties = {
-        applicationName: isModule ? (item.moduleName ?? "NR") : (item.applicationName ?? "NR"),
+        applicationName: resolveApplicationName(item, isModule),
         sndi: item.sndi ?? "NR",
         domaine: item.domaineSndi ?? "NR",
         domaineFonc: item.domaineFonctionnel ?? "NR",
