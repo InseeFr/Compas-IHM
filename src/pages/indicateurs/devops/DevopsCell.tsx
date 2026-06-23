@@ -19,38 +19,27 @@ function getTooltip(
     return prefix ? `${prefix} ${nb} ${label}` : `${nb} ${label}`;
 }
 
-function isUpDownOrStableDevopsBase(
+function isUpDownOrStable(
     diff?: number,
     lettre?: string,
-    pastValue?: string
+    pastValue?: string,
+    invertDirection = false
 ): Trend | undefined {
     if (lettre === "NR" || lettre === "SO") return undefined;
     if (diff === undefined) return undefined;
-
     if (pastValue === "NR" || pastValue === "SO" || pastValue === "") return undefined;
     const nb = Number(pastValue);
     if (nb === -1 || nb === -2) return undefined;
-
     if (diff === 0) return "flat";
-    return diff > 0 ? "up" : "down";
+    const isUp = diff > 0 !== invertDirection;
+    return isUp ? "up" : "down";
 }
 
-function isUpDownOrStableDistance(
-    diff?: number,
-    lettre?: string,
-    pastValue?: string
-): Trend | undefined {
-    if (lettre === "NR" || lettre === "SO") return undefined;
-    if (diff === undefined) return undefined;
+const isUpDownOrStableDevopsBase = (diff?: number, lettre?: string, pastValue?: string) =>
+    isUpDownOrStable(diff, lettre, pastValue);
 
-    if (pastValue === "NR" || pastValue === "SO" || pastValue === "") return undefined;
-    const nb = Number(pastValue);
-    if (nb === -1 || nb === -2) return undefined;
-
-    if (diff === 0) return "flat";
-    return diff > 0 ? "down" : "up";
-}
-
+const isUpDownOrStableDistance = (diff?: number, lettre?: string, pastValue?: string) =>
+    isUpDownOrStable(diff, lettre, pastValue, true);
 export function ContributorCell({ row }: Readonly<{ row: { original: DevopsIndicateur } }>) {
     const {
         lettreContributorCount,
