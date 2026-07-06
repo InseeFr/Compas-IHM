@@ -8,7 +8,7 @@ import {
     getIndicateurSecuriteByApplication,
     getMaturiteCloud,
     getModules1,
-    getModules2,
+    getModules,
     listerApplicationsMeteo,
     listerModulesA11y,
     getHomologation,
@@ -62,11 +62,11 @@ export async function fetchApplicationSynthesis() {
             homologation
         ] = await Promise.all([
             getApplications1(),
-            getModules1(),
+            getModules(),
             getIndicateurQualiteByApplicationByDate(),
             getIndicateurQualiteByModuleByDate(),
             getApplications2(),
-            getModules2(),
+            getModules1(),
             listerApplicationsMeteo(),
             getApplications(),
             listerModulesA11y(),

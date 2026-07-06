@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFilterContext } from "store/filterContext";
-import { getModules1, listerModulesA11y } from "todos-api/client.gen";
+import { getModules, listerModulesA11y } from "todos-api/client.gen";
 import { A11yIndicateurTable } from "pages/indicateurs/a11y/A11yIndicateur";
 import * as a11yConfig from "pages/indicateurs/a11y/a11yConfig";
 
@@ -101,7 +101,7 @@ describe("A11yIndicateurTable", () => {
         });
 
         vi.mocked(listerModulesA11y).mockResolvedValue(mockModulesA11y);
-        vi.mocked(getModules1).mockResolvedValue(mockModules);
+        vi.mocked(getModules).mockResolvedValue(mockModules);
     });
 
     it("devrait afficher le titre et les filtres", () => {
@@ -122,7 +122,7 @@ describe("A11yIndicateurTable", () => {
 
         await waitFor(() => {
             expect(listerModulesA11y).toHaveBeenCalledTimes(1);
-            expect(getModules1).toHaveBeenCalledTimes(1);
+            expect(getModules).toHaveBeenCalledTimes(1);
         });
 
         await waitFor(() => {
@@ -178,7 +178,7 @@ describe("A11yIndicateurTable", () => {
     it("devrait gérer les erreurs lors du chargement des modules", async () => {
         const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-        vi.mocked(getModules1).mockRejectedValue(new Error("Erreur API Modules"));
+        vi.mocked(getModules).mockRejectedValue(new Error("Erreur API Modules"));
 
         render(<A11yIndicateurTable />, { wrapper: createWrapper() });
 

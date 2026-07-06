@@ -1,6 +1,6 @@
 import {
     getApplications2,
-    getModules2,
+    getModules1,
     type GetApplications2Params
 } from "../../../todos-api/client.gen";
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
@@ -19,7 +19,7 @@ export const DevopsIndicateurTable = () => {
 
                 datePassee: stateTendance.dateDebut
             };
-            const [apps, modules] = await Promise.all([getApplications2(params), getModules2(params)]);
+            const [apps, modules] = await Promise.all([getApplications2(params), getModules1(params)]);
 
             const formattedApplications = apps.map(app => formatIndicateur(app));
             const formattedModules = modules.map(module => formatIndicateur(module, "module"));

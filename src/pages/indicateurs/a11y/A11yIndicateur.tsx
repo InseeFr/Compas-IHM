@@ -1,5 +1,5 @@
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./a11yConfig";
-import { getModules1, listerModulesA11y } from "todos-api/client.gen";
+import { getModules, listerModulesA11y } from "todos-api/client.gen";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 
 export const A11yIndicateurTable = () => {
@@ -7,7 +7,7 @@ export const A11yIndicateurTable = () => {
 
     const fetchData = async () => {
         try {
-            const [modulesA11y, modules] = await Promise.all([listerModulesA11y(), getModules1()]);
+            const [modulesA11y, modules] = await Promise.all([listerModulesA11y(), getModules()]);
 
             const modulesByName = new Map(modules.map(module => [module.modName, module]));
 

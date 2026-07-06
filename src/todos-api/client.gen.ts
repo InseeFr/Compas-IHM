@@ -120,52 +120,74 @@ export interface Meteo {
     commentaire?: string;
 }
 
-export interface IndicateurModuleGreenITView {
-    moduleId?: number;
-    moduleName?: string;
-    ramAllocated?: string;
-    diskUsed?: string;
-    diskAllocated?: string;
-    cpuAllocated?: string;
-    conso?: string;
-    nbVm?: string;
-    consoScore?: string;
-    impactScore?: string;
-    gaspillageScore?: string;
-    lettreGreen?: string;
-    dateMaj?: string;
-}
-
 export interface IndicateurApplicationGreenITView {
     applicationId?: number;
     applicationName?: string;
+    domaineDev?: string;
+    serviceDev?: string;
+    domaineFonc?: string;
     ramAllocated?: string;
+    ramAllocatedHist?: string;
     ramMaxi?: string;
+    ramMaxiHist?: string;
     diskAllocated?: string;
+    diskAllocatedHist?: string;
     diskUsed?: string;
+    diskUsedHist?: string;
     cpuAllocated?: string;
+    cpuAllocatedHist?: string;
     cpuMaxi?: string;
+    cpuMaxiHist?: string;
     conso?: string;
+    consoHist?: string;
+    asUsed?: string;
+    asUsedHist?: string;
+    asAllocated?: string;
+    asAllocatedHist?: string;
     nbVm?: string;
+    nbVmHist?: string;
     cpuUsed?: string;
+    cpuUsedHist?: string;
     ramUsed?: string;
+    ramUsedHist?: string;
     s3Used?: string;
+    s3UsedHist?: string;
     pvcUsed?: string;
+    pvcUsedHist?: string;
     nbPodMaxi?: string;
+    nbPodMaxiHist?: string;
     ramAllocatedProd?: string;
+    ramAllocatedHistProd?: string;
     ramMaxiProd?: string;
+    ramMaxiHistProd?: string;
     diskAllocatedProd?: string;
+    diskAllocatedHistProd?: string;
     diskUsedProd?: string;
+    diskUsedHistProd?: string;
     cpuAllocatedProd?: string;
+    cpuAllocatedHistProd?: string;
     cpuMaxiProd?: string;
+    cpuMaxiHistProd?: string;
     consoProd?: string;
+    consoHistProd?: string;
+    asUsedProd?: string;
+    asUsedHistProd?: string;
+    asAllocatedProd?: string;
+    asAllocatedHistProd?: string;
     nbVmProd?: string;
+    nbVmHistProd?: string;
     cpuUsedProd?: string;
+    cpuUsedHistProd?: string;
     ramUsedProd?: string;
+    ramUsedHistProd?: string;
     s3UsedProd?: string;
+    s3UsedHistProd?: string;
     pvcUsedProd?: string;
+    pvcUsedHistProd?: string;
     nbPodMaxiProd?: string;
+    nbPodMaxiHistProd?: string;
     consoScore?: string;
+    consoHistScore?: string;
     impactScore?: string;
     gaspillageScore?: string;
     lettreGreen?: string;
@@ -406,9 +428,14 @@ export type GetHistoryParams = {
     nbMois?: number;
 };
 
+export type GetApplicationsParams = {
+    origine?: string;
+    passee?: string;
+};
+
 export type GetKeySonarParApplication200 = { [key: string]: string[] };
 
-export type GetModules2Params = {
+export type GetModules1Params = {
     dateReference?: string;
     datePassee?: string;
     isSynthetique?: boolean;
@@ -719,35 +746,16 @@ export const listerApplicationsMeteoAnciennesParam = (
     return fetch<Meteo[]>({ url: `/meteo/anciennes/${jours}`, method: "GET" }, options);
 };
 
-export const getModules = (options?: SecondParameter<typeof fetch<IndicateurModuleGreenITView[]>>) => {
-    return fetch<IndicateurModuleGreenITView[]>({ url: `/kpi-green/modules`, method: "GET" }, options);
-};
-
-export const getIndicateursGreenIT = (
-    moduleId: number,
-    options?: SecondParameter<typeof fetch<IndicateurModuleGreenITView>>
-) => {
-    return fetch<IndicateurModuleGreenITView>(
-        { url: `/kpi-green/modules/${moduleId}`, method: "GET" },
-        options
-    );
+export const getValidDates = (options?: SecondParameter<typeof fetch<string[]>>) => {
+    return fetch<string[]>({ url: `/kpi-green/valid-dates`, method: "GET" }, options);
 };
 
 export const getApplications = (
+    params?: GetApplicationsParams,
     options?: SecondParameter<typeof fetch<IndicateurApplicationGreenITView[]>>
 ) => {
     return fetch<IndicateurApplicationGreenITView[]>(
-        { url: `/kpi-green/applications`, method: "GET" },
-        options
-    );
-};
-
-export const getNombreVirtualMachine = (
-    applicationId: number,
-    options?: SecondParameter<typeof fetch<IndicateurApplicationGreenITView>>
-) => {
-    return fetch<IndicateurApplicationGreenITView>(
-        { url: `/kpi-green/applications/${applicationId}`, method: "GET" },
+        { url: `/kpi-green/applications`, method: "GET", params },
         options
     );
 };
@@ -782,7 +790,7 @@ export const getHomologation = (options?: SecondParameter<typeof fetch<Homologat
 /**
  * @summary liste des modules d'oscar sans feign
  */
-export const getModules1 = (options?: SecondParameter<typeof fetch<Module[]>>) => {
+export const getModules = (options?: SecondParameter<typeof fetch<Module[]>>) => {
     return fetch<Module[]>({ url: `/get-modules`, method: "GET" }, options);
 };
 
@@ -812,8 +820,8 @@ export const getAllModules = (options?: SecondParameter<typeof fetch<ModuleOscar
     return fetch<ModuleOscarView[]>({ url: `/get-all-modules`, method: "GET" }, options);
 };
 
-export const getModules2 = (
-    params?: GetModules2Params,
+export const getModules1 = (
+    params?: GetModules1Params,
     options?: SecondParameter<typeof fetch<IndicateurDevopsView[]>>
 ) => {
     return fetch<IndicateurDevopsView[]>({ url: `/devops/modules`, method: "GET", params }, options);
@@ -945,25 +953,21 @@ export type ListerApplicationsMeteoAnciennesResult = NonNullable<
 export type ListerApplicationsMeteoAnciennesParamResult = NonNullable<
     Awaited<ReturnType<typeof listerApplicationsMeteoAnciennesParam>>
 >;
-export type GetModulesResult = NonNullable<Awaited<ReturnType<typeof getModules>>>;
-export type GetIndicateursGreenITResult = NonNullable<Awaited<ReturnType<typeof getIndicateursGreenIT>>>;
+export type GetValidDatesResult = NonNullable<Awaited<ReturnType<typeof getValidDates>>>;
 export type GetApplicationsResult = NonNullable<Awaited<ReturnType<typeof getApplications>>>;
-export type GetNombreVirtualMachineResult = NonNullable<
-    Awaited<ReturnType<typeof getNombreVirtualMachine>>
->;
 export type GetApplicationsAbsentesOscarResult = NonNullable<
     Awaited<ReturnType<typeof getApplicationsAbsentesOscar>>
 >;
 export type GetDoublonsGristResult = NonNullable<Awaited<ReturnType<typeof getDoublonsGrist>>>;
 export type GetApplicationGristResult = NonNullable<Awaited<ReturnType<typeof getApplicationGrist>>>;
 export type GetHomologationResult = NonNullable<Awaited<ReturnType<typeof getHomologation>>>;
-export type GetModules1Result = NonNullable<Awaited<ReturnType<typeof getModules1>>>;
+export type GetModulesResult = NonNullable<Awaited<ReturnType<typeof getModules>>>;
 export type GetKeySonarParApplicationResult = NonNullable<
     Awaited<ReturnType<typeof getKeySonarParApplication>>
 >;
 export type GetApplications1Result = NonNullable<Awaited<ReturnType<typeof getApplications1>>>;
 export type GetAllModulesResult = NonNullable<Awaited<ReturnType<typeof getAllModules>>>;
-export type GetModules2Result = NonNullable<Awaited<ReturnType<typeof getModules2>>>;
+export type GetModules1Result = NonNullable<Awaited<ReturnType<typeof getModules1>>>;
 export type GetApplications2Result = NonNullable<Awaited<ReturnType<typeof getApplications2>>>;
 export type GetIndicateurResult = NonNullable<Awaited<ReturnType<typeof getIndicateur>>>;
 export type GetApplicationConseilsResult = NonNullable<

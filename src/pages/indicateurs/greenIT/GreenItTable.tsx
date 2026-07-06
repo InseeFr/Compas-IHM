@@ -4,10 +4,10 @@ import { useFilterContext } from "store/filterContext";
 
 import {
     columnsGreenIt,
-    fetchData,
     onExport,
     paginationConfig,
-    filteredViewMode
+    filteredViewMode,
+    formatIndicateur
 } from "./greenItConfig";
 
 import TablePageLayout from "components/TablePageLayout";
@@ -18,6 +18,8 @@ import { GreenItDate } from "components/GreenItDate";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 import { GreenItToggleButton } from "./GreenItCell";
 import { useTendanceContext } from "store/tendance-context";
+import { getApplications, type GetApplicationsParams } from "todos-api/client.gen";
+import { useInitTendanceDates, useValidDates } from "hooks/useCompasDataDate";
 
 const VM_COLUMNS = {
     _nbVmSort: true,
@@ -39,9 +41,12 @@ const KUBE_COLUMNS = {
 export const GreenItTable = () => {
     const { state, dispatch } = useFilterContext();
     const { stateTendance, dispatchTendance } = useTendanceContext();
+    const { validDates, validDatesSet } = useValidDates();
+
+    useInitTendanceDates(validDates, dispatchTendance);
 
     const [viewMode, setViewMode] = useState<ViewMode>("global");
-    const columns = columnsGreenIt();
+    const columns = columnsGreenIt(viewMode);
     const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
         // Kube
         _nbPodMaxiSort: true,
@@ -59,8 +64,22 @@ export const GreenItTable = () => {
     });
     const [infraMode, setInfraMode] = useState<"kube" | "vm" | null>("kube");
 
+    const fetchData = async () => {
+        try {
+            const params: GetApplicationsParams = {
+                origine: stateTendance.dateFin,
+                passee: stateTendance.dateDebut
+            };
+            const appGreenIt = await getApplications(params);
+            return formatIndicateur(appGreenIt);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des données: ", error);
+            throw error;
+        }
+    };
+
     const { data, isLoading, filteredData, refetch } = useQueryIndicators({
-        queryKey: ["GreenItIndicator"],
+        queryKey: ["GreenItIndicator", stateTendance.dateDebut, stateTendance.dateFin],
         fetchData,
         hasModules: false
     });
@@ -76,6 +95,7 @@ export const GreenItTable = () => {
                         dispatch={dispatch}
                         stateTendance={stateTendance}
                         dispatchTendance={dispatchTendance}
+                        validDatesSet={validDatesSet}
                     />
                     <GreenItDate />
                 </Box>
@@ -84,9 +104,7 @@ export const GreenItTable = () => {
             isLoading={isLoading}
             columns={columns}
             paginationConfig={paginationConfig}
-            rowId={row =>
-                row.isModule ? `${row.parentApplication}-${row.applicationName}` : row.applicationName
-            }
+            rowId={row => row.applicationId + row.applicationName}
             renderTopCustom={({ table }) => (
                 <>
                     <ToggleButtonGroup

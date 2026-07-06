@@ -7,7 +7,7 @@ import {
     getIndicateurQualiteByApplicationByDate,
     getIndicateurQualiteByModuleByDate,
     getApplications2,
-    getModules2,
+    getModules,
     listerApplicationsMeteo,
     getApplications,
     listerModulesA11y,
@@ -41,7 +41,7 @@ vi.mock("todos-api/client.gen", () => ({
     getApplications1: vi.fn(),
     getModules1: vi.fn(),
     getApplications2: vi.fn(),
-    getModules2: vi.fn(),
+    getModules: vi.fn(),
     getApplications: vi.fn(),
     listerApplicationsMeteo: vi.fn(),
     listerModulesA11y: vi.fn(),
@@ -118,12 +118,12 @@ describe("application-synthesis-config", () => {
     describe("fetchApplicationSynthesis", () => {
         it("returns formatted applications and modules", async () => {
             (getApplications1 as any).mockResolvedValue([{ idApplication: 1, appName: "App 1" }]);
-            (getModules1 as any).mockResolvedValue([{ id: 10, modName: "Module 1", appName: "App 1" }]);
+            (getModules as any).mockResolvedValue([{ id: 10, modName: "Module 1", appName: "App 1" }]);
 
             (getIndicateurQualiteByApplicationByDate as any).mockResolvedValue([]);
             (getIndicateurQualiteByModuleByDate as any).mockResolvedValue([]);
             (getApplications2 as any).mockResolvedValue([]);
-            (getModules2 as any).mockResolvedValue([]);
+            (getModules1 as any).mockResolvedValue([]);
             (listerApplicationsMeteo as any).mockResolvedValue([]);
             (getIndicateurSecuriteByModule as any).mockResolvedValue([]);
             (getApplications as any).mockResolvedValue([]);

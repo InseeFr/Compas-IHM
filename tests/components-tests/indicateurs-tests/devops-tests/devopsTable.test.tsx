@@ -4,12 +4,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { DevopsIndicateurTable } from "pages/indicateurs/devops/DevopsIndicateur";
 import { FilterProvider } from "store/filterContext";
 import * as devopsConfig from "pages/indicateurs/devops/devopsConfig";
-import { getApplications2, getModules2 } from "todos-api/client.gen";
+import { getApplications2, getModules1 } from "todos-api/client.gen";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 
 vi.mock("todos-api/client.gen", () => ({
     getApplications2: vi.fn(),
-    getModules2: vi.fn()
+    getModules1: vi.fn()
 }));
 
 vi.mock("store/tendance-context", () => ({
@@ -158,7 +158,7 @@ describe("DevopsIndicateurTable", () => {
 
     it("fetchData appelle getApplications2 et getModules2 et formate les résultats", async () => {
         (getApplications2 as any).mockResolvedValue(mockApps);
-        (getModules2 as any).mockResolvedValue(mockModules);
+        (getModules1 as any).mockResolvedValue(mockModules);
 
         let capturedFetchData: (() => Promise<any>) | undefined;
 
@@ -177,7 +177,7 @@ describe("DevopsIndicateurTable", () => {
         const result = await capturedFetchData!();
 
         expect(getApplications2).toHaveBeenCalledOnce();
-        expect(getModules2).toHaveBeenCalledOnce();
+        expect(getModules1).toHaveBeenCalledOnce();
         // formatIndicateur appelé pour chaque app et chaque module
         expect(devopsConfig.formatIndicateur).toHaveBeenCalledTimes(
             mockApps.length + mockModules.length
@@ -193,7 +193,7 @@ describe("DevopsIndicateurTable", () => {
         const fetchError = new Error("Network error");
 
         (getApplications2 as any).mockRejectedValue(fetchError);
-        (getModules2 as any).mockResolvedValue([]);
+        (getModules1 as any).mockResolvedValue([]);
 
         let capturedFetchData: (() => Promise<any>) | undefined;
 

@@ -91,7 +91,7 @@ describe("MainIndicator", () => {
         vi.mocked(clientGen.getIndicateurQualiteByApplicationByDate).mockResolvedValue([]);
         vi.mocked(clientGen.getIndicateurQualiteByModuleByDate).mockResolvedValue([]);
         vi.mocked(clientGen.getApplications2).mockResolvedValue([]);
-        vi.mocked(clientGen.getModules2).mockResolvedValue([]);
+        vi.mocked(clientGen.getModules).mockResolvedValue([]);
         vi.mocked(clientGen.listerApplicationsMeteo).mockResolvedValue([]);
         vi.mocked(clientGen.getApplications).mockResolvedValue([]);
         vi.mocked(clientGen.listerModulesALL11y).mockResolvedValue([]);
@@ -302,7 +302,7 @@ describe("MainIndicator", () => {
             expect(clientGen.getIndicateurQualiteByApplicationByDate).toHaveBeenCalled();
             expect(clientGen.getIndicateurQualiteByModuleByDate).toHaveBeenCalled();
             expect(clientGen.getApplications2).toHaveBeenCalled();
-            expect(clientGen.getModules2).toHaveBeenCalled();
+            expect(clientGen.getModules).toHaveBeenCalled();
             expect(clientGen.listerApplicationsMeteo).toHaveBeenCalled();
             expect(clientGen.getApplications).toHaveBeenCalled();
             expect(clientGen.listerModulesALL11y).toHaveBeenCalled();

@@ -80,7 +80,7 @@ export function buildInfraColumns(
     infraType: InfraType
 ): MRT_ColumnDef<GreenITIndicateur>[] {
     const baseColumns = BASE_COLONNE<GreenITIndicateur>();
-    const allInfraColumns = columnsGreenIt().filter(
+    const allInfraColumns = columnsGreenIt(viewMode).filter(
         col => !baseColumns.some(base => base.accessorKey === col.accessorKey)
     );
 

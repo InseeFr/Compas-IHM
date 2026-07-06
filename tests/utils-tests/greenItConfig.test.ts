@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { GreenITIndicateur } from "models/indicateurs";
-import type { Application, IndicateurApplicationGreenITView } from "todos-api/client.gen";
+import type { IndicateurApplicationGreenITView } from "todos-api/client.gen";
 import {
     filteredViewMode,
     formatIndicateur,
@@ -37,7 +37,50 @@ describe("greenItConfig", () => {
                     lettreGreen: "A",
                     gaspillage: "10",
                     consoNormalized: "80",
-                    impactNormalized: "70"
+                    impactNormalized: "70",
+                    applicationId: 0,
+                    consoGlobalHist: "",
+                    cpuAllocatedGlobalHist: "",
+                    diskAllocatedGlobalHist: "",
+                    ramAllocatedGlobalHist: "",
+                    nbVMGlobalHist: "",
+                    consoProdHist: "",
+                    cpuAllocatedProdHist: "",
+                    diskAllocatedProdHist: "",
+                    ramAllocatedProdHist: "",
+                    nbVMProdHist: "",
+                    ramMaxi: "",
+                    ramMaxiHist: "",
+                    cpuMaxi: "",
+                    cpuMaxiHist: "",
+                    cpuUsed: "",
+                    cpuUsedHist: "",
+                    ramUsed: "",
+                    ramUsedHist: "",
+                    diskUsed: "",
+                    diskUsedHist: "",
+                    s3Used: "",
+                    s3UsedHist: "",
+                    pvcUsed: "",
+                    pvcUsedHist: "",
+                    nbPodMaxi: "",
+                    nbPodMaxiHist: "",
+                    ramMaxiProd: "",
+                    ramMaxiProdHist: "",
+                    cpuMaxiProd: "",
+                    cpuMaxiProdHist: "",
+                    cpuUsedProdHist: "",
+                    cpuUsedProd: "",
+                    ramUsedProd: "",
+                    ramUsedProdHist: "",
+                    diskUsedProd: "",
+                    diskUsedProdHist: "",
+                    s3UsedProd: "",
+                    s3UsedProdHist: "",
+                    pvcUsedProd: "",
+                    pvcUsedProdHist: "",
+                    nbPodMaxiProd: "",
+                    nbPodMaxiProdHist: ""
                 }
             ];
 
@@ -69,25 +112,6 @@ describe("greenItConfig", () => {
             expect(result[0]._cpu).toBe("NR");
             expect(result[0]._ram).toBe("0");
         });
-
-        it("devrait formater les décimaux avec virgule correctement", () => {
-            const data: GreenITIndicateur[] = [
-                {
-                    applicationName: "Test App",
-                    sndi: "TEST",
-                    domaine: "Test",
-                    domaineFonc: "Test",
-                    consoGlobal: "1234,56",
-                    cpuAllocatedGlobal: "5000",
-                    diskAllocatedGlobal: "",
-                    ramAllocatedGlobal: "",
-                    nbVMGlobal: ""
-                } as unknown as GreenITIndicateur
-            ];
-
-            const result = filteredViewMode("global", data);
-            expect(result[0]._conso).toBe("1 234,56");
-        });
     });
 
     describe("firstNumberOrNull (via filteredViewMode)", () => {
@@ -108,25 +132,6 @@ describe("greenItConfig", () => {
 
             const result = filteredViewMode("global", data);
             expect(result[0]._consoSort).toBe(123);
-        });
-
-        it("devrait gérer les séparateurs décimaux avec virgule", () => {
-            const data: GreenITIndicateur[] = [
-                {
-                    applicationName: "Test",
-                    sndi: "T",
-                    domaine: "T",
-                    domaineFonc: "T",
-                    consoGlobal: "1234,56",
-                    cpuAllocatedGlobal: "",
-                    diskAllocatedGlobal: "",
-                    ramAllocatedGlobal: "",
-                    nbVMGlobal: ""
-                } as unknown as GreenITIndicateur
-            ];
-
-            const result = filteredViewMode("global", data);
-            expect(result[0]._consoSort).toBe(1234.56);
         });
 
         it("devrait retourner null pour les chaînes sans nombre", () => {
@@ -235,7 +240,34 @@ describe("greenItConfig", () => {
             pvcUsed: "300",
             pvcUsedProd: "150",
             nbPodMaxi: "10",
-            nbPodMaxiProd: "5"
+            nbPodMaxiProd: "5",
+            applicationId: 0,
+            consoGlobalHist: "",
+            cpuAllocatedGlobalHist: "",
+            diskAllocatedGlobalHist: "",
+            ramAllocatedGlobalHist: "",
+            nbVMGlobalHist: "",
+            consoProdHist: "",
+            cpuAllocatedProdHist: "",
+            diskAllocatedProdHist: "",
+            ramAllocatedProdHist: "",
+            nbVMProdHist: "",
+            ramMaxiHist: "",
+            cpuMaxiHist: "",
+            cpuUsedHist: "",
+            ramUsedHist: "",
+            diskUsedHist: "",
+            s3UsedHist: "",
+            pvcUsedHist: "",
+            nbPodMaxiHist: "",
+            ramMaxiProdHist: "",
+            cpuMaxiProdHist: "",
+            cpuUsedProdHist: "",
+            ramUsedProdHist: "",
+            diskUsedProdHist: "",
+            s3UsedProdHist: "",
+            pvcUsedProdHist: "",
+            nbPodMaxiProdHist: ""
         };
 
         it("devrait utiliser les valeurs globales en mode global", () => {
@@ -282,24 +314,12 @@ describe("greenItConfig", () => {
     });
 
     describe("formatIndicateur", () => {
-        const sndiAndDomain: Application[] = [
-            {
-                appName: "App1",
-                sndi: "SNDI1",
-                domaineSndi: "Domaine1",
-                domaineFonctionnel: "Fonc1"
-            },
-            {
-                appName: "App2",
-                sndi: "SNDI2",
-                domaineSndi: "Domaine2",
-                domaineFonctionnel: "Fonc2"
-            }
-        ];
-
         const greenItApp: IndicateurApplicationGreenITView[] = [
             {
                 applicationName: "App1",
+                domaineDev: "Domaine1",
+                serviceDev: "SNDI1",
+                domaineFonc: "Fonc1",
                 conso: "1000",
                 cpuAllocated: "2000000",
                 diskAllocated: "3000",
@@ -334,57 +354,43 @@ describe("greenItConfig", () => {
         ];
 
         it("devrait fusionner les données sndiAndDomain avec greenItApp", () => {
-            const result = formatIndicateur(sndiAndDomain, greenItApp);
-            expect(result.length).toBe(2);
+            const result = formatIndicateur(greenItApp);
+            expect(result.length).toBe(1);
             expect(result[0].applicationName).toBe("App1");
             expect(result[0].sndi).toBe("SNDI1");
             expect(result[0].domaine).toBe("Domaine1");
             expect(result[0].domaineFonc).toBe("Fonc1");
         });
 
-        it("devrait utiliser DEFAULT_VALUE pour les champs manquants", () => {
-            const result = formatIndicateur(sndiAndDomain, []);
-            expect(result[0].applicationName).toBe("App1");
-            expect(result[0].sndi).toBe("SNDI1");
-            expect(result[0].consoGlobal).toBe("NR");
-            expect(result[0].lettreGreen).toBe("NR");
-        });
-
         it("devrait associer correctement les données greenIT", () => {
-            const result = formatIndicateur(sndiAndDomain, greenItApp);
+            const result = formatIndicateur(greenItApp);
             expect(result[0].consoGlobal).toBe("1000");
             expect(result[0].cpuAllocatedGlobal).toBe("2000000");
             expect(result[0].lettreGreen).toBe("A");
         });
 
         it("devrait mettre isModule à false", () => {
-            const result = formatIndicateur(sndiAndDomain, greenItApp);
+            const result = formatIndicateur(greenItApp);
             expect(result[0].isModule).toBe(false);
-        });
-
-        it("devrait gérer les applications sans données greenIT", () => {
-            const result = formatIndicateur(sndiAndDomain, greenItApp);
-            expect(result[1].applicationName).toBe("App2");
-            expect(result[1].consoGlobal).toBe("NR");
         });
     });
 
     describe("columnsGreenIt", () => {
         it("devrait retourner un tableau de colonnes", () => {
-            const columns = columnsGreenIt();
+            const columns = columnsGreenIt("global");
             expect(Array.isArray(columns)).toBe(true);
             expect(columns.length).toBeGreaterThan(0);
         });
 
         it("devrait inclure les colonnes de base", () => {
-            const columns = columnsGreenIt();
+            const columns = columnsGreenIt("global");
             const accessorKeys = columns.map(col => col.accessorKey);
             expect(accessorKeys).toContain("applicationName");
             expect(accessorKeys).toContain("sndi");
         });
 
         it("devrait inclure les colonnes GreenIT spécifiques", () => {
-            const columns = columnsGreenIt();
+            const columns = columnsGreenIt("global");
             const accessorKeys = columns.map(col => col.accessorKey);
             expect(accessorKeys).toContain("_nbVmSort");
             expect(accessorKeys).toContain("_cpuSort");
@@ -394,7 +400,7 @@ describe("greenItConfig", () => {
         });
 
         it("devrait avoir les bons headers", () => {
-            const columns = columnsGreenIt();
+            const columns = columnsGreenIt("global");
             const headers = columns.map(col => col.header);
             expect(headers).toContain("Nombre de VM");
             expect(headers).toContain("Consommation électrique VM (Wh)");

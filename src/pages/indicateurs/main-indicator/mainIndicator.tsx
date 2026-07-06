@@ -3,7 +3,6 @@ import {
     getIndicateurQualiteByApplicationByDate,
     getIndicateurQualiteByModuleByDate,
     getApplications2,
-    getModules2,
     listerApplicationsMeteo,
     getApplications,
     listerModulesALL11y,
@@ -12,7 +11,8 @@ import {
     getIndicateurSecuriteByModule,
     getMaturiteCloud,
     getModules1,
-    getApplications1
+    getApplications1,
+    getModules
 } from "todos-api/client.gen";
 import { formattedApps, formattedModules } from "./formatted-mod-and-app";
 import TablePageLayout from "components/TablePageLayout";
@@ -46,11 +46,11 @@ export const MainIndicator = () => {
             maturiteCloudApps
         ] = await Promise.all([
             getApplications1(),
-            getModules1(),
+            getModules(),
             getIndicateurQualiteByApplicationByDate(),
             getIndicateurQualiteByModuleByDate(),
             getApplications2(),
-            getModules2(),
+            getModules1(),
             listerApplicationsMeteo(),
             getApplications(),
             listerModulesALL11y(),

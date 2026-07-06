@@ -70,22 +70,33 @@ export interface QualiteIndicateur {
 }
 
 export interface GreenITIndicateur {
+    applicationId: number;
     applicationName: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
 
     consoGlobal: string;
+    consoGlobalHist: string;
+    cpuAllocatedGlobalHist: string;
     cpuAllocatedGlobal: string;
     diskAllocatedGlobal: string;
+    diskAllocatedGlobalHist: string;
     ramAllocatedGlobal: string;
+    ramAllocatedGlobalHist: string;
     nbVMGlobal: string;
+    nbVMGlobalHist: string;
 
     consoProd: string;
+    consoProdHist: string;
     cpuAllocatedProd: string;
+    cpuAllocatedProdHist: string;
     diskAllocatedProd: string;
+    diskAllocatedProdHist: string;
     ramAllocatedProd: string;
+    ramAllocatedProdHist: string;
     nbVMProd: string;
+    nbVMProdHist: string;
 
     consoNormalized: string;
     impactNormalized: string;
@@ -93,7 +104,6 @@ export interface GreenITIndicateur {
     lettreGreen: string;
 
     isModule?: boolean;
-    parentApplication?: string;
 
     _conso?: string;
     _cpu?: string;
@@ -107,22 +117,38 @@ export interface GreenITIndicateur {
     _diskSort?: number | null;
     _nbVmSort?: number | null;
 
-    ramMaxi?: string;
-    cpuMaxi?: string;
-    cpuUsed?: string;
-    ramUsed?: string;
-    diskUsed?: string;
-    s3Used?: string;
-    pvcUsed?: string;
-    nbPodMaxi?: string;
-    ramMaxiProd?: string;
-    cpuMaxiProd?: string;
-    cpuUsedProd?: string;
-    ramUsedProd?: string;
-    diskUsedProd?: string;
-    s3UsedProd?: string;
-    pvcUsedProd?: string;
-    nbPodMaxiProd?: string;
+    ramMaxi: string;
+    ramMaxiHist: string;
+    cpuMaxi: string;
+    cpuMaxiHist: string;
+    cpuUsed: string;
+    cpuUsedHist: string;
+    ramUsed: string;
+    ramUsedHist: string;
+    diskUsed: string;
+    diskUsedHist: string;
+    s3Used: string;
+    s3UsedHist: string;
+    pvcUsed: string;
+    pvcUsedHist: string;
+    nbPodMaxi: string;
+    nbPodMaxiHist: string;
+    ramMaxiProd: string;
+    ramMaxiProdHist: string;
+    cpuMaxiProd: string;
+    cpuMaxiProdHist: string;
+    cpuUsedProdHist: string;
+    cpuUsedProd: string;
+    ramUsedProd: string;
+    ramUsedProdHist: string;
+    diskUsedProd: string;
+    diskUsedProdHist: string;
+    s3UsedProd: string;
+    s3UsedProdHist: string;
+    pvcUsedProd: string;
+    pvcUsedProdHist: string;
+    nbPodMaxiProd: string;
+    nbPodMaxiProdHist: string;
 
     _ramMaxiSort?: number | null;
     _cpuMaxiSort?: number | null;

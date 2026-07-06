@@ -18,6 +18,7 @@ interface FilterSidebarProps {
     stateTendance?: TendanceState;
     dispatchTendance?: React.Dispatch<ActionTendance>;
     data: AllIndicators[];
+    validDatesSet?: Set<string>;
 }
 
 export const FilterSidebar = ({
@@ -26,6 +27,7 @@ export const FilterSidebar = ({
     stateTendance,
     dispatchTendance,
     data,
+    validDatesSet,
     customFilters
 }: Readonly<FilterSidebarProps>) => {
     const {
@@ -83,8 +85,7 @@ export const FilterSidebar = ({
                 onClick={openSidebar}
             >
                 <TuneIcon sx={{ fontSize: 16 }} aria-hidden="true" />
-                {/* Demander si je laisse  */}
-                Filtres des colonnes du tableau
+                Filtres
                 {totalActive > 0 && (
                     <span
                         className="filter-trigger__badge"
@@ -159,6 +160,7 @@ export const FilterSidebar = ({
                             <TendancePeriodeForm
                                 dateFin={tempFilters?.dateFin ?? ""}
                                 dateDebut={tempFilters?.dateDebut ?? ""}
+                                validDatesSet={validDatesSet}
                                 handleChange={(field, value) => {
                                     const formatted = value ? format(value, "dd/MM/yyyy") : "";
                                     if (field === "dateFin") {

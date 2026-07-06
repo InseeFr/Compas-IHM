@@ -3,7 +3,7 @@ import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 import { BaseFormLayout } from "components/formsPageLayout/BaseFormLayout";
 
-import { getModules1, saisirStrategieCloud } from "todos-api/client.gen";
+import { getModules, saisirStrategieCloud } from "todos-api/client.gen";
 import type { DemandeCreationStrategieCloud as ApiDemandeCreationStrategieCloud } from "todos-api/client.gen";
 
 import {
@@ -51,7 +51,7 @@ export function StrategieCloudForm() {
     const { snackbar, showSuccess, showError, close } = useSnackbar();
 
     const fetchData = async (): Promise<ModsIndicateur[]> => {
-        const items = await getModules1();
+        const items = await getModules();
         return (items ?? [])
             .filter(item => item.id != null)
             .map(item => ({

@@ -8,37 +8,42 @@ import type {
 } from "material-react-table";
 import type { GreenITIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import {
-    getApplications,
-    getApplications1,
-    type Application,
-    type IndicateurApplicationGreenITView
-} from "todos-api/client.gen";
+import { type IndicateurApplicationGreenITView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
 import { BASE_HEADERS, GREENIT_HEADERS } from "constantes/constantes-headers";
+import {
+    ConsoCell,
+    CPUCell,
+    CpuUsedCell,
+    DiskAllocatedCell,
+    DiskUsedCell,
+    NbPodCell,
+    NbVMCell,
+    PvcUsedCell,
+    RamAlloueeCell,
+    RamUsedCell,
+    S3UsedCell
+} from "./GreenItCell";
 
 const firstNumberOrNull = (s: string | null | undefined): number | null => {
     if (!s) return null;
-    const m = new RegExp(/[\d.,]+/).exec(String(s));
+    const m = new RegExp(/[\d.]+/).exec(String(s));
     if (!m) return null;
-    const normalized = m[0].replaceAll(".", "").replace(",", ".");
-    const num = Number(normalized);
+    const num = Number(m[0]);
     return Number.isFinite(num) ? num : null;
 };
 
-const diffNumeric = (globalVal?: string, prodVal?: string): number | null => {
+export const diffNumeric = (globalVal?: string, prodVal?: string): number | null => {
     const g = firstNumberOrNull(globalVal);
     const p = firstNumberOrNull(prodVal);
     if (g == null || p == null) return null;
     return g - p;
 };
 
-const formatNumberWithSpaces = (num: number, forceInteger = false): string => {
-    const n = forceInteger ? Math.round(num) : num;
-    const [intPart, decPartRaw] = String(n).split(".");
-
-    const intSpaced = intPart
+export const formatNumberWithSpaces = (num: number): string => {
+    const rounded = Math.round(num);
+    return String(rounded)
         .split("")
         .reverse()
         .join("")
@@ -46,15 +51,6 @@ const formatNumberWithSpaces = (num: number, forceInteger = false): string => {
         .split("")
         .reverse()
         .join("");
-
-    let decPart = "";
-    if (!forceInteger && decPartRaw) {
-        let i = decPartRaw.length;
-        while (i > 0 && decPartRaw[i - 1] === "0") i--;
-        if (i > 0) decPart = "," + decPartRaw.slice(0, i);
-    }
-
-    return intSpaced + decPart;
 };
 
 const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
@@ -68,14 +64,14 @@ const sortHelper: MRT_SortingFn<GreenITIndicateur> = (rowA, rowB, columnId) => {
     return a - b;
 };
 
-const formatOrNR = (value: number | null | undefined) =>
+export const formatOrNR = (value: number | null | undefined) =>
     value == null ? "NR" : formatNumberWithSpaces(value);
 
-const formatOrNRWithUnit = (value: number | null | undefined) =>
-    value == null ? "NR" : formatNumberWithSpaces(value, true);
+export const formatOrNRWithUnit = (value: number | null | undefined) =>
+    value == null ? "NR" : formatNumberWithSpaces(value);
 
-const formatCpu = (value: number | null | undefined) =>
-    value == null ? "NR" : formatNumberWithSpaces(value / 1000, true);
+export const formatCpu = (value: number | null | undefined) =>
+    value == null ? "NR" : formatNumberWithSpaces(value / 1000);
 
 /* =========================================================EXPORT CSV========================================================= */
 
@@ -162,7 +158,6 @@ export const filteredViewMode = (
         if (viewMode === "prod") return firstNumberOrNull(prodVal);
         return diffNumeric(globalVal, prodVal);
     };
-
     return greenItData.map(item => {
         const conso = pickNumeric(item.consoGlobal, item.consoProd);
         const cpu = pickNumeric(item.cpuAllocatedGlobal, item.cpuAllocatedProd);
@@ -177,7 +172,6 @@ export const filteredViewMode = (
         const s3Used = pickNumeric(item.s3Used, item.s3UsedProd);
         const pvcUsed = pickNumeric(item.pvcUsed, item.pvcUsedProd);
         const nbPodMaxi = pickNumeric(item.nbPodMaxi, item.nbPodMaxiProd);
-
         return {
             ...item,
 
@@ -189,27 +183,29 @@ export const filteredViewMode = (
 
             _ramMaxi: formatOrNR(ramMaxi),
             _cpuMaxi: formatCpu(cpuMaxi),
-            _cpuUsed: cpuUsed == null ? "NR" : formatNumberWithSpaces(cpuUsed / 3600, true),
+            _cpuUsed: cpuUsed == null ? "NR" : formatNumberWithSpaces(cpuUsed / 3600),
             _ramUsed: formatOrNR(ramUsed),
             _diskUsed: formatOrNR(diskUsed),
             _s3Used: formatOrNR(s3Used),
             _pvcUsed: formatOrNR(pvcUsed),
             _nbPodMaxi: formatOrNRWithUnit(nbPodMaxi),
 
-            _consoSort: conso,
-            _cpuSort: cpu == null ? null : cpu / 1000,
-            _ramSort: ram,
-            _diskSort: disk,
-            _nbVmSort: nbVm,
+            _consoSort: conso == null ? null : Math.round(conso),
+            _cpuSort: cpu == null ? null : Math.round(cpu / 1000),
+            _ramSort: ram == null ? null : Math.round(ram),
+            _diskSort: disk == null ? null : Math.round(disk),
+            _nbVmSort: nbVm == null ? null : Math.round(nbVm),
 
-            _ramMaxiSort: ramMaxi,
-            _cpuMaxiSort: cpuMaxi == null ? null : cpuMaxi / 1000,
-            _cpuUsedSort: cpuUsed == null ? null : cpuUsed / 3600,
-            _ramUsedSort: ramUsed,
-            _diskUsedSort: diskUsed,
-            _s3UsedSort: s3Used,
-            _pvcUsedSort: pvcUsed,
-            _nbPodMaxiSort: nbPodMaxi
+            _ramMaxiSort: ramMaxi == null ? null : Math.round(ramMaxi),
+            _cpuMaxiSort: cpuMaxi == null ? null : Math.round(cpuMaxi / 1000),
+            _cpuUsedSort: cpuUsed == null ? null : Math.round(cpuUsed / 3600),
+
+            // ramUsed / pvcUsed / s3Used sont déjà en Go côté backend -> pas de division ici
+            _ramUsedSort: ramUsed == null ? null : Math.round(ramUsed),
+            _diskUsedSort: diskUsed == null ? null : Math.round(diskUsed),
+            _s3UsedSort: s3Used == null ? null : Math.round(s3Used),
+            _pvcUsedSort: pvcUsed == null ? null : Math.round(pvcUsed),
+            _nbPodMaxiSort: nbPodMaxi == null ? null : Math.round(nbPodMaxi)
         };
     });
 };
@@ -220,60 +216,74 @@ function getValue<T>(obj: T | undefined, key: keyof T): string {
     return value !== undefined && value !== null ? String(value) : DEFAULT_VALUE;
 }
 
-export function formatIndicateur(
-    sndiAndDomain: Application[],
-    greentItApp: IndicateurApplicationGreenITView[]
-): GreenITIndicateur[] {
-    return sndiAndDomain.map(app => {
-        const greenITApp = greentItApp.find(aG => aG.applicationName === app.appName);
+export function formatIndicateur(greentItApp: IndicateurApplicationGreenITView[]): GreenITIndicateur[] {
+    return greentItApp.map(app => {
+        const appGreen: GreenITIndicateur = {
+            isModule: false,
+            applicationId: app.applicationId ?? -1,
+            applicationName: app.applicationName ?? DEFAULT_VALUE,
+            sndi: app.serviceDev ?? DEFAULT_VALUE,
+            domaine: app.domaineDev ?? DEFAULT_VALUE,
+            domaineFonc: app.domaineFonc ?? DEFAULT_VALUE,
 
-        return {
-            applicationName: app.appName ?? DEFAULT_VALUE,
-            sndi: app.sndi ?? DEFAULT_VALUE,
-            domaine: app.domaineSndi ?? DEFAULT_VALUE,
-            domaineFonc: app.domaineFonctionnel ?? DEFAULT_VALUE,
-
-            consoGlobal: getValue(greenITApp, "conso"),
-            cpuAllocatedGlobal: getValue(greenITApp, "cpuAllocated"),
-            diskAllocatedGlobal: getValue(greenITApp, "diskAllocated"),
-            ramAllocatedGlobal: getValue(greenITApp, "ramAllocated"),
-            nbVMGlobal: getValue(greenITApp, "nbVm"),
-
-            consoProd: getValue(greenITApp, "consoProd"),
-            cpuAllocatedProd: getValue(greenITApp, "cpuAllocatedProd"),
-            diskAllocatedProd: getValue(greenITApp, "diskAllocatedProd"),
-            ramAllocatedProd: getValue(greenITApp, "ramAllocatedProd"),
-            nbVMProd: getValue(greenITApp, "nbVmProd"),
-
-            lettreGreen: getValue(greenITApp, "lettreGreen"),
-            gaspillage: getValue(greenITApp, "gaspillageScore"),
-            consoNormalized: getValue(greenITApp, "consoScore"),
-            impactNormalized: getValue(greenITApp, "impactScore"),
-
-            nbPodMaxi: getValue(greenITApp, "nbPodMaxi"),
-            nbPodMaxiProd: getValue(greenITApp, "nbPodMaxiProd"),
-
-            diskUsed: getValue(greenITApp, "diskUsed"),
-            pvcUsed: getValue(greenITApp, "pvcUsed"),
-            diskUsedProd: getValue(greenITApp, "diskUsedProd"),
-            pvcUsedProd: getValue(greenITApp, "pvcUsedProd"),
-
-            s3Used: getValue(greenITApp, "s3Used"),
-            s3UsedProd: getValue(greenITApp, "s3UsedProd"),
-
-            cpuUsed: getValue(greenITApp, "cpuUsed"),
-            cpuUsedProd: getValue(greenITApp, "cpuUsedProd"),
-
-            ramUsed: getValue(greenITApp, "ramUsed"),
-            ramUsedProd: getValue(greenITApp, "ramUsedProd"),
-
-            ramMaxi: getValue(greenITApp, "ramMaxi"),
-            cpuMaxi: getValue(greenITApp, "cpuMaxi"),
-            ramMaxiProd: getValue(greenITApp, "ramMaxiProd"),
-            cpuMaxiProd: getValue(greenITApp, "cpuMaxiProd"),
-
-            isModule: false
+            consoGlobal: getValue(app, "conso"),
+            cpuAllocatedGlobal: getValue(app, "cpuAllocated"),
+            diskAllocatedGlobal: getValue(app, "diskAllocated"),
+            ramAllocatedGlobal: getValue(app, "ramAllocated"),
+            nbVMGlobal: getValue(app, "nbVm"),
+            consoProd: getValue(app, "consoProd"),
+            cpuAllocatedProd: getValue(app, "cpuAllocatedProd"),
+            diskAllocatedProd: getValue(app, "diskAllocatedProd"),
+            ramAllocatedProd: getValue(app, "ramAllocatedProd"),
+            nbVMProd: getValue(app, "nbVmProd"),
+            consoNormalized: getValue(app, "consoScore"),
+            impactNormalized: getValue(app, "impactScore"),
+            gaspillage: getValue(app, "gaspillageScore"),
+            lettreGreen: getValue(app, "lettreGreen"),
+            consoGlobalHist: getValue(app, "consoHist"),
+            cpuAllocatedGlobalHist: getValue(app, "cpuAllocatedHist"),
+            diskAllocatedGlobalHist: getValue(app, "diskAllocatedHist"),
+            ramAllocatedGlobalHist: getValue(app, "ramAllocatedHist"),
+            nbVMGlobalHist: getValue(app, "nbVmHist"),
+            consoProdHist: getValue(app, "consoHistProd"),
+            cpuAllocatedProdHist: getValue(app, "cpuAllocatedHistProd"),
+            diskAllocatedProdHist: getValue(app, "diskAllocatedHistProd"),
+            ramAllocatedProdHist: getValue(app, "ramAllocatedHistProd"),
+            nbVMProdHist: getValue(app, "nbVmHistProd"),
+            ramMaxi: getValue(app, "ramMaxi"),
+            cpuMaxi: getValue(app, "cpuMaxi"),
+            cpuUsed: getValue(app, "cpuUsed"),
+            ramUsed: getValue(app, "ramUsed"),
+            diskUsed: getValue(app, "diskUsed"),
+            s3Used: getValue(app, "s3Used"),
+            pvcUsed: getValue(app, "pvcUsed"),
+            nbPodMaxi: getValue(app, "nbPodMaxi"),
+            ramMaxiProd: getValue(app, "ramMaxiProd"),
+            cpuMaxiProd: getValue(app, "cpuMaxiProd"),
+            cpuUsedProd: getValue(app, "cpuUsedProd"),
+            ramUsedProd: getValue(app, "ramUsedProd"),
+            diskUsedProd: getValue(app, "diskUsedProd"),
+            s3UsedProd: getValue(app, "s3UsedProd"),
+            pvcUsedProd: getValue(app, "pvcUsedProd"),
+            nbPodMaxiProd: getValue(app, "nbPodMaxiProd"),
+            ramMaxiHist: getValue(app, "ramMaxiHist"),
+            cpuMaxiHist: getValue(app, "cpuMaxiHist"),
+            cpuUsedHist: getValue(app, "cpuUsedHist"),
+            ramUsedHist: getValue(app, "ramUsedHist"),
+            diskUsedHist: getValue(app, "diskUsedHist"),
+            s3UsedHist: getValue(app, "s3UsedHist"),
+            pvcUsedHist: getValue(app, "pvcUsedHist"),
+            nbPodMaxiHist: getValue(app, "nbPodMaxiHist"),
+            ramMaxiProdHist: getValue(app, "ramMaxiHistProd"),
+            cpuMaxiProdHist: getValue(app, "cpuMaxiHistProd"),
+            cpuUsedProdHist: getValue(app, "cpuUsedHistProd"),
+            ramUsedProdHist: getValue(app, "ramUsedHistProd"),
+            diskUsedProdHist: getValue(app, "diskUsedHistProd"),
+            s3UsedProdHist: getValue(app, "s3UsedHistProd"),
+            pvcUsedProdHist: getValue(app, "pvcUsedHistProd"),
+            nbPodMaxiProdHist: getValue(app, "nbPodMaxiHistProd")
         };
+        return appGreen;
     });
 }
 
@@ -284,12 +294,12 @@ export const paginationConfig: Pagination = {
     }
 };
 
-export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
+export const columnsGreenIt = (view: ViewMode): MRT_ColumnDef<GreenITIndicateur>[] => {
     const colonnes: MRT_ColumnDef<GreenITIndicateur>[] = [
         {
             header: GREENIT_HEADERS.NOMBRE_VM, //ok
             accessorKey: "_nbVmSort",
-            Cell: ({ row }: MRT_RowData) => row.original._nbVm,
+            Cell: ({ row }: MRT_RowData) => NbVMCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Nombre de VM", cell: cell, row: row })
@@ -297,7 +307,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "Nombre (maxi) de POD", //ok
             accessorKey: "_nbPodMaxiSort",
-            Cell: ({ row }: MRT_RowData) => row.original._nbPodMaxi,
+            Cell: ({ row }: MRT_RowData) => NbPodCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Nombre (maxi) de POD", cell: cell, row: row })
@@ -305,7 +315,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: GREENIT_HEADERS.DISQUE_ALLOUE_GO, //ok
             accessorKey: "_diskSort",
-            Cell: ({ row }: MRT_RowData) => row.original._disk,
+            Cell: ({ row }: MRT_RowData) => DiskAllocatedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "stockage réservé VM (Go)", cell: cell, row: row })
@@ -313,7 +323,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "Stockage utilisé VM (Go)", //ok
             accessorKey: "_diskUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._diskUsed,
+            Cell: ({ row }: MRT_RowData) => DiskUsedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Stockage utilisé VM (Go)", cell: cell, row: row })
@@ -321,7 +331,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "Stockage utilisé Kube (Go)",
             accessorKey: "_pvcUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._pvcUsed,
+            Cell: ({ row }: MRT_RowData) => PvcUsedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Stockage utilisé Kube (Go)", cell: cell, row: row })
@@ -329,7 +339,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "Stockage utilisé S3 (Go)",
             accessorKey: "_s3UsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._s3Used,
+            Cell: ({ row }: MRT_RowData) => S3UsedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "Stockage utilisé S3 (Go)", cell: cell, row: row })
@@ -337,7 +347,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "CPU réservée VM (Ghz)",
             accessorKey: "_cpuSort",
-            Cell: ({ row }: MRT_RowData) => row.original._cpu,
+            Cell: ({ row }: MRT_RowData) => CPUCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "CPU réservée VM (Ghz)", cell: cell, row: row })
@@ -345,7 +355,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "CPU utilisée Kube (heure)",
             accessorKey: "_cpuUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._cpuUsed,
+            Cell: ({ row }: MRT_RowData) => CpuUsedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "CPU utilisée Kube (heure)", cell: cell, row: row })
@@ -353,7 +363,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: GREENIT_HEADERS.RAM_ALLOUEE_GO,
             accessorKey: "_ramSort",
-            Cell: ({ row }: MRT_RowData) => row.original._ram,
+            Cell: ({ row }: MRT_RowData) => RamAlloueeCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "RAM réservée VM (Go)", cell: cell, row: row })
@@ -361,7 +371,7 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: "RAM utilisée Kube (Go)",
             accessorKey: "_ramUsedSort",
-            Cell: ({ row }: MRT_RowData) => row.original._ramUsed,
+            Cell: ({ row }: MRT_RowData) => RamUsedCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "RAM utilisée Kube (Go)", cell: cell, row: row })
@@ -369,24 +379,11 @@ export const columnsGreenIt = (): MRT_ColumnDef<GreenITIndicateur>[] => {
         {
             header: GREENIT_HEADERS.CONSO_WH,
             accessorKey: "_consoSort",
-            Cell: ({ row }: MRT_RowData) => row.original._conso,
+            Cell: ({ row }: MRT_RowData) => ConsoCell({ row }, view),
             sortingFn: sortHelper,
             muiTableBodyCellProps: ({ cell, row }) =>
                 muiAriaCell({ title: "consommation électrique VM (Wh)", cell: cell, row: row })
         }
     ];
     return [...BASE_COLONNE<GreenITIndicateur>(), ...colonnes];
-};
-
-export const fetchData = async () => {
-    try {
-        const [sndiAndDomainApp, appGreenIt] = await Promise.all([
-            getApplications1(),
-            getApplications()
-        ]);
-        return [...formatIndicateur(sndiAndDomainApp, appGreenIt)];
-    } catch (error) {
-        console.error("Erreur lors de la récupération des données: ", error);
-        throw error;
-    }
 };

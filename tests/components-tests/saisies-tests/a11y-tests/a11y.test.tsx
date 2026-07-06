@@ -8,7 +8,7 @@ import * as client from "todos-api/client.gen";
 // ─── Mocks API ────────────────────────────────────────────────────────────────
 
 vi.mock("todos-api/client.gen", () => ({
-    getModules1: vi.fn(),
+    getModules: vi.fn(),
     listerModulesA11y: vi.fn(),
     majInfosSaisiesA11Y: vi.fn()
 }));
@@ -129,7 +129,7 @@ describe("A11yForm", () => {
 
         vi.mocked(client.listerModulesA11y).mockResolvedValue([{ idModule: 1 }, { idModule: 2 }]);
 
-        vi.mocked(client.getModules1).mockResolvedValue(mockModules);
+        vi.mocked(client.getModules).mockResolvedValue(mockModules);
 
         vi.mocked(client.majInfosSaisiesA11Y).mockResolvedValue(1);
     });

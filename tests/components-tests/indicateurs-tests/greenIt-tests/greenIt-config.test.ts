@@ -23,11 +23,6 @@ beforeEach(() => {
 
 // ----- Tests formatIndicateur -----
 describe("GreenIT formatIndicateur", () => {
-    const mockApps = [
-        { appName: "App1", sndi: "S1", domaineSndi: "D1" },
-        { appName: "App2", sndi: "S2", domaineSndi: "D2" }
-    ];
-
     const mockGreenItData = [
         {
             applicationName: "App1",
@@ -44,45 +39,75 @@ describe("GreenIT formatIndicateur", () => {
     ];
 
     it("formatte correctement les applications avec données Green IT", () => {
-        const result = formatIndicateur(mockApps, mockGreenItData);
+        const result = formatIndicateur(mockGreenItData);
 
-        expect(result).toHaveLength(2);
+        expect(result).toHaveLength(1);
 
         // Vérifie le premier élément avec données Green IT
         expect(result[0]).toEqual(
             expect.objectContaining({
+                applicationId: -1,
                 applicationName: "App1",
-                sndi: "S1",
-                domaine: "D1",
                 consoGlobal: "1000",
-                cpuAllocatedGlobal: "2000",
-                ramAllocatedGlobal: "3000",
-                diskAllocatedGlobal: "4000",
-                nbVMGlobal: "10",
-                lettreGreen: "A",
-                gaspillage: "B",
+                consoGlobalHist: "NR",
                 consoNormalized: "C",
+                consoProd: "NR",
+                consoProdHist: "NR",
+                cpuAllocatedGlobal: "2000",
+                cpuAllocatedGlobalHist: "NR",
+                cpuAllocatedProd: "NR",
+                cpuAllocatedProdHist: "NR",
+                cpuMaxi: "NR",
+                cpuMaxiHist: "NR",
+                cpuMaxiProd: "NR",
+                cpuMaxiProdHist: "NR",
+                cpuUsed: "NR",
+                cpuUsedHist: "NR",
+                cpuUsedProd: "NR",
+                cpuUsedProdHist: "NR",
+                diskAllocatedGlobal: "4000",
+                domaine: "NR",
+                diskAllocatedGlobalHist: "NR",
+                diskAllocatedProd: "NR",
+                diskAllocatedProdHist: "NR",
+                diskUsed: "NR",
+                diskUsedHist: "NR",
+                diskUsedProd: "NR",
+                diskUsedProdHist: "NR",
+                domaineFonc: "NR",
+                gaspillage: "B",
                 impactNormalized: "D",
-                isModule: false
-            })
-        );
-
-        // Vérifie le deuxième élément sans données Green IT
-        expect(result[1]).toEqual(
-            expect.objectContaining({
-                applicationName: "App2",
-                sndi: "S2",
-                domaine: "D2",
-                consoGlobal: "NR",
-                cpuAllocatedGlobal: "NR",
-                ramAllocatedGlobal: "NR",
-                diskAllocatedGlobal: "NR",
-                nbVMGlobal: "NR",
-                lettreGreen: "NR",
-                gaspillage: "NR",
-                consoNormalized: "NR",
-                impactNormalized: "NR",
-                isModule: false
+                isModule: false,
+                lettreGreen: "A",
+                nbPodMaxi: "NR",
+                nbPodMaxiHist: "NR",
+                nbPodMaxiProd: "NR",
+                nbPodMaxiProdHist: "NR",
+                nbVMGlobal: "10",
+                nbVMGlobalHist: "NR",
+                nbVMProd: "NR",
+                nbVMProdHist: "NR",
+                pvcUsed: "NR",
+                pvcUsedHist: "NR",
+                pvcUsedProd: "NR",
+                pvcUsedProdHist: "NR",
+                ramAllocatedGlobal: "3000",
+                sndi: "NR",
+                ramAllocatedGlobalHist: "NR",
+                ramAllocatedProd: "NR",
+                ramAllocatedProdHist: "NR",
+                ramMaxi: "NR",
+                ramMaxiHist: "NR",
+                ramMaxiProd: "NR",
+                ramMaxiProdHist: "NR",
+                ramUsed: "NR",
+                ramUsedHist: "NR",
+                ramUsedProd: "NR",
+                ramUsedProdHist: "NR",
+                s3Used: "NR",
+                s3UsedHist: "NR",
+                s3UsedProd: "NR",
+                s3UsedProdHist: "NR"
             })
         );
     });
@@ -158,7 +183,7 @@ describe("Green IT - onExport", () => {
 });
 
 describe("Colonnes Accessibilité", () => {
-    const colonnes = columnsGreenIt();
+    const colonnes = columnsGreenIt("global");
     it("doit générer un aria-label Conso", () => {
         const colContributeur = colonnes.find(c => c.accessorKey === "_consoSort")!;
         const props =
@@ -305,7 +330,34 @@ describe("GreenIT - filteredViewMode", () => {
             gaspillage: "B",
             consoNormalized: "C",
             impactNormalized: "D",
-            isModule: false
+            isModule: false,
+            applicationId: 0,
+            consoGlobalHist: "",
+            cpuAllocatedGlobalHist: "",
+            diskAllocatedGlobalHist: "",
+            ramAllocatedGlobalHist: "",
+            nbVMGlobalHist: "",
+            consoProdHist: "",
+            cpuAllocatedProdHist: "",
+            diskAllocatedProdHist: "",
+            ramAllocatedProdHist: "",
+            nbVMProdHist: "",
+            ramMaxiHist: "",
+            cpuMaxiHist: "",
+            cpuUsedHist: "",
+            ramUsedHist: "",
+            diskUsedHist: "",
+            s3UsedHist: "",
+            pvcUsedHist: "",
+            nbPodMaxiHist: "",
+            ramMaxiProdHist: "",
+            cpuMaxiProdHist: "",
+            cpuUsedProdHist: "",
+            ramUsedProdHist: "",
+            diskUsedProdHist: "",
+            s3UsedProdHist: "",
+            pvcUsedProdHist: "",
+            nbPodMaxiProdHist: ""
         }
     ];
 
@@ -341,8 +393,6 @@ describe("GreenIT - filteredViewMode", () => {
 });
 
 describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
-    const mockApps = [{ appName: "App1", sndi: "S1", domaineSndi: "D1" }];
-
     const mockGreenItData = [
         {
             applicationName: "App1",
@@ -366,7 +416,7 @@ describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
     ];
 
     it("formate correctement les nouveaux champs Kube et VM", () => {
-        const result = formatIndicateur(mockApps, mockGreenItData);
+        const result = formatIndicateur(mockGreenItData);
 
         expect(result[0]).toEqual(
             expect.objectContaining({
@@ -384,7 +434,7 @@ describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
 });
 
 describe("Colonnes Accessibilité", () => {
-    const colonnes = columnsGreenIt();
+    const colonnes = columnsGreenIt("global");
     it("doit générer un aria-label CPU Max", () => {
         const colonne = colonnes.find(c => c.accessorKey === "_cpuMaxiSort")!;
         if (!colonne) return;

@@ -7,6 +7,8 @@ export type ACCESSIBILITE = "conforme" | "partiel" | "Non-conforme";
 
 export type ViewMode = "global" | "prod" | "horsprod";
 
+export const BYTES_PER_GB = 1024 ** 3;
+
 export const NAV_TEXTS: NavBarModel = {
     items: [
         {

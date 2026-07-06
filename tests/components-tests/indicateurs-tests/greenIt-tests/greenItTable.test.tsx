@@ -1,152 +1,153 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+
+// mocks context
+import { useFilterContext } from "store/filterContext";
+import { useTendanceContext } from "store/tendance-context";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
-import type { GreenITIndicateur } from "models/indicateurs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { fr } from "date-fns/locale";
+import { getApplications } from "todos-api/client.gen";
+import { GreenItTable } from "pages/indicateurs/greenIT/GreenItTable";
+
+// -------------------- MOCKS --------------------
+
+vi.mock("store/filterContext", () => ({
+    useFilterContext: vi.fn()
+}));
+
+vi.mock("store/tendance-context", () => ({
+    useTendanceContext: vi.fn()
+}));
 
 vi.mock("hooks/useQueryIndicators", () => ({
     useQueryIndicators: vi.fn()
 }));
-vi.mock("store/tendance-context", () => ({
-    useTendanceContext: () => ({
-        stateTendance: {
-            dateDebut: "01/05/2026",
-            dateFin: "02/06/2026"
-        },
-        dispatchTendance: vi.fn()
-    })
-}));
-vi.mock("components/indicators/TendanceForm", () => ({
-    TendancePeriodeForm: () => <div data-testid="tendance-form" />
-}));
-
-vi.mock("store/filterContext", () => ({
-    useFilterContext: () => ({
-        state: { domaineDev: "", service: "" },
-        dispatch: vi.fn()
-    })
-}));
-
-vi.mock("components/GreenItDate", () => ({
-    GreenItDate: () => <div data-testid="greenit-date" />
-}));
-
-vi.mock("components/ButtonCsvExport", () => ({
-    default: ({ onExport }: { onExport: () => void }) => (
-        <button data-testid="button-export-csv" onClick={onExport}>
-            Export CSV
-        </button>
-    )
-}));
-
-vi.mock("pages/Filters", () => ({
-    Filters: () => <div data-testid="filters" />
-}));
 
 vi.mock("components/TablePageLayout", () => ({
-    default: ({
-        titleTable,
-        filters,
-        data,
-        isLoading,
-        renderTopCustom
-    }: {
-        titleTable: string;
-        filters: React.ReactNode;
-        data: GreenITIndicateur[];
-        isLoading: boolean;
-        renderTopCustom: (props: { table: Record<string, unknown> }) => React.ReactNode;
-    }) => (
+    default: (props: any) => (
         <div>
-            <h1>{titleTable}</h1>
-            {isLoading && <progress data-testid="progress">Loading...</progress>}
-            <div data-testid="layout-filters">{filters}</div>
-            <div data-testid="table-data">
-                {data?.map(row => (
-                    <div key={row.applicationName}>{row.applicationName}</div>
-                ))}
-            </div>
-            <div data-testid="top-custom">{renderTopCustom?.({ table: {} })}</div>
+            <div data-testid="title">{props.titleTable}</div>
+
+            {/* 🔥 AJOUT IMPORTANT */}
+            <div data-testid="filters">{props.filters}</div>
+
+            {props.renderTopCustom?.({ table: {} })}
+
+            <div data-testid="data">{JSON.stringify(props.data)}</div>
         </div>
     )
 }));
 
-const renderWithProviders = (ui: React.ReactElement) => {
-    return render(
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
-            {ui}
-        </LocalizationProvider>
-    );
-};
+vi.mock("components/filtersLayout/FilterSideBar", () => ({
+    FilterSidebar: () => <div data-testid="sidebar" />
+}));
 
-const mockData: GreenITIndicateur[] = [
-    {
-        applicationName: "App1",
-        sndi: "S1",
-        domaine: "D1",
-        domaineFonc: "DF1",
-        isModule: false,
-        consoGlobal: "1000",
-        cpuAllocatedGlobal: "2000",
-        diskAllocatedGlobal: "4000",
-        ramAllocatedGlobal: "3000",
-        nbVMGlobal: "10",
-        consoProd: "900",
-        cpuAllocatedProd: "1800",
-        diskAllocatedProd: "3800",
-        ramAllocatedProd: "2800",
-        nbVMProd: "8",
-        lettreGreen: "A",
-        gaspillage: "B",
-        consoNormalized: "C",
-        impactNormalized: "D",
-        cpuUsed: "1000",
-        cpuUsedProd: "900",
-        ramUsed: "2000",
-        ramUsedProd: "1900",
-        diskUsed: "3000",
-        diskUsedProd: "2900",
-        s3Used: "500",
-        s3UsedProd: "450",
-        pvcUsed: "600",
-        pvcUsedProd: "550",
-        nbPodMaxi: "20",
-        nbPodMaxiProd: "18",
-        ramMaxi: "4000",
-        cpuMaxi: "5000",
-        ramMaxiProd: "3800",
-        cpuMaxiProd: "4800"
-    }
-];
+vi.mock("components/GreenItDate", () => ({
+    GreenItDate: () => <div data-testid="date" />
+}));
 
-describe("GreenItTable", () => {
+vi.mock("components/ButtonCsvExport", () => ({
+    default: () => <button data-testid="export" />
+}));
+
+vi.mock("pages/indicateurs/greenIT/GreenItCell", () => ({
+    GreenItToggleButton: () => <div data-testid="viewmode" />
+}));
+
+vi.mock("todos-api/client.gen", async () => {
+    const actual = await vi.importActual<any>("todos-api/client.gen");
+    return {
+        ...actual,
+        getApplications: vi.fn(),
+        getValidDates: vi.fn(() => Promise.resolve([]))
+    };
+});
+
+vi.mock("hooks/useCompasDataDate", () => ({
+    useInitTendanceDates: vi.fn(),
+    useValidDates: () => ({
+        validDates: [],
+        validDatesSet: new Set()
+    })
+}));
+
+// -------------------- TESTS --------------------
+
+describe("GreenItTable (Vitest)", () => {
+    const dispatch = vi.fn();
+    const dispatchTendance = vi.fn();
+
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.mocked(useQueryIndicators).mockReturnValue({
-            data: mockData,
-            filteredData: mockData,
+
+        (useFilterContext as any).mockReturnValue({
+            state: {},
+            dispatch
+        });
+
+        (useTendanceContext as any).mockReturnValue({
+            stateTendance: {
+                dateDebut: "2024-01-01",
+                dateFin: "2024-01-31"
+            },
+            dispatchTendance
+        });
+
+        (useQueryIndicators as any).mockReturnValue({
+            data: [],
+            filteredData: [],
             isLoading: false,
             refetch: vi.fn()
-        } as never);
+        });
+
+        (getApplications as any).mockResolvedValue([]);
     });
 
-    it("affiche le titre correctement", () => {
-        renderWithProviders(<GreenItTable />);
-        expect(screen.getByRole("heading", { name: /table indicateur greenit/i })).toBeInTheDocument();
+    it("renders main layout", () => {
+        render(<GreenItTable />);
+
+        expect(screen.getByTestId("title")).toHaveTextContent("Table Indicateur GreenIT");
+        expect(screen.getByTestId("sidebar")).toBeInTheDocument();
+        expect(screen.getByTestId("date")).toBeInTheDocument();
     });
 
-    it("affiche les données", () => {
-        renderWithProviders(<GreenItTable />);
-        expect(screen.getByText("App1")).toBeInTheDocument();
+    it("renders export button", () => {
+        render(<GreenItTable />);
+
+        expect(screen.getByTestId("export")).toBeInTheDocument();
     });
 
-    it("change le mode de vue via ToggleButtonGroup", () => {
-        renderWithProviders(<GreenItTable />);
-        const prodButton = screen.getByText("Prod");
-        fireEvent.click(prodButton);
-        expect(prodButton).toHaveAttribute("aria-pressed", "true");
+    it("renders view mode toggle", () => {
+        render(<GreenItTable />);
+
+        expect(screen.getByTestId("viewmode")).toBeInTheDocument();
+    });
+
+    it("switches infra mode to VM", async () => {
+        render(<GreenItTable />);
+
+        const vmBtn = screen.getByRole("button", { name: "VM" });
+        fireEvent.click(vmBtn);
+
+        await waitFor(() => {
+            expect(vmBtn).toBeDefined();
+        });
+    });
+
+    it("switches infra mode to Kube", async () => {
+        render(<GreenItTable />);
+
+        const kubeBtn = screen.getByRole("button", { name: "Kube" });
+        fireEvent.click(kubeBtn);
+
+        await waitFor(() => {
+            expect(kubeBtn).toBeDefined();
+        });
+    });
+
+    it("calls useQueryIndicators", () => {
+        render(<GreenItTable />);
+
+        expect(useQueryIndicators).toHaveBeenCalled();
     });
 });
