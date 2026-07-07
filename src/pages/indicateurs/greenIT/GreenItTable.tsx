@@ -27,7 +27,9 @@ const VM_COLUMNS = {
     _diskUsedSort: true,
     _cpuSort: true,
     _ramSort: true,
-    _consoSort: true
+    _consoSort: true,
+    _asUsedSort: true,
+    _asAllocatedSort: true
 };
 
 const KUBE_COLUMNS = {
@@ -60,7 +62,9 @@ export const GreenItTable = () => {
         _diskUsedSort: false,
         _cpuSort: false,
         _ramSort: false,
-        _consoSort: false
+        _consoSort: false,
+        _asUsedSort: false,
+        _asAllocatedSort: false
     });
     const [infraMode, setInfraMode] = useState<"kube" | "vm" | null>("kube");
 
@@ -97,7 +101,10 @@ export const GreenItTable = () => {
                         dispatchTendance={dispatchTendance}
                         validDatesSet={validDatesSet}
                     />
-                    <GreenItDate />
+                    <GreenItDate
+                        lastDate={stateTendance.dateFin}
+                        penultimateDate={stateTendance.dateDebut}
+                    />
                 </Box>
             }
             data={filteredViewMode(viewMode, filteredData)}

@@ -1,23 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { format, parse, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import type { ActionTendance } from "store/tendance-context";
 import { getValidDates } from "todos-api/client.gen";
-
-export const useCompasDataDate = () => {
-    return useQuery({
-        queryKey: ["compasDataDate"],
-        queryFn: async () => {
-            const data = await getValidDates();
-            const lastDate = new Date(
-                Math.max(...data.map(date => new Date(date).getTime()))
-            ).toString();
-            return lastDate;
-        },
-        staleTime: 1000 * 60 * 5,
-        retry: false
-    });
-};
 
 export function useValidDates() {
     const [validDates, setValidDates] = useState<string[]>([]);

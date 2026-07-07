@@ -294,3 +294,41 @@ export function ConsoCell(
         />
     );
 }
+
+export function AsAllocatedCell(
+    { row }: Readonly<{ row: { original: GreenITIndicateur } }>,
+    viewMode: ViewMode
+) {
+    const { _asAllocatedSort, asAllocatedHist, asAllocatedProdHist } = row.original;
+    const resultAsAllocatedView = getViewMode(viewMode, asAllocatedHist, asAllocatedProdHist);
+    const { icon: Icon, color } = getTrendDisplay(_asAllocatedSort, resultAsAllocatedView);
+    return (
+        <ToolTipLayout
+            title={`AS alloué : ${displayOrNR(_asAllocatedSort)} (${resultAsAllocatedView})`}
+            content={
+                <div>
+                    {displayOrNR(_asAllocatedSort)} {Icon && <Icon sx={{ color }} />}
+                </div>
+            }
+        />
+    );
+}
+
+export function AsUsedCell(
+    { row }: Readonly<{ row: { original: GreenITIndicateur } }>,
+    viewMode: ViewMode
+) {
+    const { _asUsedSort, asUsedHist, asUsedProdHist } = row.original;
+    const resultAsUsedView = getViewMode(viewMode, asUsedHist, asUsedProdHist);
+    const { icon: Icon, color } = getTrendDisplay(_asUsedSort, resultAsUsedView);
+    return (
+        <ToolTipLayout
+            title={`AS utilisé : ${displayOrNR(_asUsedSort)} (${resultAsUsedView})`}
+            content={
+                <div>
+                    {displayOrNR(_asUsedSort)} {Icon && <Icon sx={{ color }} />}
+                </div>
+            }
+        />
+    );
+}

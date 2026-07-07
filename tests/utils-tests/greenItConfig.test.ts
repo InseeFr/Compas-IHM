@@ -80,7 +80,15 @@ describe("greenItConfig", () => {
                     pvcUsedProd: "",
                     pvcUsedProdHist: "",
                     nbPodMaxiProd: "",
-                    nbPodMaxiProdHist: ""
+                    nbPodMaxiProdHist: "",
+                    asUsed: "",
+                    asUsedHist: "",
+                    asAllocated: "",
+                    asAllocatedHist: "",
+                    asUsedProd: "",
+                    asUsedProdHist: "",
+                    asAllocatedProd: "",
+                    asAllocatedProdHist: ""
                 }
             ];
 
@@ -267,7 +275,15 @@ describe("greenItConfig", () => {
             diskUsedProdHist: "",
             s3UsedProdHist: "",
             pvcUsedProdHist: "",
-            nbPodMaxiProdHist: ""
+            nbPodMaxiProdHist: "",
+            asUsed: "",
+            asUsedHist: "",
+            asAllocated: "",
+            asAllocatedHist: "",
+            asUsedProd: "",
+            asUsedProdHist: "",
+            asAllocatedProd: "",
+            asAllocatedProdHist: ""
         };
 
         it("devrait utiliser les valeurs globales en mode global", () => {

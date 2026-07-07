@@ -7,14 +7,25 @@ import { BASE_COLONNE } from "constantes/constantes";
 export type InfraType = "ALL" | "KUB" | "VM";
 
 const VM_KEYS = {
-    GLOBAL: ["_nbVmSort", "_cpuSort", "_ramSort", "_diskSort", "_ramMaxiSort", "_cpuMaxiSort"],
+    GLOBAL: [
+        "_nbVmSort",
+        "_cpuSort",
+        "_ramSort",
+        "_diskSort",
+        "_ramMaxiSort",
+        "_cpuMaxiSort",
+        "_asUsedSort",
+        "_asAllocatedSort"
+    ],
     PROD: [
         "_nbVmProdSort",
         "_cpuUsedProdSort",
         "_ramUsedProdSort",
         "_diskUsedProdSort",
         "_ramMaxiProdSort",
-        "_cpuMaxiProdSort"
+        "_cpuMaxiProdSort",
+        "_asUsedProdSort",
+        "_asAllocatedProdSort"
     ],
     HORSPROD: [
         "_nbVmHorsProdSort",
@@ -22,7 +33,9 @@ const VM_KEYS = {
         "_ramHorsProdSort",
         "_diskHorsProdSort",
         "_ramMaxiHorsProdSort",
-        "_cpuMaxiHorsProdSort"
+        "_cpuMaxiHorsProdSort",
+        "_asUsedHordProdSort",
+        "_asAllocatedHorsProdSort"
     ]
 };
 

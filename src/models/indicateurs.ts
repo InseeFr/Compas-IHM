@@ -117,6 +117,11 @@ export interface GreenITIndicateur {
     _diskSort?: number | null;
     _nbVmSort?: number | null;
 
+    asUsed: string;
+    asUsedHist: string;
+    asAllocated: string;
+    asAllocatedHist: string;
+
     ramMaxi: string;
     ramMaxiHist: string;
     cpuMaxi: string;
@@ -133,6 +138,10 @@ export interface GreenITIndicateur {
     pvcUsedHist: string;
     nbPodMaxi: string;
     nbPodMaxiHist: string;
+    asUsedProd: string;
+    asUsedProdHist: string;
+    asAllocatedProd: string;
+    asAllocatedProdHist: string;
     ramMaxiProd: string;
     ramMaxiProdHist: string;
     cpuMaxiProd: string;
@@ -150,6 +159,8 @@ export interface GreenITIndicateur {
     nbPodMaxiProd: string;
     nbPodMaxiProdHist: string;
 
+    _asUsedSort?: number | null;
+    _asAllocatedSort?: number | null;
     _ramMaxiSort?: number | null;
     _cpuMaxiSort?: number | null;
     _cpuUsedSort?: number | null;

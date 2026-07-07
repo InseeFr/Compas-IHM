@@ -1,58 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-vi.mock("hooks/useCompasDataDate", () => ({
-    useCompasDataDate: vi.fn()
-}));
-
-import { useCompasDataDate } from "hooks/useCompasDataDate";
 import { GreenItDate } from "components/GreenItDate";
 
 describe("GreenItDate", () => {
-    it("affiche le Skeleton pendant le chargement", () => {
-        (useCompasDataDate as any).mockReturnValue({
-            data: null,
-            isLoading: true,
-            isError: false
-        });
+    it("renders a skeleton when dates are missing", () => {
+        const { container } = render(<GreenItDate lastDate="" penultimateDate="" />);
 
-        const { container } = render(<GreenItDate />);
         expect(container.querySelector(".MuiSkeleton-root")).toBeInTheDocument();
     });
 
-    it("retourne null en cas d’erreur", () => {
-        (useCompasDataDate as any).mockReturnValue({
-            data: null,
-            isLoading: false,
-            isError: true
-        });
+    it("renders the formatted dates with the default label", () => {
+        render(<GreenItDate lastDate="15/03/2024" penultimateDate="08/03/2024" />);
 
-        const { container } = render(<GreenItDate />);
-        expect(container.firstChild).toBeNull();
+        expect(
+            screen.getByText("Données du 15 mars 2024 (du 8 mars 2024)")
+        ).toBeInTheDocument();
     });
 
-    it("affiche la date formatée correctement", () => {
-        (useCompasDataDate as any).mockReturnValue({
-            data: "2024-01-15T00:00:00.000Z",
-            isLoading: false,
-            isError: false
-        });
+    it("renders a custom label", () => {
+        render(<GreenItDate label="Mis à jour le" lastDate="01/01/2024" penultimateDate="25/12/2023" />);
 
-        render(<GreenItDate />);
-
-        expect(screen.getByText("Données du 15 janvier 2024")).toBeInTheDocument();
-    });
-
-    it("affiche un label personnalisé", () => {
-        (useCompasDataDate as any).mockReturnValue({
-            data: "2024-01-15T00:00:00.000Z",
-            isLoading: false,
-            isError: false
-        });
-
-        render(<GreenItDate label="Mise à jour du" />);
-
-        expect(screen.getByText("Mise à jour du 15 janvier 2024")).toBeInTheDocument();
+        expect(
+            screen.getByText("Mis à jour le 1 janvier 2024 (du 25 décembre 2023)")
+        ).toBeInTheDocument();
     });
 });

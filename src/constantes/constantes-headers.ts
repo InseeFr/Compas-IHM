@@ -85,6 +85,8 @@ export const GREENIT_HEADERS = {
     SCORE_CONSO_GREENIT: "Score conso GreenIT (normalisé)",
     SCORE_IMPACT_GREENIT: "Score impact GreenIT (normalisé)",
     SCORE_GASPILLAGE_GREENIT: "Score gaspillage GreenIT",
+    STOCKAGE_ALLOUE_APPLISHARE: "Stockage réservé applishare (Go)",
+    STOCKAGE_UTILISE_APPLISHARE: "Stockage utilisé applishare (Go)",
     // Colonnes globales
     NB_VM: "Nb VM",
     CPU_ALLOUE: "CPU alloué (GHz)",

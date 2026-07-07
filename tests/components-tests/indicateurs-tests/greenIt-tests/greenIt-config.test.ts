@@ -291,6 +291,43 @@ describe("Colonnes Accessibilité", () => {
 
         expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre de VM", "App1", "12"));
     });
+
+    it("doit générer un aria-label Stockage réservé applieshare", () => {
+        const colonne = colonnes.find(c => c.accessorKey === "_asAllocatedSort")!;
+        if (!colonne) return;
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "1000" } as unknown as MRT_Cell<
+                          GreenITIndicateur,
+                          unknown
+                      >,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage réservé applishare (Go)", "App1", "1000")
+        );
+    });
+
+    it("doit générer un aria-label Stockage utilisé applieshare", () => {
+        const colonne = colonnes.find(c => c.accessorKey === "_asUsedSort")!;
+        if (!colonne) return;
+        const props =
+            typeof colonne.muiTableBodyCellProps === "function"
+                ? colonne.muiTableBodyCellProps({
+                      cell: { getValue: () => "800" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                      column: {} as never,
+                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                      table: {} as never
+                  })
+                : colonne.muiTableBodyCellProps;
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage utilisé applishare (Go)", "App1", "800")
+        );
+    });
 });
 
 describe("GreenIT - filteredViewMode", () => {
@@ -357,7 +394,15 @@ describe("GreenIT - filteredViewMode", () => {
             diskUsedProdHist: "",
             s3UsedProdHist: "",
             pvcUsedProdHist: "",
-            nbPodMaxiProdHist: ""
+            nbPodMaxiProdHist: "",
+            asUsed: "",
+            asUsedHist: "",
+            asAllocated: "",
+            asAllocatedHist: "",
+            asUsedProd: "",
+            asUsedProdHist: "",
+            asAllocatedProd: "",
+            asAllocatedProdHist: ""
         }
     ];
 

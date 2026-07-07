@@ -1,23 +1,24 @@
 import { Typography, Skeleton } from "@mui/material";
-import { useCompasDataDate } from "hooks/useCompasDataDate";
 
 interface DataUpdateDateProps {
     label?: string;
+    lastDate: string;
+    penultimateDate: string;
 }
 
-export const GreenItDate = ({ label = "Données du" }: DataUpdateDateProps) => {
-    const { data: dateMaj, isLoading, isError } = useCompasDataDate();
-
-    if (isLoading) {
+export const GreenItDate = ({
+    label = "Données du",
+    lastDate,
+    penultimateDate
+}: DataUpdateDateProps) => {
+    if (!lastDate || !penultimateDate) {
         return <Skeleton width={150} height={24} />;
     }
-
-    if (isError || !dateMaj) {
-        return null;
-    }
-
     const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
+        const [day, month, year] = dateStr.split("/").map(Number);
+
+        const date = new Date(year, month - 1, day);
+
         return date.toLocaleDateString("fr-FR", {
             day: "numeric",
             month: "long",
@@ -27,7 +28,7 @@ export const GreenItDate = ({ label = "Données du" }: DataUpdateDateProps) => {
 
     return (
         <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "nowrap" }}>
-            {label} {formatDate(dateMaj)}
+            {label} {`${formatDate(lastDate)} (du ${formatDate(penultimateDate)})`}
         </Typography>
     );
 };

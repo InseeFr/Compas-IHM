@@ -577,6 +577,10 @@ export const uploadKubeCSV = (
     );
 };
 
+export const uploadApplishare = (options?: SecondParameter<typeof fetch<string>>) => {
+    return fetch<string>({ url: `/kpi-green/applications/applishare`, method: "POST" }, options);
+};
+
 /**
  * @summary Saisie de la maturité cloud
  */
@@ -924,6 +928,7 @@ export type CreerMeteoResult = NonNullable<Awaited<ReturnType<typeof creerMeteo>
 export type EnvoyerAlertesResult = NonNullable<Awaited<ReturnType<typeof envoyerAlertes>>>;
 export type UploadCSVResult = NonNullable<Awaited<ReturnType<typeof uploadCSV>>>;
 export type UploadKubeCSVResult = NonNullable<Awaited<ReturnType<typeof uploadKubeCSV>>>;
+export type UploadApplishareResult = NonNullable<Awaited<ReturnType<typeof uploadApplishare>>>;
 export type SaisirStrategieCloudResult = NonNullable<Awaited<ReturnType<typeof saisirStrategieCloud>>>;
 export type ImportFaitsMaturiteCloudResult = NonNullable<
     Awaited<ReturnType<typeof importFaitsMaturiteCloud>>

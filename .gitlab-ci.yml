@@ -17,6 +17,11 @@ include:
       username_personnal_github: ${GITHUB_MIRROR_USERNAME}
       personnal_token_github: ${GITHUB_TOKEN_MIRRORING}
       chemin_gitlab_project: "dsi/compas/compas-ui-v2"
+  - component: "$CI_SERVER_FQDN/outils-transverses/services-dev/versionning-component/versionning-pipeline@0.0.1"
+    inputs:
+      projectId: $CI_PROJECT_ID
+      ecosystem: 'nodejs'
+      token: $GITHUB_MR_TOKEN
 
 
 
@@ -26,6 +31,7 @@ stages:
   - security-app
   - build-app-and-test
   - quality
+  - versionning-apply
   - 🪞mirroir mon beau mirroir
   - calculate-version-and-release
   - tag

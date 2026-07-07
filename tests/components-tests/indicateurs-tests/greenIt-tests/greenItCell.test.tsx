@@ -2,7 +2,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { GreenITIndicateur } from "models/indicateurs";
-import type { ViewMode } from "constantes/constantes";
 import {
     GreenItToggleButton,
     NbVMCell,
@@ -15,7 +14,9 @@ import {
     CpuUsedCell,
     RamAlloueeCell,
     RamUsedCell,
-    ConsoCell
+    ConsoCell,
+    AsAllocatedCell,
+    AsUsedCell
 } from "pages/indicateurs/greenIT/GreenItCell";
 
 // --- Mocks -----------------------------------------------------------------
@@ -77,6 +78,12 @@ const buildRow = (overrides: Partial<GreenITIndicateur> = {}) =>
         _consoSort: "5",
         consoGlobalHist: "4",
         consoProdHist: "2",
+        _asAllocatedSort: "10",
+        asAllocatedHist: "8",
+        asAllocatedProdHist: "5",
+        _asUsedSort: "10",
+        asUsedHist: "8",
+        asUsedProdHist: "5",
         ...overrides
     }) as unknown as GreenITIndicateur;
 
@@ -106,14 +113,14 @@ describe("GreenItToggleButton", () => {
 describe("NbVMCell", () => {
     it("affiche la valeur courante et le tooltip en mode global", () => {
         const row = { original: buildRow({ _nbVm: "10", nbVMGlobalHist: "8" }) };
-        render(NbVMCell({ row }, "global" as ViewMode));
+        render(NbVMCell({ row }, "global"));
         expect(screen.getByText("10")).toBeInTheDocument();
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", "Nombre de VM : 10 (8)");
     });
 
     it("affiche une tendance à la baisse quand la valeur courante est supérieure à l'historique", () => {
         const row = { original: buildRow({ _nbVm: "10", nbVMGlobalHist: "5" }) };
-        render(NbVMCell({ row }, "global" as ViewMode));
+        render(NbVMCell({ row }, "global"));
         expect(screen.getByTestId("icon-down")).toBeInTheDocument();
     });
 
@@ -162,5 +169,85 @@ describe.each([
         expect(tooltip.getAttribute("title")).toContain(
             String(row.original[value as keyof GreenITIndicateur])
         );
+    });
+});
+
+describe("AsAllocatedCell", () => {
+    it("affiche le libellé 'AS alloué' et la valeur brute dans le tooltip", () => {
+        const row = { original: buildRow() };
+        render(AsAllocatedCell({ row }, "global"));
+        const tooltip = screen.getByTestId("tooltip");
+        expect(tooltip.getAttribute("title")).toContain("AS alloué");
+        expect(tooltip.getAttribute("title")).toContain(String(row.original._asAllocatedSort));
+    });
+
+    it("affiche une tendance à la baisse quand la valeur courante est supérieure à l'historique", () => {
+        const row = { original: buildRow({ _asAllocatedSort: 10, asAllocatedHist: "5" }) };
+        render(AsAllocatedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-down")).toBeInTheDocument();
+    });
+
+    it("affiche une tendance à la hausse quand la valeur courante est inférieure à l'historique", () => {
+        const row = { original: buildRow({ _asAllocatedSort: 5, asAllocatedHist: "10" }) };
+        render(AsAllocatedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-up")).toBeInTheDocument();
+    });
+
+    it("affiche une tendance stable quand les valeurs sont égales", () => {
+        const row = { original: buildRow({ _asAllocatedSort: 10, asAllocatedHist: "10" }) };
+        render(AsAllocatedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-flat")).toBeInTheDocument();
+    });
+
+    it("utilise la valeur prod en mode 'prod'", () => {
+        const row = { original: buildRow({ asAllocatedProdHist: "3" }) };
+        render(AsAllocatedCell({ row }, "prod"));
+        expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
+    });
+
+    it("utilise le diff (global - prod) en mode 'horsprod'", () => {
+        const row = { original: buildRow({ asAllocatedHist: "8", asAllocatedProdHist: "5" }) };
+        render(AsAllocatedCell({ row }, "horsprod"));
+        expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
+    });
+});
+
+describe("AsUsedCell", () => {
+    it("affiche le libellé 'AS utilisé' et la valeur brute dans le tooltip", () => {
+        const row = { original: buildRow() };
+        render(AsUsedCell({ row }, "global"));
+        const tooltip = screen.getByTestId("tooltip");
+        expect(tooltip.getAttribute("title")).toContain("AS utilisé");
+        expect(tooltip.getAttribute("title")).toContain(String(row.original._asUsedSort));
+    });
+
+    it("affiche une tendance à la baisse quand la valeur courante est supérieure à l'historique", () => {
+        const row = { original: buildRow({ _asUsedSort: 10, asUsedHist: "5" }) };
+        render(AsUsedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-down")).toBeInTheDocument();
+    });
+
+    it("affiche une tendance à la hausse quand la valeur courante est inférieure à l'historique", () => {
+        const row = { original: buildRow({ _asUsedSort: 5, asUsedHist: "10" }) };
+        render(AsUsedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-up")).toBeInTheDocument();
+    });
+
+    it("affiche une tendance stable quand les valeurs sont égales", () => {
+        const row = { original: buildRow({ _asUsedSort: 10, asUsedHist: "10" }) };
+        render(AsUsedCell({ row }, "global"));
+        expect(screen.getByTestId("icon-flat")).toBeInTheDocument();
+    });
+
+    it("utilise la valeur prod en mode 'prod'", () => {
+        const row = { original: buildRow({ asUsedProdHist: "3" }) };
+        render(AsUsedCell({ row }, "prod"));
+        expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
+    });
+
+    it("utilise le diff (global - prod) en mode 'horsprod'", () => {
+        const row = { original: buildRow({ asUsedHist: "8", asUsedProdHist: "5" }) };
+        render(AsUsedCell({ row }, "horsprod"));
+        expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
 });

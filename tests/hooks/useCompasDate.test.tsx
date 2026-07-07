@@ -1,101 +1,11 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useCompasDataDate, useInitTendanceDates, useValidDates } from "hooks/useCompasDataDate";
+import { useInitTendanceDates, useValidDates } from "hooks/useCompasDataDate";
 import * as clientGen from "todos-api/client.gen";
-import { act, type ReactElement, type ReactNode } from "react";
+import { act } from "react";
 import type { ActionTendance } from "store/tendance-context";
 
 vi.mock("todos-api/client.gen");
-
-const createWrapper = () => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: { retry: false }
-        }
-    });
-    // eslint-disable-next-line react/display-name
-    return ({ children }: { children: ReactNode }): ReactElement => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
-};
-
-describe("useCompasDataDate", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
-    it("should handle fetch errors", async () => {
-        vi.mocked(clientGen.getValidDates).mockRejectedValue(new Error("API Error"));
-
-        const { result } = renderHook(() => useCompasDataDate(), {
-            wrapper: createWrapper()
-        });
-
-        await waitFor(() => {
-            expect(result.current.isError).toBe(true);
-        });
-
-        expect(result.current.data).toBeUndefined();
-        expect(result.current.error).toBeDefined();
-    });
-
-    it("should display loading state", () => {
-        vi.mocked(clientGen.getValidDates).mockImplementation(() => new Promise(() => {}));
-
-        const { result } = renderHook(() => useCompasDataDate(), {
-            wrapper: createWrapper()
-        });
-
-        expect(result.current.isLoading).toBe(true);
-        expect(result.current.data).toBeUndefined();
-    });
-
-    it("should fetch and return the last date successfully", async () => {
-        const mockDates = ["2023-01-01", "2023-01-02", "2023-01-03"];
-        vi.mocked(clientGen.getValidDates).mockResolvedValue(mockDates);
-
-        const { result } = renderHook(() => useCompasDataDate(), {
-            wrapper: createWrapper()
-        });
-
-        await waitFor(() => {
-            expect(result.current.isSuccess).toBe(true);
-        });
-
-        expect(result.current.data).toBe(
-            new Date(Math.max(...mockDates.map(date => new Date(date).getTime()))).toString()
-        );
-    });
-
-    it("should handle an empty array of dates", async () => {
-        vi.mocked(clientGen.getValidDates).mockResolvedValue([]);
-
-        const { result } = renderHook(() => useCompasDataDate(), {
-            wrapper: createWrapper()
-        });
-
-        await waitFor(() => {
-            expect(result.current.isSuccess).toBe(true);
-        });
-
-        expect(result.current.data).toBe(new Date(Math.max()).toString());
-    });
-
-    it("should not retry on failure", async () => {
-        vi.mocked(clientGen.getValidDates).mockRejectedValue(new Error("API Error"));
-
-        const { result } = renderHook(() => useCompasDataDate(), {
-            wrapper: createWrapper()
-        });
-
-        await waitFor(() => {
-            expect(result.current.isError).toBe(true);
-        });
-
-        expect(clientGen.getValidDates).toHaveBeenCalledTimes(1);
-    });
-});
 
 vi.mock("services/greenItService", () => ({
     getValidDates: vi.fn()
