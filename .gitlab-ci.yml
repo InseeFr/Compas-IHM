@@ -1,7 +1,8 @@
 include:
   - component: $CI_SERVER_FQDN/sndi-lille/ressources-communes/components/meta-component-js-kube/ci-js-kube@2.1.0
     inputs:
-      package_manager: "pnpm" 
+      package_manager: "pnpm"
+      node_extra_test_opts: ""
       sonar_project_key: "dsi_compas_compas-ui-v2_3395f55b-6671-4c39-9a53-6585284c1b56"
       sonar_token: "${SONAR_TOKEN}"
       sonar_props_js: |
