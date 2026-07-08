@@ -13,9 +13,7 @@ describe("GreenItDate", () => {
     it("renders the formatted dates with the default label", () => {
         render(<GreenItDate lastDate="15/03/2024" penultimateDate="08/03/2024" />);
 
-        expect(
-            screen.getByText("Données du 15 mars 2024 (du 8 mars 2024)")
-        ).toBeInTheDocument();
+        expect(screen.getByText("Données du 15 mars 2024 (du 8 mars 2024)")).toBeInTheDocument();
     });
 
     it("renders a custom label", () => {
