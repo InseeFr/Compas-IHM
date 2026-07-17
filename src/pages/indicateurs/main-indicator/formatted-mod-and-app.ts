@@ -4,7 +4,7 @@ import type {
     IndicateurQualiteView,
     IndicateurDevopsView,
     Meteo,
-    IndicateurApplicationGreenITView,
+    IndicateurAppGreenVmView,
     IndicateursModuleA11Y,
     IndicateurSecuriteView,
     IndicateurApplicationMaturiteCloud,
@@ -19,7 +19,7 @@ interface ApplicationDataSources {
     qualiteAppData: IndicateurQualiteView[];
     devopsAppData: IndicateurDevopsView[];
     meteoData: Meteo[];
-    consoAppData: IndicateurApplicationGreenITView[];
+    consoAppData: IndicateurAppGreenVmView[];
     a11yDataApps: IndicateursModuleA11Y[];
     securiteApps: IndicateurSecuriteView[];
     maturiteCloudApps: IndicateurApplicationMaturiteCloud[];
@@ -96,7 +96,7 @@ const createMeteoIndicators = (meteo?: Meteo, isModule = false) => ({
     dateMeteoCommentaire: meteo?.date ?? (isModule ? SO : NR)
 });
 
-const createGreenITIndicators = (greenApp?: IndicateurApplicationGreenITView) => ({
+const createGreenITIndicators = (greenApp?: IndicateurAppGreenVmView) => ({
     conso: stringOrNR(greenApp?.conso),
     lettreGreen: stringOrNR(greenApp?.lettreGreen),
     gaspillage: stringOrNR(greenApp?.gaspillageScore),

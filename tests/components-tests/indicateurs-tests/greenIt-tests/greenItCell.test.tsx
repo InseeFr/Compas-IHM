@@ -38,52 +38,66 @@ vi.mock("constantes/trend.constants", () => ({
 }));
 
 vi.mock("./greenItConfig", () => ({
-    diffNumeric: vi.fn((global: string, prod: string) => Number(global) - Number(prod))
+    formatNumberWithSpaces: vi.fn((num: number) => String(Math.round(num))),
+    formatOrNRWithUnit: vi.fn((value: number | "NR") => (value === "NR" ? "NR" : String(value)))
 }));
 
 // --- Helpers -----------------------------------------------------------------
 
 const buildRow = (overrides: Partial<GreenITIndicateur> = {}) =>
     ({
-        _nbVm: "10",
+        _nbVmSort: "10",
         nbVMGlobalHist: "8",
         nbVMProdHist: "5",
+        nbVMHpHist: "3",
         _nbPodMaxiSort: "20",
         nbPodMaxiHist: "18",
         nbPodMaxiProdHist: "10",
+        nbPodMaxiHpHist: "8",
         _diskSort: "100",
         diskAllocatedGlobalHist: "90",
         diskAllocatedProdHist: "60",
+        diskAllocatedHpHist: "30",
         _diskUsedSort: "50",
         diskUsedHist: "55",
         diskUsedProdHist: "30",
+        diskUsedHpHist: "25",
         _pvcUsedSort: "40",
         pvcUsedHist: "40",
         pvcUsedProdHist: "20",
+        pvcUsedHpHist: "20",
         _s3UsedSort: "70",
         s3UsedHist: "60",
         s3UsedProdHist: "30",
+        s3UsedHpHist: "30",
         _cpuSort: "4",
         cpuAllocatedGlobalHist: "3",
         cpuAllocatedProdHist: "2",
+        cpuAllocatedHpHist: "1",
         _cpuUsedSort: "2",
         cpuUsedHist: "2",
         cpuUsedProdHist: "1",
+        cpuUsedHpHist: "1",
         _ramSort: "16",
         ramAllocatedGlobalHist: "14",
         ramAllocatedProdHist: "8",
+        ramAllocatedHpHist: "6",
         _ramUsedSort: "12",
         ramUsedHist: "12",
         ramUsedProdHist: "6",
+        ramUsedHpHist: "6",
         _consoSort: "5",
         consoGlobalHist: "4",
         consoProdHist: "2",
+        consoHpHist: "2",
         _asAllocatedSort: "10",
         asAllocatedHist: "8",
         asAllocatedProdHist: "5",
+        asAllocatedHpHist: "3",
         _asUsedSort: "10",
         asUsedHist: "8",
         asUsedProdHist: "5",
+        asUsedHpHist: "3",
         ...overrides
     }) as unknown as GreenITIndicateur;
 
@@ -112,26 +126,26 @@ describe("GreenItToggleButton", () => {
 
 describe("NbVMCell", () => {
     it("affiche la valeur courante et le tooltip en mode global", () => {
-        const row = { original: buildRow({ _nbVm: "10", nbVMGlobalHist: "8" }) };
+        const row = { original: buildRow({ _nbVmSort: 10, nbVMGlobalHist: "8" }) };
         render(NbVMCell({ row }, "global"));
         expect(screen.getByText("10")).toBeInTheDocument();
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", "Nombre de VM : 10 (8)");
     });
 
     it("affiche une tendance à la baisse quand la valeur courante est supérieure à l'historique", () => {
-        const row = { original: buildRow({ _nbVm: "10", nbVMGlobalHist: "5" }) };
+        const row = { original: buildRow({ _nbVmSort: 10, nbVMGlobalHist: "5" }) };
         render(NbVMCell({ row }, "global"));
         expect(screen.getByTestId("icon-down")).toBeInTheDocument();
     });
 
     it("affiche une tendance à la hausse quand la valeur courante est inférieure à l'historique", () => {
-        const row = { original: buildRow({ _nbVm: "5", nbVMGlobalHist: "10" }) };
+        const row = { original: buildRow({ _nbVmSort: 5, nbVMGlobalHist: "10" }) };
         render(NbVMCell({ row }, "global"));
         expect(screen.getByTestId("icon-up")).toBeInTheDocument();
     });
 
     it("affiche une tendance stable quand les valeurs sont égales", () => {
-        const row = { original: buildRow({ _nbVm: "10", nbVMGlobalHist: "10" }) };
+        const row = { original: buildRow({ _nbVmSort: 10, nbVMGlobalHist: "10" }) };
         render(NbVMCell({ row }, "global"));
         expect(screen.getByTestId("icon-flat")).toBeInTheDocument();
     });
@@ -142,8 +156,8 @@ describe("NbVMCell", () => {
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
 
-    it("utilise le diff (global - prod) en mode 'horsprod'", () => {
-        const row = { original: buildRow({ nbVMGlobalHist: "8", nbVMProdHist: "5" }) };
+    it("utilise directement la valeur hors-prod en mode 'horsprod' (plus de diff)", () => {
+        const row = { original: buildRow({ nbVMHpHist: "3" }) };
         render(NbVMCell({ row }, "horsprod"));
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
@@ -205,8 +219,8 @@ describe("AsAllocatedCell", () => {
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
 
-    it("utilise le diff (global - prod) en mode 'horsprod'", () => {
-        const row = { original: buildRow({ asAllocatedHist: "8", asAllocatedProdHist: "5" }) };
+    it("utilise directement la valeur hors-prod en mode 'horsprod' (plus de diff)", () => {
+        const row = { original: buildRow({ asAllocatedHpHist: "3" }) };
         render(AsAllocatedCell({ row }, "horsprod"));
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
@@ -245,8 +259,8 @@ describe("AsUsedCell", () => {
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });
 
-    it("utilise le diff (global - prod) en mode 'horsprod'", () => {
-        const row = { original: buildRow({ asUsedHist: "8", asUsedProdHist: "5" }) };
+    it("utilise directement la valeur hors-prod en mode 'horsprod' (plus de diff)", () => {
+        const row = { original: buildRow({ asUsedHpHist: "3" }) };
         render(AsUsedCell({ row }, "horsprod"));
         expect(screen.getByTestId("tooltip")).toHaveAttribute("title", expect.stringContaining("(3)"));
     });

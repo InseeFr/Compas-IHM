@@ -18,7 +18,12 @@ import { GreenItDate } from "components/GreenItDate";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 import { GreenItToggleButton } from "./GreenItCell";
 import { useTendanceContext } from "store/tendance-context";
-import { getApplications, type GetApplicationsParams } from "todos-api/client.gen";
+import {
+    getApplications,
+    type GetApplicationsParams,
+    type IndicateurAppGreenKubeView,
+    type IndicateurAppGreenVmView
+} from "todos-api/client.gen";
 import { useInitTendanceDates, useValidDates } from "hooks/useCompasDataDate";
 
 const VM_COLUMNS = {
@@ -66,7 +71,32 @@ export const GreenItTable = () => {
         _asUsedSort: false,
         _asAllocatedSort: false
     });
-    const [infraMode, setInfraMode] = useState<"kube" | "vm" | null>("kube");
+    const [infraMode, setInfraMode] = useState<"KUBE" | "VM">("KUBE");
+
+    const handleInfraModeChange = (_: unknown, val: "KUBE" | "VM" | null) => {
+        if (!val) return;
+        setInfraMode(val);
+
+        const newColumnVisibility = { ...columnVisibility };
+
+        if (val === "VM") {
+            Object.keys(KUBE_COLUMNS).forEach(key => {
+                newColumnVisibility[key] = false;
+            });
+            Object.keys(VM_COLUMNS).forEach(key => {
+                newColumnVisibility[key] = true;
+            });
+        } else if (val === "KUBE") {
+            Object.keys(VM_COLUMNS).forEach(key => {
+                newColumnVisibility[key] = false;
+            });
+            Object.keys(KUBE_COLUMNS).forEach(key => {
+                newColumnVisibility[key] = true;
+            });
+        }
+
+        setColumnVisibility(newColumnVisibility);
+    };
 
     const fetchData = async () => {
         try {
@@ -74,8 +104,9 @@ export const GreenItTable = () => {
                 origine: stateTendance.dateFin,
                 passee: stateTendance.dateDebut
             };
-            const appGreenIt = await getApplications(params);
-            return formatIndicateur(appGreenIt);
+            const appGreenItKube: IndicateurAppGreenKubeView[] = await getApplications("KUBE", params);
+            const appGreenItVm: IndicateurAppGreenVmView[] = await getApplications("VM", params);
+            return formatIndicateur(appGreenItKube, appGreenItVm);
         } catch (error) {
             console.error("Erreur lors de la récupération des données: ", error);
             throw error;
@@ -117,27 +148,12 @@ export const GreenItTable = () => {
                     <ToggleButtonGroup
                         value={infraMode}
                         exclusive
-                        onChange={(_, val) => {
-                            setInfraMode(val);
-                            if (val === "vm") {
-                                setColumnVisibility({
-                                    ...Object.fromEntries(
-                                        Object.keys(KUBE_COLUMNS).map(k => [k, false])
-                                    ),
-                                    ...Object.fromEntries(Object.keys(VM_COLUMNS).map(k => [k, true]))
-                                });
-                            } else if (val === "kube") {
-                                setColumnVisibility({
-                                    ...Object.fromEntries(Object.keys(VM_COLUMNS).map(k => [k, false])),
-                                    ...Object.fromEntries(Object.keys(KUBE_COLUMNS).map(k => [k, true]))
-                                });
-                            }
-                        }}
+                        onChange={handleInfraModeChange}
                         size="small"
                         color="secondary"
                     >
-                        <ToggleButton value="vm">VM</ToggleButton>
-                        <ToggleButton value="kube">Kube</ToggleButton>
+                        <ToggleButton value="VM">VM</ToggleButton>
+                        <ToggleButton value="KUBE">Kube</ToggleButton>
                     </ToggleButtonGroup>
                     <GreenItToggleButton viewMode={viewMode} setViewMode={setViewMode} />
                     <ButtonCsvExport table={table} onExport={onExport} />

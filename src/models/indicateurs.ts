@@ -70,6 +70,8 @@ export interface QualiteIndicateur {
 }
 
 export interface GreenITIndicateur {
+    hasVm?: boolean;
+    hasKube?: boolean;
     applicationId: number;
     applicationName: string;
     sndi: string;
@@ -98,6 +100,17 @@ export interface GreenITIndicateur {
     nbVMProd: string;
     nbVMProdHist: string;
 
+    consoHp: string;
+    consoHpHist: string;
+    cpuAllocatedHp: string;
+    cpuAllocatedHpHist: string;
+    diskAllocatedHp: string;
+    diskAllocatedHpHist: string;
+    ramAllocatedHp: string;
+    ramAllocatedHpHist: string;
+    nbVMHp: string;
+    nbVMHpHist: string;
+
     consoNormalized: string;
     impactNormalized: string;
     gaspillage: string;
@@ -122,6 +135,16 @@ export interface GreenITIndicateur {
     asAllocated: string;
     asAllocatedHist: string;
 
+    asUsedHp: string;
+    asUsedHpHist: string;
+    asAllocatedHp: string;
+    asAllocatedHpHist: string;
+
+    asUsedProd: string;
+    asUsedProdHist: string;
+    asAllocatedProd: string;
+    asAllocatedProdHist: string;
+
     ramMaxi: string;
     ramMaxiHist: string;
     cpuMaxi: string;
@@ -138,10 +161,24 @@ export interface GreenITIndicateur {
     pvcUsedHist: string;
     nbPodMaxi: string;
     nbPodMaxiHist: string;
-    asUsedProd: string;
-    asUsedProdHist: string;
-    asAllocatedProd: string;
-    asAllocatedProdHist: string;
+
+    ramMaxiHp: string;
+    ramMaxiHpHist: string;
+    cpuMaxiHp: string;
+    cpuMaxiHpHist: string;
+    cpuUsedHp: string;
+    cpuUsedHpHist: string;
+    ramUsedHp: string;
+    ramUsedHpHist: string;
+    diskUsedHp: string;
+    diskUsedHpHist: string;
+    s3UsedHp: string;
+    s3UsedHpHist: string;
+    pvcUsedHp: string;
+    pvcUsedHpHist: string;
+    nbPodMaxiHp: string;
+    nbPodMaxiHpHist: string;
+
     ramMaxiProd: string;
     ramMaxiProdHist: string;
     cpuMaxiProd: string;

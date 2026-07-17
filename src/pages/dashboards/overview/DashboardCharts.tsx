@@ -72,7 +72,7 @@ const DashboardCharts = () => {
                     getIndicateurQualiteByApplicationByDate(),
                     getApplications2(),
                     listerApplicationsMeteo(),
-                    getApplications(),
+                    getApplications("VM"),
                     listerApplicationA11y(),
                     getIndicateurSecuriteByApplication(),
                     getMaturiteCloud()

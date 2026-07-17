@@ -4,7 +4,7 @@ import type {
     IndicateurQualiteView,
     IndicateurDevopsView,
     Meteo,
-    IndicateurApplicationGreenITView,
+    IndicateurAppGreenVmView,
     IndicateursModuleA11Y,
     IndicateurSecuriteView,
     IndicateurApplicationMaturiteCloud,
@@ -50,7 +50,7 @@ describe("formattedApps", () => {
             date: "2024-01-15"
         };
 
-        const mockGreenIT: IndicateurApplicationGreenITView = {
+        const mockGreenIT: IndicateurAppGreenVmView = {
             applicationId: 1,
             conso: "150",
             lettreGreen: "B",

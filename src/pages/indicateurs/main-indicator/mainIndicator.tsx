@@ -52,7 +52,7 @@ export const MainIndicator = () => {
             getApplications2(),
             getModules1(),
             listerApplicationsMeteo(),
-            getApplications(),
+            getApplications("VM"),
             listerModulesALL11y(),
             listerApplicationA11y(),
             getIndicateurSecuriteByApplication(),

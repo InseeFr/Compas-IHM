@@ -22,10 +22,14 @@ beforeEach(() => {
 });
 
 // ----- Tests formatIndicateur -----
-describe("GreenIT formatIndicateur", () => {
-    const mockGreenItData = [
+describe("GreenIT formatIndicateur - mode Vm", () => {
+    const mockVmData: any[] = [
         {
+            applicationId: 1,
             applicationName: "App1",
+            serviceDev: "S1",
+            domaineDev: "D1",
+            domaineFonc: "DF1",
             conso: "1000",
             cpuAllocated: "2000",
             ramAllocated: "3000",
@@ -38,16 +42,20 @@ describe("GreenIT formatIndicateur", () => {
         }
     ];
 
-    it("formatte correctement les applications avec données Green IT", () => {
-        const result = formatIndicateur(mockGreenItData);
+    it("formatte correctement les applications en mode Vm", () => {
+        const result = formatIndicateur([], mockVmData);
 
         expect(result).toHaveLength(1);
 
-        // Vérifie le premier élément avec données Green IT
         expect(result[0]).toEqual(
             expect.objectContaining({
-                applicationId: -1,
+                applicationId: 1,
                 applicationName: "App1",
+                sndi: "S1",
+                domaine: "D1",
+                domaineFonc: "DF1",
+                hasVm: true,
+                hasKube: false,
                 consoGlobal: "1000",
                 consoGlobalHist: "NR",
                 consoNormalized: "C",
@@ -57,57 +65,143 @@ describe("GreenIT formatIndicateur", () => {
                 cpuAllocatedGlobalHist: "NR",
                 cpuAllocatedProd: "NR",
                 cpuAllocatedProdHist: "NR",
-                cpuMaxi: "NR",
-                cpuMaxiHist: "NR",
-                cpuMaxiProd: "NR",
-                cpuMaxiProdHist: "NR",
-                cpuUsed: "NR",
-                cpuUsedHist: "NR",
-                cpuUsedProd: "NR",
-                cpuUsedProdHist: "NR",
                 diskAllocatedGlobal: "4000",
-                domaine: "NR",
                 diskAllocatedGlobalHist: "NR",
                 diskAllocatedProd: "NR",
                 diskAllocatedProdHist: "NR",
-                diskUsed: "NR",
-                diskUsedHist: "NR",
-                diskUsedProd: "NR",
-                diskUsedProdHist: "NR",
-                domaineFonc: "NR",
                 gaspillage: "B",
                 impactNormalized: "D",
                 isModule: false,
                 lettreGreen: "A",
-                nbPodMaxi: "NR",
-                nbPodMaxiHist: "NR",
-                nbPodMaxiProd: "NR",
-                nbPodMaxiProdHist: "NR",
                 nbVMGlobal: "10",
                 nbVMGlobalHist: "NR",
                 nbVMProd: "NR",
                 nbVMProdHist: "NR",
-                pvcUsed: "NR",
-                pvcUsedHist: "NR",
-                pvcUsedProd: "NR",
-                pvcUsedProdHist: "NR",
                 ramAllocatedGlobal: "3000",
-                sndi: "NR",
                 ramAllocatedGlobalHist: "NR",
                 ramAllocatedProd: "NR",
                 ramAllocatedProdHist: "NR",
                 ramMaxi: "NR",
-                ramMaxiHist: "NR",
-                ramMaxiProd: "NR",
-                ramMaxiProdHist: "NR",
-                ramUsed: "NR",
+                cpuMaxi: "NR",
+                diskUsed: "NR",
+                asAllocated: "NR",
+                asUsed: "NR"
+            })
+        );
+    });
+});
+
+describe("GreenIT formatIndicateur - mode Kube", () => {
+    const mockKubeData: any[] = [
+        {
+            applicationId: 1,
+            applicationName: "App1",
+            cpuUsed: "1000",
+            ramUsed: "2000",
+            s3Used: "500",
+            pvcUsed: "600",
+            nbPodMaxi: "20",
+            cpuUsedProd: "900",
+            ramUsedProd: "1900",
+            s3UsedProd: "450",
+            pvcUsedProd: "550",
+            nbPodMaxiProd: "18",
+            lettreGreen: "A",
+            gaspillageScore: "B",
+            consoScore: "C",
+            impactScore: "D"
+        }
+    ];
+
+    it("formatte correctement les applications en mode Kube", () => {
+        const result = formatIndicateur(mockKubeData, []);
+
+        expect(result).toHaveLength(1);
+
+        expect(result[0]).toEqual(
+            expect.objectContaining({
+                applicationId: 1,
+                applicationName: "App1",
+                hasKube: true,
+                hasVm: false,
+                cpuUsed: "1000",
+                ramUsed: "2000",
+                s3Used: "500",
+                pvcUsed: "600",
+                nbPodMaxi: "20",
+                cpuUsedProd: "900",
+                ramUsedProd: "1900",
+                s3UsedProd: "450",
+                pvcUsedProd: "550",
+                nbPodMaxiProd: "18",
+                lettreGreen: "A",
+                gaspillage: "B",
+                consoNormalized: "C",
+                impactNormalized: "D",
+                sndi: "NR",
+                domaine: "NR",
+                domaineFonc: "NR",
+                cpuUsedHist: "NR",
                 ramUsedHist: "NR",
-                ramUsedProd: "NR",
-                ramUsedProdHist: "NR",
-                s3Used: "NR",
                 s3UsedHist: "NR",
-                s3UsedProd: "NR",
-                s3UsedProdHist: "NR"
+                pvcUsedHist: "NR",
+                nbPodMaxiHist: "NR"
+            })
+        );
+    });
+});
+
+describe("GreenIT formatIndicateur - fusion Kube + Vm", () => {
+    const mockKubeData: any[] = [
+        {
+            applicationId: 1,
+            applicationName: "App1",
+            cpuUsed: "1000",
+            ramUsed: "2000",
+            lettreGreen: "A",
+            gaspillageScore: "B",
+            consoScore: "C",
+            impactScore: "D"
+        }
+    ];
+
+    const mockVmData: any[] = [
+        {
+            applicationId: 1,
+            applicationName: "App1",
+            serviceDev: "S1",
+            domaineDev: "D1",
+            domaineFonc: "DF1",
+            conso: "1000",
+            cpuAllocated: "2000",
+            ramAllocated: "3000",
+            diskAllocated: "4000",
+            nbVm: "10",
+            lettreGreen: "A",
+            gaspillageScore: "B",
+            consoScore: "C",
+            impactScore: "D"
+        }
+    ];
+
+    it("fusionne les données Kube et Vm pour une même application", () => {
+        const result = formatIndicateur(mockKubeData, mockVmData);
+
+        expect(result).toHaveLength(1);
+
+        expect(result[0]).toEqual(
+            expect.objectContaining({
+                applicationId: 1,
+                applicationName: "App1",
+                hasKube: true,
+                hasVm: true,
+                cpuUsed: "1000",
+                ramUsed: "2000",
+                consoGlobal: "1000",
+                cpuAllocatedGlobal: "2000",
+                ramAllocatedGlobal: "3000",
+                diskAllocatedGlobal: "4000",
+                nbVMGlobal: "10"
             })
         );
     });
@@ -182,154 +276,6 @@ describe("Green IT - onExport", () => {
     });
 });
 
-describe("Colonnes Accessibilité", () => {
-    const colonnes = columnsGreenIt("global");
-    it("doit générer un aria-label Conso", () => {
-        const colContributeur = colonnes.find(c => c.accessorKey === "_consoSort")!;
-        const props =
-            typeof colContributeur.muiTableBodyCellProps === "function"
-                ? colContributeur.muiTableBodyCellProps({
-                      cell: {
-                          getValue: () => "100"
-                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as any,
-                      row: {
-                          original: {
-                              applicationName: "App1"
-                          }
-                      } as MRT_Row<GreenITIndicateur>,
-                      table: {} as any
-                  })
-                : colContributeur.muiTableBodyCellProps;
-
-        expect(props!["aria-label"]).toBe(
-            generateAriaLabelCell("consommation électrique VM (Wh)", "App1", "100")
-        );
-    });
-    it("doit générer un aria-label Cpu", () => {
-        const colContributeur = colonnes.find(c => c.accessorKey === "_cpuSort")!;
-        const props =
-            typeof colContributeur.muiTableBodyCellProps === "function"
-                ? colContributeur.muiTableBodyCellProps({
-                      cell: {
-                          getValue: () => "1000"
-                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as any,
-                      row: {
-                          original: {
-                              applicationName: "App1"
-                          }
-                      } as MRT_Row<GreenITIndicateur>,
-                      table: {} as any
-                  })
-                : colContributeur.muiTableBodyCellProps;
-
-        expect(props!["aria-label"]).toBe(
-            generateAriaLabelCell("CPU réservée VM (Ghz)", "App1", "1000")
-        );
-    });
-    it("doit générer un aria-label Ram", () => {
-        const colContributeur = colonnes.find(c => c.accessorKey === "_ramSort")!;
-        const props =
-            typeof colContributeur.muiTableBodyCellProps === "function"
-                ? colContributeur.muiTableBodyCellProps({
-                      cell: {
-                          getValue: () => "50"
-                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as any,
-                      row: {
-                          original: {
-                              applicationName: "App1"
-                          }
-                      } as MRT_Row<GreenITIndicateur>,
-                      table: {} as any
-                  })
-                : colContributeur.muiTableBodyCellProps;
-
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("RAM réservée VM (Go)", "App1", "50"));
-    });
-    it("doit générer un aria-label Disque", () => {
-        const colContributeur = colonnes.find(c => c.accessorKey === "_diskSort")!;
-        const props =
-            typeof colContributeur.muiTableBodyCellProps === "function"
-                ? colContributeur.muiTableBodyCellProps({
-                      cell: {
-                          getValue: () => "50"
-                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as any,
-                      row: {
-                          original: {
-                              applicationName: "App1"
-                          }
-                      } as MRT_Row<GreenITIndicateur>,
-                      table: {} as any
-                  })
-                : colContributeur.muiTableBodyCellProps;
-
-        expect(props!["aria-label"]).toBe(
-            generateAriaLabelCell("stockage réservé VM (Go)", "App1", "50")
-        );
-    });
-
-    it("doit générer un aria-label Nombre VM", () => {
-        const colContributeur = colonnes.find(c => c.accessorKey === "_nbVmSort")!;
-        const props =
-            typeof colContributeur.muiTableBodyCellProps === "function"
-                ? colContributeur.muiTableBodyCellProps({
-                      cell: {
-                          getValue: () => "12"
-                      } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as any,
-                      row: {
-                          original: {
-                              applicationName: "App1"
-                          }
-                      } as MRT_Row<GreenITIndicateur>,
-                      table: {} as any
-                  })
-                : colContributeur.muiTableBodyCellProps;
-
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre de VM", "App1", "12"));
-    });
-
-    it("doit générer un aria-label Stockage réservé applieshare", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_asAllocatedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "1000" } as unknown as MRT_Cell<
-                          GreenITIndicateur,
-                          unknown
-                      >,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(
-            generateAriaLabelCell("Stockage réservé applishare (Go)", "App1", "1000")
-        );
-    });
-
-    it("doit générer un aria-label Stockage utilisé applieshare", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_asUsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "800" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(
-            generateAriaLabelCell("Stockage utilisé applishare (Go)", "App1", "800")
-        );
-    });
-});
-
 describe("GreenIT - filteredViewMode", () => {
     const mockData: GreenITIndicateur[] = [
         {
@@ -339,30 +285,49 @@ describe("GreenIT - filteredViewMode", () => {
             domaineFonc: "DF1",
             consoGlobal: "1000",
             consoProd: "900",
+            consoHp: "100",
             cpuAllocatedGlobal: "2000",
             cpuAllocatedProd: "1800",
+            cpuAllocatedHp: "200",
             ramAllocatedGlobal: "3000",
             ramAllocatedProd: "2800",
+            ramAllocatedHp: "200",
             diskAllocatedGlobal: "4000",
             diskAllocatedProd: "3800",
+            diskAllocatedHp: "200",
             nbVMGlobal: "10",
             nbVMProd: "8",
+            nbVMHp: "2",
             cpuUsed: "1000",
             cpuUsedProd: "900",
+            cpuUsedHp: "100",
             ramUsed: "2000",
             ramUsedProd: "1900",
+            ramUsedHp: "100",
             diskUsed: "3000",
             diskUsedProd: "2900",
+            diskUsedHp: "100",
             s3Used: "500",
             s3UsedProd: "450",
+            s3UsedHp: "50",
             pvcUsed: "600",
             pvcUsedProd: "550",
+            pvcUsedHp: "50",
             nbPodMaxi: "20",
             nbPodMaxiProd: "18",
+            nbPodMaxiHp: "2",
             ramMaxi: "NR",
             cpuMaxi: "NR",
             ramMaxiProd: "NR",
             cpuMaxiProd: "NR",
+            ramMaxiHp: "NR",
+            cpuMaxiHp: "NR",
+            asUsed: "300",
+            asUsedProd: "280",
+            asUsedHp: "20",
+            asAllocated: "400",
+            asAllocatedProd: "380",
+            asAllocatedHp: "20",
             lettreGreen: "A",
             gaspillage: "B",
             consoNormalized: "C",
@@ -395,15 +360,11 @@ describe("GreenIT - filteredViewMode", () => {
             s3UsedProdHist: "",
             pvcUsedProdHist: "",
             nbPodMaxiProdHist: "",
-            asUsed: "",
             asUsedHist: "",
-            asAllocated: "",
             asAllocatedHist: "",
-            asUsedProd: "",
             asUsedProdHist: "",
-            asAllocatedProd: "",
             asAllocatedProdHist: ""
-        }
+        } as GreenITIndicateur
     ];
 
     it("retourne les données globales en mode global", () => {
@@ -422,7 +383,7 @@ describe("GreenIT - filteredViewMode", () => {
         expect(result[0]._nbVmSort).toBe(8);
     });
 
-    it("retourne la différence en mode horsprod", () => {
+    it("retourne directement la valeur hors-prod en mode horsprod (plus de diff)", () => {
         const result = filteredViewMode("horsprod", mockData);
 
         expect(result).toHaveLength(1);
@@ -430,180 +391,129 @@ describe("GreenIT - filteredViewMode", () => {
         expect(result[0]._nbVmSort).toBe(2);
     });
 
-    it("formate correctement cpuUsed en heures", () => {
+    it("formate correctement les champs numériques (arrondis, sans décimale)", () => {
         const result = filteredViewMode("global", mockData);
 
         expect(result[0].cpuUsed).not.toBe("NR");
+        expect(result[0]._conso).not.toMatch(/\./);
     });
-});
 
-describe("GreenIT - formatIndicateur avec nouveaux champs", () => {
-    const mockGreenItData = [
-        {
-            applicationName: "App1",
-            cpuUsed: "1000",
-            ramUsed: "2000",
-            diskUsed: "3000",
-            s3Used: "500",
-            pvcUsed: "600",
-            nbPodMaxi: "20",
-            cpuUsedProd: "900",
-            ramUsedProd: "1900",
-            diskUsedProd: "2900",
-            s3UsedProd: "450",
-            pvcUsedProd: "550",
-            nbPodMaxiProd: "18",
-            ramMaxi: "4000",
-            cpuMaxi: "5000",
-            ramMaxiProd: "3800",
-            cpuMaxiProd: "4800"
-        }
-    ];
+    it("calcule toujours les colonnes VM et Kube, quel que soit le mode d'affichage courant", () => {
+        const result = filteredViewMode("global", mockData);
 
-    it("formate correctement les nouveaux champs Kube et VM", () => {
-        const result = formatIndicateur(mockGreenItData);
-
-        expect(result[0]).toEqual(
-            expect.objectContaining({
-                cpuUsed: "1000",
-                ramUsed: "2000",
-                diskUsed: "3000",
-                s3Used: "500",
-                pvcUsed: "600",
-                nbPodMaxi: "20",
-                ramMaxi: "4000",
-                cpuMaxi: "5000"
-            })
-        );
+        // VM
+        expect(result[0]._nbVmSort).not.toBeNull();
+        expect(result[0]._diskSort).not.toBeNull();
+        expect(result[0]._cpuSort).not.toBeNull();
+        expect(result[0]._ramSort).not.toBeNull();
+        expect(result[0]._consoSort).not.toBeNull();
+        // Kube
+        expect(result[0]._cpuUsedSort).not.toBeNull();
+        expect(result[0]._ramUsedSort).not.toBeNull();
+        expect(result[0]._s3UsedSort).not.toBeNull();
+        expect(result[0]._pvcUsedSort).not.toBeNull();
+        expect(result[0]._nbPodMaxiSort).not.toBeNull();
     });
 });
 
 describe("Colonnes Accessibilité", () => {
     const colonnes = columnsGreenIt("global");
-    it("doit générer un aria-label CPU Max", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_cpuMaxiSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "5000" } as unknown as MRT_Cell<
-                          GreenITIndicateur,
-                          unknown
-                      >,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
-        expect(props!["aria-label"]).toBe(generateAriaLabelCell("CPU maxi (GHz)", "App1", "5000"));
+
+    const getProps = (accessorKey: string, value: string) => {
+        const colonne = colonnes.find(c => c.accessorKey === accessorKey);
+        if (!colonne) return undefined;
+        return typeof colonne.muiTableBodyCellProps === "function"
+            ? colonne.muiTableBodyCellProps({
+                  cell: { getValue: () => value } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
+                  column: {} as never,
+                  row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
+                  table: {} as never
+              })
+            : colonne.muiTableBodyCellProps;
+    };
+
+    it("doit générer un aria-label Conso", () => {
+        const props = getProps("_consoSort", "100");
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("consommation électrique VM (Wh)", "App1", "100")
+        );
+    });
+
+    it("doit générer un aria-label Cpu", () => {
+        const props = getProps("_cpuSort", "1000");
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("CPU réservée VM (Ghz)", "App1", "1000")
+        );
+    });
+
+    it("doit générer un aria-label Ram", () => {
+        const props = getProps("_ramSort", "50");
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("RAM réservée VM (Go)", "App1", "50"));
+    });
+
+    it("doit générer un aria-label Disque", () => {
+        const props = getProps("_diskSort", "50");
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("stockage réservé VM (Go)", "App1", "50")
+        );
+    });
+
+    it("doit générer un aria-label Nombre VM", () => {
+        const props = getProps("_nbVmSort", "12");
+        expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre de VM", "App1", "12"));
+    });
+
+    it("doit générer un aria-label Stockage réservé applishare", () => {
+        const props = getProps("_asAllocatedSort", "1000");
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage réservé applishare (Go)", "App1", "1000")
+        );
+    });
+
+    it("doit générer un aria-label Stockage utilisé applishare", () => {
+        const props = getProps("_asUsedSort", "800");
+        expect(props!["aria-label"]).toBe(
+            generateAriaLabelCell("Stockage utilisé applishare (Go)", "App1", "800")
+        );
     });
 
     it("doit générer un aria-label CPU Utilisé Kube", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_cpuUsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "1000" } as unknown as MRT_Cell<
-                          GreenITIndicateur,
-                          unknown
-                      >,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_cpuUsedSort", "1000");
         expect(props!["aria-label"]).toBe(
             generateAriaLabelCell("CPU utilisée Kube (heure)", "App1", "1000")
         );
     });
 
     it("doit générer un aria-label RAM Utilisée Kube", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_ramUsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "2000" } as unknown as MRT_Cell<
-                          GreenITIndicateur,
-                          unknown
-                      >,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_ramUsedSort", "2000");
         expect(props!["aria-label"]).toBe(
             generateAriaLabelCell("RAM utilisée Kube (Go)", "App1", "2000")
         );
     });
 
     it("doit générer un aria-label Disque Utilisé", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_diskUsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "3000" } as unknown as MRT_Cell<
-                          GreenITIndicateur,
-                          unknown
-                      >,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_diskUsedSort", "3000");
         expect(props!["aria-label"]).toBe(
             generateAriaLabelCell("Stockage utilisé VM (Go)", "App1", "3000")
         );
     });
 
     it("doit générer un aria-label S3 Utilisé", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_s3UsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "500" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_s3UsedSort", "500");
         expect(props!["aria-label"]).toBe(
             generateAriaLabelCell("Stockage utilisé S3 (Go)", "App1", "500")
         );
     });
 
     it("doit générer un aria-label PVC Utilisé", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_pvcUsedSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "600" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_pvcUsedSort", "600");
         expect(props!["aria-label"]).toBe(
             generateAriaLabelCell("Stockage utilisé Kube (Go)", "App1", "600")
         );
     });
 
     it("doit générer un aria-label Nombre de POD", () => {
-        const colonne = colonnes.find(c => c.accessorKey === "_nbPodMaxiSort")!;
-        if (!colonne) return;
-        const props =
-            typeof colonne.muiTableBodyCellProps === "function"
-                ? colonne.muiTableBodyCellProps({
-                      cell: { getValue: () => "20" } as unknown as MRT_Cell<GreenITIndicateur, unknown>,
-                      column: {} as never,
-                      row: { original: { applicationName: "App1" } } as MRT_Row<GreenITIndicateur>,
-                      table: {} as never
-                  })
-                : colonne.muiTableBodyCellProps;
+        const props = getProps("_nbPodMaxiSort", "20");
         expect(props!["aria-label"]).toBe(generateAriaLabelCell("Nombre (maxi) de POD", "App1", "20"));
     });
 });

@@ -14,7 +14,7 @@ import {
     getHomologation,
     type HomologationDto,
     type Application,
-    type IndicateurApplicationGreenITView,
+    type IndicateurAppGreenVmView,
     type IndicateurApplicationMaturiteCloud,
     type IndicateurDevopsView,
     type IndicateurQualiteView,
@@ -38,7 +38,7 @@ type ParamApplicationSynthese = {
     qualiteApp: IndicateurQualiteView[];
     devopsApp: IndicateurDevopsView[];
     meteo: Meteo[];
-    greenIt: IndicateurApplicationGreenITView[];
+    greenIt: IndicateurAppGreenVmView[];
     securityApp: IndicateurSecuriteView[];
     maturite: IndicateurApplicationMaturiteCloud[];
     homologation: HomologationDto[];
@@ -68,7 +68,7 @@ export async function fetchApplicationSynthesis() {
             getApplications2(),
             getModules1(),
             listerApplicationsMeteo(),
-            getApplications(),
+            getApplications("VM"),
             listerModulesA11y(),
             getIndicateurSecuriteByApplication(),
             getIndicateurSecuriteByModule(),

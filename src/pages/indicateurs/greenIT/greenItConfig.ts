@@ -8,7 +8,7 @@ import type {
 } from "material-react-table";
 import type { GreenITIndicateur } from "models/indicateurs";
 import type { Pagination } from "models/table-model";
-import { type IndicateurApplicationGreenITView } from "todos-api/client.gen";
+import { type IndicateurAppGreenKubeView, type IndicateurAppGreenVmView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
 import { BASE_HEADERS, GREENIT_HEADERS } from "constantes/constantes-headers";
@@ -34,13 +34,6 @@ const firstNumberOrNull = (s: string | null | undefined): number | null => {
     if (!m) return null;
     const num = Number(m[0]);
     return Number.isFinite(num) ? num : null;
-};
-
-export const diffNumeric = (globalVal?: string, prodVal?: string): number | null => {
-    const g = firstNumberOrNull(globalVal);
-    const p = firstNumberOrNull(prodVal);
-    if (g == null || p == null) return null;
-    return g - p;
 };
 
 export const formatNumberWithSpaces = (num: number): string => {
@@ -71,9 +64,6 @@ export const formatOrNR = (value: number | null | undefined) =>
 
 export const formatOrNRWithUnit = (value: number | null | undefined) =>
     value == null ? "NR" : formatNumberWithSpaces(value);
-
-export const formatCpu = (value: number | null | undefined) =>
-    value == null ? "NR" : formatNumberWithSpaces(value / 1000);
 
 /* =========================================================EXPORT CSV========================================================= */
 
@@ -150,96 +140,74 @@ export const onExport = (table: MRT_TableInstance<GreenITIndicateur>) => {
 
     handleExportCsv("green-it", table, csvData, headers);
 };
+
 export const filteredViewMode = (
     viewMode: ViewMode,
     greenItData: GreenITIndicateur[]
 ): GreenITIndicateur[] => {
-    const pickNumeric = (globalVal?: string, prodVal?: string): number | null => {
+    const pickNumeric = (globalVal?: string, prodVal?: string, hpVal?: string): number | null => {
         if (viewMode === "global") return firstNumberOrNull(globalVal);
         if (viewMode === "prod") return firstNumberOrNull(prodVal);
-        return diffNumeric(globalVal, prodVal);
-    };
-
-    const formatAndSort = (
-        value: number | null,
-        divisor?: number,
-        unit?: string
-    ): { formatted: string; sorted: number | null } => {
-        if (value == null) return { formatted: "NR", sorted: null };
-        const sortedValue = Math.round(divisor ? value / divisor : value);
-        const formattedValue =
-            unit === "cpu" ? formatNumberWithSpaces(value / 1000) : formatNumberWithSpaces(sortedValue);
-        return { formatted: formattedValue, sorted: sortedValue };
+        return firstNumberOrNull(hpVal);
     };
 
     return greenItData.map(item => {
-        const conso = pickNumeric(item.consoGlobal, item.consoProd);
-        const cpu = pickNumeric(item.cpuAllocatedGlobal, item.cpuAllocatedProd);
-        const ram = pickNumeric(item.ramAllocatedGlobal, item.ramAllocatedProd);
-        const disk = pickNumeric(item.diskAllocatedGlobal, item.diskAllocatedProd);
-        const nbVm = pickNumeric(item.nbVMGlobal, item.nbVMProd);
-        const ramMaxi = pickNumeric(item.ramMaxi, item.ramMaxiProd);
-        const cpuMaxi = pickNumeric(item.cpuMaxi, item.cpuMaxiProd);
-        const cpuUsed = pickNumeric(item.cpuUsed, item.cpuUsedProd);
-        const ramUsed = pickNumeric(item.ramUsed, item.ramUsedProd);
-        const diskUsed = pickNumeric(item.diskUsed, item.diskUsedProd);
-        const s3Used = pickNumeric(item.s3Used, item.s3UsedProd);
-        const pvcUsed = pickNumeric(item.pvcUsed, item.pvcUsedProd);
-        const nbPodMaxi = pickNumeric(item.nbPodMaxi, item.nbPodMaxiProd);
-        const asAllocated = pickNumeric(item.asAllocated, item.asAllocatedProd);
-        const asUsed = pickNumeric(item.asUsed, item.asUsedProd);
+        // --- VM ---
+        const conso = pickNumeric(item.consoGlobal, item.consoProd, item.consoHp);
+        const cpu = pickNumeric(item.cpuAllocatedGlobal, item.cpuAllocatedProd, item.cpuAllocatedHp);
+        const ram = pickNumeric(item.ramAllocatedGlobal, item.ramAllocatedProd, item.ramAllocatedHp);
+        const disk = pickNumeric(item.diskAllocatedGlobal, item.diskAllocatedProd, item.diskAllocatedHp);
+        const nbVm = pickNumeric(item.nbVMGlobal, item.nbVMProd, item.nbVMHp);
+        const ramMaxi = pickNumeric(item.ramMaxi, item.ramMaxiProd, item.ramMaxiHp);
+        const cpuMaxi = pickNumeric(item.cpuMaxi, item.cpuMaxiProd, item.cpuMaxiHp);
+        const diskUsed = pickNumeric(item.diskUsed, item.diskUsedProd, item.diskUsedHp);
+        const asAllocated = pickNumeric(item.asAllocated, item.asAllocatedProd, item.asAllocatedHp);
+        const asUsed = pickNumeric(item.asUsed, item.asUsedProd, item.asUsedHp);
 
-        const { formatted: _conso, sorted: _consoSort } = formatAndSort(conso);
-        const { formatted: _cpu, sorted: _cpuSort } = formatAndSort(cpu, 1000, "cpu");
-        const { formatted: _ram, sorted: _ramSort } = formatAndSort(ram);
-        const { formatted: _disk, sorted: _diskSort } = formatAndSort(disk);
-        const { formatted: _nbVm, sorted: _nbVmSort } = formatAndSort(nbVm);
-        const { formatted: _ramMaxi, sorted: _ramMaxiSort } = formatAndSort(ramMaxi);
-        const { formatted: _cpuMaxi, sorted: _cpuMaxiSort } = formatAndSort(cpuMaxi, 1000, "cpu");
-        const { formatted: _cpuUsed, sorted: _cpuUsedSort } = formatAndSort(cpuUsed, 3600);
-        const { formatted: _ramUsed, sorted: _ramUsedSort } = formatAndSort(ramUsed);
-        const { formatted: _diskUsed, sorted: _diskUsedSort } = formatAndSort(diskUsed);
-        const { formatted: _s3Used, sorted: _s3UsedSort } = formatAndSort(s3Used);
-        const { formatted: _pvcUsed, sorted: _pvcUsedSort } = formatAndSort(pvcUsed);
-        const { formatted: _nbPodMaxi, sorted: _nbPodMaxiSort } = formatAndSort(nbPodMaxi);
-        const { formatted: _asAllocated, sorted: _asAllocatedSort } = formatAndSort(asAllocated);
-        const { formatted: _asUsed, sorted: _asUsedSort } = formatAndSort(asUsed);
+        // --- KUBE ---
+        const cpuUsed = pickNumeric(item.cpuUsed, item.cpuUsedProd, item.cpuUsedHp);
+        const ramUsed = pickNumeric(item.ramUsed, item.ramUsedProd, item.ramUsedHp);
+        const s3Used = pickNumeric(item.s3Used, item.s3UsedProd, item.s3UsedHp);
+        const pvcUsed = pickNumeric(item.pvcUsed, item.pvcUsedProd, item.pvcUsedHp);
+        const nbPodMaxi = pickNumeric(item.nbPodMaxi, item.nbPodMaxiProd, item.nbPodMaxiHp);
 
         return {
             ...item,
-            _conso,
-            _cpu,
-            _ram,
-            _disk,
-            _nbVm,
-            _ramMaxi,
-            _cpuMaxi,
-            _cpuUsed,
-            _ramUsed,
-            _diskUsed,
-            _s3Used,
-            _pvcUsed,
-            _nbPodMaxi,
-            _asAllocated,
-            _asUsed,
-            _consoSort,
-            _cpuSort,
-            _ramSort,
-            _diskSort,
-            _nbVmSort,
-            _ramMaxiSort,
-            _cpuMaxiSort,
-            _cpuUsedSort,
-            _ramUsedSort,
-            _diskUsedSort,
-            _s3UsedSort,
-            _pvcUsedSort,
-            _nbPodMaxiSort,
-            _asAllocatedSort,
-            _asUsedSort
+            _conso: formatOrNR(conso),
+            _cpu: String(cpu),
+            _ram: formatOrNR(ram),
+            _disk: formatOrNR(disk),
+            _nbVm: formatOrNR(nbVm),
+            _ramMaxi: formatOrNR(ramMaxi),
+            _cpuMaxi: String(cpuMaxi),
+            _diskUsed: formatOrNR(diskUsed),
+            _asAllocated: formatOrNR(asAllocated),
+            _asUsed: formatOrNR(asUsed),
+            _consoSort: conso,
+            _cpuSort: cpu,
+            _ramSort: ram,
+            _diskSort: disk,
+            _nbVmSort: nbVm,
+            _ramMaxiSort: ramMaxi,
+            _cpuMaxiSort: cpuMaxi,
+            _diskUsedSort: diskUsed,
+            _asAllocatedSort: asAllocated,
+            _asUsedSort: asUsed,
+
+            _cpuUsed: formatOrNR(cpuUsed),
+            _ramUsed: formatOrNR(ramUsed),
+            _s3Used: formatOrNR(s3Used),
+            _pvcUsed: formatOrNR(pvcUsed),
+            _nbPodMaxi: formatOrNR(nbPodMaxi),
+            _cpuUsedSort: cpuUsed,
+            _ramUsedSort: ramUsed,
+            _s3UsedSort: s3Used,
+            _pvcUsedSort: pvcUsed,
+            _nbPodMaxiSort: nbPodMaxi
         };
     });
 };
+
 const DEFAULT_VALUE = "NR";
 
 function getValue<T>(obj: T | undefined, key: keyof T): string {
@@ -247,83 +215,152 @@ function getValue<T>(obj: T | undefined, key: keyof T): string {
     return value !== undefined && value !== null ? String(value) : DEFAULT_VALUE;
 }
 
-export function formatIndicateur(greentItApp: IndicateurApplicationGreenITView[]): GreenITIndicateur[] {
-    return greentItApp.map(app => {
-        const appGreen: GreenITIndicateur = {
-            isModule: false,
-            applicationId: app.applicationId ?? -1,
-            applicationName: app.applicationName ?? DEFAULT_VALUE,
-            sndi: app.serviceDev ?? DEFAULT_VALUE,
-            domaine: app.domaineDev ?? DEFAULT_VALUE,
-            domaineFonc: app.domaineFonc ?? DEFAULT_VALUE,
+function getBaseAppGreen(app: IndicateurAppGreenKubeView | IndicateurAppGreenVmView): GreenITIndicateur {
+    return {
+        isModule: false,
+        applicationId: app.applicationId ?? -1,
+        applicationName: app.applicationName ?? DEFAULT_VALUE,
+        sndi: (app as IndicateurAppGreenVmView).serviceDev ?? DEFAULT_VALUE,
+        domaine: (app as IndicateurAppGreenVmView).domaineDev ?? DEFAULT_VALUE,
+        domaineFonc: (app as IndicateurAppGreenVmView).domaineFonc ?? DEFAULT_VALUE,
+        consoNormalized: getValue(app, "consoScore"),
+        impactNormalized: getValue(app, "impactScore"),
+        gaspillage: getValue(app, "gaspillageScore"),
+        lettreGreen: getValue(app, "lettreGreen"),
+        hasKube: false,
+        hasVm: false
+    } as GreenITIndicateur;
+}
 
-            consoGlobal: getValue(app, "conso"),
-            cpuAllocatedGlobal: getValue(app, "cpuAllocated"),
-            diskAllocatedGlobal: getValue(app, "diskAllocated"),
-            ramAllocatedGlobal: getValue(app, "ramAllocated"),
-            nbVMGlobal: getValue(app, "nbVm"),
-            consoProd: getValue(app, "consoProd"),
-            cpuAllocatedProd: getValue(app, "cpuAllocatedProd"),
-            diskAllocatedProd: getValue(app, "diskAllocatedProd"),
-            ramAllocatedProd: getValue(app, "ramAllocatedProd"),
-            nbVMProd: getValue(app, "nbVmProd"),
-            consoNormalized: getValue(app, "consoScore"),
-            impactNormalized: getValue(app, "impactScore"),
-            gaspillage: getValue(app, "gaspillageScore"),
-            lettreGreen: getValue(app, "lettreGreen"),
-            consoGlobalHist: getValue(app, "consoHist"),
-            cpuAllocatedGlobalHist: getValue(app, "cpuAllocatedHist"),
-            diskAllocatedGlobalHist: getValue(app, "diskAllocatedHist"),
-            ramAllocatedGlobalHist: getValue(app, "ramAllocatedHist"),
-            nbVMGlobalHist: getValue(app, "nbVmHist"),
-            consoProdHist: getValue(app, "consoHistProd"),
-            cpuAllocatedProdHist: getValue(app, "cpuAllocatedHistProd"),
-            diskAllocatedProdHist: getValue(app, "diskAllocatedHistProd"),
-            ramAllocatedProdHist: getValue(app, "ramAllocatedHistProd"),
-            nbVMProdHist: getValue(app, "nbVmHistProd"),
-            ramMaxi: getValue(app, "ramMaxi"),
-            cpuMaxi: getValue(app, "cpuMaxi"),
-            cpuUsed: getValue(app, "cpuUsed"),
-            ramUsed: getValue(app, "ramUsed"),
-            diskUsed: getValue(app, "diskUsed"),
-            s3Used: getValue(app, "s3Used"),
-            pvcUsed: getValue(app, "pvcUsed"),
-            nbPodMaxi: getValue(app, "nbPodMaxi"),
-            ramMaxiProd: getValue(app, "ramMaxiProd"),
-            cpuMaxiProd: getValue(app, "cpuMaxiProd"),
-            cpuUsedProd: getValue(app, "cpuUsedProd"),
-            ramUsedProd: getValue(app, "ramUsedProd"),
-            diskUsedProd: getValue(app, "diskUsedProd"),
-            s3UsedProd: getValue(app, "s3UsedProd"),
-            pvcUsedProd: getValue(app, "pvcUsedProd"),
-            nbPodMaxiProd: getValue(app, "nbPodMaxiProd"),
-            ramMaxiHist: getValue(app, "ramMaxiHist"),
-            cpuMaxiHist: getValue(app, "cpuMaxiHist"),
-            cpuUsedHist: getValue(app, "cpuUsedHist"),
-            ramUsedHist: getValue(app, "ramUsedHist"),
-            diskUsedHist: getValue(app, "diskUsedHist"),
-            s3UsedHist: getValue(app, "s3UsedHist"),
-            pvcUsedHist: getValue(app, "pvcUsedHist"),
-            nbPodMaxiHist: getValue(app, "nbPodMaxiHist"),
-            ramMaxiProdHist: getValue(app, "ramMaxiHistProd"),
-            cpuMaxiProdHist: getValue(app, "cpuMaxiHistProd"),
-            cpuUsedProdHist: getValue(app, "cpuUsedHistProd"),
-            ramUsedProdHist: getValue(app, "ramUsedHistProd"),
-            diskUsedProdHist: getValue(app, "diskUsedHistProd"),
-            s3UsedProdHist: getValue(app, "s3UsedHistProd"),
-            pvcUsedProdHist: getValue(app, "pvcUsedHistProd"),
-            nbPodMaxiProdHist: getValue(app, "nbPodMaxiHistProd"),
-            asAllocated: getValue(app, "asAllocated"),
-            asAllocatedHist: getValue(app, "asAllocatedHist"),
-            asAllocatedProd: getValue(app, "asAllocatedProd"),
-            asAllocatedProdHist: getValue(app, "asAllocatedHistProd"),
-            asUsed: getValue(app, "asUsed"),
-            asUsedHist: getValue(app, "asUsedHist"),
-            asUsedProdHist: getValue(app, "asUsedHistProd"),
-            asUsedProd: getValue(app, "asUsedProd")
-        };
-        return appGreen;
-    });
+export function formatIndicateur(
+    greentItAppKube: IndicateurAppGreenKubeView[],
+    greenItAppVm: IndicateurAppGreenVmView[]
+): GreenITIndicateur[] {
+    const byId = new Map<number, GreenITIndicateur>();
+    for (const kubeApp of greentItAppKube) {
+        const id = kubeApp.applicationId ?? -1;
+        const existing = byId.get(id) ?? getBaseAppGreen(kubeApp);
+
+        byId.set(id, {
+            ...existing,
+            hasKube: true,
+
+            cpuUsed: getValue(kubeApp, "cpuUsed"),
+            cpuUsedHp: getValue(kubeApp, "cpuUsedHp"),
+            ramUsed: getValue(kubeApp, "ramUsed"),
+            ramUsedHp: getValue(kubeApp, "ramUsedHp"),
+            s3Used: getValue(kubeApp, "s3Used"),
+            s3UsedHp: getValue(kubeApp, "s3UsedHp"),
+            pvcUsed: getValue(kubeApp, "pvcUsed"),
+            pvcUsedHp: getValue(kubeApp, "pvcUsedHp"),
+            nbPodMaxi: getValue(kubeApp, "nbPodMaxi"),
+            nbPodMaxiHp: getValue(kubeApp, "nbPodMaxiHp"),
+
+            cpuUsedProd: getValue(kubeApp, "cpuUsedProd"),
+            ramUsedProd: getValue(kubeApp, "ramUsedProd"),
+            s3UsedProd: getValue(kubeApp, "s3UsedProd"),
+            pvcUsedProd: getValue(kubeApp, "pvcUsedProd"),
+            nbPodMaxiProd: getValue(kubeApp, "nbPodMaxiProd"),
+
+            cpuUsedHist: getValue(kubeApp, "cpuUsedHist"),
+            cpuUsedHpHist: getValue(kubeApp, "cpuUsedHistHp"),
+            ramUsedHist: getValue(kubeApp, "ramUsedHist"),
+            ramUsedHpHist: getValue(kubeApp, "ramUsedHistHp"),
+            s3UsedHist: getValue(kubeApp, "s3UsedHist"),
+            s3UsedHpHist: getValue(kubeApp, "s3UsedHistHp"),
+            pvcUsedHist: getValue(kubeApp, "pvcUsedHist"),
+            pvcUsedHpHist: getValue(kubeApp, "pvcUsedHistHp"),
+            nbPodMaxiHist: getValue(kubeApp, "nbPodMaxiHist"),
+            nbPodMaxiHpHist: getValue(kubeApp, "nbPodMaxiHistHp"),
+
+            cpuUsedProdHist: getValue(kubeApp, "cpuUsedHistProd"),
+            ramUsedProdHist: getValue(kubeApp, "ramUsedHistProd"),
+            s3UsedProdHist: getValue(kubeApp, "s3UsedHistProd"),
+            pvcUsedProdHist: getValue(kubeApp, "pvcUsedHistProd"),
+            nbPodMaxiProdHist: getValue(kubeApp, "nbPodMaxiHistProd")
+        });
+    }
+    for (const vmApp of greenItAppVm) {
+        const id = vmApp.applicationId ?? -1;
+        const existing = byId.get(id) ?? getBaseAppGreen(vmApp);
+
+        byId.set(id, {
+            ...existing,
+            hasVm: true,
+
+            consoGlobal: getValue(vmApp, "conso"),
+            consoHp: getValue(vmApp, "consoHp"),
+            consoHpHist: getValue(vmApp, "consoHistHp"),
+            cpuAllocatedGlobal: getValue(vmApp, "cpuAllocated"),
+            cpuAllocatedHp: getValue(vmApp, "cpuAllocatedHp"),
+            cpuAllocatedHpHist: getValue(vmApp, "cpuAllocatedHistHp"),
+            diskAllocatedGlobal: getValue(vmApp, "diskAllocated"),
+            diskAllocatedHp: getValue(vmApp, "diskAllocatedHp"),
+            diskAllocatedHpHist: getValue(vmApp, "diskAllocatedHistHp"),
+            ramAllocatedGlobal: getValue(vmApp, "ramAllocated"),
+            ramAllocatedHp: getValue(vmApp, "ramAllocatedHp"),
+            ramAllocatedHpHist: getValue(vmApp, "ramAllocatedHistHp"),
+            nbVMHp: getValue(vmApp, "nbVmHp"),
+            nbVMHpHist: getValue(vmApp, "nbVmHistHp"),
+            nbVMGlobal: getValue(vmApp, "nbVm"),
+
+            consoProd: getValue(vmApp, "consoProd"),
+            cpuAllocatedProd: getValue(vmApp, "cpuAllocatedProd"),
+            diskAllocatedProd: getValue(vmApp, "diskAllocatedProd"),
+            ramAllocatedProd: getValue(vmApp, "ramAllocatedProd"),
+            nbVMProd: getValue(vmApp, "nbVmProd"),
+
+            consoGlobalHist: getValue(vmApp, "consoHist"),
+            cpuAllocatedGlobalHist: getValue(vmApp, "cpuAllocatedHist"),
+            diskAllocatedGlobalHist: getValue(vmApp, "diskAllocatedHist"),
+            ramAllocatedGlobalHist: getValue(vmApp, "ramAllocatedHist"),
+            nbVMGlobalHist: getValue(vmApp, "nbVmHist"),
+
+            consoProdHist: getValue(vmApp, "consoHistProd"),
+            cpuAllocatedProdHist: getValue(vmApp, "cpuAllocatedHistProd"),
+            diskAllocatedProdHist: getValue(vmApp, "diskAllocatedHistProd"),
+            ramAllocatedProdHist: getValue(vmApp, "ramAllocatedHistProd"),
+            nbVMProdHist: getValue(vmApp, "nbVmHistProd"),
+
+            ramMaxi: getValue(vmApp, "ramMaxi"),
+            ramMaxiHp: getValue(vmApp, "ramMaxiHp"),
+            cpuMaxi: getValue(vmApp, "cpuMaxi"),
+            cpuMaxiHp: getValue(vmApp, "cpuMaxiHp"),
+            diskUsed: getValue(vmApp, "diskUsed"),
+            diskUsedHp: getValue(vmApp, "diskUsedHp"),
+
+            ramMaxiProd: getValue(vmApp, "ramMaxiProd"),
+            cpuMaxiProd: getValue(vmApp, "cpuMaxiProd"),
+            diskUsedProd: getValue(vmApp, "diskUsedProd"),
+
+            ramMaxiHist: getValue(vmApp, "ramMaxiHist"),
+            ramMaxiHpHist: getValue(vmApp, "ramMaxiHistHp"),
+            cpuMaxiHist: getValue(vmApp, "cpuMaxiHist"),
+            cpuMaxiHpHist: getValue(vmApp, "cpuMaxiHistHp"),
+            diskUsedHist: getValue(vmApp, "diskUsedHist"),
+            diskUsedHpHist: getValue(vmApp, "diskUsedHistHp"),
+
+            ramMaxiProdHist: getValue(vmApp, "ramMaxiHistProd"),
+            cpuMaxiProdHist: getValue(vmApp, "cpuMaxiHistProd"),
+            diskUsedProdHist: getValue(vmApp, "diskUsedHistProd"),
+
+            asAllocated: getValue(vmApp, "asAllocated"),
+            asAllocatedHist: getValue(vmApp, "asAllocatedHist"),
+            asAllocatedHp: getValue(vmApp, "asAllocatedHp"),
+            asAllocatedHpHist: getValue(vmApp, "asAllocatedHistHp"),
+            asAllocatedProd: getValue(vmApp, "asAllocatedProd"),
+            asAllocatedProdHist: getValue(vmApp, "asAllocatedHistProd"),
+
+            asUsed: getValue(vmApp, "asUsed"),
+            asUsedHist: getValue(vmApp, "asUsedHist"),
+            asUsedHp: getValue(vmApp, "asUsedHp"),
+            asUsedHpHist: getValue(vmApp, "asUsedHistHp"),
+            asUsedProd: getValue(vmApp, "asUsedProd"),
+            asUsedProdHist: getValue(vmApp, "asUsedHistProd")
+        });
+    }
+
+    return Array.from(byId.values());
 }
 
 export const paginationConfig: Pagination = {

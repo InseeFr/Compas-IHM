@@ -49,10 +49,10 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableExpanding={true}
                 enableColumnFilters={true}
                 enableColumnActions={false}
-                enableHiding={props.enableHiding ?? false}
-                onColumnVisibilityChange={props.onColumnVisibilityChange}
                 enableGlobalFilter={true}
                 enableDensityToggle={false}
+                enableHiding={props.enableHiding ?? false}
+                onColumnVisibilityChange={props.onColumnVisibilityChange}
                 muiTableProps={{
                     "aria-label": props.titleTable
                 }}
