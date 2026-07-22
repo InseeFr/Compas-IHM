@@ -9,7 +9,6 @@ import {
 import { MRT_Localization_FR } from "material-react-table/locales/fr";
 import { type JSX, type ReactNode } from "react";
 import type { Pagination } from "../models/table-model";
-import AnimatedTitle from "./AnimatedTitleLayout";
 import { Paper, Stack } from "@mui/material";
 import "styles/tablePageLayout.css";
 import Ariane from "./Ariane";
@@ -40,7 +39,6 @@ export default function TablePageLayout<T extends MRT_RowData>(
     return (
         <Paper className="table-page-layout">
             <Ariane items={[{ nav: props.titleTable, link: "" }]} />
-            <AnimatedTitle text={props.titleTable} />
             <MaterialReactTable
                 key={props.reactKey}
                 data={props.data}

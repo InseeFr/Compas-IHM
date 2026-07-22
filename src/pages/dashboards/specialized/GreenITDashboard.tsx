@@ -26,7 +26,7 @@ const GreenITDashboard = () => {
 
     return (
         <SpecializedDashboardLayout
-            title="Green IT"
+            title="Écoconception"
             subtitle="Indicateurs écologiques et consommation"
             icon={<Co2Outlined fontSize="large" />}
             data={data}

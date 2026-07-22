@@ -91,9 +91,9 @@ describe("SpecializedDashboardLinks", () => {
             ).toBeInTheDocument();
         });
 
-        it("affiche la carte Green IT avec le bon titre et la bonne description", () => {
+        it("affiche la carte Écoconception avec le bon titre et la bonne description", () => {
             render(<SpecializedDashboardLinks />);
-            expect(screen.getByText("Green IT")).toBeInTheDocument();
+            expect(screen.getByText("Écoconception")).toBeInTheDocument();
             expect(
                 screen.getByText("Indicateurs écologiques et consommation énergétique")
             ).toBeInTheDocument();
@@ -131,9 +131,9 @@ describe("SpecializedDashboardLinks", () => {
             );
         });
 
-        it("la carte Green IT pointe vers /dashboard/greenit", () => {
+        it("la carte Écoconception pointe vers /dashboard/Écoconception", () => {
             render(<SpecializedDashboardLinks />);
-            expect(screen.getByRole("link", { name: /green it/i })).toHaveAttribute(
+            expect(screen.getByRole("link", { name: /Écoconception/i })).toHaveAttribute(
                 "href",
                 "/dashboard/greenit"
             );

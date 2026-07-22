@@ -22,7 +22,7 @@ export const GLOBAL_HEADERS = {
     QUALITE: "Qualité",
     SECURITE: "Sécurité",
     DEVOPS: "DevOps",
-    GREENIT: "GreenIt",
+    GREENIT: "Écoconception",
     METEO_RESSENTIE: "Météo ressentie",
     ACCESSIBILITE: "Accessibilité",
     MATURITE_CLOUD: "Maturité Cloud"

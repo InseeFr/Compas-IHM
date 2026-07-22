@@ -106,7 +106,7 @@ describe("GreenItTable (Vitest)", () => {
     it("renders main layout", () => {
         render(<GreenItTable />);
 
-        expect(screen.getByTestId("title")).toHaveTextContent("Table Indicateur GreenIT");
+        expect(screen.getByTestId("title")).toHaveTextContent("Table Indicateur Écoconception");
         expect(screen.getByTestId("sidebar")).toBeInTheDocument();
         expect(screen.getByTestId("date")).toBeInTheDocument();
     });

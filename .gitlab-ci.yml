@@ -8,6 +8,7 @@ include:
       sonar_props_js: |
         -Dsonar.coverage.exclusions=**/*.gen.ts,src/routes/**,src/main.tsx,src/todos-api/axiosInstance.ts,**/*.test.ts,**/*.test.tsx
         -Dsonar.test.inclusions=**/*.test.ts,**/*.test.tsx
+      trivy_path_to_trivyignore: "${CI_PROJECT_DIR}/.trivyignore"
       auto_tags_with_semver: false
   - project: 'kubernetes/kubeapp/ci-templates'
     ref: main

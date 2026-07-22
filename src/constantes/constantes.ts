@@ -25,7 +25,7 @@ export const NAV_TEXTS: NavBarModel = {
                 { label: "Indicateurs principaux", to: "/indicateur/mainIndicators" },
                 { label: "Qualité", to: "/indicateur/qualiteTable" },
                 { label: "Devops", to: "/indicateur/devopsTable" },
-                { label: "Green IT", to: "/indicateur/greenITTable" },
+                { label: "Écoconception", to: "/indicateur/greenITTable" },
                 { label: "Sécurité", to: "/indicateur/securiteTable" },
                 { label: "Accessibilité", to: "/indicateur/accessibiliteTable" },
                 { label: "Dernières Méteo", to: "/indicateur/meteoTable" },

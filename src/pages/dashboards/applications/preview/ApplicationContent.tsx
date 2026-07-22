@@ -148,7 +148,7 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                         texte2: `Homologation : ${narrative.homologation}`
                     },
                     {
-                        titre: "Green IT",
+                        titre: "Écoconception",
                         valeur: appDetails.lettreGreen ?? "NR",
                         texte: narrative.green
                     },

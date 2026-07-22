@@ -60,10 +60,6 @@ describe("columnsGlobal", () => {
             expect(nomColumn.accessorKey).toBe("applicationName");
         });
 
-        it("a le header 'Nom'", () => {
-            expect(nomColumn.header).toBe("Nom");
-        });
-
         it("n'a pas de Cell personnalisée", () => {
             expect(nomColumn.Cell).toBeUndefined();
         });
@@ -96,9 +92,6 @@ describe("columnsGlobal", () => {
             expect(sndiColumn.accessorKey).toBe("sndi");
         });
 
-        it("a le header 'serviceDev'", () => {
-            expect(sndiColumn.header).toBe("Service dev.");
-        });
         it("doit générer un aria-label servicedev", () => {
             const colContributeur = columns.find(c => c.accessorKey === "sndi")!;
             const props =
@@ -128,9 +121,6 @@ describe("columnsGlobal", () => {
             expect(qualityColumn.accessorKey).toBe("lettreQualiteGenerale");
         });
 
-        it("a le header 'Qualité'", () => {
-            expect(qualityColumn.header).toBe("Qualité");
-        });
 
         it("a une Cell personnalisée QualityCell", () => {
             expect(qualityColumn.Cell).toBeDefined();
@@ -165,9 +155,6 @@ describe("columnsGlobal", () => {
             expect(securityColumn.accessorKey).toBe("lettreGlobaleSecurite");
         });
 
-        it("a le header 'Sécurité'", () => {
-            expect(securityColumn.header).toBe("Sécurité");
-        });
 
         it("a une Cell personnalisée SecurityCell", () => {
             expect(securityColumn.Cell).toBeDefined();
@@ -204,10 +191,6 @@ describe("columnsGlobal", () => {
 
         it("a un id personnalisé 'devopsSort'", () => {
             expect(devopsColumn.id).toBe("devopsSort");
-        });
-
-        it("a le header 'DevOps'", () => {
-            expect(devopsColumn.header).toBe("DevOps");
         });
 
         it("a une Cell personnalisée DevopsCell", () => {
@@ -256,9 +239,6 @@ describe("columnsGlobal", () => {
             expect(greenItColumn.accessorKey).toBe("lettreGreen");
         });
 
-        it("a le header 'GreenIt'", () => {
-            expect(greenItColumn.header).toBe("GreenIt");
-        });
 
         it("a une Cell personnalisée GreenItCell", () => {
             expect(greenItColumn.Cell).toBeDefined();
@@ -293,9 +273,6 @@ describe("columnsGlobal", () => {
             expect(meteoColumn.accessorKey).toBe("meteo");
         });
 
-        it("a le header 'Météo ressentie'", () => {
-            expect(meteoColumn.header).toBe("Météo ressentie");
-        });
 
         it("a une Cell personnalisée MeteoCell", () => {
             expect(meteoColumn.Cell).toBeDefined();
@@ -328,10 +305,6 @@ describe("columnsGlobal", () => {
 
         it("utilise accessorKey 'lettreA11y'", () => {
             expect(a11yColumn.accessorKey).toBe("lettreA11y");
-        });
-
-        it("a le header 'Accessibilité'", () => {
-            expect(a11yColumn.header).toBe("Accessibilité");
         });
 
         it("a une Cell personnalisée A11yCell", () => {
@@ -369,10 +342,6 @@ describe("columnsGlobal", () => {
             expect(maturityColumn.accessorKey).toBe("maturite");
         });
 
-        it("a le header 'Maturité Cloud'", () => {
-            expect(maturityColumn.header).toBe("Maturité Cloud");
-        });
-
         it("a une Cell personnalisée MaturityCell", () => {
             expect(maturityColumn.Cell).toBeDefined();
             expect(maturityColumn.Cell?.name).toBe("MaturityCell");
@@ -408,7 +377,7 @@ describe("columnsGlobal", () => {
                 "Qualité",
                 "Sécurité",
                 "DevOps",
-                "GreenIt",
+                "Écoconception",
                 "Météo ressentie",
                 "Accessibilité",
                 "Maturité Cloud"

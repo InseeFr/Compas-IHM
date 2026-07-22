@@ -122,7 +122,7 @@ describe("GreenITDashboard", () => {
         });
     });
 
-    // ─── Rendu ───────────────────────────────────────────────────────────────
+    // ─── Rendu ─────────────────────────────────────────────────────────────
 
     describe("Rendu du layout", () => {
         it("affiche le layout après chargement", async () => {
@@ -134,7 +134,7 @@ describe("GreenITDashboard", () => {
         it("passe le titre 'Green IT' au layout", async () => {
             render(<GreenITDashboard />);
             await waitFor(() => screen.getByTestId("layout-title"));
-            expect(screen.getByTestId("layout-title")).toHaveTextContent("Green IT");
+            expect(screen.getByTestId("layout-title")).toHaveTextContent("Écoconception");
         });
 
         it("passe le bon sous-titre au layout", async () => {

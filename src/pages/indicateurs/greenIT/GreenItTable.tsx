@@ -121,7 +121,7 @@ export const GreenItTable = () => {
 
     return (
         <TablePageLayout
-            titleTable="Table Indicateur GreenIT"
+            titleTable="Table Indicateur Écoconception"
             filters={
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
                     <FilterSidebar

@@ -192,7 +192,7 @@ export const SpecializedDashboardLinks = () => {
                 : { text: "#bf360c", iconBackground: "#fbe9e7" }
         },
         {
-            title: "Green IT",
+            title: "Écoconception",
             description: "Indicateurs écologiques et consommation énergétique",
             icon: <Co2Outlined fontSize="large" />,
             to: "/dashboard/greenit",

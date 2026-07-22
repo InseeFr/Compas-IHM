@@ -5,3 +5,4 @@ allowBuilds:
 overrides:
   "esbuild": "0.28.1"
   "undici": "7.28.0"
+  "orval>js-yaml": "4.3.0"
