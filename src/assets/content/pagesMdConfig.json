@@ -3,7 +3,11 @@
     { "file": "indicateurs-qualite", "page": "Les indicateurs qualité", "parent": "Indicateurs" },
     { "file": "indicateurs-securite", "page": "Les indicateurs sécurité", "parent": "Indicateurs" },
     { "file": "indicateurs-devops", "page": "Les indicateurs devops", "parent": "Indicateurs" },
-    { "file": "indicateurs-ecoconception", "page": "Les indicateurs d'écoconception", "parent": "Indicateurs" },
+    {
+        "file": "indicateurs-ecoconception",
+        "page": "Les indicateurs d'écoconception",
+        "parent": "Indicateurs"
+    },
     { "file": "indicateurs-meteo", "page": "Les indicateurs météo", "parent": "Indicateurs" },
     { "file": "indicateurs-a11y", "page": "Les indicateurs d'accessibilité", "parent": "Indicateurs" },
     {

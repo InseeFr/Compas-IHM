@@ -121,7 +121,6 @@ describe("columnsGlobal", () => {
             expect(qualityColumn.accessorKey).toBe("lettreQualiteGenerale");
         });
 
-
         it("a une Cell personnalisée QualityCell", () => {
             expect(qualityColumn.Cell).toBeDefined();
             expect(qualityColumn.Cell?.name).toBe("QualityCell");
@@ -154,7 +153,6 @@ describe("columnsGlobal", () => {
         it("utilise accessorKey 'lettreGlobaleSecurite'", () => {
             expect(securityColumn.accessorKey).toBe("lettreGlobaleSecurite");
         });
-
 
         it("a une Cell personnalisée SecurityCell", () => {
             expect(securityColumn.Cell).toBeDefined();
@@ -239,7 +237,6 @@ describe("columnsGlobal", () => {
             expect(greenItColumn.accessorKey).toBe("lettreGreen");
         });
 
-
         it("a une Cell personnalisée GreenItCell", () => {
             expect(greenItColumn.Cell).toBeDefined();
             expect(greenItColumn.Cell?.name).toBe("GreenItCell");
@@ -272,7 +269,6 @@ describe("columnsGlobal", () => {
         it("utilise accessorKey 'meteo'", () => {
             expect(meteoColumn.accessorKey).toBe("meteo");
         });
-
 
         it("a une Cell personnalisée MeteoCell", () => {
             expect(meteoColumn.Cell).toBeDefined();

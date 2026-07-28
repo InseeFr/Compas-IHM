@@ -189,10 +189,10 @@ describe("SecuriteIndicateurTable", () => {
     });
 
     it("fonctionne si aucun indicateur sécurité n'est retourné", async () => {
-    renderWithProviders(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
-    expect(await screen.findByText("Nom")).toBeInTheDocument();
-});
+        expect(await screen.findByText("Nom")).toBeInTheDocument();
+    });
 
     it("génère le bon rowId", () => {
         const rowApp = {
@@ -214,34 +214,34 @@ describe("SecuriteIndicateurTable", () => {
     });
 
     it("associe correctement les modules à leur application", async () => {
-    renderWithProviders(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
-    await screen.findByText("Nom");
+        await screen.findByText("Nom");
 
-    expect(groupModuleUtils.groupModulesByApp).toHaveBeenCalled();
-});
+        expect(groupModuleUtils.groupModulesByApp).toHaveBeenCalled();
+    });
 
     it("n'affiche pas les modules comme lignes principales", async () => {
-    renderWithProviders(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
-    await screen.findByText("Nom");
+        await screen.findByText("Nom");
 
-    expect(screen.queryByText("Mod1")).not.toBeInTheDocument();
-});
+        expect(screen.queryByText("Mod1")).not.toBeInTheDocument();
+    });
 
     it("renderWithProviderss table with fetched data", async () => {
-    renderWithProviders(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
-    expect(await screen.findByText("Nom")).toBeInTheDocument();
+        expect(await screen.findByText("Nom")).toBeInTheDocument();
         const elements = await screen.findAllByText("Service dev.");
         expect(elements[0]).toBeInTheDocument();
         expect(screen.getByText("CVE")).toBeInTheDocument();
     });
 
     it("appuie bien sur le bouton export", async () => {
-    renderWithProviders(<SecuriteIndicateurTable />);
+        renderWithProviders(<SecuriteIndicateurTable />);
 
-    await screen.findByText("Nom");
+        await screen.findByText("Nom");
         await screen.findByText("CVE");
 
         const exportButton = screen.getByTestId("button-export-csv");

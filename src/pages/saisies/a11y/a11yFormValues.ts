@@ -1,6 +1,6 @@
 import type { ModsIndicateur } from "models/indicateurs";
 import {
-    getModules1,
+    getModules,
     listerModulesA11y,
     type IndicateursModuleA11Y,
     type InfosSaisiesA11yToSaveDTO,
@@ -16,7 +16,7 @@ export const TYPES_AUDIT: number[] = [511, 512, 513];
 export const DEFAULT_TYPE_AUDIT: number = 510;
 
 export async function fetchModules(): Promise<ModsIndicateur[]> {
-    const [a11yMods, modules] = await Promise.all([listerModulesA11y(), getModules1()]);
+    const [a11yMods, modules] = await Promise.all([listerModulesA11y(), getModules()]);
     const filteredModules = filterModules(modules, a11yMods);
     const mappedModules = mapModules(filteredModules);
     return sortModules(mappedModules);
