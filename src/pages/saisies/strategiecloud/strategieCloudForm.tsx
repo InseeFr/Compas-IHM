@@ -1,9 +1,8 @@
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
-
+import { useEffect } from "react";
 import { FormPageLayout } from "components/formsPageLayout/FormPageLayout";
 import { BaseFormLayout } from "components/formsPageLayout/BaseFormLayout";
-
-import { getModules, saisirStrategieCloud } from "todos-api/client.gen";
+import { getModules, saisirStrategieCloud, getDerniereStrategie } from "todos-api/client.gen";
 import type { DemandeCreationStrategieCloud as ApiDemandeCreationStrategieCloud } from "todos-api/client.gen";
 
 import {
@@ -17,6 +16,7 @@ import type { ModsIndicateur } from "models/indicateurs";
 import CommentaryLayout from "components/formsPageLayout/CommentaryPageLayout";
 import { useSnackbar } from "hooks/useSnackbar";
 import { useQueryForm } from "hooks/useQueryForm";
+import { getStrategieCommune } from "pages/indicateurs/strategiecloud/strategieCloudUtils.tsx";
 
 interface FormDemandeCreationStrategieCloud {
     idsModule: number[];
@@ -83,12 +83,64 @@ export function StrategieCloudForm() {
         control,
         handleSubmit,
         reset,
+        setValue,
         formState: { errors }
     } = useForm<FormDemandeCreationStrategieCloud>({ defaultValues });
 
     const strategieCloud = useWatch({ control, name: "strategieCloud" });
+    const idsModule = useWatch({control,name: "idsModule"});
     const isCommentaryRequired =
         strategieCloud !== undefined && ["En cours", "Validée"].includes(strategieCloud);
+        useEffect(() => {
+    const chargerDerniereStrategie = async () => {
+        if (idsModule.length === 0) {
+            return;
+        }
+
+        try {
+            const strategies = await Promise.all(
+                idsModule.map(id => getDerniereStrategie(id))
+            );
+
+            const strategieCommune = getStrategieCommune(strategies);
+
+            if (strategieCommune) {
+
+                setValue(
+                    "strategieCloud",
+                    strategieCommune.strategieCloud ?? "A instruire"
+                );
+
+                setValue(
+                    "envCibleProd",
+                    strategieCommune.envCibleProd === "Cloud Externe"
+                        ? "cloud externe"
+                        : strategieCommune.envCibleProd ?? "Kube"
+                );
+
+                setValue(
+                    "commentaire",
+                    strategieCommune.commentaire ?? ""
+                );
+
+            } else {
+
+                setValue("strategieCloud", defaultValues.strategieCloud);
+                setValue("envCibleProd", defaultValues.envCibleProd);
+                setValue("commentaire", defaultValues.commentaire);
+
+            }
+
+        } catch (error) {
+            console.error(
+                "Erreur lors de la récupération de la dernière stratégie cloud",
+                error
+            );
+        }
+    };
+
+    chargerDerniereStrategie();
+}, [idsModule, setValue, reset]);
 
     const creer: SubmitHandler<FormDemandeCreationStrategieCloud> = async data => {
         try {
