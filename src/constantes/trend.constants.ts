@@ -1,18 +1,18 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import NorthEastIcon from "@mui/icons-material/NorthEast";
-import SouthEastIcon from "@mui/icons-material/SouthEast";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'; // ou RemoveIcon
 
 export const TREND_CONFIG = {
     up: {
-        icon: NorthEastIcon,
+        icon: ThumbUpIcon,
         color: "success.main"
     },
     down: {
-        icon: SouthEastIcon,
+        icon: ThumbDownIcon,
         color: "error.main"
     },
     flat: {
-        icon: ArrowForwardIcon,
+        icon: HorizontalRuleIcon, // ou RemoveIcon
         color: "#c7c7c7"
     }
 } as const;
