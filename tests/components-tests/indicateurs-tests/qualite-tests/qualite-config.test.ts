@@ -27,6 +27,7 @@ vi.mock("utils/exportCsv", () => ({
 
 const mockApp = {
     applicationId: 1,
+    nbLigneCodeTotal: "1000",
     applicationName: "App1",
     sndi: "S1",
     domaineSndi: "D1",
@@ -47,6 +48,7 @@ const mockApp = {
 
 const mockModule = {
     moduleName: "Mod1",
+    nbLigneCodeTotal: "2000",
     applicationName: "App1",
     sndi: "S1",
     domaineSndi: "D1",
@@ -78,6 +80,7 @@ describe("formatIndicateur", () => {
             lettreFiabilite: "B",
             lettreFiabilitePast: "NR",
             lettreDetteTechnique: "C",
+            nbLigneCodeTotal: "1000",
             pourcentageCouvertureTestUnitaire: "50%",
             lettreQualiteGenerale: "G",
             detteTechnique: "123",
@@ -101,6 +104,7 @@ describe("formatIndicateur", () => {
             lettreFiabilite: "Y",
             lettreFiabilitePast: "NR",
             lettreDetteTechnique: "Z",
+            nbLigneCodeTotal: "2000",
             pourcentageCouvertureTestUnitaire: "75%",
             pourcentageCouvertureTestUnitairePast: "NR",
             parentApplication: "App1",
@@ -213,8 +217,8 @@ describe("OnExport", () => {
         expect(entetes).toBeDefined();
 
         expect(csvData).toEqual([
-            `"App1","","S1","D1","NR","A","50%","B","C","123"`,
-            `"App1","Mod1","S1","D1","NR","X","75%","Y","Z","456"`
+            `"App1","","S1","D1","NR","A","50%","B","C","123","1000"`,
+            `"App1","Mod1","S1","D1","NR","X","75%","Y","Z","456","2000"`
         ]);
     });
 });
@@ -237,7 +241,8 @@ describe("formatIndicateur — valeurs manquantes", () => {
             detteTechnique: null,
             evolutionCouvertureTestUnitaire: null,
             evolutionDetteTechnique: null,
-            evolutionFiabilite: null
+            evolutionFiabilite: null,
+            nbLigneCodeTotal: null,
         };
         const resultat = formatIndicateur(vide as any, false);
         expect(resultat.applicationName).toBe("NR");
@@ -248,6 +253,7 @@ describe("formatIndicateur — valeurs manquantes", () => {
         expect(resultat.lettreFiabilite).toBe("NR");
         expect(resultat.lettreDetteTechnique).toBe("NR");
         expect(resultat.detteTechnique).toBe("NR");
+        expect(resultat.nbLigneCodeTotal).toBe("NR");
         expect(resultat.lettreQualiteGenerale).toBe("NR");
     });
 
@@ -328,7 +334,8 @@ describe("OnExport — cas limites", () => {
                 detteTechnique: null,
                 evolutionCouvertureTestUnitaire: null,
                 evolutionDetteTechnique: null,
-                evolutionFiabilite: null
+                evolutionFiabilite: null,
+            nbLigneCodeTotal: null,
             } as any,
             false
         );
@@ -340,7 +347,7 @@ describe("OnExport — cas limites", () => {
         };
         OnExport(mockTable);
         const csvData = (handleExportCsv as any).mock.calls.at(-1)[2];
-        expect(csvData[0]).toBe(`"AppVide","","NR","NR","NR","NR","NR","NR","NR","NR"`);
+        expect(csvData[0]).toBe(`"AppVide","","NR","NR","NR","NR","NR","NR","NR","NR","NR"`);
     });
 
     it("doit aplatir les subRows et les inclure dans le CSV", () => {

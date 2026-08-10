@@ -108,6 +108,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
         lettreFiabilite: item.lettreFiabilite ?? defaultValue,
         lettreFiabilitePast: item.fiabilitePast ?? defaultValue,
         lettreDetteTechnique: item.lettreDetteTechnique ?? defaultValue,
+        nbLigneCodeTotal: item.nbLigneCodeTotal ?? defaultValue,
         pourcentageCouvertureTestUnitaire: item.pourcentageCouvertureTestUnitaire ?? defaultValue,
         pourcentageCouvertureTestUnitairePast:
             item.pourcentageCouvertureTestUnitairePast ?? defaultValue,
