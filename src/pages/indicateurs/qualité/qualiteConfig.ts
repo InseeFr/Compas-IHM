@@ -15,7 +15,8 @@ const getValueQualiteCSV = (row: MRT_Row<QualiteIndicateur>): string[] => {
         `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
         `"${row.original.lettreFiabilite ?? "NR"}"`,
         `"${row.original.lettreDetteTechnique ?? "NR"}"`,
-        `"${row.original.detteTechnique ?? "NR"}"`
+        `"${row.original.detteTechnique ?? "NR"}"`,
+        `"${row.original.nbLigneCodeTotal ?? "NR"}"`
     ];
 };
 export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
@@ -29,7 +30,8 @@ export const OnExport = (table: MRT_TableInstance<QualiteIndicateur>) => {
         QUALITE_HEADERS.POURCENTAGE_COUVERTURE_TEST,
         QUALITE_HEADERS.NIVEAU_FIABILITE,
         QUALITE_HEADERS.NIVEAU_DETTE_TECHNIQUE,
-        QUALITE_HEADERS.DETTE_TECHNIQUE_JOURS
+        QUALITE_HEADERS.DETTE_TECHNIQUE_JOURS,
+        QUALITE_HEADERS.NB_LIGNE_CODE_TOTALE
     ].map(escapeCsvValue);
 
     const filteredRows: MRT_Row<QualiteIndicateur>[] = flattenRows(table.getExpandedRowModel().rows);

@@ -62,7 +62,7 @@
         "jsdom": "29.1.1",
         "minimatch": "^10.2.5",
         "node-fetch": "^3.3.2",
-        "orval": "8.22.0",
+        "orval": "7.21.0",
         "prettier": "^3.7.4",
         "typescript": "~5.9.3",
         "typescript-eslint": "^8.46.4",

@@ -56,6 +56,7 @@ export interface QualiteIndicateur {
     lettreFiabilite?: string;
     lettreFiabilitePast?: string;
     lettreDetteTechnique?: string;
+    nbLigneCodeTotal?: string;
     pourcentageCouvertureTestUnitaire: string;
     pourcentageCouvertureTestUnitairePast: string;
     grade?: string;

@@ -40,7 +40,9 @@ export const QUALITE_HEADERS = {
     NIVEAU_FIABILITE: "Niveau fiabilité",
     DETTE_TECHNIQUE: "Dette Technique",
     NIVEAU_DETTE_TECHNIQUE: "Niveau dette technique",
-    DETTE_TECHNIQUE_JOURS: "Dette technique (jours)"
+    DETTE_TECHNIQUE_JOURS: "Dette technique (jours)",
+    NB_LIGNE_CODE_TOTALE: "Nb de ligne de code totale"
+
 } as const;
 
 // ============================================================================
