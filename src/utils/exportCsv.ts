@@ -49,6 +49,26 @@ export const sanitizeLigneCode = (value?: string | number): string => {
     return sanitize(value);
 };
 
+export const sanitizeAllLignesCode = (
+    nbLigneCode?: string | number,
+    nbLigneCodeTotal?: string | number,
+    nbLigneCodeNonTeste?: string | number
+): [string, string, string] => {
+    const hasSO = 
+        nbLigneCode === -1 || nbLigneCode === "-1" ||
+        nbLigneCodeTotal === -1 || nbLigneCodeTotal === "-1" ||
+        nbLigneCodeNonTeste === -1 || nbLigneCodeNonTeste === "-1";
+    
+    if (hasSO) {
+        return ["SO", "SO", "SO"];
+    }
+    return [
+        sanitize(nbLigneCode),
+        sanitize(nbLigneCodeTotal),
+        sanitize(nbLigneCodeNonTeste)
+    ];
+};
+
 export const formatValue = (value: string): string | number => {
     if (value === "NR") return "NR";
     const num = Number(value);
@@ -82,9 +102,7 @@ export const formatMainCsvRow = (item: MRT_Row<GlobalIndicator>): string => {
         sanitize(computeDetteTechniqueJours(original.detteTechnique)),
         sanitize(original.lettreFiabilite),
         sanitize(original.lettreCve),
-        sanitizeLigneCode(original.nbLigneCode),
-        sanitizeLigneCode(original.nbLigneCodeTotal),
-        sanitizeLigneCode(original.nbLigneCodeNonTeste),
+        ...sanitizeAllLignesCode(original.nbLigneCode, original.nbLigneCodeTotal, original.nbLigneCodeNonTeste),
         sanitize(formatValue(original.nbCveCritical)),
         sanitize(formatValue(original.nbCveHigh)),
         sanitize(formatValue(original.nbCveMedium)),
