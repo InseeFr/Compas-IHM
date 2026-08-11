@@ -44,6 +44,11 @@ export const sanitize = (value?: string | number): string => {
     return value === null || value === undefined || value === -1 || value === "" ? "NR" : String(value);
 };
 
+export const sanitizeLigneCode = (value?: string | number): string => {
+    if (value === -1 || value === "-1") return "SO";
+    return sanitize(value);
+};
+
 export const formatValue = (value: string): string | number => {
     if (value === "NR") return "NR";
     const num = Number(value);
@@ -77,7 +82,9 @@ export const formatMainCsvRow = (item: MRT_Row<GlobalIndicator>): string => {
         sanitize(computeDetteTechniqueJours(original.detteTechnique)),
         sanitize(original.lettreFiabilite),
         sanitize(original.lettreCve),
-        sanitize(original.nbLigneCodeTotal),
+        sanitizeLigneCode(original.nbLigneCode),
+        sanitizeLigneCode(original.nbLigneCodeTotal),
+        sanitizeLigneCode(original.nbLigneCodeNonTeste),
         sanitize(formatValue(original.nbCveCritical)),
         sanitize(formatValue(original.nbCveHigh)),
         sanitize(formatValue(original.nbCveMedium)),
