@@ -41,7 +41,9 @@ export const QUALITE_HEADERS = {
     DETTE_TECHNIQUE: "Dette Technique",
     NIVEAU_DETTE_TECHNIQUE: "Niveau dette technique",
     DETTE_TECHNIQUE_JOURS: "Dette technique (jours)",
-    NB_LIGNE_CODE_TOTALE: "Nb de ligne de code totale"
+    NB_LIGNE_CODE: "Nb de ligne de code",
+    NB_LIGNE_CODE_TOTALE: "Nb de ligne de code totale",
+    NB_LIGNE_CODE_NON_TESTE: "Nb de ligne de code non testé"
 
 } as const;
 
@@ -167,7 +169,9 @@ export const CSV_HEADERS = [
     QUALITE_HEADERS.DETTE_TECHNIQUE_JOURS,
     QUALITE_HEADERS.NIVEAU_FIABILITE,
     SECURITE_HEADERS.NIVEAU_CVE,
+    QUALITE_HEADERS.NB_LIGNE_CODE,
     QUALITE_HEADERS.NB_LIGNE_CODE_TOTALE,
+    QUALITE_HEADERS.NB_LIGNE_CODE_NON_TESTE,
     SECURITE_HEADERS.CVE_CRITIQUE,
     SECURITE_HEADERS.CVE_ELEVE,
     SECURITE_HEADERS.CVE_MOYEN,

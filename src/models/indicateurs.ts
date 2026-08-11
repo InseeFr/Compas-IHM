@@ -323,6 +323,7 @@ export interface GlobalIndicator {
     pourcentageCouvertureTestUniaire: string;
     nbLigneCode?: string;
     nbLigneCodeTotal?: string;
+    nbLigneCodeNonTeste?: string;
     nbCveCritical: string;
     nbCveHigh: string;
     nbCveLow: string;
