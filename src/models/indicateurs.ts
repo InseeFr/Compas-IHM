@@ -322,6 +322,7 @@ export interface GlobalIndicator {
     lettreGlobaleSecurite: string;
     pourcentageCouvertureTestUniaire: string;
     nbLigneCode?: string;
+    nbLigneCodeTotal?: string;
     nbCveCritical: string;
     nbCveHigh: string;
     nbCveLow: string;
