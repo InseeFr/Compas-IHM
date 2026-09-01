@@ -6,6 +6,7 @@ import {
     paginationConfig
 } from "pages/indicateurs/strategiecloud/strategieCloud-config";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
+import { filterByApplicationName } from "constantes/constantes";
 
 export const StrategieCloudTable = () => {
     const columns = columnsTable();
@@ -29,6 +30,7 @@ export const StrategieCloudTable = () => {
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={onExport}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

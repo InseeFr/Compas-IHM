@@ -1,6 +1,7 @@
 import type { ViewMode } from "constantes/constantes";
 import { useState } from "react";
 import { useFilterContext } from "store/filterContext";
+import { filterByApplicationName } from "constantes/constantes";
 
 import {
     columnsGreenIt,
@@ -163,6 +164,7 @@ export const GreenItTable = () => {
             enableHiding={true}
             columnVisibility={columnVisibility}
             onColumnVisibilityChange={setColumnVisibility}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

@@ -6,6 +6,7 @@ import {
 import { columnsTable, formatIndicateur, onExport, paginationConfig } from "./devopsConfig";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 import { useTendanceContext } from "store/tendance-context";
+import { filterByApplicationName } from "constantes/constantes";
 
 export const DevopsIndicateurTable = () => {
     const { stateTendance } = useTendanceContext();
@@ -40,6 +41,7 @@ export const DevopsIndicateurTable = () => {
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={onExport}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

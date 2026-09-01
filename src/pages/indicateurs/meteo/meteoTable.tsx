@@ -10,6 +10,7 @@ import {
     paginationConfig
 } from "./meteo-config";
 import TablePageLayout from "components/TablePageLayout";
+import { filterByApplicationName } from "constantes/constantes";
 import ButtonCsvExport from "components/ButtonCsvExport";
 import { applyDevFilters } from "utils/filters-functions";
 import { MeteoFormMonths } from "./meteoCell";
@@ -81,6 +82,7 @@ export const MeteoTable = () => {
                     <ButtonCsvExport table={table} onExport={onExport} />
                 </Fragment>
             )}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

@@ -7,7 +7,7 @@ import {
     type MRT_VisibilityState
 } from "material-react-table";
 import { MRT_Localization_FR } from "material-react-table/locales/fr";
-import { type JSX, type ReactNode } from "react";
+import { useMemo, useState, type JSX, type ReactNode } from "react";
 import type { Pagination } from "../models/table-model";
 import { Paper, Stack } from "@mui/material";
 import "styles/tablePageLayout.css";
@@ -31,17 +31,26 @@ interface TablePageLayoutProps<T extends MRT_RowData> {
     onColumnVisibilityChange?: (
         updater: MRT_VisibilityState | ((old: MRT_VisibilityState) => MRT_VisibilityState)
     ) => void;
+    // prédicat appliqué aux lignes de 1er niveau ; si absent, aucun filtrage manuel
+    filterPredicate?: (row: T, search: string) => boolean;
 }
 
 export default function TablePageLayout<T extends MRT_RowData>(
     props: Readonly<TablePageLayoutProps<T>>
 ): JSX.Element {
+    const [globalFilter, setGlobalFilter] = useState("");
+
+    const displayedData = useMemo(() => {
+        if (!props.filterPredicate || !globalFilter?.trim()) return props.data;
+        return props.data.filter(row => props.filterPredicate!(row, globalFilter));
+    }, [props.data, props.filterPredicate, globalFilter]);
+
     return (
         <Paper className="table-page-layout">
             <Ariane items={[{ nav: props.titleTable, link: "" }]} />
             <MaterialReactTable
                 key={props.reactKey}
-                data={props.data}
+                data={displayedData}
                 columns={props.columns}
                 enableFullScreenToggle={false}
                 enableExpanding={true}
@@ -51,12 +60,15 @@ export default function TablePageLayout<T extends MRT_RowData>(
                 enableDensityToggle={false}
                 enableHiding={props.enableHiding ?? false}
                 onColumnVisibilityChange={props.onColumnVisibilityChange}
+                manualFiltering={!!props.filterPredicate}
+                onGlobalFilterChange={(value: string | undefined) => setGlobalFilter(value ?? "")}
                 muiTableProps={{
                     "aria-label": props.titleTable
                 }}
                 state={{
                     isLoading: props.isLoading,
-                    columnVisibility: props.columnVisibility ?? {}
+                    columnVisibility: props.columnVisibility ?? {},
+                    globalFilter
                 }}
                 initialState={{
                     pagination: props.paginationConfig.pagination,

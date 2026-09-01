@@ -1,6 +1,7 @@
 import { columnsTable, formatIndicateur, OnExport, paginationConfig } from "./a11yConfig";
 import { getModules, listerModulesA11y } from "todos-api/client.gen";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
+import { filterByApplicationName } from "constantes/constantes";
 
 export const A11yIndicateurTable = () => {
     const columns = columnsTable();
@@ -28,6 +29,7 @@ export const A11yIndicateurTable = () => {
             paginationConfig={paginationConfig}
             onExport={OnExport}
             rowId={row => row.modName}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

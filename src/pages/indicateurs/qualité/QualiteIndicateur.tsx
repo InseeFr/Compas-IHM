@@ -7,6 +7,7 @@ import {
 
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 import { useTendanceContext } from "store/tendance-context";
+import { filterByApplicationName } from "constantes/constantes";
 
 const QualiteIndicateurTable = () => {
     const { stateTendance } = useTendanceContext();
@@ -44,6 +45,7 @@ const QualiteIndicateurTable = () => {
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

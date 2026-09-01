@@ -9,6 +9,18 @@ export type ViewMode = "global" | "prod" | "horsprod";
 
 export const BYTES_PER_GB = 1024 ** 3;
 
+// Fonction de filtre générique pour filtrer uniquement sur le nom d'application/module (pas les sous-modules)
+// Elle gère plusieurs cas :
+// - Objets avec isModule=true (modules) : exclus du filtre global
+// - Objets avec applicationName : filtre sur applicationName
+// - Objets avec modName mais pas applicationName : filtre sur modName
+export const filterByApplicationName = (row: unknown, search: string): boolean => {
+    const r = row as { isModule?: boolean; applicationName?: string; modName?: string };
+    if (r.isModule === true) return true;
+    const nom = r.applicationName ?? r.modName ?? "";
+    return nom.toLowerCase().includes(search.trim().toLowerCase());
+};
+
 export const NAV_TEXTS: NavBarModel = {
     items: [
         {
@@ -48,6 +60,7 @@ export const BASE_COLONNE = <T extends MRT_RowData>(isModule?: boolean): MRT_Col
         ? {
               accessorKey: "modName",
               header: BASE_HEADERS.NOM_MODULE,
+              enableGlobalFilter: false,
               muiTableBodyCellProps: ({ cell, row }) =>
                   muiAriaCell({ title: "Module", cell: cell, row: row })
           }
@@ -63,6 +76,7 @@ export const BASE_COLONNE = <T extends MRT_RowData>(isModule?: boolean): MRT_Col
     {
         accessorKey: "sndi",
         header: BASE_HEADERS.SERVICE_DEV,
+        enableGlobalFilter: false,
         muiTableBodyCellProps: ({ cell, row }) =>
             muiAriaCell({ title: "Service SNDI", cell: cell, row: row })
     }

@@ -22,6 +22,7 @@ import { onExport } from "./csvexport";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
 import { useTendanceContext } from "store/tendance-context";
+import { filterByApplicationName } from "constantes/constantes";
 
 export const MainIndicator = () => {
     const { state, dispatch } = useFilterContext();
@@ -110,6 +111,7 @@ export const MainIndicator = () => {
             subRow={subRow => (subRow.isModule ? undefined : modulesByApp[subRow.applicationName])}
             renderTopCustom={({ table }) => <ButtonCsvExport table={table} onExport={onExport} />}
             fetch={refetch}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

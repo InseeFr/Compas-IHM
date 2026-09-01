@@ -14,6 +14,7 @@ import {
 } from "todos-api/client.gen";
 import GenericIndicatorTable from "components/indicators/GenericIndicatorTable";
 import { useTendanceContext } from "store/tendance-context";
+import { filterByApplicationName } from "constantes/constantes";
 
 const SecuriteIndicateurTable = () => {
     const { stateTendance } = useTendanceContext();
@@ -51,6 +52,7 @@ const SecuriteIndicateurTable = () => {
             hasModules={true}
             paginationConfig={paginationConfig}
             onExport={OnExport}
+            filterPredicate={filterByApplicationName}
         />
     );
 };

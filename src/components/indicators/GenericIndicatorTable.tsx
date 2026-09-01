@@ -20,6 +20,7 @@ interface GenericIndicatorTableProps {
     onExport?: (table: any) => void;
     paginationConfig: Pagination;
     customFilters?: React.ReactNode;
+    filterPredicate?: (row: any, search: string) => boolean;
 }
 
 export const GenericIndicatorTable = ({
@@ -32,7 +33,8 @@ export const GenericIndicatorTable = ({
     subRow,
     onExport,
     paginationConfig,
-    customFilters
+    customFilters,
+    filterPredicate
 }: GenericIndicatorTableProps) => {
     const { state, dispatch } = useFilterContext();
     const { stateTendance, dispatchTendance } = useTendanceContext();
@@ -97,6 +99,7 @@ export const GenericIndicatorTable = ({
             renderTopCustom={({ table }) =>
                 onExport && <ButtonCsvExport table={table} onExport={onExport} />
             }
+            filterPredicate={filterPredicate}
         />
     );
 };

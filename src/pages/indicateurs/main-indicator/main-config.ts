@@ -9,7 +9,7 @@ import {
     QualityCell,
     SecurityCell
 } from "./mainCell";
-import type { MRT_ColumnDef, MRT_SortingFn } from "material-react-table";
+import type { MRT_ColumnDef, MRT_FilterFn, MRT_SortingFn } from "material-react-table";
 import { isDateOlderThan31Days } from "utils/date-functions";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
@@ -20,6 +20,13 @@ export const paginationConfig: Pagination = {
         pageIndex: 0,
         pageSize: 30
     }
+};
+
+export const filtreNomApplication: MRT_FilterFn<GlobalIndicator> = (row, _columnId, filterValue) => {
+    // un module suit toujours son application parente
+    if (row.original.isModule) return true;
+    const nom = row.original.applicationName ?? "";
+    return nom.toLowerCase().includes(String(filterValue).trim().toLowerCase());
 };
 
 export const sortHelper: MRT_SortingFn<GlobalIndicator> = (rowA, rowB) => {
