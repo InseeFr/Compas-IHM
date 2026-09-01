@@ -157,7 +157,6 @@ const createA11yIndicators = (a11y?: IndicateursModuleA11Y) => ({
 
 const createMaturiteCloudIndicators = (maturite?: IndicateurApplicationMaturiteCloud) => ({
     maturite: stringOrNR(maturite?.maturite),
-    robustesse: stringOrNR(maturite?.robustesse),
     scoreBenefice: stringOrNR(maturite?.scoreBenefice),
     scoreComplexite: stringOrNR(maturite?.scoreComplexite),
     scoreOrga: stringOrNR(maturite?.scoreOrga),
@@ -173,7 +172,6 @@ const createMaturiteCloudIndicators = (maturite?: IndicateurApplicationMaturiteC
 
 const MODULE_MATURITE_CLOUD_DEFAULTS = {
     maturite: SO,
-    robustesse: SO,
     scoreBenefice: SO,
     scoreComplexite: SO,
     scoreOrga: SO,

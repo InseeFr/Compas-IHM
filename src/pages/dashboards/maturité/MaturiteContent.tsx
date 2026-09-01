@@ -1,286 +1,178 @@
-import { alpha, Box, Chip, Divider, LinearProgress, Stack, Typography, useTheme } from "@mui/material";
-import { green, grey, red } from "@mui/material/colors";
-import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import { alpha, Box, Chip, Stack, Typography, useTheme } from "@mui/material";
+import { green, red } from "@mui/material/colors";
+import type { ReactNode } from "react";
 
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
+import GroupsIcon from "@mui/icons-material/Groups";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 import type { IndicateurApplicationMaturite } from "models/indicateurs";
-import { ToolTipLayout } from "components/ToolTipLayout";
+import {
+    type Classement,
+    type Conseil,
+    type Tendance,
+    computeConseil,
+    fmtBenefice,
+    fmtComplexite,
+    getClassement,
+    getScoreColor,
+    getTendance,
+    normalizeMaturite,
+    toPct
+} from "./maturite-config";
 
-import { clamp01, getScoreColor, formatNum, maturiteLevel, maturiteLabel } from "./maturite-config";
-import type { ApplicationTip } from "todos-api/client.gen";
+/* -------------------------------------------------------------------------- */
+/*  Briques réutilisables                                                     */
+/* -------------------------------------------------------------------------- */
 
-interface MaturiteProps {
-    selectedApp: IndicateurApplicationMaturite | null;
-    tipsItemsTech?: ApplicationTip[];
-    tipsItemsOrga?: ApplicationTip[];
-}
-
-interface NormalizedMaturite {
-    scoreTechnique: number;
-    scoreOrga: number;
-    scoreComplexite: number;
-    scoreBenefice: number;
-    progressionDeploy: number;
-    progressionArchi: number;
-    progressionTechnos: number;
-    progressionCloud: number;
-    progressionDevops: number;
-    progressionMateqip: number;
-    maturite: string | null;
-    robustesse: string;
-}
-
-interface TipsBlockProps {
-    title: string;
-    items: ApplicationTip[];
-    loading?: boolean;
-    error?: string | null;
-}
-
-function useNormalizedMaturite(selectedApp: IndicateurApplicationMaturite | null): NormalizedMaturite {
-    if (!selectedApp) {
-        return {
-            scoreTechnique: 0,
-            scoreOrga: 0,
-            scoreComplexite: 0,
-            scoreBenefice: 0,
-            progressionDeploy: 0,
-            progressionArchi: 0,
-            progressionTechnos: 0,
-            progressionCloud: 0,
-            progressionDevops: 0,
-            progressionMateqip: 0,
-            maturite: null,
-            robustesse: "0"
-        };
-    }
-
-    return {
-        scoreTechnique: formatNum(selectedApp.scoreTechnique, 0),
-        scoreOrga: formatNum(selectedApp.scoreOrga, 0),
-        scoreComplexite: formatNum(selectedApp.scoreComplexite, 0),
-        scoreBenefice: formatNum(selectedApp.scoreBenefice, 0),
-        progressionDeploy: clamp01(formatNum(selectedApp.progressionDeploy, 0)),
-        progressionArchi: clamp01(formatNum(selectedApp.progressionArchi, 0)),
-        progressionTechnos: clamp01(formatNum(selectedApp.progressionTechnos, 0)),
-        progressionCloud: clamp01(formatNum(selectedApp.progressionCloud, 0)),
-        progressionDevops: clamp01(formatNum(selectedApp.progressionDevops, 0)),
-        progressionMateqip: clamp01(formatNum(selectedApp.progressionMateqip, 0)),
-        maturite: selectedApp.maturite ?? null,
-        robustesse: selectedApp.robustesse ?? "0"
-    };
-}
-
-function ScoreBox({ value }: Readonly<{ value: number }>) {
+function ScorePill({
+    text,
+    color,
+    minWidth = 72
+}: Readonly<{ text: string; color: string; minWidth?: number }>) {
     const theme = useTheme();
-    const isDark = theme.palette.mode === "dark";
 
     return (
         <Box
+            component="span"
             sx={{
+                display: "inline-block",
                 px: 1.5,
                 py: 0.5,
-                borderRadius: 2,
+                borderRadius: 1.5,
                 fontWeight: 700,
-                color: isDark ? "grey.100" : "black",
-                bgcolor: isDark ? alpha(grey[800], 0.4) : "background.paper",
-                minWidth: 64,
+                fontVariantNumeric: "tabular-nums",
                 textAlign: "center",
-                boxShadow: t =>
-                    `0 0 0 2px ${alpha(isDark ? t.palette.grey[700] : t.palette.common.black, 0.04)} inset`
+                minWidth,
+                bgcolor: color,
+                color: theme.palette.getContrastText(color)
             }}
         >
-            {value.toFixed(2)}
+            {text}
         </Box>
     );
 }
 
-function LabeledValue({
+function TrendArrow({ tendance }: Readonly<{ tendance: Tendance }>) {
+    const theme = useTheme();
+
+    const map = {
+        hausse: {
+            Icon: TrendingUpIcon,
+            color: theme.palette.success.main,
+            title: "Tendance à la hausse"
+        },
+        stable: {
+            Icon: TrendingFlatIcon,
+            color: theme.palette.text.secondary,
+            title: "Tendance stable"
+        },
+        baisse: {
+            Icon: TrendingDownIcon,
+            color: theme.palette.error.main,
+            title: "Tendance à la baisse"
+        }
+    } as const;
+
+    const { Icon, color, title } = map[tendance];
+    return <Icon sx={{ color, fontSize: 28 }} titleAccess={title} />;
+}
+
+function ClassementChip({
+    prefix,
+    classement
+}: Readonly<{ prefix: string; classement: Classement }>) {
+    return (
+        <Chip
+            icon={classement.positive ? <CheckCircleIcon /> : <CancelIcon />}
+            label={`${prefix} ${classement.label}`}
+            color={classement.positive ? "success" : "error"}
+            variant="outlined"
+            size="small"
+            sx={{ fontWeight: 600 }}
+        />
+    );
+}
+
+function DefinitionHint({ children }: Readonly<{ children: ReactNode }>) {
+    return (
+        <Stack direction="row" spacing={0.5} alignItems="flex-start" sx={{ maxWidth: 320 }}>
+            <HelpOutlineIcon fontSize="small" sx={{ mt: "2px", opacity: 0.7 }} />
+            <Typography variant="caption" sx={{ lineHeight: 1.3, opacity: 0.85 }}>
+                {children}
+            </Typography>
+        </Stack>
+    );
+}
+
+function ScoreHeadline({
+    prefix,
+    score,
+    delta,
+    definition
+}: Readonly<{
+    prefix: string;
+    score: number;
+    delta: number;
+    definition: ReactNode;
+}>) {
+    const classement = getClassement(score);
+    const tendance = getTendance(delta);
+
+    return (
+        <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+            alignItems={{ xs: "flex-start", md: "center" }}
+            justifyContent="space-between"
+            flexWrap="wrap"
+        >
+            <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+                <ClassementChip prefix={prefix} classement={classement} />
+                <Typography
+                    variant="h5"
+                    fontWeight={800}
+                    sx={{ fontVariantNumeric: "tabular-nums" }}
+                >
+                    {toPct(score)}
+                </Typography>
+                <TrendArrow tendance={tendance} />
+            </Stack>
+            <DefinitionHint>{definition}</DefinitionHint>
+        </Stack>
+    );
+}
+
+function SubScore({
     icon,
     label,
-    value
-}: Readonly<{
-    icon: React.ReactNode;
-    label: string;
-    value: number;
-}>) {
+    score
+}: Readonly<{ icon: ReactNode; label: string; score: number }>) {
     return (
-        <Stack spacing={1} alignItems="center" sx={{ minWidth: 160 }}>
+        <Stack spacing={1} alignItems="center">
             <Stack direction="row" spacing={0.5} alignItems="center">
                 <Typography variant="body2" fontWeight={600}>
                     {label}
                 </Typography>
                 {icon}
             </Stack>
-            <ScoreBox value={value} />
+            <ScorePill text={toPct(score)} color={getScoreColor(score)} minWidth={80} />
         </Stack>
     );
 }
 
-function HorizontalBars({
-    items
-}: Readonly<{
-    items: { label: string; value: number }[];
-}>) {
+function ConseilBox({ conseil }: Readonly<{ conseil: Conseil }>) {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
-
-    return (
-        <Stack spacing={1}>
-            {items.map((item, idx) => {
-                const pct = clamp01(item.value) * 100;
-                const color = getScoreColor(item.value);
-
-                return (
-                    <Stack key={`${item.label}-${idx}`} spacing={0.5}>
-                        <Stack direction="row" justifyContent="space-between">
-                            <Typography variant="caption" sx={{ opacity: isDark ? 0.9 : 0.8 }}>
-                                {item.label}
-                            </Typography>
-                            <Typography variant="caption" fontWeight={700}>
-                                {Math.round(pct)}%
-                            </Typography>
-                        </Stack>
-
-                        <Box
-                            sx={{
-                                height: 10,
-                                borderRadius: 999,
-                                bgcolor: isDark ? alpha(grey[700], 0.4) : alpha(grey[500], 0.25),
-                                overflow: "hidden"
-                            }}
-                        >
-                            <Box sx={{ width: `${pct}%`, height: "100%", bgcolor: color }} />
-                        </Box>
-                    </Stack>
-                );
-            })}
-        </Stack>
-    );
-}
-
-function MaturiteSection({
-    icon,
-    title,
-    score,
-    bars,
-    titletips,
-    tipsItems
-}: Readonly<{
-    icon: React.ReactNode;
-    title: string;
-    score: number;
-    bars: { label: string; value: number }[];
-    titletips: string;
-    tipsItems: ApplicationTip[];
-}>) {
-    return (
-        <Stack spacing={1.5} sx={{ flex: 1, minWidth: 260 }}>
-            <LabeledValue icon={icon} label={title} value={score} />
-            <HorizontalBars items={bars} />
-            <Box sx={{ mt: 2 }}>
-                <TipsBlock title={titletips} items={tipsItems} />
-            </Box>
-        </Stack>
-    );
-}
-
-export function MaturiteHeader({ selectedApp }: Readonly<MaturiteProps>) {
-    const level = maturiteLevel(selectedApp?.maturite);
-    const label = maturiteLabel(selectedApp?.maturite);
-
-    return (
-        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-            <Chip
-                icon={level === "forte" ? <CheckCircleIcon /> : <CancelIcon />}
-                label={`Maturité cloud ${label}`}
-                color={level === "forte" ? "success" : "error"}
-                variant="outlined"
-                size="small"
-            />
-            <Chip
-                label={`Robustesse ${selectedApp?.robustesse ?? "0"}/4`}
-                size="small"
-                sx={{ bgcolor: alpha(green[600], 0.12) }}
-            />
-        </Stack>
-    );
-}
-
-export function TechAndOrga({ selectedApp, tipsItemsTech, tipsItemsOrga }: Readonly<MaturiteProps>) {
-    const m = useNormalizedMaturite(selectedApp);
-
-    return (
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={3} justifyContent="space-around">
-            <MaturiteSection
-                icon={<PrecisionManufacturingIcon />}
-                title="Maturité technique"
-                score={m.scoreTechnique}
-                bars={[
-                    { label: "Pratiques de développement", value: m.progressionDeploy },
-                    { label: "Architectures compatibles", value: m.progressionArchi },
-                    { label: "Technologies compatibles", value: m.progressionTechnos }
-                ]}
-                titletips="Conseils techniques"
-                tipsItems={tipsItemsTech ?? []}
-            />
-
-            <MaturiteSection
-                icon={<GroupsIcon />}
-                title="Maturité organisationnelle"
-                score={m.scoreOrga}
-                bars={[
-                    { label: "Pratiques des technologies du cloud", value: m.progressionCloud },
-                    { label: "Pratiques DevOps", value: m.progressionDevops },
-                    { label: "Maturité d'équipe", value: m.progressionMateqip }
-                ]}
-                titletips="Conseils organisationnels"
-                tipsItems={tipsItemsOrga ?? []}
-            />
-        </Stack>
-    );
-}
-
-export function ComplexitySection({ selectedApp }: Readonly<MaturiteProps>) {
-    const m = useNormalizedMaturite(selectedApp);
-
-    return (
-        <Stack spacing={1.5} alignItems="center" mb={2}>
-            <Typography variant="subtitle1" fontWeight={700}>
-                Balance risques / opportunités
-            </Typography>
-
-            <Stack direction="row" spacing={2} alignItems="center">
-                <ToolTipLayout
-                    title="Complexité attendue (entre -1 et 0)"
-                    content={<ScoreBox value={m.scoreComplexite} />}
-                />
-
-                <Divider flexItem orientation="vertical" />
-
-                <ToolTipLayout
-                    title="Bénéfice attendu (entre 0 et 1)"
-                    content={<ScoreBox value={m.scoreBenefice} />}
-                />
-            </Stack>
-        </Stack>
-    );
-}
-
-export function ConseilComplexity({
-    conseil
-}: Readonly<{
-    conseil: { favorable: boolean; texte: string };
-}>) {
-    const theme = useTheme();
-    const isDark = theme.palette.mode === "dark";
-    const greenShade = isDark ? 400 : 600;
-    const redShade = isDark ? 400 : 500;
-    const borderColor = conseil.favorable ? green[greenShade] : red[redShade];
+    const favorableShade = isDark ? 400 : 600;
+    const defavorableShade = isDark ? 400 : 500;
+    const borderColor = conseil.favorable ? green[favorableShade] : red[defavorableShade];
 
     return (
         <Box
@@ -289,6 +181,7 @@ export function ConseilComplexity({
                 p: 1.5,
                 width: "100%",
                 maxWidth: 680,
+                mx: "auto",
                 borderRadius: 2,
                 bgcolor: t =>
                     alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.15 : 0.08),
@@ -305,56 +198,78 @@ export function ConseilComplexity({
     );
 }
 
-function TipsBlock({ title, items, loading = false, error = null }: Readonly<TipsBlockProps>) {
-    const theme = useTheme();
-    const isDark = theme.palette.mode === "dark";
+/* -------------------------------------------------------------------------- */
+/*  Blocs principaux                                                          */
+/* -------------------------------------------------------------------------- */
 
-    const texts = items.map(t => (t.conseil ?? "").trim()).filter(Boolean);
-    const messages = Array.from(new Set(texts));
+export function OpportuniteBlock({
+    selectedApp
+}: Readonly<{ selectedApp: IndicateurApplicationMaturite | null }>) {
+    if (!selectedApp) return null;
+
+    const m = normalizeMaturite(selectedApp);
+    const conseil = computeConseil(m.scoreMaturite, m.benefice, m.complexite);
 
     return (
-        <Stack spacing={1}>
-            <Typography variant="subtitle2" fontWeight={700}>
-                {title}
-            </Typography>
+        <Stack spacing={2}>
+            <ScoreHeadline
+                prefix="Opportunité"
+                score={m.scoreOpportunite}
+                delta={m.deltaOpportunite}
+                definition="Le score d’opportunité quantifie l’intérêt qu’il peut y avoir pour cette application à aller sur le Cloud."
+            />
 
-            {loading && <LinearProgress />}
-
-            {error && (
-                <Typography variant="caption" color="error">
-                    {error}
+            <Stack spacing={1} alignItems="center">
+                <Typography variant="subtitle1" fontWeight={700}>
+                    Balance complexité / bénéfices
                 </Typography>
-            )}
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <ScorePill
+                        text={fmtComplexite(m.complexite)}
+                        color={getScoreColor(m.complexite, "complexite")}
+                    />
+                    <ScorePill text={fmtBenefice(m.benefice)} color={getScoreColor(m.benefice)} />
+                </Stack>
+            </Stack>
 
-            {!loading && !error && messages.length === 0 && (
-                <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                    Aucun conseil.
-                </Typography>
-            )}
+            <ConseilBox conseil={conseil} />
+        </Stack>
+    );
+}
 
-            {!loading && !error && messages.length > 0 && (
-                <Box
-                    sx={{
-                        p: 1,
-                        borderRadius: 1.5,
-                        bgcolor: t =>
-                            alpha(
-                                isDark ? t.palette.info.light : t.palette.info.main,
-                                isDark ? 0.12 : 0.06
-                            ),
-                        borderLeft: t =>
-                            `3px solid ${alpha(isDark ? t.palette.info.light : t.palette.info.main, isDark ? 0.8 : 0.6)}`
-                    }}
-                >
-                    <Stack spacing={0.75}>
-                        {messages.map(msg => (
-                            <Typography key={msg} variant="body2" sx={{ lineHeight: 1.4 }}>
-                                • {msg}
-                            </Typography>
-                        ))}
-                    </Stack>
-                </Box>
-            )}
+export function MaturiteBlock({
+    selectedApp
+}: Readonly<{ selectedApp: IndicateurApplicationMaturite | null }>) {
+    if (!selectedApp) return null;
+
+    const m = normalizeMaturite(selectedApp);
+
+    return (
+        <Stack spacing={2}>
+            <ScoreHeadline
+                prefix="Maturité cloud"
+                score={m.scoreMaturite}
+                delta={m.deltaMaturite}
+                definition="Le score de maturité quantifie la facilité avec laquelle on pourrait conduire un chantier de migration vers le Cloud pour cette application."
+            />
+
+            <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={4}
+                justifyContent="space-around"
+                alignItems="center"
+            >
+                <SubScore
+                    icon={<PrecisionManufacturingIcon />}
+                    label="Maturité technique"
+                    score={m.scoreTechnique}
+                />
+                <SubScore
+                    icon={<GroupsIcon />}
+                    label="Maturité organisationnelle"
+                    score={m.scoreOrga}
+                />
+            </Stack>
         </Stack>
     );
 }
@@ -366,11 +281,13 @@ export function DisclaimerMaturity() {
     return (
         <Box
             sx={{
+                mt: 3,
                 p: { xs: 2, sm: 3, md: 4 },
                 display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
                 gap: 3,
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                borderRadius: 2,
                 bgcolor: isDark ? "#4a0051" : "#72007a",
                 color: "common.white",
                 width: "100%",
@@ -378,33 +295,17 @@ export function DisclaimerMaturity() {
                 mx: "auto"
             }}
         >
-            <Stack direction="row" alignItems="flex-start" spacing={2} justifyContent="space-between">
-                <Box sx={{ pr: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
-                        Ces indicateurs et les conseils associés sont basés sur un questionnaire
-                        auto-administré rempli par les équipes de développement en avril 2025. Ils
-                        peuvent donc être partiellement obsolètes, ou biaisés par une éventuelle mauvaise
-                        compréhension de certaines questions.
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
-                        De plus, les indicateurs sont issus d’une analyse statistique des réponses
-                        apportées à ce questionnaire, et sont donc soumis aux incertitudes propres à ce
-                        type d’analyse.
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.4 }}>
-                        L’IA a été utilisée de manière marginale tout au long du process. Aucune donnée
-                        relative aux applications de l’Insee ne lui a été soumise.
-                    </Typography>
-                    <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
-                        Ces informations ont vocation à être mises à jour à un rythme semestriel.
-                    </Typography>
-                </Box>
+            <Typography variant="body2" sx={{ lineHeight: 1.5, pr: 1 }}>
+                Ces indicateurs sont basés sur un questionnaire auto-administré rempli par les
+                équipes de développement en février 2026. Ils peuvent donc être partiellement
+                obsolètes, ou biaisés par une éventuelle mauvaise compréhension de certaines
+                questions.
+            </Typography>
 
-                <WarningAmberRoundedIcon
-                    sx={{ fontSize: 64, flexShrink: 0, color: "warning.main" }}
-                    titleAccess="Avertissement"
-                />
-            </Stack>
+            <WarningAmberRoundedIcon
+                sx={{ fontSize: 64, flexShrink: 0, color: "warning.main" }}
+                titleAccess="Avertissement"
+            />
         </Box>
     );
 }

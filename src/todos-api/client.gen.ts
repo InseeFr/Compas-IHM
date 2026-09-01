@@ -392,11 +392,15 @@ export interface ApplicationTip {
 export interface IndicateurApplicationMaturiteCloud {
     applicationId?: number;
     maturite?: string;
+    scoreMaturite?: string;
+    deltaMaturite?: string;
+    deltaOpportunite?: string;
     robustesse?: string;
     scoreBenefice?: string;
     scoreOrga?: string;
     scoreComplexite?: string;
     scoreTechnique?: string;
+    scoreOpportunite?: string;
     progressionDeploy?: string;
     progressionTechnos?: string;
     progressionArchi?: string;

@@ -6,12 +6,15 @@ export interface IndicateurApplicationMaturite {
     domaine: string;
     domaineFonc: string;
     maturite?: string;
-    robustesse?: string;
 
     scoreBenefice?: string;
     scoreComplexite?: string;
     scoreOrga?: string;
     scoreTechnique?: string;
+    scoreOpportunite?: string;
+    scoreMaturite?: string;
+    deltaOpportunite?: string;
+    deltaMaturite?: string;
 
     progressionDeploy?: string;
     progressionArchi?: string;
@@ -378,7 +381,6 @@ export interface GlobalIndicator {
     detteTechnique?: string;
 
     maturite?: string;
-    robustesse?: string;
     scoreBenefice?: string;
     scoreComplexite?: string;
     scoreOrga?: string;
@@ -422,7 +424,16 @@ export interface IndicateurApplicationSynthese {
     meteoCommentaire?: string;
     dateMeteoCommentaire?: string;
     maturite?: string;
-    robustesse?: string;
+    scoreBenefice?: string;
+    scoreComplexite?: string;
+    scoreOrga?: string;
+    scoreTechnique?: string;
+    progressionDeploy?: string;
+    progressionArchi?: string;
+    progressionTechnos?: string;
+    progressionCloud?: string;
+    progressionDevops?: string;
+    progressionMateqip?: string;
     gaspillage?: string;
     consoNormalized?: string;
     impactNormalized?: string;

@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import {
-    computeConseil,
-    fetchMaturiteData,
-    fetchTipsData
-} from "pages/dashboards/maturité/maturite-config";
+import { fetchMaturiteData } from "pages/dashboards/maturité/maturite-config";
 import MaturiteCloud from "pages/dashboards/maturité/MaturiteCloud";
 
 vi.mock("store/filterContext", () => ({
@@ -30,30 +26,27 @@ vi.mock("@tanstack/react-router", async () => {
     };
 });
 
-vi.mock("pages/dashboards/maturité/maturite-config", () => ({
-    fetchMaturiteData: vi.fn(),
-    fetchTipsData: vi.fn(),
-    bottom3ByPriority: vi.fn(tips => tips.slice(0, 3)),
-    computeConseil: vi.fn()
-}));
-
-vi.mock("pages/dashboards/maturité/MaturiteContent", async () => {
+vi.mock("pages/dashboards/maturité/maturite-config", async importOriginal => {
+    const actual = await importOriginal<typeof import("pages/dashboards/maturité/maturite-config")>();
     return {
-        ComplexitySection: () => <div>ComplexitySection</div>,
-        ConseilComplexity: () => <div>ConseilComplexity</div>,
-        DisclaimerMaturity: () => <div>DisclaimerMaturity</div>,
-        MaturiteHeader: () => <div>MaturiteHeader</div>,
-        TechAndOrga: () => <div>TechAndOrga</div>
+        ...actual,
+        fetchMaturiteData: vi.fn()
     };
 });
 
 vi.mock("components/dashboardsPagesLayout/dashboardPageLayout", () => {
     return {
-        default: ({ setter, dashboardData, renderContent }: any) => {
+        default: ({ setter, dashboardData, renderContent, renderInputAutoComplete, title }: any) => {
             if (dashboardData?.length && setter) {
                 setter(dashboardData[0]); // sélection automatique
             }
-            return <div>{renderContent}</div>;
+            return (
+                <div>
+                    <h1>{title}</h1>
+                    {renderInputAutoComplete && renderInputAutoComplete({})}
+                    {renderContent}
+                </div>
+            );
         }
     };
 });
@@ -62,24 +55,19 @@ describe("MaturiteCloud", () => {
     const fakeApp = {
         applicationId: 1,
         applicationName: "App Test",
-        maturite: 3,
-        scoreBenefice: 5,
-        scoreComplexite: 2
+        scoreOpportunite: "0.8",
+        scoreMaturite: "0.7",
+        scoreTechnique: "0.8",
+        scoreOrga: "0.7",
+        scoreBenefice: "0.6",
+        scoreComplexite: "-0.3",
+        deltaOpportunite: "0.1",
+        deltaMaturite: "0.05"
     };
 
     beforeEach(() => {
         vi.clearAllMocks();
-
         (fetchMaturiteData as any).mockResolvedValue([fakeApp]);
-        (fetchTipsData as any).mockResolvedValue([
-            { id: 1, sourceId: 1, priority: 1 },
-            { id: 2, sourceId: 2, priority: 2 }
-        ]);
-
-        (computeConseil as any).mockReturnValue({
-            favorable: true,
-            texte: "Conseil favorable"
-        });
     });
 
     it("charge les données au montage", async () => {
@@ -97,29 +85,9 @@ describe("MaturiteCloud", () => {
             expect(fetchMaturiteData).toHaveBeenCalled();
         });
 
-        await waitFor(() => {
-            expect(fetchTipsData).toHaveBeenCalledWith(fakeApp);
-        });
-
-        expect(screen.getByText("ComplexitySection")).toBeInTheDocument();
-        expect(screen.getByText("TechAndOrga")).toBeInTheDocument();
-        expect(screen.getByText("ConseilComplexity")).toBeInTheDocument();
-    });
-
-    it("appelle computeConseil avec les bons paramètres", async () => {
-        render(<MaturiteCloud />);
-
-        await waitFor(() => {
-            expect(fetchMaturiteData).toHaveBeenCalled();
-            expect(fetchTipsData).toHaveBeenCalled();
-        });
-
-        await waitFor(() => {
-            expect(computeConseil).toHaveBeenCalledWith(
-                fakeApp.maturite,
-                fakeApp.scoreBenefice,
-                fakeApp.scoreComplexite
-            );
-        });
+        // Le DashboardPageLayout mock sélectionne automatiquement la première app
+        // et rend le contenu
+        // On vérifie que le composant a rendu le titre
+        expect(screen.getByText("Synthèse Maturité Cloud")).toBeInTheDocument();
     });
 });

@@ -1,29 +1,23 @@
 import type { IndicateurApplicationMaturite } from "models/indicateurs";
 import { Fragment, useEffect, useState } from "react";
+import { Divider, Stack, TextField } from "@mui/material";
+
 import { useFilterContext } from "store/filterContext";
-import { bottom3ByPriority, computeConseil, fetchMaturiteData, fetchTipsData } from "./maturite-config";
-import DashboardPageLayout from "components/dashboardsPagesLayout/dashboardPageLayout";
 import { applyDevFilters } from "utils/filters-functions";
-import { TextField } from "@mui/material";
-import {
-    ComplexitySection,
-    ConseilComplexity,
-    DisclaimerMaturity,
-    MaturiteHeader,
-    TechAndOrga
-} from "./MaturiteContent";
-import type { ApplicationTip } from "todos-api/client.gen";
+import DashboardPageLayout from "components/dashboardsPagesLayout/dashboardPageLayout";
 import { FilterSidebar } from "components/filtersLayout/FilterSideBar";
+
+import { fetchMaturiteData } from "./maturite-config";
+import { DisclaimerMaturity, MaturiteBlock, OpportuniteBlock } from "./MaturiteContent";
 
 export default function MaturiteCloud() {
     const [maturiteData, setMaturiteData] = useState<IndicateurApplicationMaturite[]>([]);
     const [selectedApp, setSelectedApp] = useState<IndicateurApplicationMaturite | null>(null);
-    const [tips, setTips] = useState<ApplicationTip[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const { state, dispatch } = useFilterContext();
 
     const getLabel = (app: IndicateurApplicationMaturite) =>
-        app.applicationName ?? `Application ${app.applicationId}`;
+        app.applicationName ?? (app.applicationId ? `Application ${app.applicationId}` : "Application inconnue");
 
     useEffect(() => {
         async function loadMaturiteData() {
@@ -40,22 +34,7 @@ export default function MaturiteCloud() {
         loadMaturiteData();
     }, []);
 
-    useEffect(() => {
-        async function loadTips() {
-            const result = await fetchTipsData(selectedApp);
-            setTips(result);
-        }
-        loadTips();
-    }, [selectedApp]);
-
     const filteredData = maturiteData.filter(item => applyDevFilters(item, state));
-
-    const tipsTechTop3 = bottom3ByPriority(tips.filter(t => t.sourceId === 1));
-    const tipsOrgaTop3 = bottom3ByPriority(tips.filter(t => t.sourceId === 2));
-
-    const conseil = selectedApp
-        ? computeConseil(selectedApp.maturite, selectedApp.scoreBenefice, selectedApp.scoreComplexite)
-        : null;
 
     return (
         <Fragment>
@@ -66,6 +45,7 @@ export default function MaturiteCloud() {
                 loading={loading}
                 setter={setSelectedApp}
                 getter={selectedApp}
+                subHeader={undefined}
                 renderInputAutoComplete={params => (
                     <TextField
                         {...params}
@@ -75,17 +55,12 @@ export default function MaturiteCloud() {
                     />
                 )}
                 titleCard={selectedApp?.applicationName}
-                subHeader={<MaturiteHeader selectedApp={selectedApp} />}
                 renderContent={
-                    <Fragment>
-                        <ComplexitySection selectedApp={selectedApp} />
-                        {conseil && <ConseilComplexity conseil={conseil} />}
-                        <TechAndOrga
-                            selectedApp={selectedApp}
-                            tipsItemsTech={tipsTechTop3}
-                            tipsItemsOrga={tipsOrgaTop3}
-                        />
-                    </Fragment>
+                    <Stack spacing={3} sx={{ width: "100%" }}>
+                        <OpportuniteBlock selectedApp={selectedApp} />
+                        <Divider />
+                        <MaturiteBlock selectedApp={selectedApp} />
+                    </Stack>
                 }
                 label={getLabel}
             />

@@ -149,7 +149,6 @@ const createMockGlobalIndicator = (overrides: Partial<GlobalIndicator> = {}): Gl
         lettreDevopsGenerale: "A",
         detteTechnique: "0",
         maturite: "A",
-        robustesse: "A",
         scoreBenefice: "0",
         scoreComplexite: "0",
         scoreOrga: "0",

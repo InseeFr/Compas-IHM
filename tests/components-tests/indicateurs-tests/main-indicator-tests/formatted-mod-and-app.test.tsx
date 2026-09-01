@@ -96,7 +96,6 @@ describe("formattedApps", () => {
         const mockMaturite: IndicateurApplicationMaturiteCloud = {
             applicationId: 1,
             maturite: "Avancé",
-            robustesse: "Forte",
             scoreBenefice: "85",
             scoreComplexite: "60",
             scoreOrga: "75",
@@ -316,8 +315,7 @@ describe("formattedModules", () => {
         expect(result[0]).toMatchObject({
             conso: "SO",
             lettreGreen: "SO",
-            maturite: "SO",
-            robustesse: "SO"
+            maturite: "SO"
         });
     });
 

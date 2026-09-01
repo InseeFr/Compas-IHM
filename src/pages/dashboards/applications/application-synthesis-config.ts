@@ -177,7 +177,6 @@ const buildFormattedApp = ({
         lettreQualiteGenerale: getAttribute(quality?.lettreGlobalQualite),
         detteTechnique: getAttribute(quality?.detteTechnique).replace(/\.00$/, ""),
         maturite: getAttribute(maturiteCloudApp?.maturite),
-        robustesse: getAttribute(maturiteCloudApp?.robustesse),
         statutHomologation: homologationApp?.statutHomologation,
         homologationBeginDate: homologationApp?.homologationBeginDate ?? undefined,
         homologationEndDate: homologationApp?.homologationEndDate ?? undefined,
