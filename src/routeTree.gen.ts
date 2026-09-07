@@ -9,33 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PlanDuSiteRouteImport } from './routes/plan-du-site'
-import { Route as PageNameRouteImport } from './routes/$pageName'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SaisieStrategiecloudRouteImport } from './routes/saisie/strategiecloud'
-import { Route as SaisieMeteoRouteImport } from './routes/saisie/meteo'
-import { Route as SaisieAccessibilitChar233RouteImport } from './routes/saisie/accessibilité'
-import { Route as IndicateurStrategieCloudTableRouteImport } from './routes/indicateur/strategieCloudTable'
-import { Route as IndicateurSecuriteTableRouteImport } from './routes/indicateur/securiteTable'
-import { Route as IndicateurQualiteTableRouteImport } from './routes/indicateur/qualiteTable'
-import { Route as IndicateurMeteoTableRouteImport } from './routes/indicateur/meteoTable'
-import { Route as IndicateurMainIndicatorsRouteImport } from './routes/indicateur/mainIndicators'
-import { Route as IndicateurGreenITTableRouteImport } from './routes/indicateur/greenITTable'
-import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
-import { Route as IndicateurAccessibiliteTableRouteImport } from './routes/indicateur/accessibiliteTable'
-import { Route as DashboardSyntheseRouteImport } from './routes/dashboard/synthese'
-import { Route as DashboardSecuriteRouteImport } from './routes/dashboard/securite'
-import { Route as DashboardQualiteRouteImport } from './routes/dashboard/qualite'
-import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
-import { Route as DashboardMeteoRouteImport } from './routes/dashboard/meteo'
-import { Route as DashboardMaturiteRouteImport } from './routes/dashboard/maturite'
-import { Route as DashboardGreenitRouteImport } from './routes/dashboard/greenit'
-import { Route as DashboardDevopsRouteImport } from './routes/dashboard/devops'
+import { Route as PageNameRouteImport } from './routes/$pageName'
+import { Route as PlanDuSiteRouteImport } from './routes/plan-du-site'
 import { Route as DashboardAccessibiliteRouteImport } from './routes/dashboard/accessibilite'
+import { Route as DashboardDevopsRouteImport } from './routes/dashboard/devops'
+import { Route as DashboardGreenitRouteImport } from './routes/dashboard/greenit'
+import { Route as DashboardMaturiteRouteImport } from './routes/dashboard/maturite'
+import { Route as DashboardMeteoRouteImport } from './routes/dashboard/meteo'
+import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
+import { Route as DashboardQualiteRouteImport } from './routes/dashboard/qualite'
+import { Route as DashboardSecuriteRouteImport } from './routes/dashboard/securite'
+import { Route as DashboardSyntheseRouteImport } from './routes/dashboard/synthese'
+import { Route as IndicateurAccessibiliteTableRouteImport } from './routes/indicateur/accessibiliteTable'
+import { Route as IndicateurDevopsTableRouteImport } from './routes/indicateur/devopsTable'
+import { Route as IndicateurGreenITTableRouteImport } from './routes/indicateur/greenITTable'
+import { Route as IndicateurMainIndicatorsRouteImport } from './routes/indicateur/mainIndicators'
+import { Route as IndicateurMeteoTableRouteImport } from './routes/indicateur/meteoTable'
+import { Route as IndicateurQualiteTableRouteImport } from './routes/indicateur/qualiteTable'
+import { Route as IndicateurSecuriteTableRouteImport } from './routes/indicateur/securiteTable'
+import { Route as IndicateurStrategieCloudTableRouteImport } from './routes/indicateur/strategieCloudTable'
+import { Route as SaisieAccessibilitChar233RouteImport } from './routes/saisie/accessibilité'
+import { Route as SaisieMeteoRouteImport } from './routes/saisie/meteo'
+import { Route as SaisieStrategiecloudRouteImport } from './routes/saisie/strategiecloud'
 
-const PlanDuSiteRoute = PlanDuSiteRouteImport.update({
-  id: '/plan-du-site',
-  path: '/plan-du-site',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PageNameRoute = PageNameRouteImport.update({
@@ -43,62 +43,54 @@ const PageNameRoute = PageNameRouteImport.update({
   path: '/$pageName',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PlanDuSiteRoute = PlanDuSiteRouteImport.update({
+  id: '/plan-du-site',
+  path: '/plan-du-site',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SaisieStrategiecloudRoute = SaisieStrategiecloudRouteImport.update({
-  id: '/saisie/strategiecloud',
-  path: '/saisie/strategiecloud',
+const DashboardAccessibiliteRoute = DashboardAccessibiliteRouteImport.update({
+  id: '/dashboard/accessibilite',
+  path: '/dashboard/accessibilite',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SaisieMeteoRoute = SaisieMeteoRouteImport.update({
-  id: '/saisie/meteo',
-  path: '/saisie/meteo',
+const DashboardDevopsRoute = DashboardDevopsRouteImport.update({
+  id: '/dashboard/devops',
+  path: '/dashboard/devops',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SaisieAccessibilitChar233Route =
-  SaisieAccessibilitChar233RouteImport.update({
-    id: '/saisie/accessibilité',
-    path: '/saisie/accessibilité',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const IndicateurStrategieCloudTableRoute =
-  IndicateurStrategieCloudTableRouteImport.update({
-    id: '/indicateur/strategieCloudTable',
-    path: '/indicateur/strategieCloudTable',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const IndicateurSecuriteTableRoute = IndicateurSecuriteTableRouteImport.update({
-  id: '/indicateur/securiteTable',
-  path: '/indicateur/securiteTable',
+const DashboardGreenitRoute = DashboardGreenitRouteImport.update({
+  id: '/dashboard/greenit',
+  path: '/dashboard/greenit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndicateurQualiteTableRoute = IndicateurQualiteTableRouteImport.update({
-  id: '/indicateur/qualiteTable',
-  path: '/indicateur/qualiteTable',
+const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
+  id: '/dashboard/maturite',
+  path: '/dashboard/maturite',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndicateurMeteoTableRoute = IndicateurMeteoTableRouteImport.update({
-  id: '/indicateur/meteoTable',
-  path: '/indicateur/meteoTable',
+const DashboardMeteoRoute = DashboardMeteoRouteImport.update({
+  id: '/dashboard/meteo',
+  path: '/dashboard/meteo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndicateurMainIndicatorsRoute =
-  IndicateurMainIndicatorsRouteImport.update({
-    id: '/indicateur/mainIndicators',
-    path: '/indicateur/mainIndicators',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const IndicateurGreenITTableRoute = IndicateurGreenITTableRouteImport.update({
-  id: '/indicateur/greenITTable',
-  path: '/indicateur/greenITTable',
+const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
+  id: '/dashboard/overview',
+  path: '/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndicateurDevopsTableRoute = IndicateurDevopsTableRouteImport.update({
-  id: '/indicateur/devopsTable',
-  path: '/indicateur/devopsTable',
+const DashboardQualiteRoute = DashboardQualiteRouteImport.update({
+  id: '/dashboard/qualite',
+  path: '/dashboard/qualite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSecuriteRoute = DashboardSecuriteRouteImport.update({
+  id: '/dashboard/securite',
+  path: '/dashboard/securite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardSyntheseRoute = DashboardSyntheseRouteImport.update({
+  id: '/dashboard/synthese',
+  path: '/dashboard/synthese',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndicateurAccessibiliteTableRoute =
@@ -107,49 +99,57 @@ const IndicateurAccessibiliteTableRoute =
     path: '/indicateur/accessibiliteTable',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DashboardSyntheseRoute = DashboardSyntheseRouteImport.update({
-  id: '/dashboard/synthese',
-  path: '/dashboard/synthese',
+const IndicateurDevopsTableRoute = IndicateurDevopsTableRouteImport.update({
+  id: '/indicateur/devopsTable',
+  path: '/indicateur/devopsTable',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardSecuriteRoute = DashboardSecuriteRouteImport.update({
-  id: '/dashboard/securite',
-  path: '/dashboard/securite',
+const IndicateurGreenITTableRoute = IndicateurGreenITTableRouteImport.update({
+  id: '/indicateur/greenITTable',
+  path: '/indicateur/greenITTable',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardQualiteRoute = DashboardQualiteRouteImport.update({
-  id: '/dashboard/qualite',
-  path: '/dashboard/qualite',
+const IndicateurMainIndicatorsRoute =
+  IndicateurMainIndicatorsRouteImport.update({
+    id: '/indicateur/mainIndicators',
+    path: '/indicateur/mainIndicators',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const IndicateurMeteoTableRoute = IndicateurMeteoTableRouteImport.update({
+  id: '/indicateur/meteoTable',
+  path: '/indicateur/meteoTable',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
-  id: '/dashboard/overview',
-  path: '/dashboard/overview',
+const IndicateurQualiteTableRoute = IndicateurQualiteTableRouteImport.update({
+  id: '/indicateur/qualiteTable',
+  path: '/indicateur/qualiteTable',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardMeteoRoute = DashboardMeteoRouteImport.update({
-  id: '/dashboard/meteo',
-  path: '/dashboard/meteo',
+const IndicateurSecuriteTableRoute = IndicateurSecuriteTableRouteImport.update({
+  id: '/indicateur/securiteTable',
+  path: '/indicateur/securiteTable',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardMaturiteRoute = DashboardMaturiteRouteImport.update({
-  id: '/dashboard/maturite',
-  path: '/dashboard/maturite',
+const IndicateurStrategieCloudTableRoute =
+  IndicateurStrategieCloudTableRouteImport.update({
+    id: '/indicateur/strategieCloudTable',
+    path: '/indicateur/strategieCloudTable',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SaisieAccessibilitChar233Route =
+  SaisieAccessibilitChar233RouteImport.update({
+    id: '/saisie/accessibilité',
+    path: '/saisie/accessibilité',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SaisieMeteoRoute = SaisieMeteoRouteImport.update({
+  id: '/saisie/meteo',
+  path: '/saisie/meteo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardGreenitRoute = DashboardGreenitRouteImport.update({
-  id: '/dashboard/greenit',
-  path: '/dashboard/greenit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardDevopsRoute = DashboardDevopsRouteImport.update({
-  id: '/dashboard/devops',
-  path: '/dashboard/devops',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardAccessibiliteRoute = DashboardAccessibiliteRouteImport.update({
-  id: '/dashboard/accessibilite',
-  path: '/dashboard/accessibilite',
+const SaisieStrategiecloudRoute = SaisieStrategiecloudRouteImport.update({
+  id: '/saisie/strategiecloud',
+  path: '/saisie/strategiecloud',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -335,11 +335,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/plan-du-site': {
-      id: '/plan-du-site'
-      path: '/plan-du-site'
-      fullPath: '/plan-du-site'
-      preLoaderRoute: typeof PlanDuSiteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$pageName': {
@@ -349,137 +349,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PageNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/plan-du-site': {
+      id: '/plan-du-site'
+      path: '/plan-du-site'
+      fullPath: '/plan-du-site'
+      preLoaderRoute: typeof PlanDuSiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/saisie/strategiecloud': {
-      id: '/saisie/strategiecloud'
-      path: '/saisie/strategiecloud'
-      fullPath: '/saisie/strategiecloud'
-      preLoaderRoute: typeof SaisieStrategiecloudRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/saisie/meteo': {
-      id: '/saisie/meteo'
-      path: '/saisie/meteo'
-      fullPath: '/saisie/meteo'
-      preLoaderRoute: typeof SaisieMeteoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/saisie/accessibilité': {
-      id: '/saisie/accessibilité'
-      path: '/saisie/accessibilité'
-      fullPath: '/saisie/accessibilité'
-      preLoaderRoute: typeof SaisieAccessibilitChar233RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/strategieCloudTable': {
-      id: '/indicateur/strategieCloudTable'
-      path: '/indicateur/strategieCloudTable'
-      fullPath: '/indicateur/strategieCloudTable'
-      preLoaderRoute: typeof IndicateurStrategieCloudTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/securiteTable': {
-      id: '/indicateur/securiteTable'
-      path: '/indicateur/securiteTable'
-      fullPath: '/indicateur/securiteTable'
-      preLoaderRoute: typeof IndicateurSecuriteTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/qualiteTable': {
-      id: '/indicateur/qualiteTable'
-      path: '/indicateur/qualiteTable'
-      fullPath: '/indicateur/qualiteTable'
-      preLoaderRoute: typeof IndicateurQualiteTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/meteoTable': {
-      id: '/indicateur/meteoTable'
-      path: '/indicateur/meteoTable'
-      fullPath: '/indicateur/meteoTable'
-      preLoaderRoute: typeof IndicateurMeteoTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/mainIndicators': {
-      id: '/indicateur/mainIndicators'
-      path: '/indicateur/mainIndicators'
-      fullPath: '/indicateur/mainIndicators'
-      preLoaderRoute: typeof IndicateurMainIndicatorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/greenITTable': {
-      id: '/indicateur/greenITTable'
-      path: '/indicateur/greenITTable'
-      fullPath: '/indicateur/greenITTable'
-      preLoaderRoute: typeof IndicateurGreenITTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/devopsTable': {
-      id: '/indicateur/devopsTable'
-      path: '/indicateur/devopsTable'
-      fullPath: '/indicateur/devopsTable'
-      preLoaderRoute: typeof IndicateurDevopsTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indicateur/accessibiliteTable': {
-      id: '/indicateur/accessibiliteTable'
-      path: '/indicateur/accessibiliteTable'
-      fullPath: '/indicateur/accessibiliteTable'
-      preLoaderRoute: typeof IndicateurAccessibiliteTableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/synthese': {
-      id: '/dashboard/synthese'
-      path: '/dashboard/synthese'
-      fullPath: '/dashboard/synthese'
-      preLoaderRoute: typeof DashboardSyntheseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/securite': {
-      id: '/dashboard/securite'
-      path: '/dashboard/securite'
-      fullPath: '/dashboard/securite'
-      preLoaderRoute: typeof DashboardSecuriteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/qualite': {
-      id: '/dashboard/qualite'
-      path: '/dashboard/qualite'
-      fullPath: '/dashboard/qualite'
-      preLoaderRoute: typeof DashboardQualiteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/overview': {
-      id: '/dashboard/overview'
-      path: '/dashboard/overview'
-      fullPath: '/dashboard/overview'
-      preLoaderRoute: typeof DashboardOverviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/meteo': {
-      id: '/dashboard/meteo'
-      path: '/dashboard/meteo'
-      fullPath: '/dashboard/meteo'
-      preLoaderRoute: typeof DashboardMeteoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/maturite': {
-      id: '/dashboard/maturite'
-      path: '/dashboard/maturite'
-      fullPath: '/dashboard/maturite'
-      preLoaderRoute: typeof DashboardMaturiteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/greenit': {
-      id: '/dashboard/greenit'
-      path: '/dashboard/greenit'
-      fullPath: '/dashboard/greenit'
-      preLoaderRoute: typeof DashboardGreenitRouteImport
+    '/dashboard/accessibilite': {
+      id: '/dashboard/accessibilite'
+      path: '/dashboard/accessibilite'
+      fullPath: '/dashboard/accessibilite'
+      preLoaderRoute: typeof DashboardAccessibiliteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/devops': {
@@ -489,11 +370,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDevopsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/accessibilite': {
-      id: '/dashboard/accessibilite'
-      path: '/dashboard/accessibilite'
-      fullPath: '/dashboard/accessibilite'
-      preLoaderRoute: typeof DashboardAccessibiliteRouteImport
+    '/dashboard/greenit': {
+      id: '/dashboard/greenit'
+      path: '/dashboard/greenit'
+      fullPath: '/dashboard/greenit'
+      preLoaderRoute: typeof DashboardGreenitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/maturite': {
+      id: '/dashboard/maturite'
+      path: '/dashboard/maturite'
+      fullPath: '/dashboard/maturite'
+      preLoaderRoute: typeof DashboardMaturiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/meteo': {
+      id: '/dashboard/meteo'
+      path: '/dashboard/meteo'
+      fullPath: '/dashboard/meteo'
+      preLoaderRoute: typeof DashboardMeteoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/overview': {
+      id: '/dashboard/overview'
+      path: '/dashboard/overview'
+      fullPath: '/dashboard/overview'
+      preLoaderRoute: typeof DashboardOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/qualite': {
+      id: '/dashboard/qualite'
+      path: '/dashboard/qualite'
+      fullPath: '/dashboard/qualite'
+      preLoaderRoute: typeof DashboardQualiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/securite': {
+      id: '/dashboard/securite'
+      path: '/dashboard/securite'
+      fullPath: '/dashboard/securite'
+      preLoaderRoute: typeof DashboardSecuriteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/synthese': {
+      id: '/dashboard/synthese'
+      path: '/dashboard/synthese'
+      fullPath: '/dashboard/synthese'
+      preLoaderRoute: typeof DashboardSyntheseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/accessibiliteTable': {
+      id: '/indicateur/accessibiliteTable'
+      path: '/indicateur/accessibiliteTable'
+      fullPath: '/indicateur/accessibiliteTable'
+      preLoaderRoute: typeof IndicateurAccessibiliteTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/devopsTable': {
+      id: '/indicateur/devopsTable'
+      path: '/indicateur/devopsTable'
+      fullPath: '/indicateur/devopsTable'
+      preLoaderRoute: typeof IndicateurDevopsTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/greenITTable': {
+      id: '/indicateur/greenITTable'
+      path: '/indicateur/greenITTable'
+      fullPath: '/indicateur/greenITTable'
+      preLoaderRoute: typeof IndicateurGreenITTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/mainIndicators': {
+      id: '/indicateur/mainIndicators'
+      path: '/indicateur/mainIndicators'
+      fullPath: '/indicateur/mainIndicators'
+      preLoaderRoute: typeof IndicateurMainIndicatorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/meteoTable': {
+      id: '/indicateur/meteoTable'
+      path: '/indicateur/meteoTable'
+      fullPath: '/indicateur/meteoTable'
+      preLoaderRoute: typeof IndicateurMeteoTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/qualiteTable': {
+      id: '/indicateur/qualiteTable'
+      path: '/indicateur/qualiteTable'
+      fullPath: '/indicateur/qualiteTable'
+      preLoaderRoute: typeof IndicateurQualiteTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/securiteTable': {
+      id: '/indicateur/securiteTable'
+      path: '/indicateur/securiteTable'
+      fullPath: '/indicateur/securiteTable'
+      preLoaderRoute: typeof IndicateurSecuriteTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicateur/strategieCloudTable': {
+      id: '/indicateur/strategieCloudTable'
+      path: '/indicateur/strategieCloudTable'
+      fullPath: '/indicateur/strategieCloudTable'
+      preLoaderRoute: typeof IndicateurStrategieCloudTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saisie/accessibilité': {
+      id: '/saisie/accessibilité'
+      path: '/saisie/accessibilité'
+      fullPath: '/saisie/accessibilité'
+      preLoaderRoute: typeof SaisieAccessibilitChar233RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saisie/meteo': {
+      id: '/saisie/meteo'
+      path: '/saisie/meteo'
+      fullPath: '/saisie/meteo'
+      preLoaderRoute: typeof SaisieMeteoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saisie/strategiecloud': {
+      id: '/saisie/strategiecloud'
+      path: '/saisie/strategiecloud'
+      fullPath: '/saisie/strategiecloud'
+      preLoaderRoute: typeof SaisieStrategiecloudRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

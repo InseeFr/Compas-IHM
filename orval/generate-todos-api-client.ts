@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import * as child_process from "node:child_process";
 import type { defineConfig } from "orval";
 import type { Param0 } from "tsafe";
+import https from "node:https";
 
 const projectDirPath = process.cwd();
 
@@ -31,9 +32,13 @@ const projectDirPath = process.cwd();
 
     const todosOpenApiJsonFilePath = pathJoin(cacheDirPath, "todos-open-api.json");
 
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: false
+    });
+
     fs.writeFileSync(
         todosOpenApiJsonFilePath,
-        await fetch(`${todosApiUrl}/v3/api-docs`).then(response => response.text())
+        await fetch(`${todosApiUrl}/v3/api-docs`, { agent: httpsAgent }).then(response => response.text())
     );
 
     const orvalConfigFilePath = pathJoin(cacheDirPath, "orval.config.ts");
