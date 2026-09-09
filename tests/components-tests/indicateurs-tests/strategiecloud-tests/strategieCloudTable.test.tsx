@@ -16,8 +16,9 @@ type MockTablePageLayoutProps = {
     renderTopCustom?: (args: { table: unknown }) => React.ReactNode;
 };
 
-const { mockGetIndicateur, mockUseQueryIndicators, mockTablePageLayout } = vi.hoisted(() => ({
+const { mockGetIndicateur, mockGetApplications1, mockUseQueryIndicators, mockTablePageLayout } = vi.hoisted(() => ({
     mockGetIndicateur: vi.fn(),
+    mockGetApplications1: vi.fn(),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mockUseQueryIndicators: vi.fn((_args: unknown) => ({
         data: [],
@@ -42,6 +43,7 @@ const { mockGetIndicateur, mockUseQueryIndicators, mockTablePageLayout } = vi.ho
 // Vitest résout les alias : "todos-api/client.gen" et le chemin relatif pointent vers le même
 // module canonique. On mocke l'alias (forme courte) qui est la clé de résolution finale.
 vi.mock("todos-api/client.gen", () => ({
+    getApplications1: (...args: unknown[]) => mockGetApplications1(...args),
     getIndicateur: (...args: unknown[]) => mockGetIndicateur(...args)
 }));
 
@@ -210,6 +212,11 @@ describe("fetchData dans StrategieCloudTable", () => {
         ];
         mockGetIndicateur.mockResolvedValue(fakeItems);
 
+        mockGetApplications1.mockResolvedValue([
+        { idApplication: 1, appNameLong: "Application A longue" },
+        { idApplication: 2, appNameLong: "Application B longue" }
+    ]);
+
         let capturedFetchData: (() => Promise<unknown>) | null = null;
         mockUseQueryIndicators.mockImplementationOnce((args: unknown) => {
             capturedFetchData = (args as { fetchData: () => Promise<unknown> }).fetchData;
@@ -220,6 +227,7 @@ describe("fetchData dans StrategieCloudTable", () => {
 
         expect(capturedFetchData).not.toBeNull();
         const result = await capturedFetchData!();
+        expect(mockGetApplications1).toHaveBeenCalledOnce();
         expect(mockGetIndicateur).toHaveBeenCalledOnce();
         expect(result).toHaveLength(2);
     });
@@ -248,6 +256,7 @@ describe("fetchData dans StrategieCloudTable", () => {
 
     it("Rafraichit les données via le bouton", async () => {
         mockGetIndicateur.mockResolvedValue([]);
+        mockGetApplications1.mockResolvedValue([]);
 
         let capturedRefetch: (() => Promise<unknown>) | null = null;
         mockUseQueryIndicators.mockImplementationOnce((args: unknown) => {
@@ -270,6 +279,7 @@ describe("fetchData dans StrategieCloudTable", () => {
 
         await waitFor(() => {
             expect(capturedRefetch).toHaveBeenCalled();
+            expect(mockGetApplications1).toHaveBeenCalled();
             expect(mockGetIndicateur).toHaveBeenCalled();
         });
     });

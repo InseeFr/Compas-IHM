@@ -31,7 +31,11 @@ export const MeteoTable = () => {
         const items = meteoHistory.filter(meteo => meteo.idApplication !== undefined);
         const getMonths: string[] = month(items);
         const domaineFoncMap = buildDomaineFoncMap(apps);
-        const meteoData = buildMeteo(meteoHistory, getMonths, domaineFoncMap);
+        const appNameLongMap = new Map(
+            apps.map(app => [app.idApplication, app.appNameLong])
+        );
+        
+        const meteoData = buildMeteo(meteoHistory, getMonths, domaineFoncMap, appNameLongMap);
 
         return { data: meteoData, months: getMonths };
     };

@@ -1,4 +1,4 @@
-import { getIndicateur } from "../../../todos-api/client.gen";
+import { getApplications1, getIndicateur } from "../../../todos-api/client.gen";
 import {
     columnsTable,
     formatIndicateur,
@@ -13,8 +13,15 @@ export const StrategieCloudTable = () => {
 
     const fetchData = async () => {
         try {
-            const items = await getIndicateur();
-            return (items ?? []).map(item => formatIndicateur(item));
+            const [applications, items] = await Promise.all([
+                getApplications1(),
+                getIndicateur()
+            ]);
+            const appNameLongMap = new Map(
+                applications.map(app => [app.idApplication, app.appNameLong])
+            );
+
+            return (items ?? []).map(item => formatIndicateur(item, appNameLongMap));
         } catch (error) {
             console.error("Erreur lors de la récupération des données :", error);
             return [];

@@ -215,11 +215,13 @@ function getValue<T>(obj: T | undefined, key: keyof T): string {
     return value !== undefined && value !== null ? String(value) : DEFAULT_VALUE;
 }
 
-function getBaseAppGreen(app: IndicateurAppGreenKubeView | IndicateurAppGreenVmView): GreenITIndicateur {
+function getBaseAppGreen(app: IndicateurAppGreenKubeView | IndicateurAppGreenVmView, appNameLongMap?: Map<number | undefined, string | undefined>
+): GreenITIndicateur {
     return {
         isModule: false,
         applicationId: app.applicationId ?? -1,
         applicationName: app.applicationName ?? DEFAULT_VALUE,
+        appNameLong: appNameLongMap?.get(app.applicationId),
         sndi: (app as IndicateurAppGreenVmView).serviceDev ?? DEFAULT_VALUE,
         domaine: (app as IndicateurAppGreenVmView).domaineDev ?? DEFAULT_VALUE,
         domaineFonc: (app as IndicateurAppGreenVmView).domaineFonc ?? DEFAULT_VALUE,
@@ -234,12 +236,13 @@ function getBaseAppGreen(app: IndicateurAppGreenKubeView | IndicateurAppGreenVmV
 
 export function formatIndicateur(
     greentItAppKube: IndicateurAppGreenKubeView[],
-    greenItAppVm: IndicateurAppGreenVmView[]
+    greenItAppVm: IndicateurAppGreenVmView[],
+    appNameLongMap?: Map<number | undefined, string | undefined>
 ): GreenITIndicateur[] {
     const byId = new Map<number, GreenITIndicateur>();
     for (const kubeApp of greentItAppKube) {
         const id = kubeApp.applicationId ?? -1;
-        const existing = byId.get(id) ?? getBaseAppGreen(kubeApp);
+        const existing = byId.get(id) ?? getBaseAppGreen(kubeApp, appNameLongMap);
 
         byId.set(id, {
             ...existing,
@@ -282,7 +285,7 @@ export function formatIndicateur(
     }
     for (const vmApp of greenItAppVm) {
         const id = vmApp.applicationId ?? -1;
-        const existing = byId.get(id) ?? getBaseAppGreen(vmApp);
+        const existing = byId.get(id) ?? getBaseAppGreen(vmApp, appNameLongMap);
 
         byId.set(id, {
             ...existing,

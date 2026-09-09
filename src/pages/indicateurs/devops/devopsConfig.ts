@@ -82,10 +82,12 @@ function resolveApplicationName(item: IndicateurDevopsView, mode: IndicateurMode
 }
 export function formatIndicateur(
     item: IndicateurDevopsView,
-    mode: IndicateurMode = "application"
+    mode: IndicateurMode = "application",
+    appNameLongMap?: Map<number | undefined, string | undefined>
 ): DevopsIndicateur {
     const baseProperties = {
         applicationName: resolveApplicationName(item, mode),
+        appNameLong: mode === "module" ? undefined : appNameLongMap?.get(item.applicationId ?? 0),
         sndi: item.sndi ?? "NR",
         domaine: item.domaineSndi ?? "NR",
         domaineFonc: item.domaineFonctionnel ?? "NR",

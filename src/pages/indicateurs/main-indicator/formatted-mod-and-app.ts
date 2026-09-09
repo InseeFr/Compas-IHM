@@ -197,6 +197,7 @@ export const formattedApps = (sources: ApplicationDataSources): GlobalIndicator[
         const result: GlobalIndicator = {
             idApplication: app.idApplication,
             applicationName: app.appName ?? "",
+            appNameLong: app.appNameLong ?? undefined,
             sndi: app.sndi ?? NR,
             domaine: app.domaineSndi ?? NR,
             domaineFonc: app.domaineFonctionnel ?? NR,
@@ -221,6 +222,7 @@ export const formattedModules = (sources: ModuleDataSources): GlobalIndicator[] 
         const securiteById = findByIdMod(sources.securiteModules, module);
         return {
             applicationName: module.modName ?? "",
+            appNameLong: undefined,
             sndi: module.sndi ?? NR,
             domaine: module.domaineSndi ?? NR,
             domaineFonc: module.domaineFonctionnel ?? NR,

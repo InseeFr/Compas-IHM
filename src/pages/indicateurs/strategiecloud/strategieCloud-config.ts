@@ -116,10 +116,12 @@ export const columnsTable = (): MRT_ColumnDef<StrategieCloudIndicateur>[] => {
     return [...BASE_COLONNE<StrategieCloudIndicateur>(), ...colonnes];
 };
 
-export function formatIndicateur(item: IndicateurMaturiteView): StrategieCloudIndicateur {
+export function formatIndicateur(item: IndicateurMaturiteView, appNameLongMap?: Map<number | undefined, string | undefined>
+): StrategieCloudIndicateur {
     const isModule = item.isModule;
     return {
         applicationName: isModule ? (item.moduleName ?? "NR") : (item.appName ?? "NR"),
+        appNameLong: isModule ? undefined : appNameLongMap?.get(item.idApp ?? 0),
         sndi: item.serviceName ?? "NR",
         tauxCloud: item.tauxCloud ?? "NR",
         envActuelProd: item.envActuelProd ?? "NR",

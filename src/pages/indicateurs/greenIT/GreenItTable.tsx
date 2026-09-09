@@ -21,9 +21,8 @@ import { GreenItToggleButton } from "./GreenItCell";
 import { useTendanceContext } from "store/tendance-context";
 import {
     getApplications,
+    getApplications1,
     type GetApplicationsParams,
-    type IndicateurAppGreenKubeView,
-    type IndicateurAppGreenVmView
 } from "todos-api/client.gen";
 import { useInitTendanceDates, useValidDates } from "hooks/useCompasDataDate";
 
@@ -99,15 +98,24 @@ export const GreenItTable = () => {
         setColumnVisibility(newColumnVisibility);
     };
 
-    const fetchData = async () => {
+     const fetchData = async () => {
         try {
             const params: GetApplicationsParams = {
                 origine: stateTendance.dateFin,
                 passee: stateTendance.dateDebut
             };
-            const appGreenItKube: IndicateurAppGreenKubeView[] = await getApplications("KUBE", params);
-            const appGreenItVm: IndicateurAppGreenVmView[] = await getApplications("VM", params);
-            return formatIndicateur(appGreenItKube, appGreenItVm);
+            
+            const [applications, appGreenItKube, appGreenItVm] = await Promise.all([
+                getApplications1(),
+                getApplications("KUBE", params),
+                getApplications("VM", params)
+            ]);
+
+            const appNameLongMap = new Map(
+                applications.map(app => [app.idApplication, app.appNameLong])
+            );
+
+            return formatIndicateur(appGreenItKube, appGreenItVm, appNameLongMap);
         } catch (error) {
             console.error("Erreur lors de la récupération des données: ", error);
             throw error;

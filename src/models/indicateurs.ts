@@ -24,10 +24,13 @@ export interface IndicateurApplicationMaturite {
     progressionMateqip?: string;
 
     applicationName?: string;
+    appNameLong?: string;
+    
 }
 
 export interface DevopsIndicateur {
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -52,6 +55,7 @@ export interface DevopsIndicateur {
 export interface QualiteIndicateur {
     applicationId?: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -78,6 +82,7 @@ export interface GreenITIndicateur {
     hasKube?: boolean;
     applicationId: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -216,6 +221,7 @@ export interface SecuriteIndicateur {
     applicationId?: number;
     moduleId?: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -267,6 +273,7 @@ export interface MeteoPoint {
 export interface MeteoIndicateur {
     idApp: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -276,6 +283,7 @@ export interface MeteoIndicateur {
 export interface AppsIndicateur {
     idApplication: number;
     appName: string;
+    appNameLong?: string;
     domaine: string;
     domaineFonc: string;
     sndi: string;
@@ -296,6 +304,7 @@ export interface ModsIndicateur {
     modName?: string;
     idApplication?: number;
     appName?: string;
+    appNameLong?: string;
     domaine: string;
     domaineFonc: string;
     keySonar?: string;
@@ -316,6 +325,7 @@ export interface DemandeCreationStrategieCloud {
 export interface GlobalIndicator {
     idApplication?: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -397,6 +407,7 @@ export interface GlobalIndicator {
 export interface IndicateurApplicationSynthese {
     applicationId: number;
     applicationName: string;
+    appNameLong?: string;
     sndi: string;
     domaine: string;
     domaineFonc: string;
@@ -446,6 +457,7 @@ export interface IndicateurApplicationSynthese {
 
 export interface StrategieCloudIndicateur {
     applicationName: string;
+    appNameLong?: string;
     commentaire: string;
     ecartCible: string;
     envActuelProd: string;

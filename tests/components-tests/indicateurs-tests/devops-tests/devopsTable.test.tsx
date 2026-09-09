@@ -4,10 +4,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { DevopsIndicateurTable } from "pages/indicateurs/devops/DevopsIndicateur";
 import { FilterProvider } from "store/filterContext";
 import * as devopsConfig from "pages/indicateurs/devops/devopsConfig";
-import { getApplications2, getModules1 } from "todos-api/client.gen";
+import { getApplications1, getApplications2, getModules1 } from "todos-api/client.gen";
 import { useQueryIndicators } from "hooks/useQueryIndicators";
 
 vi.mock("todos-api/client.gen", () => ({
+    getApplications1: vi.fn(),
     getApplications2: vi.fn(),
     getModules1: vi.fn()
 }));
@@ -157,6 +158,7 @@ describe("DevopsIndicateurTable", () => {
     // ── fetchData (testé via useQueryIndicators) ──────────────────────────────
 
     it("fetchData appelle getApplications2 et getModules2 et formate les résultats", async () => {
+        (getApplications1 as any).mockResolvedValue([]); 
         (getApplications2 as any).mockResolvedValue(mockApps);
         (getModules1 as any).mockResolvedValue(mockModules);
 
@@ -176,6 +178,7 @@ describe("DevopsIndicateurTable", () => {
         // On exécute directement la fetchData passée à useQueryIndicators
         const result = await capturedFetchData!();
 
+        expect(getApplications1).toHaveBeenCalledOnce();
         expect(getApplications2).toHaveBeenCalledOnce();
         expect(getModules1).toHaveBeenCalledOnce();
         // formatIndicateur appelé pour chaque app et chaque module
@@ -183,7 +186,7 @@ describe("DevopsIndicateurTable", () => {
             mockApps.length + mockModules.length
         );
         // Les modules sont formatés avec isModule = true
-        expect(devopsConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], "module");
+        expect(devopsConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], "module", expect.any(Map));
         // Le résultat est la concaténation apps + modules formatés
         expect(result).toHaveLength(mockApps.length + mockModules.length);
     });
@@ -192,6 +195,7 @@ describe("DevopsIndicateurTable", () => {
         const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         const fetchError = new Error("Network error");
 
+        (getApplications1 as any).mockResolvedValue(fetchError);
         (getApplications2 as any).mockRejectedValue(fetchError);
         (getModules1 as any).mockResolvedValue([]);
 

@@ -1,4 +1,5 @@
 import {
+    getApplications1,
     getApplications2,
     getModules1,
     type GetApplications2Params
@@ -17,13 +18,20 @@ export const DevopsIndicateurTable = () => {
         try {
             const params: GetApplications2Params = {
                 dateReference: stateTendance.dateFin,
-
                 datePassee: stateTendance.dateDebut
             };
-            const [apps, modules] = await Promise.all([getApplications2(params), getModules1(params)]);
+            const [applications, apps, modules] = await Promise.all([
+                getApplications1(),
+                getApplications2(params),
+                getModules1(params)
+            ]);
 
-            const formattedApplications = apps.map(app => formatIndicateur(app));
-            const formattedModules = modules.map(module => formatIndicateur(module, "module"));
+            const appNameLongMap = new Map(
+                applications.map(app => [app.idApplication, app.appNameLong])
+            );
+
+            const formattedApplications = apps.map(app => formatIndicateur(app, "application", appNameLongMap));
+            const formattedModules = modules.map(module => formatIndicateur(module, "module", appNameLongMap));
 
             return [...formattedApplications, ...formattedModules];
         } catch (error) {

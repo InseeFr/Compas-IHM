@@ -77,7 +77,8 @@ export const columnsTable = (): MRT_ColumnDef<QualiteIndicateur>[] => {
     return [...BASE_COLONNE<QualiteIndicateur>(), ...colonnes];
 };
 
-export function formatIndicateur(item: IndicateurQualiteView, isModule = false): QualiteIndicateur {
+export function formatIndicateur(item: IndicateurQualiteView, isModule = false, appNameLongMap?: Map<number | undefined, string | undefined>
+): QualiteIndicateur {
     const defaultValue = "NR";
     const getApplicationName = () => {
         if (isModule) {
@@ -101,6 +102,7 @@ export function formatIndicateur(item: IndicateurQualiteView, isModule = false):
     return {
         applicationId: isModule ? undefined : item.applicationId,
         applicationName: getApplicationName(),
+        appNameLong: isModule ? undefined : appNameLongMap?.get(item.applicationId ?? 0),
         sndi: item.sndi ?? defaultValue,
         domaine: item.domaineSndi ?? defaultValue,
         domaineFonc: item.domaineFonctionnel ?? defaultValue,

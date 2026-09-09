@@ -302,6 +302,7 @@ export interface Module {
 export interface Application {
     idApplication?: number;
     appName?: string;
+    appNameLong?: string;
     domaineSndi?: string;
     domaineFonctionnel?: string;
     sndi?: string;

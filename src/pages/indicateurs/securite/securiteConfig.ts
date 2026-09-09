@@ -114,6 +114,7 @@ export function formatApplicationSecurite(
     return {
         applicationId: app.idApplication,
         applicationName: app.appName ?? defaultValue,
+        appNameLong: app.appNameLong ?? undefined,
         sndi: app.sndi ?? defaultValue,
         domaine: app.domaineSndi ?? defaultValue,
         domaineFonc: app.domaineFonctionnel ?? defaultValue,
@@ -130,6 +131,7 @@ export function formatModuleSecurite(
     return {
         moduleId: mod.id,
         applicationName: mod.modName ?? defaultValue,
+        appNameLong: undefined,
         sndi: mod.sndi ?? defaultValue,
         domaine: mod.domaineSndi ?? defaultValue,
         domaineFonc: mod.domaineFonctionnel ?? defaultValue,

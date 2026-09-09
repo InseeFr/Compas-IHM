@@ -6,6 +6,7 @@ import type { MRT_ColumnDef, MRT_Row, MRT_TableInstance } from "material-react-t
 import { escapeCsvValue, handleExportCsv } from "utils/exportCsv";
 import { generateAriaLabelCell } from "utils/accessibility-functions";
 import { BASE_HEADERS, METEO_HEADERS } from "constantes/constantes-headers";
+import { createAppNameColumn } from "components/createAppNameColumn";
 
 export const frMonthLabel = (mk: string) => {
     const [y, m] = mk.split("-").map(s => Number.parseInt(s, 10));
@@ -58,12 +59,14 @@ export const month = (meteos: Meteo[]): string[] => {
 const createRow = (
     meteo: Meteo,
     domaineFoncByApp: Map<number, string>,
-    mapMeteo: Map<number, MeteoIndicateur>
+    mapMeteo: Map<number, MeteoIndicateur>,
+    appNameLongMap?: Map<number | undefined, string | undefined>
 ): MeteoIndicateur => {
     const id = meteo.idApplication!;
     const result: MeteoIndicateur = {
         idApp: id,
         applicationName: meteo.appName ?? "NR",
+        appNameLong: appNameLongMap?.get(id),
         sndi: meteo.sndi ?? "NR",
         domaine: meteo.domaineSndi ?? "NR",
         domaineFonc: domaineFoncByApp.get(id) ?? "NR",
@@ -84,7 +87,8 @@ export function buildDomaineFoncMap(apps: Application[]): Map<number, string> {
 export const buildMeteo = (
     meteos: Meteo[],
     allMonths: string[],
-    domaineFoncByApp: Map<number, string>
+    domaineFoncByApp: Map<number, string>,
+    appNameLongMap?: Map<number | undefined, string | undefined>  
 ): MeteoIndicateur[] => {
     const meteoByApp = new Map<number, MeteoIndicateur>();
 
@@ -92,7 +96,7 @@ export const buildMeteo = (
         const id = meteo.idApplication;
         if (id == null) return;
 
-        const row = meteoByApp.get(id) ?? createRow(meteo, domaineFoncByApp, meteoByApp);
+        const row = meteoByApp.get(id) ?? createRow(meteo, domaineFoncByApp, meteoByApp, appNameLongMap);
 
         if (!meteo.date) return;
 
@@ -133,18 +137,9 @@ export const buildMeteo = (
 
 export const columnsMeteo = (months: string[]): MRT_ColumnDef<MeteoIndicateur>[] => {
     const baseColumns: MRT_ColumnDef<MeteoIndicateur>[] = [
-        {
-            header: METEO_HEADERS.NOM,
-            accessorKey: "applicationName",
-            muiTableBodyCellProps: ({ cell, row }) => ({
-                "aria-label": generateAriaLabelCell(
-                    "Application",
-                    row.original.applicationName,
-                    cell.getValue<string>()
-                )
-            })
-        }
+        createAppNameColumn<MeteoIndicateur>("applicationName", METEO_HEADERS.NOM)
     ];
+        
 
     const monthColumns: MRT_ColumnDef<MeteoIndicateur>[] = months.map(mk => ({
         id: `m-${mk}`,

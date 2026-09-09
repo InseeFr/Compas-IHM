@@ -60,29 +60,12 @@ describe("columnsGlobal", () => {
             expect(nomColumn.accessorKey).toBe("applicationName");
         });
 
-        it("n'a pas de Cell personnalisée", () => {
-            expect(nomColumn.Cell).toBeUndefined();
+        it("a une Cell personnalisée pour le tooltip", () => {
+        expect(nomColumn.Cell).toBeDefined();
         });
-        it("doit générer un aria-label appName", () => {
-            const colContributeur = columns.find(c => c.accessorKey === "applicationName")!;
-            const props =
-                typeof colContributeur.muiTableBodyCellProps === "function"
-                    ? colContributeur.muiTableBodyCellProps({
-                          cell: {
-                              getValue: () => "App1"
-                          } as unknown as MRT_Cell<GlobalIndicator, unknown>,
-                          column: {} as any,
-                          row: {
-                              original: {
-                                  applicationName: "App1"
-                              }
-                          } as MRT_Row<GlobalIndicator>,
-                          table: {} as any
-                      })
-                    : colContributeur.muiTableBodyCellProps;
-
-            expect(props!["aria-label"]).toBe("Application: App1");
-        });
+        it("n'a pas de muiTableBodyCellProps (géré par la Cell du tooltip)", () => {
+        expect(nomColumn.muiTableBodyCellProps).toBeUndefined();
+    });
     });
 
     describe("colonne serviceDev", () => {
@@ -382,14 +365,14 @@ describe("columnsGlobal", () => {
     });
 
     describe("types de colonnes", () => {
-        it("a 2 colonnes texte simples", () => {
+        it("a 1 colonne texte simple", () => {
             const simpleColumns = columns.filter(col => !col.Cell);
-            expect(simpleColumns).toHaveLength(2);
+            expect(simpleColumns).toHaveLength(1);
         });
 
-        it("a 7 colonnes avec Cell personnalisée", () => {
+        it("a 8 colonnes avec Cell personnalisée", () => {
             const customCellColumns = columns.filter(col => col.Cell);
-            expect(customCellColumns).toHaveLength(7);
+            expect(customCellColumns).toHaveLength(8);
         });
 
         it("a 1 colonne avec accessorFn personnalisé", () => {

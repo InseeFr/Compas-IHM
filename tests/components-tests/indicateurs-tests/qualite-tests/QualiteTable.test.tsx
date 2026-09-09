@@ -34,6 +34,7 @@ vi.mock("@tanstack/react-router", () => ({
 
 vi.mock("todos-api/client.gen", () => ({
     getIndicateurQualiteByApplicationByDate: vi.fn(),
+    getApplications1: vi.fn(),
     getIndicateurQualiteByModuleByDate: vi.fn()
 }));
 
@@ -142,6 +143,10 @@ describe("QualiteIndicateurTable", () => {
     });
 
     it("fetchData appelle les deux endpoints et formate les résultats", async () => {
+        (clientApi.getApplications1 as any).mockResolvedValue([
+        { idApplication: 1, appNameLong: "App1 long" },
+        { idApplication: 2, appNameLong: "App2 long" }
+    ]);
         let capturedFetchData: (() => Promise<any>) | undefined;
 
         (useQueryIndicators as any).mockImplementation(({ fetchData }: any) => {
@@ -153,13 +158,14 @@ describe("QualiteIndicateurTable", () => {
 
         const result = await capturedFetchData!();
 
+        expect(clientApi.getApplications1).toHaveBeenCalledOnce();
         expect(clientApi.getIndicateurQualiteByApplicationByDate).toHaveBeenCalledOnce();
         expect(clientApi.getIndicateurQualiteByModuleByDate).toHaveBeenCalledOnce();
         expect(qualiteConfig.formatIndicateur).toHaveBeenCalledTimes(
             mockApps.length + mockModules.length
         );
         // Les modules sont formatés avec isModule = true
-        expect(qualiteConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], true);
+        expect(qualiteConfig.formatIndicateur).toHaveBeenCalledWith(mockModules[0], true, expect.any(Map));
         // Le résultat concatène apps + modules
         expect(result).toHaveLength(mockApps.length + mockModules.length);
     });
@@ -169,6 +175,7 @@ describe("QualiteIndicateurTable", () => {
         const fetchError = new Error("Network error");
 
         (clientApi.getIndicateurQualiteByApplicationByDate as any).mockRejectedValue(fetchError);
+        (clientApi.getApplications1 as any).mockResolvedValue([]);
 
         let capturedFetchData: (() => Promise<any>) | undefined;
 

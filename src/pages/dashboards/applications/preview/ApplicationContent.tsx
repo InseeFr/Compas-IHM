@@ -99,6 +99,9 @@ const ApplicationReportPreview: React.FC<Props> = ({ appDetails, modules, popula
                     <Typography tabIndex={0}>
                         <strong>Domaine fonctionnel :</strong> {appDetails.domaineFonc ?? "NR"}
                     </Typography>
+                    <Typography tabIndex={0}>
+                        <strong>Application :</strong> {appDetails.applicationName} ({appDetails.appNameLong ?? "NR"})
+                    </Typography>
                 </Box>
                 <Box
                     sx={{

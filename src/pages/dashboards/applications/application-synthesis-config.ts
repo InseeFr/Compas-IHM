@@ -150,6 +150,7 @@ const buildFormattedApp = ({
     const appData: IndicateurApplicationSynthese = {
         applicationId: app.idApplication ?? -1,
         applicationName: getAttribute(app.appName),
+        appNameLong: getAttribute(app.appNameLong),
         sndi: getAttribute(app.sndi),
         domaine: getAttribute(app.domaineSndi),
         domaineFonc: getAttribute(app.domaineFonctionnel),
