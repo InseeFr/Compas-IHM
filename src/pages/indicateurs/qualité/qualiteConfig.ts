@@ -5,7 +5,7 @@ import type { IndicateurQualiteView } from "todos-api/client.gen";
 import { muiAriaCell } from "utils/accessibility-functions";
 import { BASE_COLONNE } from "constantes/constantes";
 import type { QualiteIndicateur } from "models/indicateurs";
-import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV } from "utils/exportCsv";
+import { flattenRows, handleExportCsv, escapeCsvValue, getBaseValueCSV, computeDetteTechniqueJours } from "utils/exportCsv";
 import { QUALITE_HEADERS, BASE_HEADERS } from "constantes/constantes-headers";
 import { getTrend } from "../../../constantes/trend.utils";
 
@@ -15,7 +15,7 @@ const getValueQualiteCSV = (row: MRT_Row<QualiteIndicateur>): string[] => {
         `"${row.original.pourcentageCouvertureTestUnitaire ?? "NR"}"`,
         `"${row.original.lettreFiabilite ?? "NR"}"`,
         `"${row.original.lettreDetteTechnique ?? "NR"}"`,
-        `"${row.original.detteTechnique ?? "NR"}"`,
+        `"${computeDetteTechniqueJours(row.original.detteTechnique)}"`,
         `"${row.original.nbLigneCodeTotal ?? "NR"}"`
     ];
 };

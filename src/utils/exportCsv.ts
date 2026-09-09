@@ -78,7 +78,7 @@ export const formatValue = (value: string): string | number => {
 export const computeDetteTechniqueJours = (dette: string | undefined): string | number => {
     if (!dette || dette === "NR") return "NR";
     const minutes = Number.parseFloat(dette);
-    if (Number.isNaN(minutes) || minutes <= 0) return "NR";
+    if (Number.isNaN(minutes)) return "NR";
     return Math.round(minutes / 420);
 };
 

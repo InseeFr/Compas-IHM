@@ -117,7 +117,10 @@ describe("computeDetteTechniqueJours", () => {
     it("devrait retourner 'NR' pour des entrées invalides", () => {
         expect(computeDetteTechniqueJours("NR")).toBe("NR");
         expect(computeDetteTechniqueJours(undefined)).toBe("NR");
-        expect(computeDetteTechniqueJours("0")).toBe("NR");
+    });
+
+    it("devrait retourner 0 pour une dette de 0 minutes", () => {
+        expect(computeDetteTechniqueJours("0")).toBe(0);
     });
 });
 

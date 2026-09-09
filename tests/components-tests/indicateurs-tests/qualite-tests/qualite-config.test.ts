@@ -22,7 +22,13 @@ vi.mock("utils/exportCsv", () => ({
         `"${row.original.domaine}"`,
         `"${row.original.domaineFonc}"`
     ]),
-    getName: vi.fn(row => `"${row.original.applicationName}"`)
+    getName: vi.fn(row => `"${row.original.applicationName}"`),
+    computeDetteTechniqueJours: vi.fn((dette: string | undefined) => {
+        if (!dette || dette === "NR") return "NR";
+        const minutes = Number.parseFloat(dette);
+        if (Number.isNaN(minutes)) return "NR";
+        return Math.round(minutes / 420);
+    })
 }));
 
 const mockApp = {
@@ -217,8 +223,8 @@ describe("OnExport", () => {
         expect(entetes).toBeDefined();
 
         expect(csvData).toEqual([
-            `"App1","","S1","D1","NR","A","50%","B","C","123","1000"`,
-            `"App1","Mod1","S1","D1","NR","X","75%","Y","Z","456","2000"`
+            `"App1","","S1","D1","NR","A","50%","B","C","0","1000"`,
+            `"App1","Mod1","S1","D1","NR","X","75%","Y","Z","1","2000"`
         ]);
     });
 });
